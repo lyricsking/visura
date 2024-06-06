@@ -1,24 +1,27 @@
 import { Link } from "@remix-run/react";
+import { Carousel } from "~/shared/components/carousel";
 
 export default function Hero() {
   return (
-    <div className="px-6 pt-14 lg:px-8">
-      <div className="mx-auto max-w-3xl py-20 sm:py-32 lg:py-40">
+    <div className="px-6 pt-10 lg:px-8">
+      <div className="mx-auto max-w-3xl py-6 sm:py-8 lg:py-10">
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full max-w-sm"
+        ></Carousel>
+
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             {
               //Put your home and office essentials on replay
             }
-            Build an online home for everything else
+            Take control of your health life.
           </h1>
-          <p className="mt-6 text-lg leading-7 text-gray-600">
-            {/*Linked lets offers weekly deliveries of your reqular used home and
-            offices essentials withoit having to spending time sorting them out.
-            Spend less time shopping.
-            */}
-            Create a consistent mobile-friendly online presence for yourself. Be
-            it a portfolio portal, landing or product page, mini-website or just
-            list of links to important resources.
+          <p className="mt-4 text-xl leading-7 text-gray-600">
+            Get personalized health and wellness packs picked and delivery to
+            you.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link

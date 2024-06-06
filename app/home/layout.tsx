@@ -8,8 +8,6 @@ import {
   PageLayoutHeaderItem,
 } from "~/shared/components/ui/page.layout";
 import pkg from "../../package.json";
-import Button from "~/shared/components/button";
-import AccountButton from "~/shared/components/ui/account.menu.button";
 
 export default function Layout() {
   return (
@@ -21,17 +19,7 @@ export default function Layout() {
               {pkg.name}.
             </h1>
           </Link>
-          {true ? (
-            <Button
-              variant={"outline"}
-              radius={"md"}
-              className="text-md font-semibold"
-            >
-              <Link to="/auth/signin">Sign In</Link>
-            </Button>
-          ) : (
-            <AccountButton />
-          )}
+          <Link to="">Get started</Link>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
