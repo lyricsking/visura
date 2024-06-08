@@ -1,13 +1,13 @@
 import { ComponentProps } from "react";
 
 type MansoryItem = {
-  id: string,
-  attrs: ComponentProps<"img">
-}
+  id: string;
+  attrs: ComponentProps<"img">;
+};
 
 type MansoryProps = {
   items: MansoryItem[];
-}
+};
 
 export function Mansory({ items }: MansoryProps) {
   const firstColumn = items.filter((_, index) => index % 4 === 0);

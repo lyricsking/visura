@@ -95,41 +95,45 @@ export interface TextAttrs
     | React.CSSProperties["backgroundImage"];
 }
 
-export type TextBlockProp =  Omit<BlockProps,"type"> & {
+export type TextBlockProp = Omit<BlockProps, "type"> & {
   props: TextAttrs;
 };
 
 export function Text({
-setting: {blockName, hide},
-  props: { children, className, size, textType: Tag,  },
+  setting: { blockName, hide },
+  props: { children, className, size, textType: Tag },
 }: TextBlockProp) {
   var computedClass = cn(textVariant({ size }), className, hide && "hidden");
 
   return Tag === TextType.text ? (
-    <p id={blockName} className={computedClass}>{children}</p>
+    <p id={blockName} className={computedClass}>
+      {children}
+    </p>
   ) : (
-    <Tag id={blockName} className={computedClass}>{children}</Tag>
+    <Tag id={blockName} className={computedClass}>
+      {children}
+    </Tag>
   );
 }
 
 export type TextEditorType = Omit<
   EditorType,
-  "designEditor" | "settingsEditor" 
+  "designEditor" | "settingsEditor"
 > & {
   props: TextAttrs;
 };
 
 export function useTextEditor(textBlockProps: TextBlockProp): TextEditorType {
   const {
-      textType: pTextType = "text",
-      alignment: pAlignment,
-      bold: pBold = false,
-      font: pFont,
-      italic: pItalic = false,
-      strikethrough: pStrikethrough = false,
-      underline: pUnderline = false,
-      size: pSize,
-    } = textBlockProps.props;
+    textType: pTextType = "text",
+    alignment: pAlignment,
+    bold: pBold = false,
+    font: pFont,
+    italic: pItalic = false,
+    strikethrough: pStrikethrough = false,
+    underline: pUnderline = false,
+    size: pSize,
+  } = textBlockProps.props;
 
   const [size, setSize] = React.useState<TextVariant["size"]>(pSize);
 
@@ -160,17 +164,24 @@ export function useTextEditor(textBlockProps: TextBlockProp): TextEditorType {
     <div className="flex flex-col bg-white w-full">
       <div className="flex border divide-x max-w-full overflow-x-auto no-scrollbar">
         {/** Text tag type e.g p, h1, h2 h3 */}
-      <div className="flex-none">
-        <Select value={textType} onValueChange={(value)=>setTextType(value as TextType)}>
-          <SelectTrigger className="border-none">
-            <SelectValue placeholder="Select Text type" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-              {Object.keys(TextType).map((textType)=> <SelectItem key={textType} value={textType}>{textType}</SelectItem>)}
-          </SelectContent>
-        </Select>
-      </div>
-     {/** Text font size */}
+        <div className="flex-none">
+          <Select
+            value={textType}
+            onValueChange={(value) => setTextType(value as TextType)}
+          >
+            <SelectTrigger className="border-none">
+              <SelectValue placeholder="Select Text type" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              {Object.keys(TextType).map((textType) => (
+                <SelectItem key={textType} value={textType}>
+                  {textType}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/** Text font size */}
         <div className="flex-none">
           <Select
             value={size!}
@@ -333,7 +344,7 @@ export function useTextEditor(textBlockProps: TextBlockProp): TextEditorType {
         />
       </div>
     </div>
-);
+  );
 
   const settings = <></>;
 

@@ -19,7 +19,7 @@ export default function Layout() {
               {pkg.name}.
             </h1>
           </Link>
-          <Link to="">Get started</Link>
+          <Link to="/quiz">Get started</Link>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 

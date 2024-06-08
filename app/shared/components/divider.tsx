@@ -6,18 +6,15 @@ export const Alignment = {
   bottom: "bottom",
   left: "left",
   center: "center",
-} as const 
-export type Alignment = typeof Alignment[keyof typeof Alignment]
+} as const;
+export type Alignment = (typeof Alignment)[keyof typeof Alignment];
 
-export type DividerProps = ComponentProps<'div'> & {
-  align: Alignment,
-}
+export type DividerProps = ComponentProps<"div"> & {
+  align: Alignment;
+};
 export function Divider({ children, align = "center" }: DividerProps) {
-  if (!children)
-    return (
-      <div className="border-t bg-gray-200" />
-    );
-  
+  if (!children) return <div className="border-t bg-gray-200" />;
+
   switch (align) {
     case Alignment.top:
     case Alignment.bottom:

@@ -13,7 +13,7 @@ type Props = ButtonProps;
 
 export default function AccountMenuButton(props: Props) {
   return (
-    <DropdownMenu >
+    <DropdownMenu>
       <DropdownMenuTrigger>
         <EllipsisVerticalIcon className={`h-5 w-5 ${props.className}`} />
       </DropdownMenuTrigger>

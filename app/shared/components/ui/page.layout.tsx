@@ -14,7 +14,7 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
     return (
       <Comp
         ref={ref}
-        className={twMerge("flex flex-col gap-4 min-h-screen", className)}
+        className={twMerge("flex flex-col min-h-screen", className)}
         {...props}
       >
         {children}
@@ -90,13 +90,9 @@ PageLayoutHeaderItem.displayName = "PageLayoutHeaderItem";
 
 const pageContentVariants = cva("flex-1", {
   variants: {
-    spacing: {
-      normal: "py-2 px-4",
-      compact: "p-2",
-    },
+    
   },
   defaultVariants: {
-    spacing: "compact",
   },
 });
 type PageLayoutContentProps = React.ComponentPropsWithRef<"div"> &
@@ -106,12 +102,12 @@ type PageLayoutContentProps = React.ComponentPropsWithRef<"div"> &
 const PageLayoutContent = React.forwardRef<
   HTMLDivElement,
   PageLayoutContentProps
->(({ className, spacing, asChild, ...props }, ref) => {
+>(({ className, asChild, ...props }, ref) => {
   const Comp = asChild ? Slot : "div";
   return (
     <Comp
       ref={ref}
-      className={twMerge(pageContentVariants({ spacing }), className)}
+      className={twMerge(pageContentVariants({  }), className)}
       {...props}
     />
   );

@@ -13,7 +13,11 @@ import {
   PopoverTrigger,
 } from "~/shared/components/popover";
 import Button from "~/shared/components/button";
-import { HexAlphaColorPicker, HexColorInput, HexColorPicker } from "react-colorful";
+import {
+  HexAlphaColorPicker,
+  HexColorInput,
+  HexColorPicker,
+} from "react-colorful";
 import { colors as presetColors } from "../data/colors";
 import { useLinkEditor } from "./link";
 import { useSectionEditor } from "./section";
@@ -62,14 +66,15 @@ export default function Editor({ id, type, ...attrs }: BlockProps) {
       spacing: {
         paddingBottom,
         paddingTop,
-      }, setting: {
+      },
+      setting: {
         blockName,
         hide,
-      }
+      },
     };
 
     //  submit(blockProps, { action: "", method: "post" });
-    alert(JSON.stringify(blockProps, null, 2));  
+    alert(JSON.stringify(blockProps, null, 2));
   };
 
   return (
@@ -172,7 +177,9 @@ function useSpacing() {
   const view = (
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center gap-x-4">
-        <Label htmlFor="padding-top" className="w-2/6">Top padding:</Label>
+        <Label htmlFor="padding-top" className="w-2/6">
+          Top padding:
+        </Label>
         <div className="flex items-center gap-1 w-2/6">
           <Input
             id="padding-top"
@@ -196,7 +203,9 @@ function useSpacing() {
       </div>
 
       <div className="flex items-center gap-x-4">
-        <Label htmlFor="padding-bottom" className="w-2/6">Bottom padding:</Label>
+        <Label htmlFor="padding-bottom" className="w-2/6">
+          Bottom padding:
+        </Label>
         <div className="flex items-center gap-1 w-2/6">
           <Input
             id="padding-bottom"
@@ -210,7 +219,7 @@ function useSpacing() {
           />
           px
         </div>
-        <Slider     
+        <Slider
           value={paddingBottom}
           onValueChange={setPaddingBottom}
           max={50}
@@ -234,7 +243,7 @@ type BackgroundType = {
   imageUrl: string;
 };
 
-function useBackground(): BackgroundType{
+function useBackground(): BackgroundType {
   const [color, setColor] = React.useState<string>("#ffffff");
   const [imageUrl, setImageUrl] = React.useState<string>("");
 
@@ -273,10 +282,10 @@ function useBackground(): BackgroundType{
       </div>
     </div>
   );
-  
+
   return {
     view,
     color,
-    imageUrl
-  }
+    imageUrl,
+  };
 }

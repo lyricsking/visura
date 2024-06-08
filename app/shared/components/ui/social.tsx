@@ -1,12 +1,12 @@
 import { ComponentProps, ComponentPropsWithRef } from "react";
 import { CommonProps } from "~/shared/types/common.props";
 
-type Props = ComponentProps<'div'> &{
+type Props = ComponentProps<"div"> & {
   sizeClass: string;
   wrapperClass?: string;
   socials: Socials[];
   iconOnly?: boolean;
-}
+};
 
 export default function Social(props: Props) {
   const { className, socials, ...otherProps } = props;

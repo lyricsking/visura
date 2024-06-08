@@ -1,26 +1,35 @@
 import Button from "~/shared/components/button";
 import React, { useState } from "react";
 import Editor from "./editor";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "~/shared/components/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/shared/components/sheet";
 import { Link } from "./link";
 import { Text } from "./text";
 import { Section } from "./section";
 
 export type BlockEditorKey =
-    //"Avatar"| 
-    "Link" 
-    //| "img" 
-    | "Text"
-    //| "ImageGallery"
-  | "Section"
+  //"Avatar"|
+  | "Link"
+  //| "img"
+  | "Text"
+  //| "ImageGallery"
+  | "Section";
 
 export const ElementEditors: Record<BlockEditorKey, any> = {
   //"Avatar": Avatar,
-  "Link":  Link,
+  Link: Link,
   //"img": "img",
-  "Text": Text,
+  Text: Text,
   //"ImageGallery":  Mansory,
-  "Section": Section,
+  Section: Section,
 } as const;
 
 export type BlockProps = {
@@ -29,16 +38,15 @@ export type BlockProps = {
   spacing: {
     paddingTop: number | string;
     paddingBottom: number | string;
-  },
+  };
   setting: {
     blockName?: string;
     hide?: boolean;
-  }
+  };
   props: Record<string, any>;
 };
 
-export default function Block({id,type, ...props}: BlockProps) {
-  
+export default function Block({ id, type, ...props }: BlockProps) {
   const Element = ElementEditors[type];
 
   const [isOpen, setIsOpen] = useState(false);
@@ -61,9 +69,9 @@ export default function Block({id,type, ...props}: BlockProps) {
           </SheetDescription>
         </SheetHeader>
         <div>
-          <Editor id={ id} type={ type} {...props} />
+          <Editor id={id} type={type} {...props} />
         </div>
-     </SheetContent>
+      </SheetContent>
     </Sheet>
   );
 }

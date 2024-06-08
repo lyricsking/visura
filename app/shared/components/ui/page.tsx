@@ -5,7 +5,7 @@ import Section, { SectionProps } from "~/dashboard/pages/components/section";
 
 export type LoaderData = {
   sections: SectionProps[];
-}; 
+};
 export const loader = () => {
   const sections: SectionProps[] = [
     {
@@ -15,8 +15,8 @@ export const loader = () => {
           id: "",
           element: "Button",
           background: "",
-          attrs: []
-        }
+          attrs: [],
+        },
       ] as BlockProps[],
     },
   ];
@@ -27,7 +27,7 @@ export const loader = () => {
 /** */
 export default function Page() {
   // Get route data from loader
-  const { sections } = useLoaderData() as LoaderData
+  const { sections } = useLoaderData() as LoaderData;
 
   // Return route view markup
   return sections.map((section: SectionProps) => <Section {...section} />);

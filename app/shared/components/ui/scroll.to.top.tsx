@@ -36,7 +36,10 @@ export default function ScrollToTop(): JSX.Element {
           onClick={backToTop}
           className=" bg-slate-400 rounded-full fixed bottom-4 right-4 p-4"
         >
-          <ArrowLongUpIcon className="h-6 w-6 text-slate-50" aria-hidden="true" />
+          <ArrowLongUpIcon
+            className="h-6 w-6 text-slate-50"
+            aria-hidden="true"
+          />
         </button>
       )}
     </>

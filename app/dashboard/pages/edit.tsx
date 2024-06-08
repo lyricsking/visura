@@ -23,7 +23,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
   console.log(formData);
 
-  let block: Partial<BlockProps>  = {};
+  let block: Partial<BlockProps> = {};
   const id = formData.get("id") as string;
   const type = formData.get("type") as BlockEditorKey;
   const attrs = formData.get("attrs") as string;
@@ -38,7 +38,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const sections = sectionsSession.getPage();
 
-
   sectionsSession.setPage(sections);
   return json(
     { success: true },
@@ -49,7 +48,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 // read the state from the cookie
 export const loader: LoaderFunction = async ({ params, request }) => {
   const edit = params["edit"];
-  
+
   let page;
   if (edit) page = await getPageFromServer(edit);
   else page = await getEditPageSession(request).getPage();
@@ -69,13 +68,11 @@ export const handle = {
   sidebarContent: (params: DashboardSidebarProps) => (
     <EditPageSidebar {...params} />
   ),
-}
+};
 
 export const links: LinksFunction = () => {
-  return [
-    ...(fonts.map(font => ({ rel: font.rel, href: font.href }))),
-  ]
-}
+  return [...fonts.map((font) => ({ rel: font.rel, href: font.href }))];
+};
 
 export default function Edit() {
   const params = useParams();
@@ -83,11 +80,8 @@ export default function Edit() {
 
   const submit = useSubmit();
   // A new blocks value is detected, we should persist to server
-  const saveBlock = ({ id, type}: BlockProps) => {
-    submit(
-      { id, type},
-      { action: "/dashboard/pages/edit", method: "post" }
-    );
+  const saveBlock = ({ id, type }: BlockProps) => {
+    submit({ id, type }, { action: "/dashboard/pages/edit", method: "post" });
   };
 
   return (

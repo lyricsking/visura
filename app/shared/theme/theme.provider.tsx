@@ -58,10 +58,7 @@ function ThemeProvider({
       return;
     }
 
-    persistTheme.submit(
-      { theme },
-      { action: "/theme/update", method: "post" }
-    );
+    persistTheme.submit({ theme }, { action: "/theme/update", method: "post" });
   }, [theme]);
 
   useEffect(() => {
