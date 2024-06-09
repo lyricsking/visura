@@ -57,17 +57,20 @@ const PageLayoutHeader = React.forwardRef<
 });
 PageLayoutHeader.displayName = "PageLayoutHeader";
 
-const headerItemVariants = cva("flex flex-row items-center justify-between", {
-  variants: {
-    spacing: {
-      normal: "gap-x-4 py-4 px-4",
-      compact: "gap-x-2 py-2 px-2",
+const headerItemVariants = cva(
+  "flex flex-row items-center justify-between h-screen",
+  {
+    variants: {
+      spacing: {
+        normal: "gap-x-4 py-4 px-4",
+        compact: "gap-x-2 py-2 px-2",
+      },
     },
-  },
-  defaultVariants: {
-    spacing: "normal",
-  },
-});
+    defaultVariants: {
+      spacing: "normal",
+    },
+  }
+);
 interface PageLayoutHeaderItemProps
   extends React.ComponentPropsWithRef<"div">,
     VariantProps<typeof headerItemVariants> {
@@ -89,11 +92,8 @@ const PageLayoutHeaderItem = React.forwardRef<
 PageLayoutHeaderItem.displayName = "PageLayoutHeaderItem";
 
 const pageContentVariants = cva("flex-1", {
-  variants: {
-    
-  },
-  defaultVariants: {
-  },
+  variants: {},
+  defaultVariants: {},
 });
 type PageLayoutContentProps = React.ComponentPropsWithRef<"div"> &
   VariantProps<typeof pageContentVariants> & {
@@ -107,7 +107,7 @@ const PageLayoutContent = React.forwardRef<
   return (
     <Comp
       ref={ref}
-      className={twMerge(pageContentVariants({  }), className)}
+      className={twMerge(pageContentVariants({}), className)}
       {...props}
     />
   );

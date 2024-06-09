@@ -6,25 +6,82 @@ import {
 } from "~/shared/components/ui/page.layout";
 import { QuizData, QuizProvider } from "./components/quiz.provider";
 
-const quizDataFn: () => QuizData = () => {
-  return {
-    healthgoal: [
-      { question: "What is the capital of France?", id: 1 },
-      { question: "What is the capital of Germany?", id: 2 },
-    ],
-    section2: [
-      { question: "What is 2 + 2?", id: 1 },
-      { question: "What is 3 + 5?", id: 2 },
-    ],
-    section3: [
-      { question: "What is the color of the sky?", id: 1 },
-      { question: "What is the color of grass?", id: 2 },
-    ],
-  };
-};
+const quizDataFn: QuizData = {
+  healthGoal: [
+    {
+      id: "primaryHealthGoal",
+      question: "What is your primary health goal?",
+      type: "single",
+      options: [
+        "Weight Loss",
+        "Muscle Gain",
+        "Improve Energy",
+        "General Wellness",
+      ],
+    },
+    {
+      id: "secondaryHealthGoal",
+      question: "Do you have any secondary health goals?",
+      type: "single",
+      options: [
+        "Improve Digestion",
+        "Better Sleep",
+        "Stress Reduction",
+        "Increased Flexibility",
+      ],
+    },
+  ],
+  dietaryPreference: [
+    {
+      id: "dietaryPreference",
+      question: "Do you follow any specific dietary preferences?",
+      type: "single",
+      options: ["None", "Vegetarian", "Vegan", "Gluten-Free", "Keto", "Paleo"],
+    },
+  ],
+  foodAvoidances: [
+    {
+      id: "foodAvoidances",
+      question:
+        "Are there any foods you need to avoid? (Select all that apply)",
+      type: "multiple",
+      options: ["Dairy", "Soy", "Nuts", "Processed Foods"],
+    },
+  ],
+  exerciseFrequency: [
+    {
+      id: "exerciseFrequency",
+      question: "How often do you exercise?",
+      type: "single",
+      options: ["Daily", "3-5 times a week", "1-2 times a week", "Rarely"],
+    },
+  ],
+  sleepHours: [
+    {
+      id: "sleepHours",
+      question: "How many hours do you usually sleep each night?",
+      type: "single",
+      options: [
+        "Less than 5 hours",
+        "5-7 hours",
+        "7-9 hours",
+        "More than 9 hours",
+      ],
+    },
+  ],
+  healthConcerns: [
+    {
+      id: "healthConcerns",
+      question: "Do you have any health concerns? (Select all that apply)",
+      type: "multiple",
+      options: ["Diabetes", "Hypertension", "Allergies", "None"],
+    },
+  ],
+} as const;
+export type QuizDataKey = keyof typeof quizDataFn;
 
 export const loader: LoaderFunction = ({ request }: LoaderFunctionArgs) => {
-  const quizData = quizDataFn();
+  const quizData = quizDataFn;
   return json({ quizData });
 };
 

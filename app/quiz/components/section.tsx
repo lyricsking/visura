@@ -1,7 +1,7 @@
-// app/routes/quiz/section1.tsx
 import { SectionType } from "..";
+import Question from "./question";
 
-const HealthGoal = ({
+const Section = ({
   questions,
   questionIndex,
   nextCallback,
@@ -10,9 +10,11 @@ const HealthGoal = ({
   const currentQuestion = questions[questionIndex];
 
   return (
-    <div>
-      <h2>Dietary Preference</h2>
-      <p>{currentQuestion.question}</p>
+    <div className="flex flex-col items-center justify-center h-[100%] py-8">
+      <h2></h2>
+      <div className="flex-1 overflow-y-auto no-scrollbar">
+        <Question {...currentQuestion} />
+      </div>
       <button onClick={() => nextCallback(currentQuestion.id, "")}>
         {isLastQuestion ? "Finish" : "Next"}
       </button>
@@ -20,4 +22,4 @@ const HealthGoal = ({
   );
 };
 
-export default HealthGoal;
+export default Section;

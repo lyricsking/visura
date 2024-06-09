@@ -1,8 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
 
+export type AnswerType = "single" | "multiple";
+
 export interface Question {
-  question: string;
   id: string;
+  question: string;
+  type: AnswerType;
+  options: string[];
 }
 
 export interface QuizData {
