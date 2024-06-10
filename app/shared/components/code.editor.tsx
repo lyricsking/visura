@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import DOMPurify from 'dompurify';
+import React, { useState } from "react";
+import DOMPurify from "dompurify";
 
 const NumberedLineInputForm = () => {
-  const [htmlContent, setHtmlContent] = useState('');
-  const [sanitizedHtmlContent, setSanitizedHtmlContent] = useState('');
+  const [htmlContent, setHtmlContent] = useState("");
+  const [sanitizedHtmlContent, setSanitizedHtmlContent] = useState("");
 
   const handleChange = (e) => {
     setHtmlContent(e.target.value);
@@ -28,16 +28,28 @@ const NumberedLineInputForm = () => {
             rows={10}
           ></textarea>
           <div className="absolute top-2 left-2 text-gray-400 select-none pointer-events-none">
-            {Array.from({ length: htmlContent.split('\n').length }).map((_, index) => (
-              <div key={index} className="leading-6">{index + 1}</div>
-            ))}
+            {Array.from({ length: htmlContent.split("\n").length }).map(
+              (_, index) => (
+                <div key={index} className="leading-6">
+                  {index + 1}
+                </div>
+              )
+            )}
           </div>
         </div>
-        <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Submit</button>
+        <button
+          type="submit"
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+        >
+          Submit
+        </button>
       </form>
       <div className="mt-8 w-full">
         <h3 className="text-lg font-semibold mb-2">Rendered HTML:</h3>
-        <div className="p-4 border border-gray-300 rounded-lg" dangerouslySetInnerHTML={{ __html: sanitizedHtmlContent }}></div>
+        <div
+          className="p-4 border border-gray-300 rounded-lg"
+          dangerouslySetInnerHTML={{ __html: sanitizedHtmlContent }}
+        ></div>
       </div>
     </div>
   );

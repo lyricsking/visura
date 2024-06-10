@@ -14,7 +14,7 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
     return (
       <Comp
         ref={ref}
-        className={twMerge("flex flex-col gap-4 min-h-screen", className)}
+        className={twMerge("flex flex-col min-h-screen", className)}
         {...props}
       >
         {children}
@@ -57,17 +57,20 @@ const PageLayoutHeader = React.forwardRef<
 });
 PageLayoutHeader.displayName = "PageLayoutHeader";
 
-const headerItemVariants = cva("flex flex-row items-center justify-between", {
-  variants: {
-    spacing: {
-      normal: "gap-x-4 py-4 px-4",
-      compact: "gap-x-2 py-2 px-2",
+const headerItemVariants = cva(
+  "flex flex-row items-center justify-between h-screen",
+  {
+    variants: {
+      spacing: {
+        normal: "gap-x-4 py-4 px-4",
+        compact: "gap-x-2 py-2 px-2",
+      },
     },
-  },
-  defaultVariants: {
-    spacing: "normal",
-  },
-});
+    defaultVariants: {
+      spacing: "normal",
+    },
+  }
+);
 interface PageLayoutHeaderItemProps
   extends React.ComponentPropsWithRef<"div">,
     VariantProps<typeof headerItemVariants> {
@@ -89,15 +92,8 @@ const PageLayoutHeaderItem = React.forwardRef<
 PageLayoutHeaderItem.displayName = "PageLayoutHeaderItem";
 
 const pageContentVariants = cva("flex-1", {
-  variants: {
-    spacing: {
-      normal: "py-2 px-4",
-      compact: "p-2",
-    },
-  },
-  defaultVariants: {
-    spacing: "compact",
-  },
+  variants: {},
+  defaultVariants: {},
 });
 type PageLayoutContentProps = React.ComponentPropsWithRef<"div"> &
   VariantProps<typeof pageContentVariants> & {
@@ -106,12 +102,12 @@ type PageLayoutContentProps = React.ComponentPropsWithRef<"div"> &
 const PageLayoutContent = React.forwardRef<
   HTMLDivElement,
   PageLayoutContentProps
->(({ className, spacing, asChild, ...props }, ref) => {
+>(({ className, asChild, ...props }, ref) => {
   const Comp = asChild ? Slot : "div";
   return (
     <Comp
       ref={ref}
-      className={twMerge(pageContentVariants({ spacing }), className)}
+      className={twMerge(pageContentVariants({}), className)}
       {...props}
     />
   );

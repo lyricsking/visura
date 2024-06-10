@@ -33,6 +33,10 @@ export default defineConfig({
             route("settings", "dashboard/settings.tsx");
           });
           route("theme/update", "shared/theme/theme.action.tsx");
+          route("quiz", "quiz/layout.tsx", () => {
+            route("", "quiz/index.tsx", { index: true });
+            //route("health", "quiz/health.goal.tsx");
+          });
         });
       },
     }),

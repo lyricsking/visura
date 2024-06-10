@@ -2,7 +2,10 @@ import { useFetcher } from "@remix-run/react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Dispatch, PropsWithChildren, SetStateAction } from "react";
 
-type BlocksContextType = [Block[] | null, Dispatch<SetStateAction<Block[] | null>>];
+type BlocksContextType = [
+  Block[] | null,
+  Dispatch<SetStateAction<Block[] | null>>
+];
 
 const BlocksContext = createContext<BlocksContextType | null>(null);
 
@@ -16,14 +19,13 @@ function BlocksProvider({
   const [blocks, setBlocks] = useState<Block[] | null>(() => {
     if (pBlocks) {
       //if (isValidBlock(pBlocks)) {
-        return pBlocks;
+      return pBlocks;
       //}
     }
-    
+
     return Block.Avatar;
-    
   });
-  
+
   // Fetcher used to post a request to server to persist blocks value
   const persistBlocks = useFetcher();
 

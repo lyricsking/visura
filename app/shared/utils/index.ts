@@ -3,7 +3,6 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { createCookie } from "@remix-run/node";
 
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

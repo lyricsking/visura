@@ -15,12 +15,8 @@ async function getEditPageSession(request: Request) {
   };
 }
 
-async function getPageFromServer(id: string): Promise<PageProps>{
-  return dbClient
-    .collection<PageProps>().find<PageProps>(
-      {id},
-    );
+async function getPageFromServer(id: string): Promise<PageProps> {
+  return dbClient.collection<PageProps>().find<PageProps>({ id });
 }
 
-export { getEditPageSession , getPageFromServer}
-
+export { getEditPageSession, getPageFromServer };

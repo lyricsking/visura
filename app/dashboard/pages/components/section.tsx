@@ -3,9 +3,7 @@ import { EditorType } from "./editor";
 
 export type SectionBlockProp = Omit<BlockProps, "type"> & {};
 
-export function Section(){
-  
-}
+export function Section() {}
 
 export type SectionEditorType = Omit<
   EditorType,

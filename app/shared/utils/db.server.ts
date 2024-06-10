@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from 'mongodb'
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 // declare prisma global variable
 declare global {
@@ -11,7 +11,7 @@ if (!global.__mongoClient) {
       version: ServerApiVersion.v1,
       strict: true,
       deprecationErrors: true,
-    }
+    },
   });
 }
 // Create a connection
