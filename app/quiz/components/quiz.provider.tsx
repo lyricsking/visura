@@ -18,14 +18,14 @@ export interface QuizData {
 
 export interface Answers {
   [key: string]: {
-    [key: number]: string;
+    [key: number]: any;
   };
 }
 
 interface QuizContextType {
   quizData: QuizData;
   answers: Answers;
-  saveAnswer: (section: string, questionId: number, answer: string) => void;
+  saveAnswer: (section: string, questionId: number, answer: any) => void;
   removeAnswer: (section: string, questionId: number) => void;
   progress: number;
 }
@@ -40,9 +40,7 @@ export function QuizProvider({ children, quizData }: QuizProviderType) {
   const [answers, setAnswers] = useState<Answers>({});
   const [progress, setProgress] = useState<number>(0);
 
-  const saveAnswer = (section: string, questionId: number, answer: string) => {
-    alert(JSON.stringify({ section, questionId, answer }, null, 2));
-
+  const saveAnswer = (section: string, questionId: number, answer: any) => {
     setAnswers((prev) => ({
       ...prev,
       [section]: {
