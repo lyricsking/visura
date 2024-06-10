@@ -1,8 +1,11 @@
-import { useCallback, useState } from "react";
-import { Question as QuestionType, useQuiz } from "./components/quiz.provider";
+import { useState } from "react";
+import {
+  Question,
+  Question as QuestionType,
+  useQuiz,
+} from "./components/quiz.provider";
 import { Progress } from "~/shared/components/progress";
 import { QuizDataKey } from "./layout";
-import HealthGoal from "./components/health.goal";
 import QuestionHandler from "./components/question";
 import { ArrowLongLeftIcon } from "@heroicons/react/16/solid";
 import Button from "~/shared/components/button";
@@ -15,7 +18,7 @@ export type SectionType = {
 };
 
 const Index = () => {
-  const { quizData, answers, saveAnswer, removeAnswer } = useQuiz();
+  const { quizData, answers, saveAnswer, removeAnswer, progress } = useQuiz();
 
   const [currentSection, setCurrentSection] =
     useState<QuizDataKey>("healthGoal");
@@ -24,14 +27,13 @@ const Index = () => {
   const sections = Object.keys(quizData) as Array<QuizDataKey>;
   const sectionIndex = sections.indexOf(currentSection);
   const questions = quizData[currentSection];
+  const question: Question = questions[currentQuestionIndex];
+  const currentAnswer =
+    answers && answers[currentSection]
+      ? answers[currentSection][question.id]
+      : undefined;
 
-  const questionsCount = Object.values(quizData).flat().length;
-  const overallProgress = Object.values(answers).reduce((prev, val) => {
-    return prev + Object.keys(val).length;
-  }, 0);
-  const progressPercent = (overallProgress / questionsCount) * 100;
-
-  const handleNext = (answer: string) => {
+  const handleNext = (answer: string | string[]) => {
     saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -42,35 +44,17 @@ const Index = () => {
   };
 
   const handlePrevious = () => {
-    removeAnswer(currentSection, questions[currentQuestionIndex - 1].id);
+    removeAnswer(currentSection, questions[currentQuestionIndex].id);
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     } else if (sectionIndex > 0) {
-      setCurrentSection(sections[sectionIndex - 1]);
-      setCurrentQuestionIndex(quizData[sections[sectionIndex - 1]].length - 1);
+      const prevSection = sections[sectionIndex - 1];
+      const prevQuestions = quizData[prevSection];
+      //removeAnswer(prevSection, prevQuestions[prevQuestions.length - 1].id);
+      setCurrentSection(prevSection);
+      setCurrentQuestionIndex(prevQuestions.length - 1);
     }
   };
-
-  const switchSection = useCallback(() => {
-    const isLastQuestion =
-      currentQuestionIndex < questions.length - 1
-        ? false
-        : sectionIndex < sections.length - 1
-        ? false
-        : true;
-
-    switch (currentSection) {
-      case "healthGoal":
-        return (
-          <HealthGoal
-            questions={questions}
-            questionIndex={currentQuestionIndex}
-            isLastQuestion={isLastQuestion}
-            nextCallback={handleNext}
-          />
-        );
-    }
-  }, [currentSection, currentQuestionIndex]);
 
   const isLastQuestion =
     currentQuestionIndex < questions.length - 1
@@ -82,7 +66,7 @@ const Index = () => {
   return (
     <div className="flex flex-col h-screen">
       <Progress
-        value={progressPercent}
+        value={progress}
         className="h-3 w-full border-2 rounded-none bg-indigo-200"
         indicatorColor="bg-indigo-400"
       />
@@ -92,7 +76,7 @@ const Index = () => {
           variant="text"
           className="py-4 px-6 border-e rounded-none"
           onClick={() => handlePrevious()}
-          disabled={sectionIndex === 0 && overallProgress === 0}
+          disabled={sectionIndex === 0 && progress === 0}
         >
           <ArrowLongLeftIcon className="h-5 w-5" />
         </Button>
@@ -100,9 +84,10 @@ const Index = () => {
 
       <div className="flex-1">
         <QuestionHandler
-          question={questions[currentQuestionIndex]}
+          question={question}
           isLastQuestion={isLastQuestion}
           onSave={handleNext}
+          answer={currentAnswer}
         />
       </div>
     </div>

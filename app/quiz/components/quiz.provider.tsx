@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type AnswerType = "single" | "multiple";
 
@@ -22,16 +22,12 @@ export interface Answers {
   };
 }
 
-interface Progress {
-  [key: string]: number;
-}
-
 interface QuizContextType {
   quizData: QuizData;
   answers: Answers;
   saveAnswer: (section: string, questionId: number, answer: string) => void;
   removeAnswer: (section: string, questionId: number) => void;
-  progress: Progress;
+  progress: number;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -42,24 +38,17 @@ type QuizProviderType = {
 };
 export function QuizProvider({ children, quizData }: QuizProviderType) {
   const [answers, setAnswers] = useState<Answers>({});
-  const [progress, setProgress] = useState<Progress>({
-    section1: 0,
-    section2: 0,
-    section3: 0,
-  });
+  const [progress, setProgress] = useState<number>(0);
 
   const saveAnswer = (section: string, questionId: number, answer: string) => {
+    alert(JSON.stringify({ section, questionId, answer }, null, 2));
+
     setAnswers((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
         [questionId]: answer,
       },
-    }));
-
-    setProgress((prev) => ({
-      ...prev,
-      [section]: Math.min(prev[section] + 1, quizData[section].length),
     }));
   };
 
@@ -72,12 +61,17 @@ export function QuizProvider({ children, quizData }: QuizProviderType) {
         [section]: newSectionAnswers,
       };
     });
-
-    setProgress((prev) => ({
-      ...prev,
-      [section]: Math.max(prev[section] - 1, 0),
-    }));
   };
+
+  const questionsCount = Object.values(quizData).flat().length;
+
+  useEffect(() => {
+    alert(JSON.stringify(answers, null, 2));
+    const overallProgress = Object.values(answers).reduce((prev, val) => {
+      return prev + Object.keys(val).length;
+    }, 0);
+    setProgress(Math.min((overallProgress / questionsCount) * 100, 100));
+  }, [answers, questionsCount]);
 
   return (
     <QuizContext.Provider

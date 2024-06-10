@@ -1,31 +1,42 @@
 import Button from "~/shared/components/button";
 import { Question } from "./quiz.provider";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "~/shared/components/radio";
 import { Label } from "~/shared/components/label";
 import { Checkbox } from "~/shared/components/checkbox";
 
 type QuestionHandlerProps = {
   question: Question;
+  answer?: string | string[];
   isLastQuestion: boolean;
-  onSave: (questionId: string, answer: string) => void;
+  onSave: (answer: string | string[]) => void;
 };
 
 export default function QuestionHandler({
-  question: { id, question, type, options },
+  question: { question, type, options },
+  answer: currentAnswer,
   isLastQuestion,
   onSave,
 }: QuestionHandlerProps) {
+  const [answer, setAnswer] = useState<string | string[]>(() => {});
   const switchType = useCallback(() => {
     switch (type) {
       case "single":
-        return <Single options={options} />;
+        return (
+          <Single answer={currentAnswer} options={options} onSave={setAnswer} />
+        );
       case "multiple":
-        return <Multiple options={options} />;
+        return (
+          <Multiple
+            answer={currentAnswer}
+            options={options}
+            onSave={setAnswer}
+          />
+        );
       default:
         return null;
     }
-  }, [type, options]);
+  }, [currentAnswer, type, options]);
 
   return (
     <div className="flex flex-col items-center justify-center h-full py-8 px-6">
@@ -39,7 +50,9 @@ export default function QuestionHandler({
         variant={"fill"}
         radius={"full"}
         className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
-        onClick={() => onSave(id, "Answer")}
+        onClick={() => {
+          onSave(answer);
+        }}
       >
         {isLastQuestion ? "Finish" : "Next"}
       </Button>
@@ -47,9 +60,15 @@ export default function QuestionHandler({
   );
 }
 
-function Single({ options }: { options: string[] }) {
+type AnswerTypeProps = {
+  options: string[];
+  answer?: string | string[];
+  onSave: QuestionHandlerProps["onSave"];
+};
+
+function Single({ answer, options, onSave }: AnswerTypeProps) {
   return (
-    <RadioGroup>
+    <RadioGroup value={answer as string} onValueChange={onSave}>
       {options.map((option) => (
         <div
           key={option}
@@ -72,7 +91,7 @@ function Single({ options }: { options: string[] }) {
   );
 }
 
-function Multiple({ options }: { options: string[] }) {
+function Multiple({ answer, options, onSave }: AnswerTypeProps) {
   return (
     <div className="flex flex-col space-y-2">
       {options.map((option) => (
@@ -80,7 +99,22 @@ function Multiple({ options }: { options: string[] }) {
           key={option}
           className="flex items-center space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white"
         >
-          <Checkbox id={option} className="h-5 w-5 rounded-none" />
+          <Checkbox
+            id={option}
+            className="h-5 w-5 rounded-none"
+            checked={answer?.includes(option)}
+            onCheckedChange={(checkState) => {
+              const prevState = [...(answer as string[])];
+
+              const optionIndex = answer?.indexOf(option) ?? -1;
+
+              if (!checkState && optionIndex >= 0)
+                delete prevState[optionIndex];
+              else prevState.push(option);
+
+              onSave(prevState);
+            }}
+          />
           <label
             htmlFor={option}
             className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
