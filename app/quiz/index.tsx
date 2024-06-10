@@ -33,7 +33,7 @@ const Index = () => {
       ? answers[currentSection][question.id]
       : undefined;
 
-  const handleNext = (answer: string | string[]) => {
+  const handleNext = (answer: any) => {
     saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -85,9 +85,9 @@ const Index = () => {
       <div className="flex-1">
         <QuestionHandler
           question={question}
+          selectedAnswer={currentAnswer}
+          onAnswer={handleNext}
           isLastQuestion={isLastQuestion}
-          onSave={handleNext}
-          answer={currentAnswer}
         />
       </div>
     </div>

@@ -29,8 +29,8 @@ const pageHeaderVariants = cva("flex flex-col w-full text-sm font-medium", {
   variants: {
     position: {
       relative: "relative",
-      sticky: "sticky top-0 left-0 right-0",
-      fixed: "fixed top-0 left-0 right-0 ",
+      sticky: "sticky z-40 top-0 left-0 right-0",
+      fixed: "fixed z-40 top-0 left-0 right-0 ",
     },
   },
   defaultVariants: {
@@ -57,20 +57,17 @@ const PageLayoutHeader = React.forwardRef<
 });
 PageLayoutHeader.displayName = "PageLayoutHeader";
 
-const headerItemVariants = cva(
-  "flex flex-row items-center justify-between h-screen",
-  {
-    variants: {
-      spacing: {
-        normal: "gap-x-4 py-4 px-4",
-        compact: "gap-x-2 py-2 px-2",
-      },
+const headerItemVariants = cva("flex flex-row items-center justify-between", {
+  variants: {
+    spacing: {
+      normal: "gap-x-4 py-4 px-4",
+      compact: "gap-x-2 py-2 px-2",
     },
-    defaultVariants: {
-      spacing: "normal",
-    },
-  }
-);
+  },
+  defaultVariants: {
+    spacing: "normal",
+  },
+});
 interface PageLayoutHeaderItemProps
   extends React.ComponentPropsWithRef<"div">,
     VariantProps<typeof headerItemVariants> {

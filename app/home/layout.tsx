@@ -12,8 +12,8 @@ import pkg from "../../package.json";
 export default function Layout() {
   return (
     <PageLayout>
-      <PageLayoutHeader>
-        <PageLayoutHeaderItem className="border">
+      <PageLayoutHeader position={"sticky"}>
+        <PageLayoutHeaderItem className="border bg-white">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">
               {pkg.name}.

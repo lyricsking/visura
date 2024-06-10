@@ -1,42 +1,51 @@
 import Button from "~/shared/components/button";
 import { Question } from "./quiz.provider";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "~/shared/components/radio";
 import { Label } from "~/shared/components/label";
 import { Checkbox } from "~/shared/components/checkbox";
 
 type QuestionHandlerProps = {
   question: Question;
-  answer?: string | string[];
+  selectedAnswer: any;
   isLastQuestion: boolean;
-  onSave: (answer: string | string[]) => void;
+  onAnswer: (answer: any) => void;
 };
 
 export default function QuestionHandler({
   question: { question, type, options },
-  answer: currentAnswer,
+  selectedAnswer,
+  onAnswer,
   isLastQuestion,
-  onSave,
 }: QuestionHandlerProps) {
-  const [answer, setAnswer] = useState<string | string[]>(() => {});
+  const [answer, setAnswer] = useState(selectedAnswer);
+
   const switchType = useCallback(() => {
     switch (type) {
       case "single":
         return (
-          <Single answer={currentAnswer} options={options} onSave={setAnswer} />
+          <Single
+            options={options}
+            selectedAnswer={selectedAnswer}
+            onAnswer={setAnswer}
+          />
         );
       case "multiple":
         return (
           <Multiple
-            answer={currentAnswer}
             options={options}
-            onSave={setAnswer}
+            selectedAnswer={selectedAnswer}
+            onAnswer={setAnswer}
           />
         );
       default:
         return null;
     }
-  }, [currentAnswer, type, options]);
+  }, [selectedAnswer, type, options]);
+
+  useEffect(() => {
+    //  alert(JSON.stringify(answer, null, 2));
+  }, [answer]);
 
   return (
     <div className="flex flex-col items-center justify-center h-full py-8 px-6">
@@ -51,7 +60,7 @@ export default function QuestionHandler({
         radius={"full"}
         className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
         onClick={() => {
-          onSave(answer);
+          answer && onAnswer(answer);
         }}
       >
         {isLastQuestion ? "Finish" : "Next"}
@@ -60,15 +69,16 @@ export default function QuestionHandler({
   );
 }
 
-type AnswerTypeProps = {
+type AnswerTypeProps = Pick<
+  QuestionHandlerProps,
+  "onAnswer" | "selectedAnswer"
+> & {
   options: string[];
-  answer?: string | string[];
-  onSave: QuestionHandlerProps["onSave"];
 };
 
-function Single({ answer, options, onSave }: AnswerTypeProps) {
+function Single({ options, selectedAnswer, onAnswer }: AnswerTypeProps) {
   return (
-    <RadioGroup value={answer as string} onValueChange={onSave}>
+    <RadioGroup value={selectedAnswer as string} onValueChange={onAnswer}>
       {options.map((option) => (
         <div
           key={option}
@@ -91,7 +101,7 @@ function Single({ answer, options, onSave }: AnswerTypeProps) {
   );
 }
 
-function Multiple({ answer, options, onSave }: AnswerTypeProps) {
+function Multiple({ options, selectedAnswer, onAnswer }: AnswerTypeProps) {
   return (
     <div className="flex flex-col space-y-2">
       {options.map((option) => (
@@ -102,17 +112,16 @@ function Multiple({ answer, options, onSave }: AnswerTypeProps) {
           <Checkbox
             id={option}
             className="h-5 w-5 rounded-none"
-            checked={answer?.includes(option)}
-            onCheckedChange={(checkState) => {
-              const prevState = [...(answer as string[])];
-
-              const optionIndex = answer?.indexOf(option) ?? -1;
-
-              if (!checkState && optionIndex >= 0)
-                delete prevState[optionIndex];
-              else prevState.push(option);
-
-              onSave(prevState);
+            checked={selectedAnswer?.includes(option)}
+            onCheckedChange={(checked) => {
+              const currentAnswers =
+                selectedAnswer && Array.isArray(selectedAnswer)
+                  ? [...selectedAnswer]
+                  : [];
+              if (checked) {
+                currentAnswers.push(option);
+                onAnswer(currentAnswers);
+              }
             }}
           />
           <label
