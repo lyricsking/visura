@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Question,
   Question as QuestionType,
@@ -9,6 +9,7 @@ import { QuizDataKey } from "./layout";
 import QuestionHandler from "./components/question";
 import { ArrowLongLeftIcon } from "@heroicons/react/16/solid";
 import Button from "~/shared/components/button";
+import OptionsHandler from "./components/question";
 
 export type SectionType = {
   questions: QuestionType[];
@@ -18,20 +19,17 @@ export type SectionType = {
 };
 
 const Index = () => {
-  const { quizData, answers, saveAnswer, removeAnswer, progress } = useQuiz();
+  const { quizData, saveAnswer, removeAnswer, progress } = useQuiz();
 
   const [currentSection, setCurrentSection] =
     useState<QuizDataKey>("healthGoal");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const sections = Object.keys(quizData) as Array<QuizDataKey>;
-  const sectionIndex = sections.indexOf(currentSection);
   const questions = quizData[currentSection];
   const question: Question = questions[currentQuestionIndex];
-  const currentAnswer =
-    answers && answers[currentSection]
-      ? answers[currentSection][question.id]
-      : undefined;
+
+  const sections = Object.keys(quizData) as Array<QuizDataKey>;
+  const sectionIndex = sections.indexOf(currentSection);
 
   const handleNext = (answer: any) => {
     saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
@@ -83,12 +81,24 @@ const Index = () => {
       </div>
 
       <div className="flex-1">
-        <QuestionHandler
-          question={question}
-          selectedAnswer={currentAnswer}
-          onAnswer={handleNext}
-          isLastQuestion={isLastQuestion}
-        />
+        <div className="flex flex-col items-center justify-center h-full py-8 px-6">
+          <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
+            {question.question}
+          </h3>
+
+          <div className="flex-1 my-6 p-2 w-full">
+            <OptionsHandler />
+          </div>
+
+          <Button
+            variant={"fill"}
+            radius={"full"}
+            className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
+            onClick={() => {}}
+          >
+            {isLastQuestion ? "Finish" : "Next"}
+          </Button>
+        </div>
       </div>
     </div>
   );
