@@ -18,23 +18,17 @@ export type SectionType = {
 };
 
 const Index = () => {
-  const { quizData, answers, saveAnswer, removeAnswer, progress } = useQuiz();
-
-  const [currentSection, setCurrentSection] =
-    useState<QuizDataKey>("healthGoal");
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-  const questions = quizData[currentSection];
-  const question: Question = questions[currentQuestionIndex];
+  const { quizData, questionsCount, answers, answersCount, saveAnswer, removeAnswer } = useQuiz();
 
   const sections = Object.keys(quizData) as Array<QuizDataKey>;
+  
+  const [currentSection, setCurrentSection] =
+    useState<QuizDataKey>("healthGoal");
   const sectionIndex = sections.indexOf(currentSection);
-  const isLastQuestion =
-    currentQuestionIndex < questions.length - 1
-      ? false
-      : sectionIndex < sections.length - 1
-      ? false
-      : true;
+  
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const questions = quizData[currentSection];
+  const question: Question = questions[currentQuestionIndex];
 
   const [answer, setAnswer] = useState();
   useEffect(() => {
@@ -43,22 +37,19 @@ const Index = () => {
       : null;
     setAnswer(currentAnswer);
   }, [currentSection, answers, question]);
-
+  
   const handleNext = () => {
-    if (
-      currentQuestionIndex < questions.length - 1 ||
-      sectionIndex < sections.length - 1
-    ) {
-      saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      } else if (sectionIndex < sections.length - 1) {
-        setCurrentSection(sections[sectionIndex + 1]);
-        setCurrentQuestionIndex(0);
-      }
-    } else {
-      alert(JSON.stringify(answers, null, 2));
-    }
+    
+    saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
+       if (currentQuestionIndex < questions.length - 1) {
+         setCurrentQuestionIndex(currentQuestionIndex + 1);
+       } else if (sectionIndex < sections.length - 1) {
+         setCurrentSection(sections[sectionIndex + 1]);
+         setCurrentQuestionIndex(0);
+       }else{
+         
+       }
+       
   };
 
   const handlePrevious = () => {
@@ -77,7 +68,7 @@ const Index = () => {
   return (
     <div className="flex flex-col h-screen">
       <Progress
-        value={progress}
+        value={Math.min((answersCount / questionsCount) * 100, 100)}
         className="h-3 w-full border-2 rounded-none bg-indigo-200"
         indicatorColor="bg-indigo-400"
       />
@@ -87,7 +78,7 @@ const Index = () => {
           variant="text"
           className="py-4 px-6 border-e rounded-none"
           onClick={() => handlePrevious()}
-          disabled={sectionIndex === 0 && progress === 0}
+          disabled={answersCount === 0}
         >
           <ArrowLongLeftIcon className="h-5 w-5" />
         </Button>
@@ -113,8 +104,9 @@ const Index = () => {
             radius={"full"}
             className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
             onClick={handleNext}
+            disabled={answersCount>= questionsCount}
           >
-            {isLastQuestion ? "Finish" : "Next"}
+            {answersCount === questionsCount-1 ? "Finish" : "Next"}
           </Button>
         </div>
       </div>
