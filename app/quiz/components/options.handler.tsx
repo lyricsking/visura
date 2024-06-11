@@ -18,8 +18,6 @@ export default function OptionsHandler({
   onAnswerSelected,
   options,
 }: AnswerProps) {
-  //const [answer, setAnswer] = useState(currentAnswer);
-
   const switchType = useCallback(() => {
     switch (answerType) {
       case "single":

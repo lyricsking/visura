@@ -6,10 +6,9 @@ import {
 } from "./components/quiz.provider";
 import { Progress } from "~/shared/components/progress";
 import { QuizDataKey } from "./layout";
-import QuestionHandler from "./components/question";
 import { ArrowLongLeftIcon } from "@heroicons/react/16/solid";
 import Button from "~/shared/components/button";
-import OptionsHandler from "./components/question";
+import OptionsHandler from "./components/options.handler";
 
 export type SectionType = {
   questions: QuestionType[];
@@ -19,7 +18,7 @@ export type SectionType = {
 };
 
 const Index = () => {
-  const { quizData, saveAnswer, removeAnswer, progress } = useQuiz();
+  const { quizData, answers, saveAnswer, removeAnswer, progress } = useQuiz();
 
   const [currentSection, setCurrentSection] =
     useState<QuizDataKey>("healthGoal");
@@ -30,14 +29,35 @@ const Index = () => {
 
   const sections = Object.keys(quizData) as Array<QuizDataKey>;
   const sectionIndex = sections.indexOf(currentSection);
+  const isLastQuestion =
+    currentQuestionIndex < questions.length - 1
+      ? false
+      : sectionIndex < sections.length - 1
+      ? false
+      : true;
 
-  const handleNext = (answer: any) => {
-    saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (sectionIndex < sections.length - 1) {
-      setCurrentSection(sections[sectionIndex + 1]);
-      setCurrentQuestionIndex(0);
+  const [answer, setAnswer] = useState();
+  useEffect(() => {
+    const currentAnswer = answers[currentSection]
+      ? answers[currentSection][question.id]
+      : null;
+    setAnswer(currentAnswer);
+  }, [currentSection, answers, question]);
+
+  const handleNext = () => {
+    if (
+      currentQuestionIndex < questions.length - 1 ||
+      sectionIndex < sections.length - 1
+    ) {
+      saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      } else if (sectionIndex < sections.length - 1) {
+        setCurrentSection(sections[sectionIndex + 1]);
+        setCurrentQuestionIndex(0);
+      }
+    } else {
+      alert(JSON.stringify(answers, null, 2));
     }
   };
 
@@ -53,13 +73,6 @@ const Index = () => {
       setCurrentQuestionIndex(prevQuestions.length - 1);
     }
   };
-
-  const isLastQuestion =
-    currentQuestionIndex < questions.length - 1
-      ? false
-      : sectionIndex < sections.length - 1
-      ? false
-      : true;
 
   return (
     <div className="flex flex-col h-screen">
@@ -87,14 +100,19 @@ const Index = () => {
           </h3>
 
           <div className="flex-1 my-6 p-2 w-full">
-            <OptionsHandler />
+            <OptionsHandler
+              answerType={question.type}
+              currentAnswer={answer}
+              onAnswerSelected={setAnswer}
+              options={question.options}
+            />
           </div>
 
           <Button
             variant={"fill"}
             radius={"full"}
             className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
-            onClick={() => {}}
+            onClick={handleNext}
           >
             {isLastQuestion ? "Finish" : "Next"}
           </Button>

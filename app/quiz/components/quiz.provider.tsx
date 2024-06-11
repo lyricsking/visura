@@ -64,7 +64,6 @@ export function QuizProvider({ children, quizData }: QuizProviderType) {
   const questionsCount = Object.values(quizData).flat().length;
 
   useEffect(() => {
-    alert(JSON.stringify(answers, null, 2));
     const overallProgress = Object.values(answers).reduce((prev, val) => {
       return prev + Object.keys(val).length;
     }, 0);
