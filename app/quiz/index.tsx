@@ -39,17 +39,18 @@ const Index = () => {
   }, [currentSection, answers, question]);
   
   const handleNext = () => {
-    
-    saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
-       if (currentQuestionIndex < questions.length - 1) {
-         setCurrentQuestionIndex(currentQuestionIndex + 1);
-       } else if (sectionIndex < sections.length - 1) {
-         setCurrentSection(sections[sectionIndex + 1]);
-         setCurrentQuestionIndex(0);
-       }else{
-         
-       }
-       
+    if(answersCount <= questionsCount-1){
+      saveAnswer(currentSection, questions[currentQuestionIndex].id, answer);
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        
+      } else if (sectionIndex < sections.length - 1) {
+        setCurrentSection(sections[sectionIndex + 1]);
+        setCurrentQuestionIndex(0);
+      }else if(answersCount === questionsCount-1){
+        alert(JSON.stringify(answers, null, 2))
+      }
+    }
   };
 
   const handlePrevious = () => {
