@@ -70,7 +70,7 @@ const Index = () => {
     <div className="flex flex-col h-screen">
       <Progress
         value={Math.min((answersCount / questionsCount) * 100, 100)}
-        className="h-3 w-full border-2 rounded-none bg-indigo-200"
+        className="h-3 w-full border rounded-none bg-indigo-200"
         indicatorColor="bg-indigo-400"
       />
 
@@ -99,17 +99,17 @@ const Index = () => {
               options={question.options}
             />
           </div>
-
-          <Button
-            variant={"fill"}
-            radius={"full"}
-            className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
-            onClick={handleNext}
-            disabled={answersCount>= questionsCount}
-          >
-            {answersCount === questionsCount-1 ? "Finish" : "Next"}
-          </Button>
         </div>
+
+        <Button
+          variant={"fill"}
+          radius={"full"}
+          className="fixed z-40 bottom-6 h-12 w-2/3 text-xl text-white text-center bg-indigo-400"
+          onClick={handleNext}
+          disabled={answersCount>= questionsCount}
+        >
+          {answersCount === questionsCount-1 ? "Finish" : "Next"}
+        </Button>
       </div>
     </div>
   );
