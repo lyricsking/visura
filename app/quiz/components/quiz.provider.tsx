@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export type AnswerType = "single" | "multiple";
 
@@ -28,7 +28,7 @@ interface QuizContextType {
   saveAnswer: (section: string, questionId: number, answer: any) => void;
   removeAnswer: (section: string, questionId: number) => void;
   questionsCount: number;
-  answersCount: number
+  answersCount: number;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -62,14 +62,21 @@ export function QuizProvider({ children, quizData }: QuizProviderType) {
   };
 
   const questionsCount = Object.values(quizData).flat().length;
-  
+
   const answersCount = Object.values(answers).reduce((prev, val) => {
-      return prev + Object.keys(val).length;
-    }, 0);
-    
+    return prev + Object.keys(val).length;
+  }, 0);
+
   return (
     <QuizContext.Provider
-      value={{ quizData, answers, saveAnswer, removeAnswer, progress }}
+      value={{
+        quizData,
+        questionsCount,
+        answers,
+        answersCount,
+        saveAnswer,
+        removeAnswer,
+      }}
     >
       {children}
     </QuizContext.Provider>
