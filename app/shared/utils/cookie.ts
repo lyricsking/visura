@@ -2,7 +2,7 @@ import { createCookie, createCookieSessionStorage } from "@remix-run/node";
 
 export const prefs = createCookie("prefs");
 
-export const sessionSecret = process.env.SESSION_SECRET;
+const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
 }
@@ -17,3 +17,5 @@ export const cookieStorage = createCookieSessionStorage({
     httpOnly: true,
   },
 });
+
+export const session =  await cookieStorage.getSession(request.headers.get("Cookie"));

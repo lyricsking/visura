@@ -35,6 +35,8 @@ export default defineConfig({
           route("theme/update", "shared/theme/theme.action.tsx");
           route("quiz", "quiz/layout.tsx", () => {
             route("", "quiz/index.tsx", { index: true });
+            route("getRecommendations", "quiz/quiz.action.tsx");
+            
             //route("health", "quiz/health.goal.tsx");
           });
         });
