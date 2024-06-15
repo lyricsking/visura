@@ -18,4 +18,5 @@ export const cookieStorage = createCookieSessionStorage({
   },
 });
 
-export const session =  await cookieStorage.getSession(request.headers.get("Cookie"));
+export const session = async (request: Request) =>
+  await cookieStorage.getSession(request.headers.get("Cookie"));
