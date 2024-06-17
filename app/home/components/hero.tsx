@@ -4,6 +4,8 @@ import { findFontByName } from "~/shared/data/fonts";
 import { cn } from "~/shared/utils";
 
 export default function Hero() {
+  const { startQuiz } = useQuiz();
+  
   const font = findFontByName("Playfair Display");
 
   return (
@@ -24,19 +26,14 @@ export default function Hero() {
             <br /> Curated and delivered, where and when you want it.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link
-              to="/quiz"
-              className={cn(
-                buttonVariants({
-                  variant: "text",
-                  radius: "md",
-                  className:
-                    "text-white bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
-                })
-              )}
+            <Button
+              variant="text"
+              radius="md"
+              className="text-white bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={()=>startQuiz()}
             >
               Get started
-            </Link>
+            </Button>
 
             <a
               href="#explanation"

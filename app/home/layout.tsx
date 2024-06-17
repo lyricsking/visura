@@ -10,6 +10,8 @@ import {
 import pkg from "../../package.json";
 
 export default function Layout() {
+  const { startQuiz } = useQuiz();
+  
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
@@ -19,7 +21,12 @@ export default function Layout() {
               {pkg.name}.
             </h1>
           </Link>
-          <Link to="/quiz">Get started</Link>
+          <Button 
+            variant="outline" 
+            onClick={()=>startQuiz()}
+          >
+            Get started
+          </Button>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
