@@ -43,13 +43,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function Home() {
-  const { q } = useLoaderData<typeof loader>();
-
-  const getStartedButtonCn = buttonVariants({
-    radius: "full",
-    variant: "outline",
-    size: "lg",
-  });
+  const { startQuiz } = useQuiz();
 
   return (
     <div className="w-full">
@@ -57,18 +51,14 @@ export default function Home() {
       <Hero />
       <hr className="border-t" />
       <Explanation />
-      <Link
-        to="/quiz"
-        className={cn(
-          getStartedButtonCn,
-          "flex items-center justify-center mx-auto",
-          "text-xl capitalize",
-          "border-2",
-          "-mt-8 mb-8 max-w-[70%] h-16"
-        )}
-      >
+      <Button
+        radius="full"
+        variant="outline"
+        size="lg"
+        className="flex items-center justify-center mx-auto text-xl capitalize border-2 -mt-8 mb-8 max-w-[70%] h-16"
+        onClick={()=>startQuiz()}>
         start quiz
-      </Link>
+      </Button>
     </div>
   );
 }

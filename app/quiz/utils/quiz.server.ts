@@ -2,6 +2,9 @@ import { cookieStorage, session } from "~/shared/utils/cookie";
 import { dbClient } from "~/shared/utils/db.server";
 import { ObjectId } from "mongodb";
 import { Answers } from "./components/quiz.provider";
+import { createCookie } from "@remix-run/node";
+
+export const quizPrefs = createCookie("quizPrefs");
 
 const recommendationIdKey = "quiz-response";
 
