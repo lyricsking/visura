@@ -1,5 +1,5 @@
-import { Link } from "@remix-run/react";
-import { buttonVariants } from "~/shared/components/button";
+import { useQuiz } from "~/quiz/utils/quiz";
+import Button, { buttonVariants } from "~/shared/components/button";
 import { findFontByName } from "~/shared/data/fonts";
 import { cn } from "~/shared/utils";
 

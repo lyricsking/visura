@@ -1,3 +1,6 @@
+import { useSubmit } from "@remix-run/react";
+import { getNanoid } from "~/shared/utils";
+
 export type AnswerType = "single" | "multiple" | "tag";
 
 const Operators = {
@@ -8,41 +11,41 @@ const Operators = {
   gte: "gte",
   contains: "contains",
   notNull: "notNull",
-  isNull: "isNull"
-} as const
+  isNull: "isNull",
+} as const;
 type Operators = keyof typeof Operators;
 
 type QuestionCondition = {
-  operator: Operators,
-  questionId: string,
-  value?: string,
-}
+  operator: Operators;
+  questionId: string;
+  value?: string;
+};
 
 export interface Question {
   id: string;
   question: string;
-  description?: string,
-  type: AnswerType
+  description?: string;
+  type: AnswerType;
   options: string[];
-  condition?: QuestionCondition
+  condition?: QuestionCondition;
 }
 
 export interface Answers {
-  [key: string]: any;
+  [key: string]: string | string[];
 }
 
 export const QuizAction = {
   cacheQuestions: "cacheQuestions",
-  cacheAnswers: "cacheAnswer"
-} as const
-export type QuizAction = keyof typeof QuizAction
+  cacheAnswers: "cacheAnswer",
+} as const;
+export type QuizAction = keyof typeof QuizAction;
 
 const questions: Question[] = [
-    {
-      id: "healthGoal",
-      question: "What are your health goal? (Select all that apply)",
-      type: "single",
-      options: [
+  {
+    id: "healthGoal",
+    question: "What are your health goal? (Select all that apply)",
+    type: "single",
+    options: [
       "Weight Loss",
       "Muscle Gain",
       "Improve Energy",
@@ -57,44 +60,28 @@ const questions: Question[] = [
       "Body detoxification",
       "Skin health",
       "Improve Sexual health",
-      "Hormone balance"
-      ],
-    },
-    {
+      "Hormone balance",
+    ],
+  },
+  {
     id: "dietaryPreference",
     question: "Do you follow any specific dietary preferences?",
     type: "single",
-    options: [
-      "None", 
-      "Vegetarian", 
-      "Vegan", 
-      "Gluten-Free", 
-      "Keto", 
-      "Paleo"
-    ],
-    },
-    {
+    options: ["None", "Vegetarian", "Vegan", "Gluten-Free", "Keto", "Paleo"],
+  },
+  {
     id: "foodAvoidances",
     question: "Are there any foods you need to avoid? (Select all that apply)",
     type: "multiple",
-    options: [
-      "Dairy", 
-      "Soy", 
-      "Nuts", 
-      "Processed Foods"
-    ],
-    },
-    {
+    options: ["Dairy", "Soy", "Nuts", "Processed Foods"],
+  },
+  {
     id: "exerciseFrequency",
     question: "How often do you exercise?",
     type: "single",
-    options: [
-      "Daily", 
-      "3-5 times a week", 
-      "1-2 times a week", "Rarely"
-    ],
-    },
-   {
+    options: ["Daily", "3-5 times a week", "1-2 times a week", "Rarely"],
+  },
+  {
     id: "sleepHours",
     question: "How many hours do you usually sleep each night?",
     type: "single",
@@ -105,7 +92,7 @@ const questions: Question[] = [
       "More than 9 hours",
     ],
   },
-    {
+  {
     id: "healthConcerns",
     question: "Do you have any health concerns? (Select all that apply)",
     type: "multiple",
@@ -116,9 +103,9 @@ const questions: Question[] = [
       "Blood Pressure",
       "Fatigue",
       "Cholesterol",
-      "Diabetes", 
+      "Diabetes",
       "Inflammation",
-      "Hypertension",       
+      "Hypertension",
       "Allergies",
       "Anxiety",
       "Stress",
@@ -129,59 +116,91 @@ const questions: Question[] = [
       "Eye",
       "Liver",
       "Menopause",
-      "Menstrual"
+      "Menstrual",
     ],
-    }
-  ];
+  },
+];
 
-export function useQuiz(): Record<string, Question> {
+export function useQuiz() {
   const submit = useSubmit();
 
-  let questionsWithId = {};
+  const questionsWithId: { [key: string]: Question } = {};
 
   questions.forEach((question) => {
-    const id = getNanoid(15);
+    const id = getNanoid(21);
     questionsWithId[id] = question;
-  })
-
-  const startQuiz = ()=>submit({
-    action: QuizAction["cacheQuestions"],
-    questions: questionsWithId
-  }, {
-    method: "post",
-    action: "/quiz?index"
   });
-  
-  return { startQuiz }
+
+  const startQuiz = () =>
+    submit(
+      {
+        action: QuizAction["cacheQuestions"],
+        questions: JSON.stringify(questionsWithId),
+      },
+      {
+        method: "post",
+        action: "/quiz?index",
+      }
+    );
+
+  return {
+    startQuiz,
+  };
 }
 
-export function filterQuestions(questionsObj: Record<string, Question>, answers: Answers){
-  const questions = Object.values(questionsObj);
-  
-  const filteredQuestions:Record<string, Question> = {};
-  
-  questions.filter((question) => {
-    return !question.condition;
-    
-    const condition: QuestionCondition = question.condition;
-    const answer = answers[condition.questionId];
-    switch (condition.operator) {
-      case 'equals':
-        return answer == condition.value;
-      case 'lt':
-        return answer < condition.value;
-      case 'gt':
-        return answer > condition.value;
-      case 'lte':
-        return answer <= condition.value;
-      case 'gte':
-        return answer >= condition.value;
-      case 'contains':
-        return answer.includes(condition.value);
-      case 'notNull':
-        return answer;
-      case 'isNull':
-        return !answer;
+export function filterQuestions(
+  questions: Record<string, Question>,
+  answers: Answers
+) {
+  const questionsKeys = Object.keys(questions);
+  const filteredQuestions: Record<string, Question> = {};
+
+  questionsKeys.forEach((key) => {
+    const question = questions[key];
+    if (!question.condition) {
+      filteredQuestions[key] = question;
+      return;
+    } else {
+      const condition: QuestionCondition = question.condition;
+      const answer = answers[condition.questionId];
+      switch (condition.operator) {
+        case "equals":
+          answer == condition.value && (filteredQuestions[key] = question);
+          break;
+        case "lt":
+          condition.value &&
+            answer < condition.value &&
+            (filteredQuestions[key] = question);
+          break;
+        case "gt":
+          condition.value &&
+            answer > condition.value &&
+            (filteredQuestions[key] = question);
+          break;
+        case "lte":
+          condition.value &&
+            answer <= condition.value &&
+            (filteredQuestions[key] = question);
+          break;
+        case "gte":
+          condition.value &&
+            answer >= condition.value &&
+            (filteredQuestions[key] = question);
+          break;
+        case "contains":
+          condition.value &&
+            answer.includes(condition.value) &&
+            (filteredQuestions[key] = question);
+          break;
+        case "notNull":
+          answer && (filteredQuestions[key] = question);
+          break;
+        case "isNull":
+          !answer && (filteredQuestions[key] = question);
+          break;
+      }
     }
-  })
+  });
+
+  return filteredQuestions;
 }

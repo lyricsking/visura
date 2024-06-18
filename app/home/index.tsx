@@ -1,24 +1,22 @@
 import {
   json,
-  LinkDescriptor,
   LinksFunction,
   LoaderFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
 import pkg from "../../package.json";
 import Hero from "./components/hero";
 import HomeCarousel from "./components/home.carousel";
 import Explanation from "./components/explanation";
-import { buttonVariants } from "~/shared/components/button";
-import { cn } from "~/shared/utils";
 import { findFontByName } from "~/shared/data/fonts";
+import { useQuiz } from "~/quiz/utils/quiz";
+import Button from "~/shared/components/button";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
   const raleway = findFontByName("Raleway");
 
-  let links = [];
+  const links = [];
 
   if (merriweather)
     links.push({ rel: merriweather.rel, href: merriweather.href });

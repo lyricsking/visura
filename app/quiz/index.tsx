@@ -1,106 +1,139 @@
-import { useEffect, useState } from "react";
 import {
-  Question,
-  Question as QuestionType,
-  useQuiz,
-} from "./components/quiz.provider";
-import { Progress } from "~/shared/components/progress";
-import { QuizDataKey } from "./layout";
-import { ArrowLongLeftIcon } from "@heroicons/react/16/solid";
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
+import { quizPrefs } from "./utils/quiz.server";
+import { Answers, Question, QuizAction, filterQuestions } from "./utils/quiz";
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import Button from "~/shared/components/button";
-import OptionsHandler from "./components/options.handler";
-import { useNavigate } from "@remix-run/react";
-import { useFetcher } from "react-router-dom";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import OptionsHandler from "./components/options.handler";
+import { Progress } from "~/shared/components/progress";
+import { useEffect } from "react";
 
-const action = ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const cookieHeader = request.headers.get("Cookie");
   const cookie = (await quizPrefs.parse(cookieHeader)) || {};
-  
+
   const formData = await request.formData();
 
-  const action = formData.get("action")
-  if(action === QuizAction.cacheQuestions) {
-    const questions = formData.get("questions");
-    
-    return json({ questions }, {
-      headers: {
-        "Set-Cookie": await quizPrefs.serialize(cookie),
-      },
-    });
-  } else if(action=== QuizAction.cacheAnswers){
-   
-    const answers = formData.get("answers");
-  
-    cookie.answers = answers;
+  const action = formData.get("action");
+  if (action === QuizAction.cacheQuestions && formData.has("questions")) {
+    const questions = JSON.parse(formData.get("questions") as string);
 
-    return json({ success: true }, {
-      headers: {
-        "Set-Cookie": await quizPrefs.serialize(cookie),
-      },
-    });
+    cookie.questions = questions;
+
+    return json(
+      { questions },
+      {
+        headers: {
+          "Set-Cookie": await quizPrefs.serialize(cookie),
+        },
+      }
+    );
+  } else if (action === QuizAction.cacheAnswers) {
+    const answers = formData.get("answers") as string;
+
+    cookie.answers = JSON.parse(answers);
+
+    return json(
+      { success: true },
+      {
+        headers: {
+          "Set-Cookie": await quizPrefs.serialize(cookie),
+        },
+      }
+    );
   }
-}
+};
 
-const loader = ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const cookieHeader = request.headers.get("Cookie");
   const cookie = (await quizPrefs.parse(cookieHeader)) || {};
-  
-  return json({ 
-    questions:  cookie.questions,
-    answers: cookie.answers, 
+
+  const url = new URL(request.url);
+
+  const questions = cookie.questions;
+  const answers = cookie.answers || {};
+
+  if (!questions) return redirect("/");
+
+  let quizId = url.searchParams.get("id");
+  if (!quizId) {
+    const lastIndex = Object.keys(answers).length;
+
+    quizId = Object.keys(questions)[lastIndex || 0];
+    url.searchParams.append("id", quizId);
+    return redirect(url.href);
+  }
+
+  return json({
+    questionId: quizId,
+    questions: questions,
+    answers: cookie.answers || {},
   });
-}
+};
 
 const Index = () => {
   //  Reterieve loader data
-  const {questions, answers } = useLoaderData<typeof loader>();
-  //  Use init the questions belonging to the the active section
-  const filteredQuestions = filterQuestions(questions,answers);
+  const { questionId, questions, answers } = useLoaderData<typeof loader>();
   //  Count the numbers of questions
-  const questionsCount = filteredQuestions.length;
-  
-  const answersCount = answers.length;
-   // Since answersCount will share same index with the last answered question, we pick the next quiz question by the (index + 1) which same as answersCount.
-  const questionId = Object.keys(questions)[answersCount]
-  
+  const questionsCount = Object.keys(questions).length;
+
+  const answersCount = Object.keys(answers).length;
+
   //  Obtain the current question by questionId
   const question: Question = questions[questionId];
- 
+
   //const currentAnswer = answers[questionId];
-  
+
   //  Init navigator
-  const navigation = useNavigation();
+  const navigate = useNavigate();
   //  init submit function to submit quiz
-  const submit = useSubmit();
-  const onSubmit = (answers: any)=>{
-    submit({
-      action: QuizAction.cacheAnswers,
-      answers
-    }, 
-    {
-      method: "POST",
-      action: "/quiz?index",
-    });
-  }
-  
-  const isSubmitting = navigation.state !== "idle";
-  
-  /** Saves the current quiz's answer and move to the next quiz or finish the quiz if otherwise. */
-  const handleNext = (answer: any) => {
-    //  If we have not the last question
-    if (answersCount < questionsCount-1) {
-      const newAnswers = {
-        ...answers, 
-        questionId: answer
+  const submit = useFetcher();
+  const onSubmit = (answers: Answers) => {
+    submit.submit(
+      {
+        action: QuizAction.cacheAnswers,
+        answers: JSON.stringify(answers),
+      },
+      {
+        method: "POST",
+        action: "/quiz?index",
       }
-      onSubmit(newAnswers);
-    }
+    );
+  };
+
+  const isSubmitting =
+    answersCount == questionsCount - 1 && submit.state !== "idle";
+  useEffect(() => {
+    if (!submit.data) return;
+    //  Use init the questions belonging to the the active section
+    const filteredQuestions = filterQuestions(questions, answers);
+    const nextQuizId = Object.keys(filteredQuestions)[answersCount];
+    //alert(JSON.stringify(answers));
+    //alert(answersCount);
+
+    navigate(`/quiz?id=${nextQuizId}`);
+  }, [submit.data, questions, answers]);
+
+  /** Saves the current quiz's answer and move to the next quiz or finish the quiz if otherwise. */
+  const handleNext = (answer: string) => {
+    //  If we have not the last question
+    //if (answersCount < questionsCount - 1) {
+    const newAnswers: Answers = {
+      ...answers,
+      [questionId]: answer,
+    };
+    onSubmit(newAnswers);
+    //}
   };
 
   const handlePrevious = () => {
-    if(answersCount >0){
-      const newAnswers = answers.filter((_, key)=> key != questionId);
+    if (answersCount > 0) {
+      const newAnswers = answers.filter((_, key) => key != questionId);
       onSubmit(newAnswers);
     }
   };
@@ -116,7 +149,7 @@ const Index = () => {
           <div className=" border-b">
             <Button
               variant="text"
-              className="gap-2 py-6 px-2 border-e rounded-none"
+              className="border-e"
               onClick={() => handlePrevious()}
               disabled={answersCount === 0}
             >
@@ -132,8 +165,8 @@ const Index = () => {
           <div className="flex-1 my-6 p-2 w-full">
             <OptionsHandler
               answerType={question.type}
-              currentAnswer={answer}
-              onAnswerSelected={setAnswer}
+              currentAnswer={"answer"}
+              onAnswerSelected={() => {}}
               options={question.options}
             />
           </div>
@@ -143,8 +176,8 @@ const Index = () => {
               variant={"fill"}
               radius={"full"}
               className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
-              onClick={handleNext}
-              disabled={isSubmitting || answersCount <= questionsCount}
+              onClick={() => handleNext("Your answer")}
+              disabled={isSubmitting || answersCount >= questionsCount - 1}
             >
               {answersCount === questionsCount - 1 ? "Finish" : "Next"}
             </Button>
