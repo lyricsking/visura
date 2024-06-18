@@ -146,9 +146,10 @@ const Index = () => {
         </div>
       ) : (
         <>
-          <div className=" border-b">
+          <div className="border-b">
+          
             <Button
-              variant="text"
+              variant="icon"
               className="border-e"
               onClick={() => handlePrevious()}
               disabled={answersCount === 0}
@@ -157,6 +158,12 @@ const Index = () => {
               Back
             </Button>
           </div>
+          
+          <Progress
+            value={Math.min((answersCount / questionsCount) * 100, 100)}
+            className="h-3 w-full rounded-none"
+            indicatorColor="bg-indigo-400"
+          />
 
           <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
             {question.question}
@@ -171,7 +178,7 @@ const Index = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-4 fixed z-30 bottom-8 right-0 left-0">
+          <div className="flex flex-col gap-4 fixed z-20 bottom-8 right-0 left-0">
             <Button
               variant={"fill"}
               radius={"full"}
@@ -181,12 +188,6 @@ const Index = () => {
             >
               {answersCount === questionsCount - 1 ? "Finish" : "Next"}
             </Button>
-
-            <Progress
-              value={Math.min((answersCount / questionsCount) * 100, 100)}
-              className="h-3 w-full rounded-none"
-              indicatorColor="bg-indigo-400"
-            />
           </div>
         </>
       )}
