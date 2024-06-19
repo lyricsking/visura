@@ -204,3 +204,42 @@ export function filterQuestions(
 
   return filteredQuestions;
 }
+// types.ts
+
+export interface UserData {
+  age: number;
+  gender: string;
+  weight: number;
+  height: number;
+  dietaryRestrictions: string[];
+  allergies: string[];
+  smokingStatus: string;
+  alcoholConsumption: string;
+  sleepHours: number;
+  sleepQuality: string;
+  stressLevel: string;
+  chronicDiseases: string[];
+  digestiveIssues: string[];
+  mentalHealthConcerns: string[];
+  boneHealthConcerns: string[];
+  healthGoals: string[];
+  healthConcerns: string[];
+  preferences: string[];
+  activityLevel: string;
+  exerciseHabits: string;
+  currentSupplements: string[];
+  medications: string[];
+  mealFrequency: number;
+  dietType: string;
+  hydration: number;
+  sunlightExposure: number;
+  livingEnvironment: string;
+  supplementForm: string[];
+  flavorPreferences: string[];
+  budget: number;
+  purchaseFrequency: string;
+  brandPreferences: string[];
+  sustainabilityConcerns: boolean;
+  focusNeeds: boolean;
+  enduranceNeeds: boolean;
+}

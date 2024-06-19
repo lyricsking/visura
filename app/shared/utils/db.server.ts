@@ -1,19 +1,25 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-
+import mongoose from "mongoose";
 // declare prisma global variable
 declare global {
-  var __mongoClient: MongoClient;
+  // eslint-disable-next-line no-var
+  var __mongoClient: typeof mongoose | null;
 }
-// Create a singleton instance of prisma
+
+//export const connectToDatabase = async (): Promise<typeof mongoose> => {
 if (!global.__mongoClient) {
-  global.__mongoClient = new MongoClient(process.env.MONGODB_URI as string, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
-  });
+  try {
+    // Replace the connection string with your MongoDB URI
+    global.__mongoClient = await mongoose.connect(
+      process.env.MONGODB_URI || ""
+    );
+    console.log("Connected to the database");
+  } catch (error) {
+    global.__mongoClient = null;
+    console.error("Error connecting to the database", error);
+    throw error;
+  }
 }
-// Create a connection
-await global.__mongoClient.connect();
-export const dbClient = global.__mongoClient.db(process.env.MONGODB_NAME);
+
+export const mongooseClient = global.__mongoClient;
+//  return global.__mongoClient;
+//};
