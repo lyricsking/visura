@@ -1,35 +1,6 @@
 import { useSubmit } from "@remix-run/react";
 import { getNanoid } from "~/shared/utils";
 
-export type AnswerType = "single" | "multiple" | "tag" | "number" | "text";
-
-const Operators = {
-  equals: "equals",
-  lt: "lt",
-  gt: "gt",
-  lte: "lte",
-  gte: "gte",
-  contains: "contains",
-  notNull: "notNull",
-  isNull: "isNull",
-} as const;
-type Operators = keyof typeof Operators;
-
-type QuestionCondition = {
-  operator: Operators;
-  questionId: string;
-  value?: string;
-};
-
-export interface Question {
-  id: string;
-  question: string;
-  description?: string;
-  type: AnswerType;
-  options: string[];
-  condition?: QuestionCondition;
-}
-
 const questions: Question[] = [
   {
     id: "name",
@@ -304,14 +275,44 @@ const questions: Question[] = [
 ];
 
 export interface Answers {
-  [key: string]: string | string[];
+  name: string;
+  email: string;
+  age: number;
+  gender: string;
+  weight: number;
+  height: number;
+  dietaryRestrictions: string[];
+  allergies: string[];
+  smokingStatus: string;
+  alcoholConsumption: string;
+  sleepHours: number;
+  sleepQuality: string;
+  stressLevel: string;
+  chronicDiseases: string[];
+  digestiveIssues: string[];
+  mentalHealthConcerns: string[];
+  boneHealthConcerns: string[];
+  healthGoals: string[];
+  healthConcerns: string[];
+  preferences: string[];
+  activityLevel: string;
+  exerciseHabits: string;
+  currentSupplements: string[];
+  medications: string[];
+  mealFrequency: number;
+  dietType: string;
+  hydration: number;
+  sunlightExposure: number;
+  livingEnvironment: string;
+  supplementForm: string[];
+  flavorPreferences: string[];
+  budget: number;
+  purchaseFrequency: string;
+  brandPreferences: string[];
+  sustainabilityConcerns: boolean;
+  focusNeeds: boolean;
+  enduranceNeeds: boolean;
 }
-
-export const QuizAction = {
-  cacheQuestions: "cacheQuestions",
-  cacheAnswers: "cacheAnswer",
-} as const;
-export type QuizAction = keyof typeof QuizAction;
 
 export function useQuiz() {
   const submit = useSubmit();
@@ -395,43 +396,4 @@ export function filterQuestions(
   });
 
   return filteredQuestions;
-}
-// types.ts
-
-export interface UserData {
-  age: number;
-  gender: string;
-  weight: number;
-  height: number;
-  dietaryRestrictions: string[];
-  allergies: string[];
-  smokingStatus: string;
-  alcoholConsumption: string;
-  sleepHours: number;
-  sleepQuality: string;
-  stressLevel: string;
-  chronicDiseases: string[];
-  digestiveIssues: string[];
-  mentalHealthConcerns: string[];
-  boneHealthConcerns: string[];
-  healthGoals: string[];
-  healthConcerns: string[];
-  preferences: string[];
-  activityLevel: string;
-  exerciseHabits: string;
-  currentSupplements: string[];
-  medications: string[];
-  mealFrequency: number;
-  dietType: string;
-  hydration: number;
-  sunlightExposure: number;
-  livingEnvironment: string;
-  supplementForm: string[];
-  flavorPreferences: string[];
-  budget: number;
-  purchaseFrequency: string;
-  brandPreferences: string[];
-  sustainabilityConcerns: boolean;
-  focusNeeds: boolean;
-  enduranceNeeds: boolean;
 }

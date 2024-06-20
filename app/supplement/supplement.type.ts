@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+
 export interface Supplement {
   name: string;
   price: number;
@@ -8,17 +9,13 @@ export interface Supplement {
   healthConcerns: string[],
   dietaryRestrictions?: string[];
   allergies?: string[];
-  associatedHabits?: string[]
+  benefits?: string[]
+  tags?: string[]
   form?: string;
   ageRange?: {
     min: number;
     max: number;
   };
-}
-
-export interface SupplementWithScore {
-  supplement: Supplement;
-  score: number;
 }
 
 interface ISupplement extends Supplement, Document {}
@@ -33,13 +30,13 @@ const SupplementSchema: Schema = new Schema<ISupplement>({
   healthConcerns: {type: String},
   dietaryRestrictions: [{ type: String }],
   allergies: [{ type: String }],
-  associatedHabits?: [{type: string}],
+  benefits: [{type: string}],
+  tags: [{type: string}],
   form: { type: String },
   ageRange: {
     min: { type: Number },
     max: { type: Number },
   },
-  
 });
 
 export const SupplementModel = mongoose.model<ISupplement>(
