@@ -1,5 +1,6 @@
 import { useSubmit } from "@remix-run/react";
 import { getNanoid } from "~/shared/utils";
+import { Question, QuestionCondition, QuizAction } from "./quiz.type";
 
 const questions: Question[] = [
   {
@@ -156,7 +157,12 @@ const questions: Question[] = [
     id: "activityLevel",
     question: "What is your activity level?",
     type: "single",
-    options: ["Sedentary", "Lightly Active", "Moderately Active", "Very Active"],
+    options: [
+      "Sedentary",
+      "Lightly Active",
+      "Moderately Active",
+      "Very Active",
+    ],
   },
   {
     id: "exerciseHabits",
@@ -226,7 +232,8 @@ const questions: Question[] = [
   },
   {
     id: "supplementForm",
-    question: "What forms of supplements do you prefer? (Select all that apply.)",
+    question:
+      "What forms of supplements do you prefer? (Select all that apply.)",
     type: "multiple",
     options: ["Capsule", "Powder", "Liquid"],
   },
@@ -240,7 +247,13 @@ const questions: Question[] = [
     id: "budget",
     question: "What is your monthly budget for supplements?",
     type: "single",
-    options: ["0 - 10,000", "10,000 - 25,000", "25,000 - 50,000", "50,000 - 100,000", "100,000+"],
+    options: [
+      "0 - 10,000",
+      "10,000 - 25,000",
+      "25,000 - 50,000",
+      "50,000 - 100,000",
+      "100,000+",
+    ],
   },
   {
     id: "purchaseFrequency",
@@ -300,13 +313,16 @@ export interface Answers {
   currentSupplements: string[];
   medications: string[];
   mealFrequency: number;
+  vegConsumptionHabits: string;
+  meatConsumptionHabits: string;
+  fishConsumptionHabits: string;
   dietType: string;
   hydration: number;
   sunlightExposure: number;
   livingEnvironment: string;
   supplementForm: string[];
   flavorPreferences: string[];
-  budget: number;
+  budget: string;
   purchaseFrequency: string;
   brandPreferences: string[];
   sustainabilityConcerns: boolean;
@@ -327,7 +343,7 @@ export function useQuiz() {
   const startQuiz = () =>
     submit(
       {
-        action: QuizAction["cacheQuestions"],
+        action: QuizAction.cacheQuestions,
         questions: JSON.stringify(questionsWithId),
       },
       {
@@ -336,9 +352,7 @@ export function useQuiz() {
       }
     );
 
-  return {
-    startQuiz,
-  };
+  return { startQuiz };
 }
 
 export function filterQuestions(
@@ -355,7 +369,8 @@ export function filterQuestions(
       return;
     } else {
       const condition: QuestionCondition = question.condition;
-      const answer = answers[condition.questionId];
+      const answer = answers[condition.questionId as keyof typeof answers];
+
       switch (condition.operator) {
         case "equals":
           answer == condition.value && (filteredQuestions[key] = question);
@@ -382,6 +397,7 @@ export function filterQuestions(
           break;
         case "contains":
           condition.value &&
+            (typeof answer === "string" || Array.isArray(answer)) &&
             answer.includes(condition.value) &&
             (filteredQuestions[key] = question);
           break;

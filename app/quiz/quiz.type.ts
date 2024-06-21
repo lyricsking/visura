@@ -12,7 +12,7 @@ const Operators = {
 } as const;
 type Operators = keyof typeof Operators;
 
-type QuestionCondition = {
+export type QuestionCondition = {
   operator: Operators;
   questionId: string;
   value?: string;

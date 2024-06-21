@@ -9,7 +9,7 @@ import Hero from "./components/hero";
 import HomeCarousel from "./components/home.carousel";
 import Explanation from "./components/explanation";
 import { findFontByName } from "~/shared/data/fonts";
-import { useQuiz } from "~/quiz/utils/quiz";
+import { useQuiz } from "~/quiz/quiz.utils";
 import Button from "~/shared/components/button";
 
 export const links: LinksFunction = () => {
@@ -54,7 +54,8 @@ export default function Home() {
         variant="outline"
         size="lg"
         className="flex items-center justify-center mx-auto text-xl capitalize border-2 -mt-8 mb-8 max-w-[70%] h-16"
-        onClick={()=>startQuiz()}>
+        onClick={() => startQuiz()}
+      >
         start quiz
       </Button>
     </div>

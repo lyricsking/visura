@@ -4,14 +4,15 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { quizPrefs } from "./utils/quiz.server";
-import { Answers, Question, QuizAction, filterQuestions } from "./utils/quiz";
+import { quizPrefs } from "./quiz.server";
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import OptionsHandler from "./components/options.handler";
 import { Progress } from "~/shared/components/progress";
 import { useEffect } from "react";
+import { Question, QuizAction } from "./quiz.type";
+import { Answers, filterQuestions } from "./quiz.utils";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const cookieHeader = request.headers.get("Cookie");
@@ -147,9 +148,8 @@ const Index = () => {
       ) : (
         <>
           <div className="border-b">
-          
             <Button
-              variant="icon"
+              variant="text"
               className="border-e"
               onClick={() => handlePrevious()}
               disabled={answersCount === 0}
@@ -158,7 +158,7 @@ const Index = () => {
               Back
             </Button>
           </div>
-          
+
           <Progress
             value={Math.min((answersCount / questionsCount) * 100, 100)}
             className="h-3 w-full rounded-none"

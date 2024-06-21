@@ -8,12 +8,12 @@ import {
   PageLayoutHeaderItem,
 } from "~/shared/components/ui/page.layout";
 import pkg from "../../package.json";
-import { useQuiz } from "~/quiz/utils/quiz";
+import { useQuiz } from "~/quiz/quiz.utils";
 import Button from "~/shared/components/button";
 
 export default function Layout() {
   const { startQuiz } = useQuiz();
-  
+
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
@@ -23,15 +23,15 @@ export default function Layout() {
               {pkg.name}.
             </h1>
           </Link>
-         <Button
+          <Button
             variant="outline"
             size="sm"
             className="-my-2"
-            onClick={()=>startQuiz()}
+            onClick={() => startQuiz()}
           >
             Get started
           </Button>
-         </PageLayoutHeaderItem>
+        </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
       <PageLayoutContent>

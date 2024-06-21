@@ -1,12 +1,12 @@
-import { AnswerType } from "./quiz.provider";
 import { useCallback } from "react";
 import { RadioGroup, RadioGroupItem } from "~/shared/components/radio";
 import { Label } from "~/shared/components/label";
 import { Checkbox } from "~/shared/components/checkbox";
+import { AnswerType } from "../quiz.type";
 
 type OptionsType = {
-  currentAnswer: any;
-  onAnswerSelected: (answer: any) => void;
+  currentAnswer: string|string[];
+  onAnswerSelected: (answer: string|string[]) => void;
   options: string[];
 };
 type AnswerProps = OptionsType & {

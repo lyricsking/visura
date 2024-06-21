@@ -1,11 +1,11 @@
-import { useQuiz } from "~/quiz/utils/quiz";
+import { useQuiz } from "~/quiz/quiz.utils";
 import Button, { buttonVariants } from "~/shared/components/button";
 import { findFontByName } from "~/shared/data/fonts";
 import { cn } from "~/shared/utils";
 
 export default function Hero() {
   const { startQuiz } = useQuiz();
-  
+
   const font = findFontByName("Playfair Display");
 
   return (
@@ -30,7 +30,7 @@ export default function Hero() {
               variant="text"
               radius="md"
               className="text-white bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={()=>startQuiz()}
+              onClick={() => startQuiz()}
             >
               Get started
             </Button>
