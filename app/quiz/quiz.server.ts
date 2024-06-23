@@ -173,13 +173,7 @@ export async function recommendSupplements(
     }
   }
 
-  await mongoose.connection.close();
+  //await mongoose.connection.close();
 
   return recommendedSupplements;
 }
-
-/**
- * Converts the recommendations to order with status cart
- * and returns order id.
- */
-export async function createCart() {}

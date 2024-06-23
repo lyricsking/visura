@@ -2,6 +2,9 @@ import { useSubmit } from "@remix-run/react";
 import { getNanoid } from "~/shared/utils";
 import { Question, QuestionCondition, QuizAction } from "./quiz.type";
 
+const QUESTIONS_KEY = "questionsKey";
+const ANSWERS_KEY = "answersKey";
+
 const questions: Question[] = [
   {
     id: "name",
@@ -287,74 +290,6 @@ const questions: Question[] = [
   },
 ];
 
-export interface Answers {
-  name: string;
-  email: string;
-  age: number;
-  gender: string;
-  weight: number;
-  height: number;
-  dietaryRestrictions: string[];
-  allergies: string[];
-  smokingStatus: string;
-  alcoholConsumption: string;
-  sleepHours: number;
-  sleepQuality: string;
-  stressLevel: string;
-  chronicDiseases: string[];
-  digestiveIssues: string[];
-  mentalHealthConcerns: string[];
-  boneHealthConcerns: string[];
-  healthGoals: string[];
-  healthConcerns: string[];
-  preferences: string[];
-  activityLevel: string;
-  exerciseHabits: string;
-  currentSupplements: string[];
-  medications: string[];
-  mealFrequency: number;
-  vegConsumptionHabits: string;
-  meatConsumptionHabits: string;
-  fishConsumptionHabits: string;
-  dietType: string;
-  hydration: number;
-  sunlightExposure: number;
-  livingEnvironment: string;
-  supplementForm: string[];
-  flavorPreferences: string[];
-  budget: string;
-  purchaseFrequency: string;
-  brandPreferences: string[];
-  sustainabilityConcerns: boolean;
-  focusNeeds: boolean;
-  enduranceNeeds: boolean;
-}
-
-export function useQuiz() {
-  const submit = useSubmit();
-
-  const questionsWithId: { [key: string]: Question } = {};
-
-  questions.forEach((question) => {
-    const id = getNanoid(21);
-    questionsWithId[id] = question;
-  });
-
-  const startQuiz = () =>
-    submit(
-      {
-        action: QuizAction.cacheQuestions,
-        questions: JSON.stringify(questionsWithId),
-      },
-      {
-        method: "post",
-        action: "/quiz?index",
-      }
-    );
-
-  return { startQuiz };
-}
-
 export function filterQuestions(
   questions: Record<string, Question>,
   answers: Answers
@@ -412,4 +347,89 @@ export function filterQuestions(
   });
 
   return filteredQuestions;
+}
+
+export function useQuiz() {
+  
+  const initQuiz: string = () => {
+    const questionsWithId: {
+    [key: string]: Question } = {};
+    
+    questions.forEach((question) => {
+      const id = getNanoid(21);
+      questionsWithId[id] = question;
+    });
+    
+    setQuestions(questionsWithId);
+    
+    return Object.keys(questionsWithId)[0];
+  }
+  
+  const saveAnswer = (key: keyof Answers, answer: string|string[]) => {
+    const answers = getAnswers();
+    
+    const newAnswers = {
+      ...answers, 
+      [key]: answer
+    }
+    
+    setAnswers(newAnswers);
+    
+    const filteredQuestions = filterQuestions(questions, answers);
+    setQuestions(filteredQuestions);
+    
+    const questionsCount = Object.keys(filteredQuestions).length;
+    const answersCount = Object.keys(newAnswers).length;
+  
+    let nextQuizId;
+    if (answersCount < questionsCount) {
+      nextQuizId = Object.keys(filteredQuestions)[answersCount];
+    }
+    
+    return nextQuizId;
+  }
+  
+  const previousQuestion = (currentId: string) => {
+    const questionKeys = Object.keys(getQuestions());
+    
+    const currentIndex = questionKeys.findIndex((value) => value === currentId)
+    
+    return questionKeys[Math.max(currentIndex-1, 0)]
+  }
+  
+  const getProgress = (id: string) => {
+    const questionsKeys = Object.keys(getQuestions());
+    
+    const currentIndex = questionsKeys.indexOf(id);
+    const lastIndex = questionsKeys.length-1;
+    
+    return {
+      currentIndex,
+      lastIndex,
+      ratio: Math.min((currentIndex/lastIndex || 0), 1)
+    }
+  }
+  
+  const getQuestions: {[key: string]: Question}= ()=> JSON.parse(sessionStorage.getItem(QUESTIONS_KEY))||{};
+  
+  const setQuestions = (questions: typeof getQuestions)=> sessionStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+  
+  const hasQuestions = () => Object.keys(getQuestions()).length > 0
+  
+  const getQuestion = (id: string)=>  getQuestions()[id]
+
+  const getAnswers: Answers = () => JSON.parse(sessionStorage.getItem(ANSWERS_KEY))||{};
+    
+  const setAnswers = (answers: Answers)=>
+    sessionStorage.setItem(ANSWERS_KEY, JSON.stringify(answers))
+  
+  return { 
+    initQuiz,
+    hasQuestions,
+    getQuestion,
+    saveAnswer, 
+    getProgress, 
+    answers: getAnswers,
+    previousQuestion
+  };
 }

@@ -1,10 +1,10 @@
 import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
+  ClientActionFunctionArgs,
+  ClientLoaderFunctionArgs,
   json,
   redirect,
 } from "@remix-run/node";
-import { quizPrefs } from "./quiz.server";
+import { quizPrefs, recommendSupplements } from "./quiz.server";
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
@@ -14,128 +14,99 @@ import { useEffect } from "react";
 import { Question, QuizAction } from "./quiz.type";
 import { Answers, filterQuestions } from "./quiz.utils";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = (await quizPrefs.parse(cookieHeader)) || {};
-
+export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
+  
   const formData = await request.formData();
-
-  const action = formData.get("action");
-  if (action === QuizAction.cacheQuestions && formData.has("questions")) {
-    const questions = JSON.parse(formData.get("questions") as string);
-
-    cookie.questions = questions;
-
-    return json(
-      { questions },
-      {
-        headers: {
-          "Set-Cookie": await quizPrefs.serialize(cookie),
-        },
-      }
-    );
-  } else if (action === QuizAction.cacheAnswers) {
-    const answers = formData.get("answers") as string;
-
-    cookie.answers = JSON.parse(answers);
-
-    return json(
-      { success: true },
-      {
-        headers: {
-          "Set-Cookie": await quizPrefs.serialize(cookie),
-        },
-      }
-    );
+  
+  const answersString = formData.get("answers");
+  const supplements: Supplement[] = await recommendSupplements(JSON.parse(answersString))
+  
+  if(supplements){
+    const cartId = await createCart(supplements);
+    
+    if(cartId){
+      return json({ 
+        success: true, 
+        data: { cartId }
+      });
+    } else {
+      return json({
+        success: false,
+        message: "Failed to convert supplements into order."
+      })
+    }
   }
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = (await quizPrefs.parse(cookieHeader)) || {};
-
+export const clientLoader = async ({ request }: ClientLoaderFunctionArgs) => {
   const url = new URL(request.url);
-
-  const questions = cookie.questions;
-  const answers = cookie.answers || {};
-
-  if (!questions) return redirect("/");
-
-  let quizId = url.searchParams.get("id");
-  if (!quizId) {
-    const lastIndex = Object.keys(answers).length;
-
-    quizId = Object.keys(questions)[lastIndex || 0];
-    url.searchParams.append("id", quizId);
-    return redirect(url.href);
-  }
-
-  return json({
-    questionId: quizId,
-    questions: questions,
-    answers: cookie.answers || {},
-  });
+  const {hasQuestions} = useQuiz();
+  
+  let questionId = url.searchParams.get("id");
+  if (!questionId || !hasQuestions()) return redirect("/");
+  
+  return json({questionId});
 };
+clientLoader.hydrate = true;
 
-const Index = () => {
-  //  Reterieve loader data
-  const { questionId, questions, answers } = useLoaderData<typeof loader>();
-  //  Count the numbers of questions
-  const questionsCount = Object.keys(questions).length;
+export function HydrateFallback() {
+  return <p>Loading quiz</p>;
+}
 
-  const answersCount = Object.keys(answers).length;
-
+export default function Index () {
+  //  Retrieve loader data
+  const { questionId } = useLoaderData<typeof loader>();
+  
+  const {answers, getQuestion, getProgress, previousQuestion, saveAnswer } = useQuiz();
+  
   //  Obtain the current question by questionId
-  const question: Question = questions[questionId];
+  const question: Question = getQuestion(questionId);
 
   //const currentAnswer = answers[questionId];
-
+  
+  const progress = getProgress();
+  
   //  Init navigator
   const navigate = useNavigate();
+  const gotoQuestion = (id: string) => {
+    navigate(`/quiz?id=${id}`)
+  }
+  
   //  init submit function to submit quiz
-  const submit = useFetcher();
-  const onSubmit = (answers: Answers) => {
-    submit.submit(
-      {
-        action: QuizAction.cacheAnswers,
-        answers: JSON.stringify(answers),
-      },
-      {
-        method: "POST",
-        action: "/quiz?index",
-      }
-    );
-  };
-
-  const isSubmitting =
-    answersCount == questionsCount - 1 && submit.state !== "idle";
+  const quizResponse = useFetcher();
+  const isSubmitting = quizResponse.state !== "idle";
+  const isSubmitted = quizResponse.state === "idle" && quizResponse.data;
+  
   useEffect(() => {
-    if (!submit.data) return;
-    //  Use init the questions belonging to the the active section
-    const filteredQuestions = filterQuestions(questions, answers);
-    const nextQuizId = Object.keys(filteredQuestions)[answersCount];
-    //alert(JSON.stringify(answers));
-    //alert(answersCount);
-
-    navigate(`/quiz?id=${nextQuizId}`);
-  }, [submit.data, questions, answers]);
-
+    if(quizResponse.data.success){
+      const id = quizResponse.data.data.cartId;
+      navigate(`/order?id=${id}`)
+    }
+  },[quizResponse, isSubmitted])
+  
   /** Saves the current quiz's answer and move to the next quiz or finish the quiz if otherwise. */
   const handleNext = (answer: string) => {
-    //  If we have not the last question
-    //if (answersCount < questionsCount - 1) {
-    const newAnswers: Answers = {
-      ...answers,
-      [questionId]: answer,
-    };
-    onSubmit(newAnswers);
-    //}
+    const nextQuestionId = saveAnswer(answer);
+    //  We update to the recent progress after updating answers
+    const progress = getProgress()
+    
+    if(!nextQuestionId && progress.ratio >= 1){
+      quizResponse.submit({
+        answers: JSON.stringify(answers())
+      },{
+        method: "post",
+        action: "/quiz?index"
+      })
+    } else if(nextQuestionId) {
+      gotoQuestion(nextQuestionId);
+    }
   };
 
   const handlePrevious = () => {
-    if (answersCount > 0) {
-      const newAnswers = answers.filter((_, key) => key != questionId);
-      onSubmit(newAnswers);
+    if (progress.ratio > 0) {
+      const prevId = previousQuestion(questionId)
+      
+      gotoQuestion(prevId)
     }
   };
 
@@ -152,7 +123,7 @@ const Index = () => {
               variant="text"
               className="border-e"
               onClick={() => handlePrevious()}
-              disabled={answersCount === 0}
+              disabled={ progress.ratio === 0}
             >
               <ArrowLeftIcon className="h-5 w-5" />
               Back
@@ -160,7 +131,7 @@ const Index = () => {
           </div>
 
           <Progress
-            value={Math.min((answersCount / questionsCount) * 100, 100)}
+            value={progress.ratio*100}
             className="h-3 w-full rounded-none"
             indicatorColor="bg-indigo-400"
           />
@@ -184,15 +155,19 @@ const Index = () => {
               radius={"full"}
               className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
               onClick={() => handleNext("Your answer")}
-              disabled={isSubmitting || answersCount >= questionsCount - 1}
+              disabled={ isSubmitting }
             >
-              {answersCount === questionsCount - 1 ? "Finish" : "Next"}
+              {
+              isSubmitting 
+              ? "Submitting" 
+              : progress.currentIndex === progress.lastIndex-1
+              ? "Finish" 
+              : "Next"
+              }
             </Button>
           </div>
         </>
       )}
     </div>
   );
-};
-
-export default Index;
+}
