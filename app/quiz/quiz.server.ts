@@ -14,6 +14,16 @@ export const quizPrefs = createCookie("quizPrefs", {
 });
 
 /**
+ * Converts the recommendations to order with status cart
+ * and returns order id.
+ * 
+ * @param supplements
+ */
+export async function createCart(supplements: Supplement[]) {
+
+}
+
+/**
  *
  */
 export async function getOrderId(quizAnswers: Answers) {}

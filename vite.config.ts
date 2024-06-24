@@ -24,7 +24,8 @@ export default defineConfig({
             route("signup", "auth/signup.tsx");
           });
           route("cart", "cart/layout.tsx", () => {
-            route("", "cart/index.tsx", { index: true });
+            route("", "cart/cart.tsx", { index: true });
+            route("checkout", "cart/checkout.tsx");
           });
           route("dashboard", "dashboard/layout.tsx", () => {
             route("", "dashboard/overview.tsx", { index: true });
