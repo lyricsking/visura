@@ -1,7 +1,6 @@
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { createCart, recommendSupplements } from "./quiz.server";
 import {
-  ClientLoaderFunction,
   ClientLoaderFunctionArgs,
   useFetcher,
   useLoaderData,
@@ -11,7 +10,7 @@ import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import OptionsHandler from "./components/options.handler";
 import { Progress } from "~/shared/components/progress";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { Answers, Question } from "./quiz.type";
 import type { ISupplement } from "~/supplement/supplement.type";
 import { useQuiz } from "./quiz.utils";
@@ -37,23 +36,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 };
-
-export const clientLoader: ClientLoaderFunction = async ({
-  request,
-}: ClientLoaderFunctionArgs) => {
+export const loader = async ({ request }: ActionFunctionArgs) => {
   const url = new URL(request.url);
-
   const questionId = url.searchParams.get("id");
-  if (!questionId) {
-    return redirect("/");
-  } else {
-    return json({ questionId });
-  }
+
+  if (questionId) return json({ questionId });
+  return redirect("/");
+};
+
+export const clientLoader = async ({
+  serverLoader,
+}: ClientLoaderFunctionArgs) => {
+  const { questionId } = await serverLoader<typeof loader>();
+  return { questionId };
 };
 clientLoader.hydrate = true;
 
 export function HydrateFallback() {
-  return <p className="h-screen text-center">Loading quiz...</p>;
+  return (
+    <div className="flex flex-col h-screen items-center justify-center ">
+      <p className="text-center">Loading quiz...</p>
+    </div>
+  );
 }
 
 export default function Index() {
@@ -71,7 +75,7 @@ export default function Index() {
   const progress = getProgress(questionId);
 
   //  Init navigator
-  const navigate = useMemo(useNavigate, []);
+  const navigate = useNavigate();
   const gotoQuestion = (id: string) => {
     navigate(`/quiz?id=${id}`);
   };
@@ -125,7 +129,8 @@ export default function Index() {
           <div className="border-b">
             <Button
               variant="text"
-              className="border-e"
+              size="sm"
+              className="border-e gap-2 h-12"
               onClick={() => handlePrevious()}
               disabled={progress.ratio === 0}
             >
@@ -136,7 +141,7 @@ export default function Index() {
 
           <Progress
             value={progress.ratio * 100}
-            className="h-3 w-full rounded-none"
+            className="h-4 w-full rounded-none"
             indicatorColor="bg-indigo-400"
           />
 
