@@ -1,6 +1,6 @@
-import { useSubmit } from "@remix-run/react";
 import { getNanoid } from "~/shared/utils";
-import { Question, QuestionCondition, QuizAction } from "./quiz.type";
+import { Answers, Question, QuestionCondition } from "./quiz.type";
+import { useNavigate } from "@remix-run/react";
 
 const QUESTIONS_KEY = "questionsKey";
 const ANSWERS_KEY = "answersKey";
@@ -350,86 +350,92 @@ export function filterQuestions(
 }
 
 export function useQuiz() {
+  const navigate = useNavigate();
   
-  const initQuiz: string = () => {
+  const initQuiz = () => {
     const questionsWithId: {
-    [key: string]: Question } = {};
-    
+      [key: string]: Question;
+    } = {};
+
     questions.forEach((question) => {
       const id = getNanoid(21);
       questionsWithId[id] = question;
     });
-    
+
     setQuestions(questionsWithId);
     
-    return Object.keys(questionsWithId)[0];
-  }
-  
-  const saveAnswer = (key: keyof Answers, answer: string|string[]) => {
-    const answers = getAnswers();
-    
-    const newAnswers = {
-      ...answers, 
-      [key]: answer
+    const id= Object.keys(questionsWithId)[0];
+    navigate(`/quiz?id=${id}`)
+  };
+
+  const saveAnswer = (key: keyof Answers, answer: string | string[]) => {
+    const oldAnswers= getAnswers() ||{} as Answers;
+    const newAnswers:Answers = {
+      ...oldAnswers,
+      [key]: answer,
     }
-    
-    setAnswers(newAnswers);
-    
-    const filteredQuestions = filterQuestions(questions, answers);
+    setAnswers(newAnswers);    
+
+    const questions= getQuestions()
+    const filteredQuestions = filterQuestions(questions, newAnswers);
     setQuestions(filteredQuestions);
-    
+
     const questionsCount = Object.keys(filteredQuestions).length;
     const answersCount = Object.keys(newAnswers).length;
-  
+
     let nextQuizId;
     if (answersCount < questionsCount) {
       nextQuizId = Object.keys(filteredQuestions)[answersCount];
     }
-    
+
     return nextQuizId;
-  }
-  
+  };
+
   const previousQuestion = (currentId: string) => {
     const questionKeys = Object.keys(getQuestions());
-    
-    const currentIndex = questionKeys.findIndex((value) => value === currentId)
-    
-    return questionKeys[Math.max(currentIndex-1, 0)]
-  }
-  
+
+    const currentIndex = questionKeys.findIndex((value) => value === currentId);
+
+    return questionKeys[Math.max(currentIndex - 1, 0)];
+  };
+
   const getProgress = (id: string) => {
     const questionsKeys = Object.keys(getQuestions());
-    
+
     const currentIndex = questionsKeys.indexOf(id);
-    const lastIndex = questionsKeys.length-1;
-    
+    const lastIndex = questionsKeys.length - 1;
+
     return {
       currentIndex,
       lastIndex,
-      ratio: Math.min((currentIndex/lastIndex || 0), 1)
-    }
-  }
-  
-  const getQuestions: {[key: string]: Question}= ()=> JSON.parse(sessionStorage.getItem(QUESTIONS_KEY))||{};
-  
-  const setQuestions = (questions: typeof getQuestions)=> sessionStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
-  
-  const hasQuestions = () => Object.keys(getQuestions()).length > 0
-  
-  const getQuestion = (id: string)=>  getQuestions()[id]
+      ratio: Math.min(currentIndex / lastIndex || 0, 1),
+    };
+  };
 
-  const getAnswers: Answers = () => JSON.parse(sessionStorage.getItem(ANSWERS_KEY))||{};
-    
-  const setAnswers = (answers: Answers)=>
-    sessionStorage.setItem(ANSWERS_KEY, JSON.stringify(answers))
-  
-  return { 
+  const getQuestions= ():{ [key: string]: Question }  =>
+    JSON.parse(sessionStorage.getItem(QUESTIONS_KEY) as string) || {};
+
+  const setQuestions = (questions: {[key:string]: Question}) =>
+    sessionStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+
+  const hasQuestions = () => Object.keys(getQuestions()).length > 0;
+
+  const getQuestion = (id: string) => getQuestions()[id];
+
+  const getAnswers = (): Answers | null => {
+    const answers =sessionStorage.getItem(ANSWERS_KEY);
+    return answers ? JSON.parse(answers) : null
+  }
+  const setAnswers = (answers: Answers) =>
+    sessionStorage.setItem(ANSWERS_KEY, JSON.stringify(answers));
+
+  return {
     initQuiz,
     hasQuestions,
     getQuestion,
-    saveAnswer, 
-    getProgress, 
+    saveAnswer,
+    getProgress,
     answers: getAnswers,
-    previousQuestion
+    previousQuestion,
   };
 }

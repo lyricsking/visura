@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface Supplement {
+export interface ISupplement extends Document {
   name: string;
   price: number;
   gender?: string;
@@ -18,8 +18,6 @@ export interface Supplement {
     max: number;
   };
 }
-
-interface ISupplement extends Supplement, Document {}
 
 const SupplementSchema: Schema = new Schema<ISupplement>({
   name: { type: String, required: true },

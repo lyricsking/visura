@@ -1,112 +1,116 @@
+import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
+import { createCart, recommendSupplements } from "./quiz.server";
 import {
-  ClientActionFunctionArgs,
+  ClientLoaderFunction,
   ClientLoaderFunctionArgs,
-  json,
-  redirect,
-} from "@remix-run/node";
-import { quizPrefs, recommendSupplements } from "./quiz.server";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import OptionsHandler from "./components/options.handler";
 import { Progress } from "~/shared/components/progress";
-import { useEffect } from "react";
-import { Question, QuizAction } from "./quiz.type";
-import { Answers, filterQuestions } from "./quiz.utils";
+import { useEffect, useMemo } from "react";
+import { Answers, Question } from "./quiz.type";
+import type { ISupplement } from "~/supplement/supplement.type";
+import { useQuiz } from "./quiz.utils";
 
-export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
-  
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  
-  const answersString = formData.get("answers");
-  const supplements: Supplement[] = await recommendSupplements(JSON.parse(answersString))
-  
-  if(supplements){
-    const cartId = await createCart(supplements);
-    
-    if(cartId){
-      return json({ 
-        success: true, 
-        data: { cartId }
-      });
-    } else {
+
+  const answersString = formData.get("answers") as string;
+  const supplements: ISupplement[] = await recommendSupplements(
+    JSON.parse(answersString)
+  );
+
+  if (supplements) {
+    try {
+      await createCart(supplements);
+
+      return json({ success: true });
+    } catch (error) {
       return json({
         success: false,
-        message: "Failed to convert supplements into order."
-      })
+        message: "Failed to convert supplements into order.",
+      });
     }
   }
 };
 
-export const clientLoader = async ({ request }: ClientLoaderFunctionArgs) => {
+export const clientLoader: ClientLoaderFunction = async ({
+  request,
+}: ClientLoaderFunctionArgs) => {
   const url = new URL(request.url);
-  const {hasQuestions} = useQuiz();
-  
-  let questionId = url.searchParams.get("id");
-  if (!questionId || !hasQuestions()) return redirect("/");
-  
-  return json({questionId});
+
+  const questionId = url.searchParams.get("id");
+  if (!questionId) {
+    return redirect("/");
+  } else {
+    return json({ questionId });
+  }
 };
 clientLoader.hydrate = true;
 
 export function HydrateFallback() {
-  return <p>Loading quiz</p>;
+  return <p className="h-screen text-center">Loading quiz...</p>;
 }
 
-export default function Index () {
+export default function Index() {
   //  Retrieve loader data
-  const { questionId } = useLoaderData<typeof loader>();
-  
-  const {answers, getQuestion, getProgress, previousQuestion, saveAnswer } = useQuiz();
-  
+  const { questionId } = useLoaderData<typeof clientLoader>();
+
+  const { answers, getQuestion, getProgress, previousQuestion, saveAnswer } =
+    useQuiz();
+
   //  Obtain the current question by questionId
   const question: Question = getQuestion(questionId);
 
   //const currentAnswer = answers[questionId];
-  
-  const progress = getProgress();
-  
+
+  const progress = getProgress(questionId);
+
   //  Init navigator
-  const navigate = useNavigate();
+  const navigate = useMemo(useNavigate, []);
   const gotoQuestion = (id: string) => {
-    navigate(`/quiz?id=${id}`)
-  }
-  
+    navigate(`/quiz?id=${id}`);
+  };
+
   //  init submit function to submit quiz
   const quizResponse = useFetcher();
   const isSubmitting = quizResponse.state !== "idle";
   const isSubmitted = quizResponse.state === "idle" && quizResponse.data;
-  
+
   useEffect(() => {
-    if(quizResponse.data.success){
-      const id = quizResponse.data.data.cartId;
-      navigate(`/order?id=${id}`)
+    if (isSubmitted) {
+      navigate(`/cart`);
     }
-  },[quizResponse, isSubmitted])
-  
+  }, [navigate, isSubmitted]);
+
   /** Saves the current quiz's answer and move to the next quiz or finish the quiz if otherwise. */
   const handleNext = (answer: string) => {
-    const nextQuestionId = saveAnswer(answer);
-    //  We update to the recent progress after updating answers
-    const progress = getProgress()
-    
-    if(!nextQuestionId && progress.ratio >= 1){
-      quizResponse.submit({
-        answers: JSON.stringify(answers())
-      },{
-        method: "post",
-        action: "/quiz?index"
-      })
-    } else if(nextQuestionId) {
+    const nextQuestionId = saveAnswer(questionId as keyof Answers, answer);
+
+    if (!nextQuestionId && progress.ratio >= 1) {
+      quizResponse.submit(
+        {
+          answers: JSON.stringify(answers()),
+        },
+        {
+          method: "post",
+          action: "/quiz?index",
+        }
+      );
+    } else if (nextQuestionId) {
       gotoQuestion(nextQuestionId);
     }
   };
 
   const handlePrevious = () => {
     if (progress.ratio > 0) {
-      const prevId = previousQuestion(questionId)
-      
-      gotoQuestion(prevId)
+      const prevId = previousQuestion(questionId);
+
+      gotoQuestion(prevId);
     }
   };
 
@@ -123,7 +127,7 @@ export default function Index () {
               variant="text"
               className="border-e"
               onClick={() => handlePrevious()}
-              disabled={ progress.ratio === 0}
+              disabled={progress.ratio === 0}
             >
               <ArrowLeftIcon className="h-5 w-5" />
               Back
@@ -131,7 +135,7 @@ export default function Index () {
           </div>
 
           <Progress
-            value={progress.ratio*100}
+            value={progress.ratio * 100}
             className="h-3 w-full rounded-none"
             indicatorColor="bg-indigo-400"
           />
@@ -155,15 +159,13 @@ export default function Index () {
               radius={"full"}
               className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
               onClick={() => handleNext("Your answer")}
-              disabled={ isSubmitting }
+              disabled={isSubmitting}
             >
-              {
-              isSubmitting 
-              ? "Submitting" 
-              : progress.currentIndex === progress.lastIndex-1
-              ? "Finish" 
-              : "Next"
-              }
+              {isSubmitting
+                ? "Submitting"
+                : progress.currentIndex === progress.lastIndex - 1
+                ? "Finish"
+                : "Next"}
             </Button>
           </div>
         </>

@@ -12,7 +12,7 @@ import { useQuiz } from "~/quiz/quiz.utils";
 import Button from "~/shared/components/button";
 
 export default function Layout() {
-  const { startQuiz } = useQuiz();
+  const { initQuiz } = useQuiz();
 
   return (
     <PageLayout>
@@ -27,7 +27,7 @@ export default function Layout() {
             variant="outline"
             size="sm"
             className="-my-2"
-            onClick={() => startQuiz()}
+            onClick={() => initQuiz()}
           >
             Get started
           </Button>

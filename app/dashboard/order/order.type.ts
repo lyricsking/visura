@@ -1,10 +1,12 @@
-interface IItem {
+import mongoose, { Schema } from "mongoose";
+
+export interface IItem {
   productId: mongoose.Types.ObjectId;
   name: string;
   quantity: number;
   price: number;
   total: number;
-  isSubscribe: boolean, //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
+  isSubscribe?: boolean; //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
 }
 
 export const OrderStatus = {
@@ -14,10 +16,10 @@ export const OrderStatus = {
   inTransit: "inTransit", //  Order is in transit now.
   paid: "paid", // Order has been paid for
   processing: "processing",
-} as const
-export type OrderStatus = typeof OrderStatus[keyof typeof OrderStatus]
+} as const;
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
 
-interface IOrder extends Document {
+export interface IOrder extends Document {
   userId: mongoose.Types.ObjectId;
   status: OrderStatus;
   items: IItem[];
@@ -36,7 +38,7 @@ const itemSchema = new Schema({
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   total: { type: Number, required: true },
-  isSubscribe: {type: Boolean, default: false }, //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
+  isSubscribe: { type: Boolean, default: false }, //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
 });
 
 const orderSchema = new Schema({
@@ -46,11 +48,12 @@ const orderSchema = new Schema({
   totalPrice: { type: Number, required: true },
   paymentDetails: {
     method: { type: String },
-    transactionId: { type: String }
+    transactionId: { type: String },
   },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
 });
 
-const Order: Model<IOrder> = mongoose.models.Order|| mongoose.model<IOrder>('Order', orderSchema);
+const Order: mongoose.Model<IOrder> =
+  mongoose.models.Order || mongoose.model<IOrder>("Order", orderSchema);
 export default Order;

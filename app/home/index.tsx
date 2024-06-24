@@ -41,7 +41,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function Home() {
-  const { startQuiz } = useQuiz();
+  const { initQuiz } = useQuiz();
 
   return (
     <div className="w-full">
@@ -54,7 +54,7 @@ export default function Home() {
         variant="outline"
         size="lg"
         className="flex items-center justify-center mx-auto text-xl capitalize border-2 -mt-8 mb-8 max-w-[70%] h-16"
-        onClick={() => startQuiz()}
+        onClick={() => initQuiz()}
       >
         start quiz
       </Button>
