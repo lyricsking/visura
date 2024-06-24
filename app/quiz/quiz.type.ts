@@ -19,7 +19,7 @@ export type QuestionCondition = {
 };
 
 export interface Question {
-  id: keyof typeof Answers;
+  id: string;
   question: string;
   description?: string;
   type: AnswerType;

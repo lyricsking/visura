@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "~/shared/components/radio";
 import { Label } from "~/shared/components/label";
 import { Checkbox } from "~/shared/components/checkbox";
 import { AnswerType } from "../quiz.type";
+import { Input } from "~/shared/components/input";
 
 type OptionsType = {
   name: string,
@@ -23,7 +24,7 @@ export default function OptionsHandler({
   const switchType = useCallback(() => {
     switch (answerType) {
       case "text":
-        return <TextInput />;
+        return <TextInput name={name} defaultValue={defaultValue} onValueChange={onValueChange}/>;
       case "single":
         return (
           <Single
@@ -50,7 +51,7 @@ export default function OptionsHandler({
   return switchType();
 }
 
-function TextInput({name, defaultValue, onValueChange}: OptionsType){
+function TextInput({name, defaultValue}: OptionsType){
   return <Input name={name} defaultValue={defaultValue} />
 }
 
@@ -61,7 +62,7 @@ function Single({ name, defaultValue, onValueChange, options}: OptionsType) {
       value={defaultValue as string}
       onValueChange={onValueChange}
     >
-      {options.map((option) => (
+      {options&&options.map((option) => (
         <div
           key={option}
           className="flex items-center space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white"
@@ -83,10 +84,10 @@ function Single({ name, defaultValue, onValueChange, options}: OptionsType) {
   );
 }
 
-function Multiple({ name, defaultValue, onValueChange, options }: OptionsType) {
+function Multiple({ name, defaultValue, options }: OptionsType) {
   return (
     <div className="flex flex-col space-y-2">
-      {options.map((option) => (
+      {options&&options.map((option) => (
         <div
           key={option}
           className="flex items-center space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white"
@@ -95,8 +96,8 @@ function Multiple({ name, defaultValue, onValueChange, options }: OptionsType) {
             id={option}
             className="h-5 w-5 rounded-none"
             name={name}
-            value={opt}
-            checked={currentAnswer?.includes(option)}
+            value={option}
+            checked={defaultValue?.includes(option)}
             required
           />
           <label

@@ -1,16 +1,22 @@
 // app/components/DynamicForm.jsx
 import { useNavigate, useLocation, useFetcher } from '@remix-run/react';
-import { formConfig } from '~/utils/formConfig';
+import { Question } from '../quiz.type';
+import Button from '~/shared/components/button';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { Progress } from '~/shared/components/progress';
+import OptionsHandler from './options-handler';
 
-type DynamicFormType = {
+type QuizHandlerType = {
   questionId: string
 }
 
-export default function DynamicForm({ questionId }: DynamicFormType) {
+export default function QuizHandler({ questionId }: QuizHandlerType) {
   const navigate = useNavigate();
   const location = useLocation();
-  const fetcher = useFetcher();
   
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state!="idle"
+
   const initialState = location.state || {};
   
   const questions = initialState["questions"] || {};
@@ -21,9 +27,9 @@ export default function DynamicForm({ questionId }: DynamicFormType) {
   const questionIndex = questionKeys.findIndex((key) => key === questionId);
   const lastQuestionId = questionKeys[questionKeys.length-1];
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
     if (questionId === lastQuestionId) {
@@ -63,7 +69,7 @@ export default function DynamicForm({ questionId }: DynamicFormType) {
                   size="sm"
                   className="border-e gap-2 h-12"
                   onClick={() => handlePrevious()}
-                  disabled={progress.ratio === 0}
+                  disabled={questionIndex === 0}
                 >
                   <ArrowLeftIcon className="h-5 w-5" />
                   Back
@@ -82,10 +88,11 @@ export default function DynamicForm({ questionId }: DynamicFormType) {
     
               <div className="flex-1 my-6 p-2 w-full">
               <fetcher.Form method="post" onSubmit={handleSubmit}>
-     <OptionsHandler
+              <OptionsHandler
               answerType={question.type}
-              currentAnswer={"answer"}
-              onAnswerSelected={() => {}}
+              name={question.id}
+              defaultValue={"answer"}
+              onValueChange={() => {}}
               options={question.options}
             />
       
@@ -94,12 +101,12 @@ export default function DynamicForm({ questionId }: DynamicFormType) {
                   variant={"fill"}
                   radius={"full"}
                   className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
-                  onClick={() => handleNext("Your answer")}
+                  type='submit'
                   disabled={isSubmitting}
                 >
                   {isSubmitting
                     ? "Submitting"
-                    : progress.currentIndex >= progress.lastIndex
+                    : questionId === lastQuestionId
                     ? "Finish"
                     : "Next"}
                 </Button>
