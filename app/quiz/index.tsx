@@ -168,7 +168,7 @@ export default function Index() {
             >
               {isSubmitting
                 ? "Submitting"
-                : progress.currentIndex === progress.lastIndex - 1
+                : progress.currentIndex >= progress.lastIndex
                 ? "Finish"
                 : "Next"}
             </Button>

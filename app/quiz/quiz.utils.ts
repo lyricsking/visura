@@ -358,34 +358,44 @@ export function useQuiz() {
     } = {};
 
     questions.forEach((question) => {
-      const id = getNanoid(21);
+      const id = getNanoid(32);
       questionsWithId[id] = question;
     });
 
-    setQuestions(questionsWithId);
+    //setQuestions(questionsWithId);
     
-    const id= Object.keys(questionsWithId)[0];
-    navigate(`/quiz?id=${id}`)
+    const id = Object.keys(questionsWithId)[0];
+    navigate(`/quiz?id=${id}`, {
+      state: { questions: questionsWithId }
+    })
   };
 
   const saveAnswer = (key: keyof Answers, answer: string | string[]) => {
+    //  Retrieve existing answers or init if otherwise
     const oldAnswers= getAnswers() ||{} as Answers;
+    //  create new answer, putting the new answer
     const newAnswers:Answers = {
       ...oldAnswers,
       [key]: answer,
     }
+    //  Save the new answers to session
     setAnswers(newAnswers);    
-
+    //  Get the existing question
     const questions= getQuestions()
+    //  Filter the question
     const filteredQuestions = filterQuestions(questions, newAnswers);
+    //  Update session's question to the  filtered questions
     setQuestions(filteredQuestions);
-
-    const questionsCount = Object.keys(filteredQuestions).length;
-    const answersCount = Object.keys(newAnswers).length;
+    //  Get question keys to figure out our progress in the quiz
+    const questionKeys = Object.keys(filteredQuestions);
+    //  Get the index of the submitted answer
+    const currentIndex = questionKeys.findIndex((value) => value === key);
+    //  Get the last index
+    const questionsCount = questionKeys.length-1;
 
     let nextQuizId;
-    if (answersCount < questionsCount) {
-      nextQuizId = Object.keys(filteredQuestions)[answersCount];
+    if (currentIndex < questionsCount) {
+      nextQuizId = Object.keys(filteredQuestions)[currentIndex+1];
     }
 
     return nextQuizId;

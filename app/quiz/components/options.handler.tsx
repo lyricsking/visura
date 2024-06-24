@@ -5,50 +5,61 @@ import { Checkbox } from "~/shared/components/checkbox";
 import { AnswerType } from "../quiz.type";
 
 type OptionsType = {
-  currentAnswer: string|string[];
-  onAnswerSelected: (answer: string|string[]) => void;
-  options: string[];
+  name: string,
+  defaultValue: string|string[];
+  onValueChange: (answer: string|string[]) => void;
+  options?: string[];
 };
 type AnswerProps = OptionsType & {
   answerType: AnswerType;
 };
 export default function OptionsHandler({
   answerType,
-  currentAnswer,
-  onAnswerSelected,
+  name,
+  defaultValue,
+  onValueChange,
   options,
 }: AnswerProps) {
   const switchType = useCallback(() => {
     switch (answerType) {
+      case "text":
+        return <TextInput />;
       case "single":
         return (
           <Single
+            name={name}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
             options={options}
-            currentAnswer={currentAnswer}
-            onAnswerSelected={onAnswerSelected}
           />
         );
       case "multiple":
         return (
           <Multiple
+            name={name}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
             options={options}
-            currentAnswer={currentAnswer}
-            onAnswerSelected={onAnswerSelected}
           />
         );
       default:
         return null;
     }
-  }, [currentAnswer, options]);
+  }, [answerType,name, defaultValue, options, onValueChange]);
 
   return switchType();
 }
 
-function Single({ options, currentAnswer, onAnswerSelected }: OptionsType) {
+function TextInput({name, defaultValue, onValueChange}: OptionsType){
+  return <Input name={name} defaultValue={defaultValue} />
+}
+
+function Single({ name, defaultValue, onValueChange, options}: OptionsType) {
   return (
     <RadioGroup
-      value={currentAnswer as string}
-      onValueChange={onAnswerSelected}
+      name={name}
+      value={defaultValue as string}
+      onValueChange={onValueChange}
     >
       {options.map((option) => (
         <div
@@ -72,7 +83,7 @@ function Single({ options, currentAnswer, onAnswerSelected }: OptionsType) {
   );
 }
 
-function Multiple({ options, currentAnswer, onAnswerSelected }: OptionsType) {
+function Multiple({ name, defaultValue, onValueChange, options }: OptionsType) {
   return (
     <div className="flex flex-col space-y-2">
       {options.map((option) => (
@@ -83,17 +94,10 @@ function Multiple({ options, currentAnswer, onAnswerSelected }: OptionsType) {
           <Checkbox
             id={option}
             className="h-5 w-5 rounded-none"
+            name={name}
+            value={opt}
             checked={currentAnswer?.includes(option)}
-            onCheckedChange={(checked) => {
-              const currentAnswers =
-                currentAnswer && Array.isArray(currentAnswer)
-                  ? [...currentAnswer]
-                  : [];
-              if (checked) {
-                currentAnswers.push(option);
-                onAnswerSelected(currentAnswers);
-              }
-            }}
+            required
           />
           <label
             htmlFor={option}
