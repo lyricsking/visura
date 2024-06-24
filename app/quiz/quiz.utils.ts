@@ -358,7 +358,7 @@ export function useQuiz() {
     } = {};
 
     questions.forEach((question) => {
-      const id = getNanoid(21);
+      const id = getNanoid(32);
       questionsWithId[id] = question;
     });
 
