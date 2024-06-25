@@ -1,16 +1,12 @@
 import { createCookie } from "@remix-run/node";
 
 import mongoose from "mongoose";
-import type { ISupplement } from "~/supplement/supplement.type";
+import type { ISupplement, SupplementWithScore } from "~/supplement/supplement.type";
 import { addItemsToCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
 import SupplementModel from "~/supplement/supplement.type";
 import { Answers } from "./quiz.type";
 
-export interface SupplementWithScore {
-  supplement: ISupplement;
-  score: number;
-}
 
 export const quizPrefs = createCookie("quizPrefs", {
   maxAge: 1440,
@@ -65,7 +61,7 @@ export async function recommendSupplements(
   const matchedSupplements = await SupplementModel.find(query).exec();
 
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
-  const supplementWeights = matchedSupplements.map(
+  const supplementWeights: SupplementWithScore = matchedSupplements.map(
     (supplement: ISupplement) => {
       let weight = 0;
       if (
@@ -183,9 +179,9 @@ export async function recommendSupplements(
   );
 
   // Sort supplements based on weight. This arranges the supplement inorder of relevance.
-  supplementWeights.sort((a: any, b: any) => b.weight - a.weight);
+  supplementWeights.sort((a, b) => b.weight - a.weight);
 
-  //  Initialize totalcost variable
+  //  Initialize totalCost variable, holds the total cost of supplements
   let totalCost = 0;
   //  Cache for supplements filter
   const recommendedSupplements: ISupplement[] = [];
