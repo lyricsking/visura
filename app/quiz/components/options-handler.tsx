@@ -1,15 +1,15 @@
-import { useCallback } from "react";
 import { RadioGroup, RadioGroupItem } from "~/shared/components/radio";
 import { Label } from "~/shared/components/label";
 import { Checkbox } from "~/shared/components/checkbox";
 import { AnswerType } from "../quiz.type";
 import { Input } from "~/shared/components/input";
+import { cn } from "~/shared/utils";
 
 type OptionsType = {
-  name: string,
+  name: string;
   defaultValue: string | string[];
   onValueChange: (answer: string | string[]) => void;
-  options ? : string[];
+  options?: string[];
 };
 
 type AnswerProps = OptionsType & {
@@ -23,14 +23,25 @@ export default function OptionsHandler({
   onValueChange,
   options,
 }: AnswerProps) {
-  const switchType = useCallback(() => {
+  const switchType = () => {
     switch (answerType) {
       case "text":
-        return <TextInput name={name} defaultValue={defaultValue} onValueChange={onValueChange}
-        />;
+        return (
+          <TextInput
+            name={name}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
+          />
+        );
       case "number":
-        return <TextInput type="number" name={name} defaultValue={defaultValue} onValueChange={onValueChange}
-        />;
+        return (
+          <TextInput
+            type="number"
+            name={name}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
+          />
+        );
       case "single":
         return (
           <Single
@@ -49,79 +60,135 @@ export default function OptionsHandler({
             options={options}
           />
         );
+      case "single-tag":
+        return (
+          <Single
+            type="flow"
+            name={name}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
+            options={options}
+          />
+        );
+      case "multiple-tag":
+        return (
+          <Multiple
+            type="flow"
+            name={name}
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
+            options={options}
+          />
+        );
       default:
         return null;
     }
-  }, [answerType, name, defaultValue, options, onValueChange]);
-
+  };
   return switchType();
 }
 
 type TextType = {
-  type: "text" | "number"
-}
+  type?: "text" | "number";
+};
 
-function TextInput({ name, defaultValue, type }: OptionsType & TextType) {
-  return <Input className="capitalize" type={type} name={name} defaultValue={defaultValue} placeholder={name} />
+function TextInput({
+  name,
+  defaultValue,
+  type = "text",
+}: OptionsType & TextType) {
+  return (
+    <Input
+      className="capitalize h-20 text-2xl border-2"
+      type={type}
+      name={name}
+      defaultValue={defaultValue}
+      placeholder={name}
+    />
+  );
 }
 
 type SingleType = {
-  type: "flex" | "flow"
-}
+  type?: "flex" | "flow";
+};
 
-function Single({ name, defaultValue, onValueChange, options, type }: OptionsType & SingleType) {
+function Single({
+  name,
+  defaultValue,
+  onValueChange,
+  options,
+  type = "flex",
+}: OptionsType & SingleType) {
   return (
     <RadioGroup
       name={name}
       value={defaultValue as string}
       onValueChange={onValueChange}
     >
-      {options&&options.map((option) => (
-        <div
-          key={option}
-          className={cn("space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white", type=== "flow" && "flex items-center")}
-        >
-          <RadioGroupItem
-            className="h-5 w-6 rounded-none"
-            value={option}
-            id={option}
-          />
-          <Label
-            className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor={option}
+      {options &&
+        options.map((option) => (
+          <div
+            key={option}
+            className={cn(
+              "space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white",
+              type === "flow" && "flex items-center"
+            )}
           >
-            {option}
-          </Label>
-        </div>
-      ))}
+            <RadioGroupItem
+              className="h-5 w-6 rounded-none"
+              value={option}
+              id={option}
+            />
+            <Label
+              className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              htmlFor={option}
+            >
+              {option}
+            </Label>
+          </div>
+        ))}
     </RadioGroup>
   );
 }
 
-function Multiple({ name, defaultValue, options, type }: OptionsType & SingleType) {
+function Multiple({
+  name,
+  defaultValue,
+  options,
+  type = "flex",
+}: OptionsType & SingleType) {
   return (
-    <div className={cn("flex", type === "flex" && "flex-col space-y-2", type === "flow" && "flex-row space-x-2")}>
-      {options&&options.map((option) => (
-        <div
-          key={option}
-          className="flex items-center space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white"
-        >
-          <Checkbox
-            id={option}
-            className="h-5 w-5 rounded-none"
-            name={name}
-            value={option}
-            checked={defaultValue?.includes(option)}
-            required
-          />
-          <label
-            htmlFor={option}
-            className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+    <div
+      className={cn(
+        "flex gap-2",
+        type === "flex" && "flex-col",
+        type === "flow" && "flex-row flex-wrap items-center justify-center"
+      )}
+    >
+      {options &&
+        options.map((option) => (
+          <div
+            key={option}
+            className={cn(
+              "items-center space-x-4 p-6 border rounded-md bg-indigo-400 text-white",
+              type === "flex" && "flex",
+              type === "flow" && "inline-flex"
+            )}
           >
-            {option}
-          </label>
-        </div>
-      ))}
+            <Checkbox
+              id={option}
+              className="h-5 w-5 rounded-none"
+              name={name}
+              value={option}
+              checked={defaultValue?.includes(option)}
+            />
+            <label
+              htmlFor={option}
+              className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {option}
+            </label>
+          </div>
+        ))}
     </div>
   );
 }

@@ -8,12 +8,12 @@ import {
 } from "@remix-run/react";
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import OptionsHandler from "./components/options.handler";
 import { Progress } from "~/shared/components/progress";
 import { useEffect } from "react";
 import { Answers, Question } from "./quiz.type";
 import type { ISupplement } from "~/supplement/supplement.type";
 import { useQuiz } from "./quiz.utils";
+import OptionsHandler from "./components/options-handler";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -152,8 +152,9 @@ export default function Index() {
           <div className="flex-1 my-6 p-2 w-full">
             <OptionsHandler
               answerType={question.type}
-              currentAnswer={"answer"}
-              onAnswerSelected={() => {}}
+              name={question.id}
+              defaultValue=""
+              onValueChange={() => {}}
               options={question.options}
             />
           </div>

@@ -1,4 +1,11 @@
-export type AnswerType ="text" | "single" | "multiple" | "tag" | "number" | "multiple-tag" | "single-tag";
+export type AnswerType =
+  | "text"
+  | "single"
+  | "multiple"
+  | "tag"
+  | "number"
+  | "multiple-tag"
+  | "single-tag";
 
 const Operators = {
   equals: "equals",
@@ -27,7 +34,6 @@ export interface Question {
   condition?: QuestionCondition;
 }
 
-/* 
 export interface Answers {
   name: string;
   email: string;
@@ -71,11 +77,9 @@ export interface Answers {
   enduranceNeeds: boolean;
 }
 
-*/
-
-export type Answers = {
-  [key: string]: string | string[]
-}
+export type Answersx = {
+  [key: string]: string | string[];
+};
 
 export const QuizAction = {
   cacheQuestions: "cacheQuestions",

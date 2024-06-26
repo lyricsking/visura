@@ -25,18 +25,18 @@ const questions: Question[] = [
     id: "gender",
     question: "What is your gender?",
     type: "single",
-    options: ["Male", "Female", "Other"]
+    options: ["Male", "Female", "Other"],
   },
   {
     id: "dietaryRestrictions",
     question: "Do you have any dietary preferences?",
-    type: "multiple",
+    type: "multiple-tag",
     options: ["Vegan", "Vegetarian", "Gluten-Free", "Keto", "Paleo", "None"],
   },
   {
     id: "allergies",
     question: "Do you have any allergies?",
-    type: "multiple",
+    type: "multiple-tag",
     options: ["Nuts", "Dairy", "Gluten", "Soy", "Processed Foods", "None"],
   },
   {
@@ -66,37 +66,37 @@ const questions: Question[] = [
     id: "sleepQuality",
     question: "How would you rate the quality of your sleep?",
     type: "single",
-    options: ["Poor", "Average", "Good"]
+    options: ["Poor", "Average", "Good"],
   },
   {
     id: "stressLevel",
     question: "How would you rate your stress level?",
     type: "single",
-    options: ["Low", "Moderate", "High"]
+    options: ["Low", "Moderate", "High"],
   },
   {
     id: "chronicDiseases",
     question: "Do you have any chronic diseases?",
     type: "multiple",
-    options: ["Diabetes", "Hypertension", "Heart Disease", "None"]
+    options: ["Diabetes", "Hypertension", "Heart Disease", "None"],
   },
   {
     id: "digestiveIssues",
     question: "Do you have any digestive issues?",
     type: "multiple",
-    options: ["Acid Reflux", "IBS", "Constipation", "None"]
+    options: ["Acid Reflux", "IBS", "Constipation", "None"],
   },
   {
     id: "mentalHealthConcerns",
     question: "Do you have any mental health concerns?",
     type: "multiple",
-    options: ["Anxiety", "Depression", "None"]
+    options: ["Anxiety", "Depression", "None"],
   },
   {
     id: "boneHealthConcerns",
     question: "Do you have any bone health concerns?",
     type: "multiple",
-    options: ["Osteoporosis", "Arthritis", "None"]
+    options: ["Osteoporosis", "Arthritis", "None"],
   },
   {
     id: "healthGoals",
@@ -137,11 +137,11 @@ const questions: Question[] = [
       "Allergies",
       "Anxiety",
       "Stress",
+      "Eye Issues",
       "Sleep Disorders",
       "Depression",
       "Osteoporosis",
       "Skin Condition",
-      "Eye Issues",
       "Liver Issues",
       "Menopause",
       "Menstrual Issues",
@@ -348,7 +348,7 @@ export function filterQuestions(
 
 export function useQuiz() {
   const navigate = useNavigate();
-  
+
   const initQuiz = () => {
     const questionsWithId: {
       [key: string]: Question;
@@ -360,25 +360,25 @@ export function useQuiz() {
     });
 
     //setQuestions(questionsWithId);
-    
+
     const id = Object.keys(questionsWithId)[0];
     navigate(`/quiz?id=${id}`, {
-      state: { questions: questionsWithId }
-    })
+      state: { questions: questionsWithId },
+    });
   };
 
   const saveAnswer = (key: keyof Answers, answer: string | string[]) => {
     //  Retrieve existing answers or init if otherwise
-    const oldAnswers= getAnswers() ||{} as Answers;
+    const oldAnswers = getAnswers() || ({} as Answers);
     //  create new answer, putting the new answer
-    const newAnswers:Answers = {
+    const newAnswers: Answers = {
       ...oldAnswers,
       [key]: answer,
-    }
+    };
     //  Save the new answers to session
-    setAnswers(newAnswers);    
+    setAnswers(newAnswers);
     //  Get the existing question
-    const questions= getQuestions()
+    const questions = getQuestions();
     //  Filter the question
     const filteredQuestions = filterQuestions(questions, newAnswers);
     //  Update session's question to the  filtered questions
@@ -388,11 +388,11 @@ export function useQuiz() {
     //  Get the index of the submitted answer
     const currentIndex = questionKeys.findIndex((value) => value === key);
     //  Get the last index
-    const questionsCount = questionKeys.length-1;
+    const questionsCount = questionKeys.length - 1;
 
     let nextQuizId;
     if (currentIndex < questionsCount) {
-      nextQuizId = Object.keys(filteredQuestions)[currentIndex+1];
+      nextQuizId = Object.keys(filteredQuestions)[currentIndex + 1];
     }
 
     return nextQuizId;
@@ -419,10 +419,10 @@ export function useQuiz() {
     };
   };
 
-  const getQuestions= ():{ [key: string]: Question }  =>
+  const getQuestions = (): { [key: string]: Question } =>
     JSON.parse(sessionStorage.getItem(QUESTIONS_KEY) as string) || {};
 
-  const setQuestions = (questions: {[key:string]: Question}) =>
+  const setQuestions = (questions: { [key: string]: Question }) =>
     sessionStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
 
   const hasQuestions = () => Object.keys(getQuestions()).length > 0;
@@ -430,9 +430,9 @@ export function useQuiz() {
   const getQuestion = (id: string) => getQuestions()[id];
 
   const getAnswers = (): Answers | null => {
-    const answers =sessionStorage.getItem(ANSWERS_KEY);
-    return answers ? JSON.parse(answers) : null
-  }
+    const answers = sessionStorage.getItem(ANSWERS_KEY);
+    return answers ? JSON.parse(answers) : null;
+  };
   const setAnswers = (answers: Answers) =>
     sessionStorage.setItem(ANSWERS_KEY, JSON.stringify(answers));
 
