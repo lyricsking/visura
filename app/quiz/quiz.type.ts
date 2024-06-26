@@ -1,4 +1,4 @@
-export type AnswerType = "single" | "multiple" | "tag" | "number" | "text";
+export type AnswerType ="text" | "single" | "multiple" | "tag" | "number" | "multiple-tag" | "single-tag";
 
 const Operators = {
   equals: "equals",
@@ -23,10 +23,11 @@ export interface Question {
   question: string;
   description?: string;
   type: AnswerType;
-  options: string[];
+  options?: string[];
   condition?: QuestionCondition;
 }
 
+/* 
 export interface Answers {
   name: string;
   email: string;
@@ -68,6 +69,12 @@ export interface Answers {
   sustainabilityConcerns: boolean;
   focusNeeds: boolean;
   enduranceNeeds: boolean;
+}
+
+*/
+
+export type Answers = {
+  [key: string]: string | string[]
 }
 
 export const QuizAction = {

@@ -7,13 +7,15 @@ import { Input } from "~/shared/components/input";
 
 type OptionsType = {
   name: string,
-  defaultValue: string|string[];
-  onValueChange: (answer: string|string[]) => void;
-  options?: string[];
+  defaultValue: string | string[];
+  onValueChange: (answer: string | string[]) => void;
+  options ? : string[];
 };
+
 type AnswerProps = OptionsType & {
   answerType: AnswerType;
 };
+
 export default function OptionsHandler({
   answerType,
   name,
@@ -24,7 +26,11 @@ export default function OptionsHandler({
   const switchType = useCallback(() => {
     switch (answerType) {
       case "text":
-        return <TextInput name={name} defaultValue={defaultValue} onValueChange={onValueChange}/>;
+        return <TextInput name={name} defaultValue={defaultValue} onValueChange={onValueChange}
+        />;
+      case "number":
+        return <TextInput type="number" name={name} defaultValue={defaultValue} onValueChange={onValueChange}
+        />;
       case "single":
         return (
           <Single
@@ -46,16 +52,24 @@ export default function OptionsHandler({
       default:
         return null;
     }
-  }, [answerType,name, defaultValue, options, onValueChange]);
+  }, [answerType, name, defaultValue, options, onValueChange]);
 
   return switchType();
 }
 
-function TextInput({name, defaultValue}: OptionsType){
-  return <Input name={name} defaultValue={defaultValue} />
+type TextType = {
+  type: "text" | "number"
 }
 
-function Single({ name, defaultValue, onValueChange, options}: OptionsType) {
+function TextInput({ name, defaultValue, type }: OptionsType & TextType) {
+  return <Input className="capitalize" type={type} name={name} defaultValue={defaultValue} placeholder={name} />
+}
+
+type SingleType = {
+  type: "flex" | "flow"
+}
+
+function Single({ name, defaultValue, onValueChange, options, type }: OptionsType & SingleType) {
   return (
     <RadioGroup
       name={name}
@@ -65,7 +79,7 @@ function Single({ name, defaultValue, onValueChange, options}: OptionsType) {
       {options&&options.map((option) => (
         <div
           key={option}
-          className="flex items-center space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white"
+          className={cn("space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white", type=== "flow" && "flex items-center")}
         >
           <RadioGroupItem
             className="h-5 w-6 rounded-none"
@@ -84,9 +98,9 @@ function Single({ name, defaultValue, onValueChange, options}: OptionsType) {
   );
 }
 
-function Multiple({ name, defaultValue, options }: OptionsType) {
+function Multiple({ name, defaultValue, options, type }: OptionsType & SingleType) {
   return (
-    <div className="flex flex-col space-y-2">
+    <div className={cn("flex", type === "flex" && "flex-col space-y-2", type === "flow" && "flex-row space-x-2")}>
       {options&&options.map((option) => (
         <div
           key={option}

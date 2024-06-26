@@ -10,25 +10,22 @@ const questions: Question[] = [
     id: "name",
     question: "Tell us your name",
     type: "text",
-    options: [],
   },
   {
     id: "email",
     question: "What is your email address?",
     type: "text",
-    options: [],
   },
   {
     id: "age",
     question: "What is your age?",
     type: "number",
-    options: [],
   },
   {
     id: "gender",
     question: "What is your gender?",
     type: "single",
-    options: ["Male", "Female", "Other"],
+    options: ["Male", "Female", "Other"]
   },
   {
     id: "dietaryRestrictions",
@@ -69,37 +66,37 @@ const questions: Question[] = [
     id: "sleepQuality",
     question: "How would you rate the quality of your sleep?",
     type: "single",
-    options: ["Poor", "Average", "Good"],
+    options: ["Poor", "Average", "Good"]
   },
   {
     id: "stressLevel",
     question: "How would you rate your stress level?",
     type: "single",
-    options: ["Low", "Moderate", "High"],
+    options: ["Low", "Moderate", "High"]
   },
   {
     id: "chronicDiseases",
     question: "Do you have any chronic diseases?",
     type: "multiple",
-    options: ["Diabetes", "Hypertension", "Heart Disease", "None"],
+    options: ["Diabetes", "Hypertension", "Heart Disease", "None"]
   },
   {
     id: "digestiveIssues",
     question: "Do you have any digestive issues?",
     type: "multiple",
-    options: ["Acid Reflux", "IBS", "Constipation", "None"],
+    options: ["Acid Reflux", "IBS", "Constipation", "None"]
   },
   {
     id: "mentalHealthConcerns",
     question: "Do you have any mental health concerns?",
     type: "multiple",
-    options: ["Anxiety", "Depression", "None"],
+    options: ["Anxiety", "Depression", "None"]
   },
   {
     id: "boneHealthConcerns",
     question: "Do you have any bone health concerns?",
     type: "multiple",
-    options: ["Osteoporosis", "Arthritis", "None"],
+    options: ["Osteoporosis", "Arthritis", "None"]
   },
   {
     id: "healthGoals",

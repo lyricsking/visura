@@ -19,6 +19,11 @@ export interface ISupplement extends Document {
   };
 }
 
+export interface SupplementWithScore {
+  supplement: ISupplement;
+  weight: number; //  Calculated weight based on relevance to user's selections
+}
+
 const SupplementSchema: Schema = new Schema<ISupplement>({
   name: { type: String, required: true },
   price: { type: Number, required: true },
@@ -37,6 +42,7 @@ const SupplementSchema: Schema = new Schema<ISupplement>({
     max: { type: Number },
   },
 });
+
 const SupplementModel =
   mongoose.models.Supplement ||
   mongoose.model<ISupplement>("Supplement", SupplementSchema);
