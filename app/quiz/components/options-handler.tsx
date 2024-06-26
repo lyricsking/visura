@@ -7,9 +7,9 @@ import { Input } from "~/shared/components/input";
 
 type OptionsType = {
   name: string,
-  defaultValue: string|string[];
-  onValueChange: (answer: string|string[]) => void;
-  options?: string[];
+  defaultValue: string | string[];
+  onValueChange: (answer: string | string[]) => void;
+  options ? : string[];
 };
 
 type AnswerProps = OptionsType & {
@@ -52,7 +52,7 @@ export default function OptionsHandler({
       default:
         return null;
     }
-  }, [answerType,name, defaultValue, options, onValueChange]);
+  }, [answerType, name, defaultValue, options, onValueChange]);
 
   return switchType();
 }
@@ -61,15 +61,15 @@ type TextType = {
   type: "text" | "number"
 }
 
-function TextInput({name, defaultValue, type}: OptionsType&{ }){
+function TextInput({ name, defaultValue, type }: OptionsType & TextType) {
   return <Input className="capitalize" type={type} name={name} defaultValue={defaultValue} placeholder={name} />
 }
 
-type SingleType= {
+type SingleType = {
   type: "flex" | "flow"
 }
 
-function Single({ name, defaultValue, onValueChange, options,type}: OptionsType&SingleType) {
+function Single({ name, defaultValue, onValueChange, options, type }: OptionsType & SingleType) {
   return (
     <RadioGroup
       name={name}
@@ -98,7 +98,7 @@ function Single({ name, defaultValue, onValueChange, options,type}: OptionsType&
   );
 }
 
-function Multiple({ name, defaultValue, options, type }: OptionsType&SingleType) {
+function Multiple({ name, defaultValue, options, type }: OptionsType & SingleType) {
   return (
     <div className={cn("flex", type === "flex" && "flex-col space-y-2", type === "flow" && "flex-row space-x-2")}>
       {options&&options.map((option) => (
