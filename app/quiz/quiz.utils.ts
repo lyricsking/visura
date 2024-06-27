@@ -1,11 +1,10 @@
-import { getNanoid } from "~/shared/utils";
 import { Answers, Question, QuestionCondition } from "./quiz.type";
 import { useNavigate } from "@remix-run/react";
 
 const QUESTIONS_KEY = "questionsKey";
 const ANSWERS_KEY = "answersKey";
 
-const questions: Question[] = [
+export const questions: Question[] = [
   {
     id: "name",
     question: "Tell us your name",
@@ -30,13 +29,13 @@ const questions: Question[] = [
   {
     id: "dietaryRestrictions",
     question: "Do you have any dietary preferences?",
-    type: "multiple-tag",
+    type: "multiple",
     options: ["Vegan", "Vegetarian", "Gluten-Free", "Keto", "Paleo", "None"],
   },
   {
     id: "allergies",
     question: "Do you have any allergies?",
-    type: "multiple-tag",
+    type: "multiple",
     options: ["Nuts", "Dairy", "Gluten", "Soy", "Processed Foods", "None"],
   },
   {
@@ -137,11 +136,11 @@ const questions: Question[] = [
       "Allergies",
       "Anxiety",
       "Stress",
-      "Eye Issues",
       "Sleep Disorders",
       "Depression",
       "Osteoporosis",
       "Skin Condition",
+      "Eye Issues",
       "Liver Issues",
       "Menopause",
       "Menstrual Issues",
@@ -350,21 +349,7 @@ export function useQuiz() {
   const navigate = useNavigate();
 
   const initQuiz = () => {
-    const questionsWithId: {
-      [key: string]: Question;
-    } = {};
-
-    questions.forEach((question) => {
-      const id = getNanoid(32);
-      questionsWithId[id] = question;
-    });
-
-    //setQuestions(questionsWithId);
-
-    const id = Object.keys(questionsWithId)[0];
-    navigate(`/quiz?id=${id}`, {
-      state: { questions: questionsWithId },
-    });
+    navigate(`/quiz`);
   };
 
   const saveAnswer = (key: keyof Answers, answer: string | string[]) => {
