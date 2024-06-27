@@ -287,56 +287,53 @@ export const questions: Question[] = [
 ];
 
 export function filterQuestions(
-  questions: Record<string, Question>,
+  questions: Question[],
   answers: Answers
 ) {
-  const questionsKeys = Object.keys(questions);
-  const filteredQuestions: Record<string, Question> = {};
-
-  questionsKeys.forEach((key) => {
-    const question = questions[key];
+  
+  const filteredQuestions: Question[] =[];
+  questions.forEach((question) => {
     if (!question.condition) {
-      filteredQuestions[key] = question;
-      return;
+      filteredQuestions.push(question);
     } else {
       const condition: QuestionCondition = question.condition;
       const answer = answers[condition.questionId as keyof typeof answers];
 
       switch (condition.operator) {
         case "equals":
-          answer == condition.value && (filteredQuestions[key] = question);
+          answer == condition.value && (filteredQuestion.push(question));
           break;
         case "lt":
           condition.value &&
             answer < condition.value &&
-            (filteredQuestions[key] = question);
+            (filteredQuestion.push(question));
           break;
         case "gt":
           condition.value &&
             answer > condition.value &&
-            (filteredQuestions[key] = question);
+            (filteredQuestion.push(question));
           break;
         case "lte":
           condition.value &&
             answer <= condition.value &&
-            (filteredQuestions[key] = question);
+            (filteredQuestion.push(question));
           break;
         case "gte":
           condition.value &&
             answer >= condition.value &&
-            (filteredQuestions[key] = question);
+            (filteredQuestion.push(question));
           break;
         case "contains":
           condition.value &&
             (typeof answer === "string" || Array.isArray(answer)) &&
             answer.includes(condition.value) &&
-            (filteredQuestions[key] = question);
+            (filteredQuestion.push(question));
           break;
         case "notNull":
-          answer && (filteredQuestions[key] = question);
+          answer && (filteredQuestion.push(question));
           break;
         case "isNull":
-          !answer && (filteredQuestions[key] = question);
+          !answer && (filteredQuestion.push(question));
           break;
       }
     }
@@ -352,82 +349,5 @@ export function useQuiz() {
     navigate(`/quiz`);
   };
 
-  const saveAnswer = (key: keyof Answers, answer: string | string[]) => {
-    //  Retrieve existing answers or init if otherwise
-    const oldAnswers = getAnswers() || ({} as Answers);
-    //  create new answer, putting the new answer
-    const newAnswers: Answers = {
-      ...oldAnswers,
-      [key]: answer,
-    };
-    //  Save the new answers to session
-    setAnswers(newAnswers);
-    //  Get the existing question
-    const questions = getQuestions();
-    //  Filter the question
-    const filteredQuestions = filterQuestions(questions, newAnswers);
-    //  Update session's question to the  filtered questions
-    setQuestions(filteredQuestions);
-    //  Get question keys to figure out our progress in the quiz
-    const questionKeys = Object.keys(filteredQuestions);
-    //  Get the index of the submitted answer
-    const currentIndex = questionKeys.findIndex((value) => value === key);
-    //  Get the last index
-    const questionsCount = questionKeys.length - 1;
-
-    let nextQuizId;
-    if (currentIndex < questionsCount) {
-      nextQuizId = Object.keys(filteredQuestions)[currentIndex + 1];
-    }
-
-    return nextQuizId;
-  };
-
-  const previousQuestion = (currentId: string) => {
-    const questionKeys = Object.keys(getQuestions());
-
-    const currentIndex = questionKeys.findIndex((value) => value === currentId);
-
-    return questionKeys[Math.max(currentIndex - 1, 0)];
-  };
-
-  const getProgress = (id: string) => {
-    const questionsKeys = Object.keys(getQuestions());
-
-    const currentIndex = questionsKeys.indexOf(id);
-    const lastIndex = questionsKeys.length - 1;
-
-    return {
-      currentIndex,
-      lastIndex,
-      ratio: Math.min(currentIndex / lastIndex || 0, 1),
-    };
-  };
-
-  const getQuestions = (): { [key: string]: Question } =>
-    JSON.parse(sessionStorage.getItem(QUESTIONS_KEY) as string) || {};
-
-  const setQuestions = (questions: { [key: string]: Question }) =>
-    sessionStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
-
-  const hasQuestions = () => Object.keys(getQuestions()).length > 0;
-
-  const getQuestion = (id: string) => getQuestions()[id];
-
-  const getAnswers = (): Answers | null => {
-    const answers = sessionStorage.getItem(ANSWERS_KEY);
-    return answers ? JSON.parse(answers) : null;
-  };
-  const setAnswers = (answers: Answers) =>
-    sessionStorage.setItem(ANSWERS_KEY, JSON.stringify(answers));
-
-  return {
-    initQuiz,
-    hasQuestions,
-    getQuestion,
-    saveAnswer,
-    getProgress,
-    answers: getAnswers,
-    previousQuestion,
-  };
+  return { initQuiz };
 }

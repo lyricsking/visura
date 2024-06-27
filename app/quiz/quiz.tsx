@@ -25,7 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   //  Save the answer as data to send to server-side for processing
   const data = Object.fromEntries(formData.entries());
 
-  session.set("answers", data);
+  session.set(ANSWER_KEY, data);
 
   const headers = {
     "Set-Cookie": await commitSession(session),
@@ -34,16 +34,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({ success: true, data: { answers: data } }, { headers });
 };
 
+const GID_KEY = "gId";
+const GIDS_MAP_KEY = "gIdsMap";
+const ANSWER_KEY = "answers";
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   //  Converts the request url to instance of URL for easy manipulation
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
-  const currentId = url.searchParams.get("gId");
+  const currentId = url.searchParams.get(GID_KEY);
 
   const session = await getSession(request.headers.get("Cookie"));
 
   // Generate a map of unique IDs for questions if not already generated
-  let gIdsMap = session.get("gIdsMap");
+  let gIdsMap = session.get(GID_MAP_KEY);
   if (!gIdsMap) {
     gIdsMap = {};
 
@@ -52,17 +56,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       gIdsMap[id] = question.id;
     });
 
-    session.set("gIdsMap", gIdsMap);
+    session.set(GIDS_MAP_KEY, gIdsMap);
   }
+  console.log(gIdsMap);
 
-  const answers = session.get("answers") || {};
+  const answers = session.get(ANSWER_KEY) || {};
 
   //  Redirect to the first question if provided question id no longer exist, e.g maybe session expired
   const gIds = Object.keys(gIdsMap);
-  if (!currentId || !gIds.includes(currentId))
-    return redirect(`/quiz?gId=${gIds[0]}`);
-  console.log(gIdsMap);
-
+  if (!currentId || !gIds.includes(currentId)){
+    //return redirect(`/quiz?${GID_KEY}=${gIds[0]}`);
+    return;
+  }
   //  Return a formatted response with the currentId to the quiz component
   return json(
     { currentId, gIdsMap, answers },
