@@ -10,7 +10,7 @@ import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/shared/components/progress";
 import { useEffect } from "react";
-import { commitSession, getSession } from "~/shared/utils/cookie";
+import { commitSession, getSession } from "~/shared/utils/session";
 import { questions } from "./quiz.utils";
 import { getNanoid } from "~/shared/utils";
 import { Question } from "./quiz.type";
@@ -53,12 +53,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     gIdsMap = {};
 
     questions.forEach((question) => {
-      const id = getNanoid(2);
+      const id = getNanoid(32);
       gIdsMap[id] = question.id;
     });
 
     session.set(GIDS_MAP_KEY, gIdsMap);
   }
+  
+  console.log("generated", gIdsMap);
 
   const answers = session.get(ANSWER_KEY) || {};
 
