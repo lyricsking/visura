@@ -43,30 +43,31 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
   const currentId = url.searchParams.get(GID_KEY);
-
+  console.log("Highde", currentId);
   const session = await getSession(request.headers.get("Cookie"));
 
   // Generate a map of unique IDs for questions if not already generated
-  let gIdsMap = session.get(GID_MAP_KEY);
+  let gIdsMap = session.get(GIDS_MAP_KEY);
+  console.log("session", gIdsMap);
   if (!gIdsMap) {
     gIdsMap = {};
 
     questions.forEach((question) => {
-      const id = getNanoid(32);
+      const id = getNanoid(2);
       gIdsMap[id] = question.id;
     });
 
     session.set(GIDS_MAP_KEY, gIdsMap);
   }
-  console.log(gIdsMap);
 
   const answers = session.get(ANSWER_KEY) || {};
 
   //  Redirect to the first question if provided question id no longer exist, e.g maybe session expired
   const gIds = Object.keys(gIdsMap);
-  if (!currentId || !gIds.includes(currentId)){
-    //return redirect(`/quiz?${GID_KEY}=${gIds[0]}`);
-    return;
+  if (!currentId || !gIds.includes(currentId)) {
+    const gId = gIds[0];
+    return redirect(`/quiz?${GID_KEY}=${gId}`);
+    //return null;
   }
   //  Return a formatted response with the currentId to the quiz component
   return json(

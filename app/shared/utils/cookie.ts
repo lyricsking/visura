@@ -16,5 +16,6 @@ export const { getSession, commitSession, destroySession } =
       sameSite: "lax",
       secrets: [sessionSecret],
       secure: process.env.NODE_ENV === "production",
+      maxAge: 60,
     },
   });
