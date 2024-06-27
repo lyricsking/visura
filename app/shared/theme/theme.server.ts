@@ -1,4 +1,4 @@
-import { commitSession, getSession } from "../utils/cookie";
+import { commitSession, getSession } from "../utils/session";
 import { Theme, isTheme } from "./theme.provider";
 
 async function getThemeSession(request: Request) {
