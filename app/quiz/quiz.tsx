@@ -114,15 +114,28 @@ export default function Quiz() {
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     //  Prevents default form handler
     e.preventDefault();
-    //alert(questionIndex);
-    //alert(totalQuestionCount);
-    //  Retrieve formdata instance from form element
-    const formData = new FormData(e.currentTarget);
-    //  Prep the data
-    const data = Object.fromEntries(formData.entries());
-
-    const newAnswers = lo.merge(answers, data);
-
+    
+    const newAnswers = {...answers}
+    
+    const formElements = e.target.elements;
+    Array.from(formElements).forEach((element) => {
+      if (element.name) {
+        if (element.type === "checkbox") {
+          if (!newAnswers[element.name]) {
+            newAnswers[element.name] = [];
+          }
+          if (element.checked) {
+            newAnswers[element.name].push(element.value);
+          } else {
+            newAnswers[element.name] = newAnswers[element.name].filter((value) => value !== element.value
+            );
+          }
+        } else {
+          newAnswers[element.name] = element.value;
+        }
+      }
+    });
+    
     // Send the data to backend here
     fetcher.submit(newAnswers, { method: "POST", navigate: true });
   };
@@ -139,7 +152,7 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    if (fetcher.state != "idle" && fetcher.data) {
+    if (fetcher.state != "loading" && fetcher.data) {
       const nextQuestionIndex = questionIndex + 1;
 
       //  Check if we have exhausted the questions available

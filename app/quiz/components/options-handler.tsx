@@ -184,7 +184,7 @@ function Multiple({
                 className="h-5 w-5 rounded-none"
                 name={name}
                 value={option}
-                checked={defaultValue?.includes(option)}
+                checked={defaultValue? defaultValue.includes(option): false}
               />
               {option}
             </Label>

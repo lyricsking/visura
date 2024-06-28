@@ -4,7 +4,7 @@ import { useNavigate } from "@remix-run/react";
 export const questions: Question[] = [
   {
     id: "name",
-    question: "Tell us your name",
+    question: "Tell us your name",.
     type: "text",
   },
   {
@@ -52,10 +52,10 @@ export const questions: Question[] = [
     question: "How many hours do you sleep on average per night?",
     type: "single",
     options: [
-      "Less than 5 hours",
-      "5-7 hours",
-      "7-9 hours",
-      "More than 9 hours",
+      "<5",
+      "5-7",
+      "7-9",
+      "9+",
     ],
   },
   {
@@ -261,7 +261,7 @@ export const questions: Question[] = [
     id: "brandPreferences",
     question: "Do you have any preferred brands? (Select all that apply.)",
     type: "multiple",
-    options: ["Kedi"],
+    options: ["Kedi", "Lyrics"],
   },
   {
     id: "sustainabilityConcerns",
