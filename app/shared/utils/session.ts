@@ -1,25 +1,29 @@
-import { createCookie, createCookieSessionStorage } from "@remix-run/node";
-import path from "path";
-
+import { createCookie, createFileSessionStorage } from "@remix-run/node";
 export const prefs = createCookie("prefs");
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const storagePath = path.resolve(__dirname, "./");
+console.log(storagePath);
 
 const sessionSecret = process.env.SESSION_SECRET || "secret";
 if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
 }
 
-const storagePath = path.resolve(__dirname, "../sessions");
-
-export const { getSession, commitSession, destroySession } = createFileSessionStorage({
-  dir: "/app/sessions",
-  //dir: storagePath,
-  cookie: {
-    name: "__session",
-    httpOnly: true,
-    maxAge: 60 * 60 * 24, // 1 day
-    path: "/",
-    sameSite: "lax",
-    secrets: [sessionSecret], // Replace with your own secret
-    secure: process.env.NODE_ENV === "production",
-  },
-});
+export const { getSession, commitSession, destroySession } =
+  createFileSessionStorage({
+    //dir: "../",
+    dir: storagePath,
+    cookie: {
+      name: "__session",
+      httpOnly: true,
+      maxAge: 60 * 60 * 24, // 1 day
+      path: "/app/shared/utils/sessions",
+      sameSite: "lax",
+      secrets: [sessionSecret], // Replace with your own secret
+      secure: process.env.NODE_ENV === "production",
+    },
+  });
