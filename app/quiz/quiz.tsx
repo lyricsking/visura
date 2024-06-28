@@ -98,7 +98,7 @@ export default function Quiz() {
   const questionId = gIdsMap[currentId];
   //
   let questionIndex = 0;
-  const question: Question | undefined = questions.find((question, index) => {
+  const question: Question = questions.find((question, index) => {
     const bool = question.id === questionId;
     //  While we are at it, let get it Index as well
     if (bool) {
@@ -190,7 +190,7 @@ export default function Quiz() {
       />
 
       <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
-        {question?.question}
+        {question!.question}
       </h3>
 
       <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
@@ -198,7 +198,7 @@ export default function Quiz() {
           <OptionsHandler
             answerType={question!.type}
             name={question!.id}
-            defaultValue={"answer"}
+            defaultValue={answers[questionId]}
             onValueChange={() => {}}
             options={question!.options}
           />
