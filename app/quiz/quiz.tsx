@@ -185,18 +185,20 @@ export default function Quiz() {
         indicatorColor="bg-indigo-400"
       />
 
-      <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
-        {question!.question}
-      </h3>
+      <fetcher.Form method="post" onSubmit={handleSubmit}>
+        <Label htmlFor={question.name}>
+          <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
+            {question!.question}
+          </h3>
+        </Label>
 
-      <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
-        <fetcher.Form method="post" onSubmit={handleSubmit}>
+        <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
           <OptionsHandler
-            answerType={question!.type}
-            name={question!.id}
-            defaultValue={answers[questionId]}
-            onValueChange={() => {}}
-            options={question!.options}
+              answerType={question!.type}
+              name={question!.id}
+              defaultValue={answers[questionId]}
+              onValueChange={() => {}}
+              options={question!.options}
           />
 
           <div className="flex fixed z-20 bottom-8 right-0 left-0">
@@ -207,15 +209,15 @@ export default function Quiz() {
               type="submit"
               disabled={isSubmitting || questionIndex >= totalQuestionCount}
             >
-              {isSubmitting
+                {isSubmitting
                 ? "Submitting"
                 : questionIndex === totalQuestionCount - 1
                 ? "Finish"
                 : "Next"}
             </Button>
           </div>
-        </fetcher.Form>
-      </div>
+        </div>
+      </fetcher.Form>
     </div>
   );
 }

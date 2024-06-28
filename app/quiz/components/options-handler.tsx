@@ -168,23 +168,23 @@ function Multiple({
         options.map((option) => (
           <div
             key={option}
-            className={cn(
+          >
+            <label
+              htmlFor={option}
+              className={cn(
               "items-center space-x-4 p-6 border rounded-md bg-indigo-400 text-white",
+              "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
               type === "flex" && "flex",
               type === "flow" && "inline-flex"
             )}
-          >
-            <Checkbox
-              id={option}
-              className="h-5 w-5 rounded-none"
-              name={name}
-              value={option}
-              checked={defaultValue?.includes(option)}
-            />
-            <label
-              htmlFor={option}
-              className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
+              <Checkbox
+                id={option}
+                className="h-5 w-5 rounded-none"
+                name={name}
+                value={option}
+                checked={defaultValue?.includes(option)}
+              />
               {option}
             </label>
           </div>
