@@ -123,25 +123,28 @@ function Single({
       name={name}
       value={defaultValue as string}
       onValueChange={onValueChange}
+      className={cn(
+        "flex gap-2",
+        type === "flex" && "flex-col",
+        type === "flow" && "flex-row flex-wrap items-center justify-center"
+      )}
     >
       {options &&
         options.map((option) => (
-          <div
-            key={option}
-            className={cn(
-              "space-x-4 py-6 px-6 border rounded-md bg-indigo-400 text-white",
-              type === "flow" && "flex items-center"
-            )}
-          >
-            <RadioGroupItem
-              className="h-5 w-6 rounded-none"
-              value={option}
-              id={option}
-            />
+          <div key={option}>
             <Label
-              className="w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              htmlFor={option}
+              className={cn(
+                "items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
+                "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                type === "flex" && "flex",
+                type === "flow" && "inline-flex"
+              )}
             >
+              <RadioGroupItem
+                className="h-5 w-6 rounded-none"
+                value={option}
+                id={option}
+              />
               {option}
             </Label>
           </div>
@@ -156,6 +159,7 @@ function Multiple({
   options,
   type = "flex",
 }: OptionsType & SingleType) {
+  se;
   return (
     <div
       className={cn(
@@ -166,17 +170,14 @@ function Multiple({
     >
       {options &&
         options.map((option) => (
-          <div
-            key={option}
-          >
-            <label
-              htmlFor={option}
+          <div key={option}>
+            <Label
               className={cn(
-              "items-center space-x-4 p-6 border rounded-md bg-indigo-400 text-white",
-              "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-              type === "flex" && "flex",
-              type === "flow" && "inline-flex"
-            )}
+                "items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
+                "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                type === "flex" && "flex",
+                type === "flow" && "inline-flex"
+              )}
             >
               <Checkbox
                 id={option}
@@ -186,7 +187,7 @@ function Multiple({
                 checked={defaultValue?.includes(option)}
               />
               {option}
-            </label>
+            </Label>
           </div>
         ))}
     </div>

@@ -1,9 +1,6 @@
 import { Answers, Question, QuestionCondition } from "./quiz.type";
 import { useNavigate } from "@remix-run/react";
 
-const QUESTIONS_KEY = "questionsKey";
-const ANSWERS_KEY = "answersKey";
-
 export const questions: Question[] = [
   {
     id: "name",
@@ -286,12 +283,8 @@ export const questions: Question[] = [
   },
 ];
 
-export function filterQuestions(
-  questions: Question[],
-  answers: Answers
-) {
-  
-  const filteredQuestions: Question[] =[];
+export function filterQuestions(questions: Question[], answers: Answers) {
+  const filteredQuestions: Question[] = [];
   questions.forEach((question) => {
     if (!question.condition) {
       filteredQuestions.push(question);
@@ -301,39 +294,39 @@ export function filterQuestions(
 
       switch (condition.operator) {
         case "equals":
-          answer == condition.value && (filteredQuestion.push(question));
+          answer == condition.value && filteredQuestion.push(question);
           break;
         case "lt":
           condition.value &&
             answer < condition.value &&
-            (filteredQuestion.push(question));
+            filteredQuestion.push(question);
           break;
         case "gt":
           condition.value &&
             answer > condition.value &&
-            (filteredQuestion.push(question));
+            filteredQuestion.push(question);
           break;
         case "lte":
           condition.value &&
             answer <= condition.value &&
-            (filteredQuestion.push(question));
+            filteredQuestion.push(question);
           break;
         case "gte":
           condition.value &&
             answer >= condition.value &&
-            (filteredQuestion.push(question));
+            filteredQuestion.push(question);
           break;
         case "contains":
           condition.value &&
             (typeof answer === "string" || Array.isArray(answer)) &&
             answer.includes(condition.value) &&
-            (filteredQuestion.push(question));
+            filteredQuestion.push(question);
           break;
         case "notNull":
-          answer && (filteredQuestion.push(question));
+          answer && filteredQuestion.push(question);
           break;
         case "isNull":
-          !answer && (filteredQuestion.push(question));
+          !answer && filteredQuestion.push(question);
           break;
       }
     }
@@ -348,7 +341,6 @@ export function useQuiz() {
   const initQuiz = () => {
     navigate(`/quiz`);
   };
-  
+
   return { initQuiz };
-  
 }
