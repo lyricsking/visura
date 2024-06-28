@@ -19,11 +19,12 @@ import OptionsHandler from "./components/options-handler";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
-
+  console.log("servers");
   //  Retrieve the submitted form quiz answers as formData instance
   const formData = await request.formData();
   //  Save the answer as data to send to server-side for processing
   const data = Object.fromEntries(formData.entries());
+  console.log(data);
 
   session.set(ANSWER_KEY, data);
 
@@ -49,7 +50,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   let gIdsMap = session.get(GIDS_MAP_KEY);
   if (!gIdsMap) {
     gIdsMap = {};
-    
+
     questions.forEach((question) => {
       const id = getNanoid(32);
       gIdsMap[id] = question.id;
@@ -57,11 +58,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     session.set(GIDS_MAP_KEY, gIdsMap);
   }
-  
+
   //  Set header session
-  const headers =  { 
+  const headers = {
     "Set-Cookie": await commitSession(session),
-  },
+  };
   //  Redirect to the first question if question id is not set or provided question id no longer exist, e.g maybe session expired
   const gIds = Object.keys(gIdsMap);
   if (!currentId || !gIds.includes(currentId)) {
@@ -69,14 +70,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect(`/quiz?${GID_KEY}=${gId}`, { headers });
     //return null;
   }
-  
+
   const answers = session.get(ANSWER_KEY) || {};
-  
   //  Return a formatted response with the currentId to the quiz component
-  return json(
-    { currentId, gIdsMap, answers },
-    { headers }
-  );
+  return json({ currentId, gIdsMap, answers }, { headers });
 };
 
 /**
@@ -108,7 +105,7 @@ export default function Quiz() {
   });
 
   //  Total number of questions in the quiz
-  const totalQuestionCount = gIdsMap.length;
+  const totalQuestionCount = Object.keys(gIdsMap).length;
 
   //  Form answer submit handler, handles moving back and forth through the quiz.
   //  It checks if there are still more questions available, caches the answer in the location object for later access and move on the next question.
@@ -116,19 +113,17 @@ export default function Quiz() {
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     //  Prevents default form handler
     e.preventDefault();
+    //alert(questionIndex);
+    //alert(totalQuestionCount);
     //  Retrieve formdata instance from form element
     const formData = new FormData(e.currentTarget);
     //  Prep the data
     const data = Object.fromEntries(formData.entries());
-    // Log form submission
-    console.log("Form data:", data);
 
     const newAnswers = lo.merge(answers, data);
-    // Log form submission
-    console.log("Final data:", newAnswers);
 
     // Send the data to backend here
-    fetcher.submit(newAnswers);
+    fetcher.submit(newAnswers, { method: "POST", navigate: true });
   };
 
   //  Handles moving back to previous question in quiz
@@ -143,15 +138,16 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    if (fetcher.data) {
+    if (fetcher.state != "idle" && fetcher.data) {
       const nextQuestionIndex = questionIndex + 1;
+
       //  Check if we have exhausted the questions available
       if (nextQuestionIndex < totalQuestionCount) {
         //  We still have one or more question left in the quiz.
 
         const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
         //  Navigate to the next question
-        navigate(`/quiz?gId=${nextQuestionGId}`);
+        navigate(`/quiz?${GID_KEY}=${nextQuestionGId}`);
       } else {
         //  We have indeed exhausted the questions available.
         navigate(`/quiz/confirmation`, {
@@ -209,13 +205,11 @@ export default function Quiz() {
               radius={"full"}
               className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
               type="submit"
-              disabled={
-                isSubmitting || questionIndex + 1 === totalQuestionCount
-              }
+              disabled={isSubmitting || questionIndex >= totalQuestionCount}
             >
               {isSubmitting
                 ? "Submitting"
-                : questionIndex + 1 === totalQuestionCount
+                : questionIndex === totalQuestionCount - 1
                 ? "Finish"
                 : "Next"}
             </Button>
