@@ -114,30 +114,14 @@ export default function Quiz() {
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     //  Prevents default form handler
     e.preventDefault();
-    
-    const newAnswers = {...answers}
-    
-    const formElements = e.target.elements;
-    Array.from(formElements).forEach((element) => {
-      if (element.name) {
-        if (element.type === "checkbox") {
-          if (!newAnswers[element.name]) {
-            newAnswers[element.name] = [];
-          }
-          if (element.checked) {
-            newAnswers[element.name].push(element.value);
-          } else {
-            newAnswers[element.name] = newAnswers[element.name].filter((value) => value !== element.value
-            );
-          }
-        } else {
-          newAnswers[element.name] = element.value;
-        }
-      }
-    });
-    
+    //  Retrieve formdata instance from form element
+    const formData = new FormData(e.currentTarget);
+    //  Prep the data
+    const data = Object.fromEntries(formData.entries());
+
+    const newAnswers = lo.merge(answers, data);
     // Send the data to backend here
-    fetcher.submit(newAnswers, { method: "POST", navigate: true });
+    fetcher.submit(newAnswers, { method: "POST" });
   };
 
   //  Handles moving back to previous question in quiz
@@ -152,7 +136,7 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    if (fetcher.state != "loading" && fetcher.data) {
+    if (fetcher.state == "loading" && fetcher.data) {
       const nextQuestionIndex = questionIndex + 1;
 
       //  Check if we have exhausted the questions available
@@ -164,7 +148,7 @@ export default function Quiz() {
         navigate(`/quiz?${GID_KEY}=${nextQuestionGId}`);
       } else {
         //  We have indeed exhausted the questions available.
-        navigate(`/quiz/confirmation`, {
+        navigate(`/quiz/confirm`, {
           state: (fetcher.data as any).data,
         });
       }

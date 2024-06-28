@@ -4,7 +4,7 @@ import { useNavigate } from "@remix-run/react";
 export const questions: Question[] = [
   {
     id: "name",
-    question: "Tell us your name",.
+    question: "Tell us your name",
     type: "text",
   },
   {
@@ -51,12 +51,7 @@ export const questions: Question[] = [
     id: "sleepHours",
     question: "How many hours do you sleep on average per night?",
     type: "single",
-    options: [
-      "<5",
-      "5-7",
-      "7-9",
-      "9+",
-    ],
+    options: ["<5", "5-7", "7-9", "9+"],
   },
   {
     id: "sleepQuality",

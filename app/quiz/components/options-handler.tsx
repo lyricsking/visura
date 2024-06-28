@@ -55,7 +55,9 @@ export default function OptionsHandler({
         return (
           <Multiple
             name={name}
-            defaultValue={defaultValue}
+            defaultValue={
+              Array.isArray(defaultValue) ? defaultValue : [defaultValue]
+            }
             onValueChange={onValueChange}
             options={options}
           />
@@ -75,7 +77,9 @@ export default function OptionsHandler({
           <Multiple
             type="flow"
             name={name}
-            defaultValue={defaultValue}
+            defaultValue={
+              Array.isArray(defaultValue) ? defaultValue : [defaultValue]
+            }
             onValueChange={onValueChange}
             options={options}
           />
@@ -158,8 +162,10 @@ function Multiple({
   defaultValue,
   options,
   type = "flex",
-}: OptionsType & SingleType) {
-  se;
+}: Omit<OptionsType, "defaultValue"> &
+  SingleType & {
+    defaultValue: string[];
+  }) {
   return (
     <div
       className={cn(
@@ -184,7 +190,9 @@ function Multiple({
                 className="h-5 w-5 rounded-none"
                 name={name}
                 value={option}
-                checked={defaultValue? defaultValue.includes(option): false}
+                defaultChecked={
+                  defaultValue ? defaultValue.includes(option) : false
+                }
               />
               {option}
             </Label>
