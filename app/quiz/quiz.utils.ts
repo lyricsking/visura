@@ -348,6 +348,7 @@ export function useQuiz() {
   const initQuiz = () => {
     navigate(`/quiz`);
   };
-
+  
   return { initQuiz };
+  
 }

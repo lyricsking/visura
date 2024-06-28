@@ -15,13 +15,13 @@ if (!sessionSecret) {
 
 export const { getSession, commitSession, destroySession } =
   createFileSessionStorage({
-    //dir: "../",
-    dir: storagePath,
+    dir: "../sessions",
+    //dir: storagePath,
     cookie: {
       name: "__session",
       httpOnly: true,
-      maxAge: 60 * 60 * 24, // 1 day
-      path: "/app/shared/utils/sessions",
+      //maxAge: 60 * 60 * 24, // 1 day
+      path: "/",
       sameSite: "lax",
       secrets: [sessionSecret], // Replace with your own secret
       secure: process.env.NODE_ENV === "production",
