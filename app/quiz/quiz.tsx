@@ -127,15 +127,17 @@ export default function Quiz() {
       const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
       //  Navigate to the next question
       submit(newAnswers, {
-        action:`/quiz?${GID_KEY}=${nextQuestionGId}`,
+        action:`/quiz?index&${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
+        encType: "application/json"
       });
     } else {
       //  We have indeed exhausted the questions available.
       submit(newAnswers, {
         method: "POST",
         action: "/quiz/confirm",
-        replace: true
+        replace: true,
+        encType: "application/json",
       });
     }
   };
@@ -147,7 +149,7 @@ export default function Quiz() {
     if (prevQuestionIndex >= 0) {
       const prevQuestionId = Object.keys(gIdsMap)[prevQuestionIndex];
       //  navigate(-1)
-      navigate(`/quiz?gId=${prevQuestionId}`);
+      navigate(`/quiz?gId=${prevQuestionId}`, {});
     }
   };
 
@@ -188,7 +190,7 @@ export default function Quiz() {
             name={question.id}
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
-            value={answer()}
+            value={answer}
           />
         ) : question.type === "number" ? (
           <NumberInputForm
@@ -197,7 +199,7 @@ export default function Quiz() {
             name={question.id}
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
-            value={answer()}
+            value={answer}
           />
         ) : question.type === "multiple" ? (
           <CheckboxGroupForm
@@ -207,7 +209,7 @@ export default function Quiz() {
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
             options={question.options!}
-            selections={answer()}
+            selections={answer}
           />
         ) : (
           <RadioGroupForm
@@ -217,7 +219,7 @@ export default function Quiz() {
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
             options={question.options!}
-            value={answer()}
+            value={answer}
           />
         )}
       </div>

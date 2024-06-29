@@ -1,3 +1,7 @@
+import { ISupplement } from "~/supplement/supplement.type";
+import { createCart, recommendSupplements } from "./quiz.server";
+import { ActionFunctionArgs, json } from "@remix-run/node";
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   // Handle server-side logic for form data
   
@@ -5,20 +9,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const body = await request.json();
   
   //
-  const supplements: ISupplement[] = await recommendSupplements(body);
-
-  if (supplements) {
     try {
-      await createCart(supplements);
+      const supplements: ISupplement[] = await recommendSupplements(body);
+      
+      if (supplements) {
 
-      return json({ success: true });
+        await createCart(supplements);
+
+        return json({ success: true });
+      }
     } catch (error) {
+      console.log("Caught:",error);
+      
       return json({
         success: false,
         message: "Failed to convert supplements into order.",
       });
     }
-  }
 };
 
 export default function Confirmation() {
