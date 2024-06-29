@@ -1,10 +1,11 @@
 export const action = async ({ request }: ActionFunctionArgs) => {
   // Handle server-side logic for form data
-
+  
+  //  Retrieve the submitted form quiz answers as json object
+  const body = await request.json();
+  
   //
-  const supplements: ISupplement[] = await recommendSupplements(
-    JSON.parse(data)
-  );
+  const supplements: ISupplement[] = await recommendSupplements(body);
 
   if (supplements) {
     try {
@@ -21,15 +22,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Confirmation() {
-  const location = useLocation();
-  const fetcher = useFetcher();
-
-  const answers = location.state;
-  useEffect(() => {
-    fetcher.submit(answers, {
-      method: "post",
-    });
-  }, [answers]);
 
   return <div></div>;
 }

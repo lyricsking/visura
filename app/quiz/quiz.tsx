@@ -117,8 +117,27 @@ export default function Quiz() {
     alert(JSON.stringify(answer));
 
     const newAnswers = lo.merge(answers, {[question.id]: answer});
-    // Send the data to backend here
-    submit(newAnswers, { method: "POST" });
+    
+    const nextQuestionIndex = questionIndex + 1;
+    
+    //  Check if we still have questions available
+    if (nextQuestionIndex < totalQuestionCount) {
+      //  We still have one or more question left in the quiz.
+    
+      const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
+      //  Navigate to the next question
+      submit(newAnswers, {
+        action:`/quiz?${GID_KEY}=${nextQuestionGId}`,
+        method: "POST",
+      });
+    } else {
+      //  We have indeed exhausted the questions available.
+      submit(newAnswers, {
+        method: "POST",
+        action: "/quiz/confirm",
+        replace: true
+      });
+    }
   };
 
   //  Handles moving back to previous question in quiz
@@ -132,32 +151,6 @@ export default function Quiz() {
     }
   };
 
-  useEffect(() => {
-    if (navigation.state == "loading" && navigation.data) {
-      const nextQuestionIndex = questionIndex + 1;
-
-      //  Check if we have exhausted the questions available
-      if (nextQuestionIndex < totalQuestionCount) {
-        //  We still have one or more question left in the quiz.
-
-        const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
-        //  Navigate to the next question
-        navigate(`/quiz?${GID_KEY}=${nextQuestionGId}`);
-      } else {
-        //  We have indeed exhausted the questions available.
-        navigate(`/quiz/confirm`, {
-          state: (fetcher.data as any).data,
-        });
-      }
-    }
-  }, [
-    navigation.state,
-    questionIndex,
-    totalQuestionCount,
-    gIdsMap,
-    navigate,
-  ]);
-  
   const disabled = isSubmitting || questionIndex >= totalQuestionCount;
   
   const submitLabel = isSubmitting 
