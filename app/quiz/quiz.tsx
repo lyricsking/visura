@@ -114,6 +114,9 @@ export default function Quiz() {
 
   //  Form answer submit handler.
   const handleSubmit = (answer: number|string  | string[]) => {
+    
+    alert(JSON.stringify(answers[question.id]));
+    
     const newAnswers = lo.merge(answers, {[question.id]: answer});
     // Send the data to backend here
     fetcher.submit(newAnswers, { method: "POST" });
