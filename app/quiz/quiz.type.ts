@@ -74,7 +74,7 @@ export interface Answers {
   enduranceNeeds: boolean;
 }
 
-export type FormSubmitHandler= (data: string|string[])=>void
+export type FormSubmitHandler= (data: number|string|string[])=>void
 export type BaseFormType = {
   label: string
   name: string

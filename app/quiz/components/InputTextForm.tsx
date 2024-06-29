@@ -1,13 +1,14 @@
 // InputText.js
 import React, { useRef } from 'react';
+import { TextInputFormType } from '../quiz.type';
 
-const InputTextForm = ({label, name, onsubmit, submitLabel, value}: TextInputFormType) => {
+const TextInputForm = ({label, name, onsubmit, submitLabel, value}: TextInputFormType) => {
   const formRef = useRef(null);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current);
-    const textInput = formData.get(name);
+    const formData = new FormData(formRef.current!);
+    const textInput = formData.get(name) as string;
     console.log('Text input:', textInput);
     onsubmit(textInput);
   };
@@ -21,4 +22,4 @@ const InputTextForm = ({label, name, onsubmit, submitLabel, value}: TextInputFor
   );
 };
 
-export default InputText;
+export default TextInputForm;

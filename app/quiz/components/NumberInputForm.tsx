@@ -1,5 +1,6 @@
-// .js
 import React, { useRef } from 'react';
+import Button from '~/shared/components/button';
+import { NumberInputFormType } from '../quiz.type';
 
 const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:NumberInputFormType) => {
   const formRef = useRef(null);
@@ -8,16 +9,16 @@ const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:N
     //  Prevents default form handler
     event.preventDefault();
     //  Retrieve formdata instance from form element
-    const formData = new FormData(formRef.current);
+    const formData = new FormData(formRef.current!);
     //  Get value from data by name
-    const numberInput = formData.get(name);
+    const numberInput = formData.get(name) as string;
     console.log('Number input:', numberInput);
     onsubmit(numberInput)
   };
 
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
-      <label htmlFor>
+      <label htmlFor={ name}>
         <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
           {name}
         </h3>
@@ -40,4 +41,4 @@ const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:N
   );
 };
 
-export default NumberInput;
+export default NumberInputForm;

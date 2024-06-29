@@ -1,12 +1,13 @@
 import React, { useRef } from 'react';
+import { CheckboxGroupFormType } from '../quiz.type';
 
-const CheckboxGroupForm = ({label, name, onsubmit, submitLabel}: CheckboxGroupFormType) => {
+const CheckboxGroupForm = ({label, name, onsubmit, options,submitLabel}: CheckboxGroupFormType) => {
   const formRef = useRef(null);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current);
-    const selectedCheckboxes = formData.getAll(name);
+    const formData = new FormData(formRef.current!) ;
+    const selectedCheckboxes = formData.getAll(name) as string[];
     console.log('Selected checkboxes:', selectedCheckboxes);
     
     onsubmit(selectedCheckboxes)
@@ -27,4 +28,4 @@ const CheckboxGroupForm = ({label, name, onsubmit, submitLabel}: CheckboxGroupFo
   );
 };
 
-export default CheckboxGroup;
+export default CheckboxGroupForm;

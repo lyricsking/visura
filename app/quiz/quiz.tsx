@@ -17,6 +17,10 @@ import { Question } from "./quiz.type";
 import * as lo from "lodash";
 import OptionsHandler from "./components/options-handler";
 import { Label } from "~/shared/components/label";
+import TextInputForm from "./components/InputTextForm";
+import NumberInputForm from "./components/NumberInputForm";
+import CheckboxGroupForm from "./components/CheckboxGroupForm";
+import RadioGroupForm from "./components/RadioGroupForm";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -109,7 +113,7 @@ export default function Quiz() {
   const totalQuestionCount = Object.keys(gIdsMap).length;
 
   //  Form answer submit handler.
-  const handleSubmit = (answer: string  | string[]) => {
+  const handleSubmit = (answer: number|string  | string[]) => {
     const newAnswers = lo.merge(answers, {[question.id]: answer});
     // Send the data to backend here
     fetcher.submit(newAnswers, { method: "POST" });
@@ -183,22 +187,45 @@ export default function Quiz() {
       />
 
       <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
-        {
-          question.type === "text"
-          ? <TextInputForm />
-          : questions.type=== "number"
-          ? <NumberInputForm
-              disabled={disabled}
-              label={question.question}
-              name={question.id}
-              onsubmit={handleSubmit}
-              submitLabel={submitLabel}
-              value={answers[question.id]}
-            />
-          : question.type === "multiple"
-          ? <CheckboxGroupForm />
-          : <RadioGroupForm />
-        }
+        {question.type === "text" ? (
+          <TextInputForm
+            disabled={disabled}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            value={answers[question.id]}
+          />
+        ) : question.type === "number" ? (
+          <NumberInputForm
+            disabled={disabled}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            value={answers[question.id]}
+          />
+        ) : question.type === "multiple" ? (
+          <CheckboxGroupForm
+            disabled={disabled}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            options={question.options!}
+            selections={answers[question.id]}
+          />
+        ) : (
+          <RadioGroupForm
+            disabled={disabled}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            options={question.options!}
+            value={answers[question.id]}
+          />
+        )}
       </div>
     </div>
   );

@@ -1,13 +1,14 @@
 // RadioGroup.js
 import React, { useRef } from 'react';
+import { RadioGroupFormType } from '../quiz.type';
 
 const RadioGroupForm = ({label, name, options, onsubmit, submitLabel, value}: RadioGroupFormType) => {
   const formRef = useRef(null);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current);
-    const selectedOption = formData.get(name);
+    const formData = new FormData(formRef.current!);
+    const selectedOption = formData.get(name)as string;
     console.log('Selected radio:', selectedOption);
     
     onsubmit(selectedOption)
@@ -28,4 +29,4 @@ const RadioGroupForm = ({label, name, options, onsubmit, submitLabel, value}: Ra
   );
 };
 
-export default RadioGroup;
+export default RadioGroupForm;
