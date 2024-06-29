@@ -108,18 +108,9 @@ export default function Quiz() {
   //  Total number of questions in the quiz
   const totalQuestionCount = Object.keys(gIdsMap).length;
 
-  //  Form answer submit handler, handles moving back and forth through the quiz.
-  //  It checks if there are still more questions available, caches the answer in the location object for later access and move on the next question.
-  //  If there are no more questions, it submits the current privided answer along with previous saved answers stored in the location state object
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    //  Prevents default form handler
-    e.preventDefault();
-    //  Retrieve formdata instance from form element
-    const formData = new FormData(e.currentTarget);
-    //  Prep the data
-    const data = Object.fromEntries(formData.entries());
-
-    const newAnswers = lo.merge(answers, data);
+  //  Form answer submit handler.
+  const handleSubmit = (answer: string  | string[]) => {
+    const newAnswers = lo.merge(answers, {[question.id]: answer});
     // Send the data to backend here
     fetcher.submit(newAnswers, { method: "POST" });
   };
@@ -161,7 +152,15 @@ export default function Quiz() {
     gIdsMap,
     navigate,
   ]);
-
+  
+  const disabled = isSubmitting || questionIndex >= totalQuestionCount;
+  
+  const submitLabel = isSubmitting 
+    ? "Submitting" 
+    : questionIndex === totalQuestionCount - 1
+    ? "Finish"
+    : "Next";
+    
   return (
     <div className="flex flex-col max-h-screen">
       <div className="border-b">
@@ -183,39 +182,24 @@ export default function Quiz() {
         indicatorColor="bg-indigo-400"
       />
 
-      <fetcher.Form method="post" onSubmit={handleSubmit}>
-        <Label htmlFor={question.id}>
-          <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
-            {question.question}
-          </h3>
-        </Label>
-
-        <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
-          <OptionsHandler
-            answerType={question!.type}
-            name={question!.id}
-            defaultValue={answers[questionId]}
-            onValueChange={() => {}}
-            options={question!.options}
-          />
-
-          <div className="flex fixed z-20 bottom-8 right-0 left-0">
-            <Button
-              variant={"fill"}
-              radius={"full"}
-              className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
-              type="submit"
-              disabled={isSubmitting || questionIndex >= totalQuestionCount}
-            >
-              {isSubmitting
-                ? "Submitting"
-                : questionIndex === totalQuestionCount - 1
-                ? "Finish"
-                : "Next"}
-            </Button>
-          </div>
-        </div>
-      </fetcher.Form>
+      <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
+        {
+          question.type === "text"
+          ? <TextInputForm />
+          : questions.type=== "number"
+          ? <NumberInputForm
+              disabled={disabled}
+              label={question.question}
+              name={question.id}
+              onsubmit={handleSubmit}
+              submitLabel={submitLabel}
+              value={answers[question.id]}
+            />
+          : question.type === "multiple"
+          ? <CheckboxGroupForm />
+          : <RadioGroupForm />
+        }
+      </div>
     </div>
   );
 }

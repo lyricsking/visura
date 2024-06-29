@@ -1,11 +1,8 @@
 export type AnswerType =
   | "text"
-  | "single"
-  | "multiple"
-  | "tag"
   | "number"
-  | "multiple-tag"
-  | "single-tag";
+  | "single"
+  | "multiple";
 
 const Operators = {
   equals: "equals",
@@ -77,12 +74,29 @@ export interface Answers {
   enduranceNeeds: boolean;
 }
 
-export type Answersx = {
-  [key: string]: string | string[];
-};
+export type FormSubmitHandler= (data: string|string[])=>void
+export type BaseFormType = {
+  label: string
+  name: string
+  onsubmit: FormSubmitHandler
+  submitLabel: string
+  disabled: boolean
+}
 
-export const QuizAction = {
-  cacheQuestions: "cacheQuestions",
-  cacheAnswers: "cacheAnswer",
-} as const;
-export type QuizAction = keyof typeof QuizAction;
+export type CheckboxGroupFormType = BaseFormType & {
+  options: string[]
+  selections: string[]
+}
+
+export  type RadioGroupFormType = BaseFormType & {
+  options: string[]
+  value: string
+}
+
+export type TextInputFormType = BaseFormType & {
+  value: string
+}
+
+export type NumberInputFormType = BaseFormType & {
+  value: number
+}

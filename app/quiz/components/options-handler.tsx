@@ -186,8 +186,8 @@ function Multiple({
               )}
             >
               <Checkbox
-                id={option}
                 className="h-5 w-5 rounded-none"
+                id={name}
                 name={name}
                 value={option}
                 defaultChecked={
