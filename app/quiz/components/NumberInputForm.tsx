@@ -13,7 +13,6 @@ const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:N
     const formData = new FormData(formRef.current!);
     //  Get value from data by name
     const numberInput = formData.get(name) as string;
-    console.log('Number input:', numberInput);
     onsubmit(numberInput)
   };
 
@@ -30,11 +29,12 @@ const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:N
       </label>
 
       <Input
-        className="capitalize h-20 text-2xl border-2"
+        className="h-20 text-2xl border-2"
         type="number"
         id={name}
         name={name}
         defaultValue={value}
+        placeholder={name}
       />
       <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
         <Button

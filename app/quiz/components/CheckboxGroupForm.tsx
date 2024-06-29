@@ -11,7 +11,6 @@ const CheckboxGroupForm = ({disabled,label, name, onsubmit, options,submitLabel}
     event.preventDefault();
     const formData = new FormData(formRef.current!) ;
     const selectedCheckboxes = formData.getAll(name) as string[];
-        alert(JSON.stringify(selectedCheckboxes));
 
     onsubmit(selectedCheckboxes)
   };

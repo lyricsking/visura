@@ -12,11 +12,9 @@ const RadioGroupForm = ({disabled,label, name, options, onsubmit, submitLabel, v
     event.preventDefault();
     const formData = new FormData(formRef.current!);
     const selectedOption = formData.get(name)as string;
-    alert(JSON.stringify(selectedOption));
     
     onsubmit(selectedOption)
   };
-
   
   return (
     <form 

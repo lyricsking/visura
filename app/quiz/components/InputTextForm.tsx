@@ -27,12 +27,13 @@ const TextInputForm = ({disabled,label, name, onsubmit, submitLabel, value}: Tex
           </h3>
         </label>
   
-        <Input
-          className="capitalize h-20 text-2xl border-2"
+      <Input
+          className="h-20 text-2xl border-2"
           type="text"
           id={name}
           name={name}
           defaultValue={value}
+          placeholder={name}
         />
         <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
           <Button

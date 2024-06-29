@@ -13,17 +13,17 @@ if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
 }
 
-export const { getSession, commitSession, destroySession } =
-  createFileSessionStorage({
-    dir: "../sessions",
-    //dir: storagePath,
-    cookie: {
-      name: "__session",
-      httpOnly: true,
-      //maxAge: 60 * 60 * 24, // 1 day
-      path: "/",
-      sameSite: "lax",
-      secrets: [sessionSecret], // Replace with your own secret
-      secure: process.env.NODE_ENV === "production",
-    },
-  });
+export const { getSession, commitSession, destroySession } = createFileSessionStorage({
+  dir: "../sessions",
+  //dir: storagePath,
+  cookie: {
+    name: "__session",
+    httpOnly: true,
+    //maxAge: 60 * 60 * 24, // 1 day
+    //maxAge: 60 , // 1 minutes
+    path: "/",
+    sameSite: "lax",
+    secrets: [sessionSecret], // Replace with your own secret
+    secure: process.env.NODE_ENV === "production",
+  },
+});

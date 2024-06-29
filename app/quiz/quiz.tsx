@@ -4,7 +4,7 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { useNavigate, useLoaderData, useFetcher } from "@remix-run/react";
+import { useNavigate, useLoaderData, useFetcher, useSubmit, useNavigation } from "@remix-run/react";
 
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
@@ -15,8 +15,6 @@ import { questions } from "./quiz.utils";
 import { getNanoid } from "~/shared/utils";
 import { Question } from "./quiz.type";
 import * as lo from "lodash";
-import OptionsHandler from "./components/options-handler";
-import { Label } from "~/shared/components/label";
 import TextInputForm from "./components/InputTextForm";
 import NumberInputForm from "./components/NumberInputForm";
 import CheckboxGroupForm from "./components/CheckboxGroupForm";
@@ -24,11 +22,8 @@ import RadioGroupForm from "./components/RadioGroupForm";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
-  console.log("servers");
-  //  Retrieve the submitted form quiz answers as formData instance
-  const formData = await request.formData();
-  //  Save the answer as data to send to server-side for processing
-  const data = Object.fromEntries(formData.entries());
+  //  Retrieve the submitted form quiz answers as json object
+  const data = await request.json();
   console.log(data);
 
   session.set(ANSWER_KEY, data);
@@ -92,9 +87,10 @@ export default function Quiz() {
   const { currentId, gIdsMap, answers } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  const fetcher = useFetcher();
+  const navigation = useNavigation();
+  const submit = useSubmit();
   //  Listen for form submission
-  const isSubmitting = fetcher.state != "idle";
+  const isSubmitting = navigation.state != "idle";
 
   //  Get the questionId keyed by currentId
   const questionId = gIdsMap[currentId];
@@ -109,17 +105,20 @@ export default function Quiz() {
     return bool;
   });
 
+  const answer = answers[question.id];
+
   //  Total number of questions in the quiz
   const totalQuestionCount = Object.keys(gIdsMap).length;
 
   //  Form answer submit handler.
   const handleSubmit = (answer: number|string  | string[]) => {
     
-    alert(JSON.stringify(answers[question.id]));
-    
+    //alert(JSON.stringify(answers[question.id]));
+    alert(JSON.stringify(answer));
+
     const newAnswers = lo.merge(answers, {[question.id]: answer});
     // Send the data to backend here
-    fetcher.submit(newAnswers, { method: "POST" });
+    submit(newAnswers, { method: "POST" });
   };
 
   //  Handles moving back to previous question in quiz
@@ -134,7 +133,7 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    if (fetcher.state == "loading" && fetcher.data) {
+    if (navigation.state == "loading" && navigation.data) {
       const nextQuestionIndex = questionIndex + 1;
 
       //  Check if we have exhausted the questions available
@@ -152,8 +151,7 @@ export default function Quiz() {
       }
     }
   }, [
-    fetcher.state,
-    fetcher.data,
+    navigation.state,
     questionIndex,
     totalQuestionCount,
     gIdsMap,
@@ -167,7 +165,7 @@ export default function Quiz() {
     : questionIndex === totalQuestionCount - 1
     ? "Finish"
     : "Next";
-    
+  
   return (
     <div className="flex flex-col max-h-screen">
       <div className="border-b">
@@ -189,7 +187,7 @@ export default function Quiz() {
         indicatorColor="bg-indigo-400"
       />
 
-      <div className="flex-1 my-6 p-2 w-full overflow-y-auto no-scrollbar pb-32">
+      <div className="flex-1 my-6 py-2 px-4 w-full overflow-y-auto no-scrollbar pb-32">
         {question.type === "text" ? (
           <TextInputForm
             disabled={disabled}
@@ -197,7 +195,7 @@ export default function Quiz() {
             name={question.id}
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
-            value={answers[question.id]}
+            value={answer()}
           />
         ) : question.type === "number" ? (
           <NumberInputForm
@@ -206,7 +204,7 @@ export default function Quiz() {
             name={question.id}
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
-            value={answers[question.id]}
+            value={answer()}
           />
         ) : question.type === "multiple" ? (
           <CheckboxGroupForm
@@ -216,7 +214,7 @@ export default function Quiz() {
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
             options={question.options!}
-            selections={answers[question.id]}
+            selections={answer()}
           />
         ) : (
           <RadioGroupForm
@@ -226,7 +224,7 @@ export default function Quiz() {
             onsubmit={handleSubmit}
             submitLabel={submitLabel}
             options={question.options!}
-            value={answers[question.id]}
+            value={answer()}
           />
         )}
       </div>
