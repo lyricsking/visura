@@ -1,15 +1,18 @@
 import React, { useRef } from 'react';
 import { CheckboxGroupFormType } from '../quiz.type';
+import { cn } from '~/shared/utils';
+import { Input } from '~/shared/components/input';
+import Button from '~/shared/components/button';
 
-const CheckboxGroupForm = ({label, name, onsubmit, options,submitLabel}: CheckboxGroupFormType) => {
+const CheckboxGroupForm = ({disabled,label, name, onsubmit, options,submitLabel}: CheckboxGroupFormType) => {
   const formRef = useRef(null);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(formRef.current!) ;
     const selectedCheckboxes = formData.getAll(name) as string[];
-    console.log('Selected checkboxes:', selectedCheckboxes);
-    
+        alert(JSON.stringify(selectedCheckboxes));
+
     onsubmit(selectedCheckboxes)
   };
 
@@ -19,19 +22,18 @@ const CheckboxGroupForm = ({label, name, onsubmit, options,submitLabel}: Checkbo
       onSubmit={handleSubmit} 
       aria-labelledby={`${name}-"label"`}
     >
-      <fieldset className="flex flex-col gap-10">
+      <fieldset className="flex flex-col gap-20">
         <legend id={`${name}-"label"`}>
           <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
             {label}
           </h3>
         </legend>
-        
+
+        <div>
         {options.map((option)=>
         <label 
-          className={cn("items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
+          className={cn("flex items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
             "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-            type === "flex" && "flex",
-            type === "flow" && "inline-flex"
           )}
         >
           <Input
@@ -46,10 +48,11 @@ const CheckboxGroupForm = ({label, name, onsubmit, options,submitLabel}: Checkbo
             {option}
           </span>
         </label>
-        )}
+          )}
+          </div>
       </fieldset>
       
-      <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white"
+      <div className="flex fixed z-20 bottom-0 right-0 left-0 p-4 bg-white"
       >
         <Button
           variant={"fill"}

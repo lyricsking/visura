@@ -1,8 +1,10 @@
 // InputText.js
 import React, { useRef } from 'react';
 import { TextInputFormType } from '../quiz.type';
+import Button from '~/shared/components/button';
+import { Input } from '~/shared/components/input';
 
-const TextInputForm = ({label, name, onsubmit, submitLabel, value}: TextInputFormType) => {
+const TextInputForm = ({disabled,label, name, onsubmit, submitLabel, value}: TextInputFormType) => {
   const formRef = useRef(null);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -16,7 +18,7 @@ const TextInputForm = ({label, name, onsubmit, submitLabel, value}: TextInputFor
   return (
       <form
         ref={formRef}
-        className="flex flex-col gap-10"
+        className="flex flex-col gap-20"
         onSubmit={handleSubmit}
       >
         <label htmlFor={name}>

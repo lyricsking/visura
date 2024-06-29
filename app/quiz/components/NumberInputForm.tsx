@@ -20,7 +20,7 @@ const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:N
   return (
     <form
       ref={formRef}
-      className="flex flex-col gap-10"
+      className="flex flex-col gap-20"
       onSubmit={handleSubmit}
     >
       <label htmlFor={name}>
