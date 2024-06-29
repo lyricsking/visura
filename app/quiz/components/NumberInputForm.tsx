@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import Button from '~/shared/components/button';
 import { NumberInputFormType } from '../quiz.type';
+import { Input } from '~/shared/components/input';
 
 const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:NumberInputFormType) => {
   const formRef = useRef(null);
@@ -17,15 +18,24 @@ const NumberInputForm = ({disabled, label, name, onsubmit, submitLabel, value}:N
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
-      <label htmlFor={ name}>
+    <form
+      ref={formRef}
+      className="flex flex-col gap-10"
+      onSubmit={handleSubmit}
+    >
+      <label htmlFor={name}>
         <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
-          {name}
+          {label}
         </h3>
-        {label}
       </label>
-      
-      <input type="number" id={name} name={name} defaultValue={value} />
+
+      <Input
+        className="capitalize h-20 text-2xl border-2"
+        type="number"
+        id={name}
+        name={name}
+        defaultValue={value}
+      />
       <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
         <Button
           variant={"fill"}

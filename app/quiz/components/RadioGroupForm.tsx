@@ -15,7 +15,7 @@ const RadioGroupForm = ({label, name, options, onsubmit, submitLabel, value}: Ra
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} aria-labelledby={`${name}-label`}>
+    <form ref={formRef}  onSubmit={handleSubmit} aria-labelledby={`${name}-label`}>
       <fieldset>
         <legend id="radio-group-label">{label}</legend>
         {options.map((option)=> 
