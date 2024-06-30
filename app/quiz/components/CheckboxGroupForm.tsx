@@ -4,12 +4,13 @@ import { cn } from '~/shared/utils';
 import { Input } from '~/shared/components/input';
 import Button from '~/shared/components/button';
 
-const CheckboxGroupForm = ({disabled,label, name, onsubmit, options,submitLabel}: CheckboxGroupFormType) => {
-  const formRef = useRef(null);
+const CheckboxGroupForm = ({disabled,id,label, name, onsubmit, options,submitLabel}: CheckboxGroupFormType) => {
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current!) ;
+    
+    const form = document.getElementById(id);
+    const formData = new FormData(form);
     const selectedCheckboxes = formData.getAll(name) as string[];
 
     onsubmit(selectedCheckboxes)
@@ -17,7 +18,7 @@ const CheckboxGroupForm = ({disabled,label, name, onsubmit, options,submitLabel}
 
   return (
     <form 
-      ref={formRef}
+      id={id}
       onSubmit={handleSubmit} 
       aria-labelledby={`${name}-"label"`}
     >

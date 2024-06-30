@@ -186,6 +186,7 @@ export default function Quiz() {
         {question.type === "text" ? (
           <TextInputForm
             disabled={disabled}
+            id={question.id}
             label={question.question}
             name={question.id}
             onsubmit={handleSubmit}
@@ -195,6 +196,7 @@ export default function Quiz() {
         ) : question.type === "number" ? (
           <NumberInputForm
             disabled={disabled}
+            id={question.id}
             label={question.question}
             name={question.id}
             onsubmit={handleSubmit}
@@ -204,6 +206,7 @@ export default function Quiz() {
         ) : question.type === "multiple" ? (
           <CheckboxGroupForm
             disabled={disabled}
+            id={question.id}
             label={question.question}
             name={question.id}
             onsubmit={handleSubmit}
@@ -214,6 +217,7 @@ export default function Quiz() {
         ) : (
           <RadioGroupForm
             disabled={disabled}
+            id={question.id}
             label={question.question}
             name={question.id}
             onsubmit={handleSubmit}

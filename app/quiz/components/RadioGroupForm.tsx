@@ -5,12 +5,13 @@ import { cn } from '~/shared/utils';
 import { Input } from '~/shared/components/input';
 import Button from '~/shared/components/button';
 
-const RadioGroupForm = ({disabled,label, name, options, onsubmit, submitLabel, value}: RadioGroupFormType) => {
-  const formRef = useRef(null);
+const RadioGroupForm = ({disabled,id,label, name, options, onsubmit, submitLabel, value}: RadioGroupFormType) => {
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current!);
+    
+    const form = document.getElementById(id);
+    const formData = new FormData(form);
     const selectedOption = formData.get(name)as string;
     
     onsubmit(selectedOption)
@@ -18,7 +19,7 @@ const RadioGroupForm = ({disabled,label, name, options, onsubmit, submitLabel, v
   
   return (
     <form 
-      ref={formRef}
+      id={id}
       onSubmit={handleSubmit} 
       aria-labelledby={`${name}-"label"`}
     >

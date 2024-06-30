@@ -76,6 +76,7 @@ export interface Answers {
 
 export type FormSubmitHandler= (data: number|string|string[])=>void
 export type BaseFormType = {
+  id: string
   label: string
   name: string
   onsubmit: FormSubmitHandler

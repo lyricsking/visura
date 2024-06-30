@@ -4,12 +4,12 @@ import { TextInputFormType } from '../quiz.type';
 import Button from '~/shared/components/button';
 import { Input } from '~/shared/components/input';
 
-const TextInputForm = ({disabled,label, name, onsubmit, submitLabel, value}: TextInputFormType) => {
-  const formRef = useRef(null);
+const TextInputForm = ({disabled,id,label, name, onsubmit, submitLabel, value}: TextInputFormType) => {
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(formRef.current!);
+    const form = document.getElementById(id);
+    const formData = new FormData(form);
     const textInput = formData.get(name) as string;
     console.log('Text input:', textInput);
     onsubmit(textInput);
@@ -17,7 +17,7 @@ const TextInputForm = ({disabled,label, name, onsubmit, submitLabel, value}: Tex
 
   return (
       <form
-        ref={formRef}
+        id={id}
         className="flex flex-col gap-20"
         onSubmit={handleSubmit}
       >
