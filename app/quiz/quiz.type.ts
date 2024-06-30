@@ -86,18 +86,18 @@ export type BaseFormType = {
 
 export type CheckboxGroupFormType = BaseFormType & {
   options: string[]
-  selections: string[]
+  selections?: string[]
 }
 
 export  type RadioGroupFormType = BaseFormType & {
   options: string[]
-  value: string
+  value?: string
 }
 
 export type TextInputFormType = BaseFormType & {
-  value: string
+  value?: string
 }
 
 export type NumberInputFormType = BaseFormType & {
-  value: number
+  value?: number
 }

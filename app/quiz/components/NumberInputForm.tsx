@@ -3,25 +3,28 @@ import Button from '~/shared/components/button';
 import { NumberInputFormType } from '../quiz.type';
 import { Input } from '~/shared/components/input';
 
-const NumberInputForm = ({disabled, id, label, name, onsubmit, submitLabel, value}:NumberInputFormType) => {
-
+const NumberInputForm = ({
+  disabled,
+  id,
+  label,
+  name,
+  onsubmit,
+  submitLabel,
+  value,
+}: NumberInputFormType) => {
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     //  Prevents default form handler
     event.preventDefault();
     //  Retrieve formdata instance from form element
-    const form = document.getElementById(id);
+    const form = document.getElementById(id) as HTMLFormElement;
     const formData = new FormData(form);
     //  Get value from data by name
     const numberInput = formData.get(name) as string;
-    onsubmit(numberInput)
+    onsubmit(numberInput);
   };
 
   return (
-    <form
-      id={id}
-      className="flex flex-col gap-20"
-      onSubmit={handleSubmit}
-    >
+    <form id={id} className="flex flex-col gap-20" onSubmit={handleSubmit}>
       <label htmlFor={name}>
         <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
           {label}
@@ -33,7 +36,7 @@ const NumberInputForm = ({disabled, id, label, name, onsubmit, submitLabel, valu
         type="number"
         id={name}
         name={name}
-        defaultValue={value}
+        value={value || ""}
         placeholder={name}
       />
       <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">

@@ -9,7 +9,7 @@ import { useNavigate, useLoaderData, useFetcher, useSubmit, useNavigation } from
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/shared/components/progress";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { commitSession, getSession } from "~/shared/utils/session";
 import { questions } from "./quiz.utils";
 import { getNanoid } from "~/shared/utils";
@@ -19,6 +19,7 @@ import TextInputForm from "./components/InputTextForm";
 import NumberInputForm from "./components/NumberInputForm";
 import CheckboxGroupForm from "./components/CheckboxGroupForm";
 import RadioGroupForm from "./components/RadioGroupForm";
+import useEmblaCarousel from "node_modules/embla-carousel-react/esm/components/useEmblaCarousel";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -105,16 +106,13 @@ export default function Quiz() {
     return bool;
   });
 
-  const answer = answers[question.id];
-
+  const answer = useMemo(() => undefined, [answers, question]);
+  
   //  Total number of questions in the quiz
   const totalQuestionCount = Object.keys(gIdsMap).length;
 
   //  Form answer submit handler.
   const handleSubmit = (answer: number|string  | string[]) => {
-    
-    //alert(JSON.stringify(answers[question.id]));
-    alert(JSON.stringify(answer));
 
     const newAnswers = lo.merge(answers, {[question.id]: answer});
     
@@ -129,6 +127,7 @@ export default function Quiz() {
       submit(newAnswers, {
         action:`/quiz?index&${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
+        replace: true,
         encType: "application/json"
       });
     } else {
