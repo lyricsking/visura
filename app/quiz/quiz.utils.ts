@@ -334,7 +334,7 @@ export function useQuiz() {
   const navigate = useNavigate();
 
   const initQuiz = () => {
-    navigate(`/quiz`);
+    navigate(`/quiz/fff`);
   };
 
   return { initQuiz };
