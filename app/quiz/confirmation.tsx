@@ -4,9 +4,10 @@ import { ActionFunctionArgs, json } from "@remix-run/node";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   // Handle server-side logic for form data
-  
+
   //  Retrieve the submitted quiz answers as json object
   const body = await request.json();
+  console.log("The body", body);
   
   //
   try {
@@ -18,7 +19,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       return json({ success: true });
     }
   } catch (error) {
-      
+    console.log(error);
+
     return json({
       success: false,
       message: "Failed to convert supplements into order.",

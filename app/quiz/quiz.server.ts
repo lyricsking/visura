@@ -9,6 +9,7 @@ import { addItemsToCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
 import SupplementModel from "~/supplement/supplement.type";
 import { Answers } from "./quiz.type";
+import { mongooseClient } from "~/shared/utils/db.server";
 
 export const quizPrefs = createCookie("quizPrefs", {
   maxAge: 1440,
@@ -43,6 +44,7 @@ export async function recommendSupplements(
   const budgetRange = (answers["budget"] as string).split(" - ").map(Number);
   const minBudget = budgetRange[0];
   const maxBudget = budgetRange[1] || Infinity;
+  console.log("server runnin");
 
   const query = {
     $and: [
@@ -61,7 +63,7 @@ export async function recommendSupplements(
   };
 
   const matchedSupplements = await SupplementModel.find(query).exec();
-
+  
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
   const supplementWeights: SupplementWithScore[] = matchedSupplements.map(
     (supplement: ISupplement) => {

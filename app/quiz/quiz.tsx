@@ -125,7 +125,7 @@ export default function Quiz() {
       const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
       //  Navigate to the next question
       submit(newAnswers, {
-        action:`/quiz?${GID_KEY}=${nextQuestionGId}`,
+        action:`/quiz?index&${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
         replace: true,
         encType: "application/json"
@@ -148,7 +148,7 @@ export default function Quiz() {
     if (prevQuestionIndex >= 0) {
       const prevQuestionId = Object.keys(gIdsMap)[prevQuestionIndex];
       //  navigate(-1)
-      navigate(`/quiz/${prevQuestionId}`, {});
+      navigate(`/quiz?${GID_KEY}=${prevQuestionId}`, {});
     }
   };
 

@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { mongooseClient } from "~/shared/utils/db.server";
 
 export interface ISupplement extends Document {
   name: string;
@@ -44,6 +45,6 @@ const SupplementSchema: Schema = new Schema<ISupplement>({
 });
 
 const SupplementModel =
-  mongoose.models.Supplement ||
-  mongoose.model<ISupplement>("Supplement", SupplementSchema);
+  mongooseClient.models.Supplement ||
+  mongooseClient.model<ISupplement>("Supplement", SupplementSchema);
 export default SupplementModel;

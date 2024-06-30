@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-// declare prisma global variable
+// declare mongoose global variable
 declare global {
   // eslint-disable-next-line no-var
   var __mongoClient: typeof mongoose | null;
