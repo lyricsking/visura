@@ -20,6 +20,12 @@ const NumberInputForm = ({
     const formData = new FormData(form);
     //  Get value from data by name
     const numberInput = formData.get(name) as string;
+    
+    if (!numberInput){
+      alert('Please provide an appropriate answer.');
+      return;
+    }
+    
     onsubmit(numberInput);
   };
 

@@ -22,6 +22,11 @@ const RadioGroupForm = ({
     const formData = new FormData(form);
     const selectedOption = formData.get(name) as string;
 
+    if (!selectedOption){
+      alert('Please select an answer.');
+      return;
+    }
+    
     onsubmit(selectedOption);
   };
 

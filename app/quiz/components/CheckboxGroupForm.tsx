@@ -20,7 +20,11 @@ const CheckboxGroupForm = ({
     const form = document.getElementById(id) as HTMLFormElement;
     const formData = new FormData(form);
     const selectedCheckboxes = formData.getAll(name) as string[];
-
+    
+    if (selectedCheckboxes.length === 0){
+      alert('Please select at least one answer.');
+      return;
+    }
     onsubmit(selectedCheckboxes);
   };
 

@@ -18,7 +18,12 @@ const TextInputForm = ({
     const form = document.getElementById(id) as HTMLFormElement;
     const formData = new FormData(form);
     const textInput = formData.get(name) as string;
-    console.log("Text input:", textInput);
+    
+    if (!textInput){
+      alert('Please provide an answer.');
+      return;
+    }
+    
     onsubmit(textInput);
   };
 
