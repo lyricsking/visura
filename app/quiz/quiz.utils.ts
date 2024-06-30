@@ -283,39 +283,39 @@ export function filterQuestions(questions: Question[], answers: Answers) {
 
       switch (condition.operator) {
         case "equals":
-          answer == condition.value && filteredQuestion.push(question);
+          answer == condition.value && filteredQuestions.push(question);
           break;
         case "lt":
           condition.value &&
             answer < condition.value &&
-            filteredQuestion.push(question);
+            filteredQuestions.push(question);
           break;
         case "gt":
           condition.value &&
             answer > condition.value &&
-            filteredQuestion.push(question);
+            filteredQuestions.push(question);
           break;
         case "lte":
           condition.value &&
             answer <= condition.value &&
-            filteredQuestion.push(question);
+            filteredQuestions.push(question);
           break;
         case "gte":
           condition.value &&
             answer >= condition.value &&
-            filteredQuestion.push(question);
+            filteredQuestions.push(question);
           break;
         case "contains":
           condition.value &&
             (typeof answer === "string" || Array.isArray(answer)) &&
             answer.includes(condition.value) &&
-            filteredQuestion.push(question);
+            filteredQuestions.push(question);
           break;
         case "notNull":
-          answer && filteredQuestion.push(question);
+          answer && filteredQuestions.push(question);
           break;
         case "isNull":
-          !answer && filteredQuestion.push(question);
+          !answer && filteredQuestions.push(question);
           break;
       }
     }
