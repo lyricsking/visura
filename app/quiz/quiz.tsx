@@ -44,7 +44,7 @@ export const loader = async ({params, request }: LoaderFunctionArgs) => {
   //  Converts the request url to instance of URL for easy manipulation
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
-  const currentId = params[GID_KEY];
+  const currentId = url.searchParams.get(GID_KEY);
   const session = await getSession(request.headers.get("Cookie"));
 
   // Generate a map of unique IDs for questions if not already generated
@@ -68,7 +68,7 @@ export const loader = async ({params, request }: LoaderFunctionArgs) => {
   const gIds = Object.keys(gIdsMap);
   if (!currentId || !gIds.includes(currentId)) {
     const gId = gIds[0];
-    return redirect(`/quiz/${gId}`, { headers });
+    return redirect(`/quiz?${GID_KEY}=${gId}`, { headers });
     //return null;
   }
 
@@ -106,7 +106,7 @@ export default function Quiz() {
     return bool;
   });
 
-  const answer = useMemo(() => undefined, [answers, question]);
+  const answer = answers[questionId]
   
   //  Total number of questions in the quiz
   const totalQuestionCount = Object.keys(gIdsMap).length;
@@ -125,7 +125,7 @@ export default function Quiz() {
       const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
       //  Navigate to the next question
       submit(newAnswers, {
-        action:`/quiz/${nextQuestionGId}`,
+        action:`/quiz?${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
         replace: true,
         encType: "application/json"
