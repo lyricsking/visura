@@ -33,7 +33,7 @@ export default defineConfig({
           });
           route("theme/update", "shared/theme/theme.action.tsx");
           route("quiz", "quiz/layout.tsx", () => {
-            route("", "quiz/quiz.tsx", { index: true });
+            route(":gId", "quiz/quiz.tsx", { index: true });
             route("confirm", "quiz/confirmation.tsx");
           });
         });

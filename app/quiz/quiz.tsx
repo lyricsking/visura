@@ -40,11 +40,11 @@ const GID_KEY = "gId";
 const GIDS_MAP_KEY = "gIdsMap";
 const ANSWER_KEY = "answers";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({params, request }: LoaderFunctionArgs) => {
   //  Converts the request url to instance of URL for easy manipulation
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
-  const currentId = url.searchParams.get(GID_KEY);
+  const currentId = params.get(GID_KEY);
   const session = await getSession(request.headers.get("Cookie"));
 
   // Generate a map of unique IDs for questions if not already generated
@@ -125,7 +125,7 @@ export default function Quiz() {
       const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
       //  Navigate to the next question
       submit(newAnswers, {
-        action:`/quiz?index&${GID_KEY}=${nextQuestionGId}`,
+        action:`/quiz/${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
         replace: true,
         encType: "application/json"
@@ -148,7 +148,7 @@ export default function Quiz() {
     if (prevQuestionIndex >= 0) {
       const prevQuestionId = Object.keys(gIdsMap)[prevQuestionIndex];
       //  navigate(-1)
-      navigate(`/quiz?gId=${prevQuestionId}`, {});
+      navigate(`/quiz/${prevQuestionId}`, {});
     }
   };
 
