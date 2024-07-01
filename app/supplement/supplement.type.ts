@@ -44,7 +44,7 @@ const SupplementSchema: Schema = new Schema<ISupplement>({
   },
 });
 
-const SupplementModel =
+const Supplement =
   mongooseClient.models.Supplement ||
   mongooseClient.model<ISupplement>("Supplement", SupplementSchema);
-export default SupplementModel;
+export default Supplement;

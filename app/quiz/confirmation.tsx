@@ -29,6 +29,5 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Confirmation() {
-
   return <div></div>;
 }

@@ -44,7 +44,6 @@ export async function recommendSupplements(
   const budgetRange = (answers["budget"] as string).split(" - ").map(Number);
   const minBudget = budgetRange[0];
   const maxBudget = budgetRange[1] || Infinity;
-  console.log("server runnin");
 
   const query = {
     $and: [
@@ -61,8 +60,9 @@ export async function recommendSupplements(
       { maxAge: { $gte: age } },
     ],
   };
-
-  const matchedSupplements = await SupplementModel.find(query).exec();
+  
+  //  Get supplement
+  const matchedSupplements = await findSupplement(query)
   
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
   const supplementWeights: SupplementWithScore[] = matchedSupplements.map(
@@ -198,8 +198,6 @@ export async function recommendSupplements(
       break; // Stop adding supplements once the budget is exceeded
     }
   }
-
-  //await mongoose.connection.close();
 
   return recommendedSupplements;
 }

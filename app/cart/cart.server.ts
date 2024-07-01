@@ -25,6 +25,8 @@ export const addItemsToCart = async (
   newItems: IItem[]
 ): Promise<void> => {
   try {
+    await connectToDatabase()
+    
     await Order.updateOne(
       { userId, status: "cart" },
       {
@@ -40,6 +42,8 @@ export const addItemsToCart = async (
     console.log("Items added to cart successfully.");
   } catch (err) {
     console.error("Error adding items to cart:", err);
+  } finally {
+    disconnectDatabase()
   }
 };
 
