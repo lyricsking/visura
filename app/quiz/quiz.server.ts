@@ -7,9 +7,8 @@ import type {
 } from "~/supplement/supplement.type";
 import { addItemsToCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
-import SupplementModel from "~/supplement/supplement.type";
 import { Answers } from "./quiz.type";
-import { mongooseClient } from "~/shared/utils/db.server";
+import { findSupplement } from "~/supplement/supplement.server";
 
 export const quizPrefs = createCookie("quizPrefs", {
   maxAge: 1440,

@@ -39,10 +39,10 @@ const NumberInputForm = ({
 
       <Input
         className="h-20 text-2xl border-2"
-        type="number"
+        type='number'
         id={name}
         name={name}
-        value={value || ""}
+        defaultValue={value || ""}
         placeholder={name}
       />
       <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">

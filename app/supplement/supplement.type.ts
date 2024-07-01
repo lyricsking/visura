@@ -1,10 +1,15 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { mongooseClient } from "~/shared/utils/db.server";
+
+type Gender = 
+  "male"|
+  "female"|
+  "other"
+
 
 export interface ISupplement extends Document {
   name: string;
   price: number;
-  gender?: string;
+  gender: Gender;
   preferences: string[];
   activityLevel: string;
   healthGoals: string[];
@@ -45,6 +50,6 @@ const SupplementSchema: Schema = new Schema<ISupplement>({
 });
 
 const Supplement =
-  mongooseClient.models.Supplement ||
-  mongooseClient.model<ISupplement>("Supplement", SupplementSchema);
+  mongoose.models.Supplement ||
+  mongoose.model<ISupplement>("Supplement", SupplementSchema);
 export default Supplement;
