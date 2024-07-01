@@ -1,6 +1,6 @@
-import { ISupplement } from "~/supplement/supplement.type";
 import { createCart, recommendSupplements } from "./quiz.server";
 import { ActionFunctionArgs, json } from "@remix-run/node";
+import type { ISupplementModel } from "~/supplement/supplement.model";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   // Handle server-side logic for form data
@@ -11,7 +11,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   
   //
   try {
-    const supplements: ISupplement[] = await recommendSupplements(body);
+    const supplements: ISupplementModel[] = await recommendSupplements(body);
       
     if (supplements) {
       await createCart(supplements);

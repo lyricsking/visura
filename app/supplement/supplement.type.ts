@@ -21,8 +21,3 @@ export interface ISupplement {
     max: number;
   };
 }
-
-export interface SupplementWithScore {
-  supplement: ISupplement;
-  weight: number; //  Calculated weight based on relevance to user's selections
-}

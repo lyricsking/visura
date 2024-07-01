@@ -1,14 +1,17 @@
 import { createCookie } from "@remix-run/node";
 
 import mongoose from "mongoose";
-import type {
-  ISupplement,
-  SupplementWithScore,
-} from "~/supplement/supplement.type";
+import type {  ISupplement} from "~/supplement/supplement.type";
 import { addItemsToCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
 import { Answers } from "./quiz.type";
 import { findSupplement } from "~/supplement/supplement.server";
+import type { ISupplementModel } from "~/supplement/supplement.model";
+
+interface SupplementWithScore {
+  supplement: ISupplementModel;
+  weight: number; //  Calculated weight based on relevance to user's selections
+}
 
 export const quizPrefs = createCookie("quizPrefs", {
   maxAge: 1440,
@@ -20,7 +23,7 @@ export const quizPrefs = createCookie("quizPrefs", {
  *
  * @param supplements
  */
-export async function createCart(supplements: ISupplement[]): Promise<void> {
+export async function createCart(supplements: ISupplementModel[]): Promise<void> {
   const items: IItem[] = supplements.map((supplement) => ({
     productId: supplement.id,
     name: supplement.name,
@@ -38,7 +41,7 @@ export async function createCart(supplements: ISupplement[]): Promise<void> {
  */
 export async function recommendSupplements(
   answers: Answers
-): Promise<ISupplement[]> {
+): Promise<ISupplementModel[]> {
   const age = answers.age;
   const budgetRange = (answers["budget"] as string).split(" - ").map(Number);
   const minBudget = budgetRange[0];
@@ -65,7 +68,7 @@ export async function recommendSupplements(
   
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
   const supplementWeights: SupplementWithScore[] = matchedSupplements.map(
-    (supplement: ISupplement) => {
+    (supplement: ISupplementModel) => {
       let weight = 0;
       if (
         answers.preferences.some((pref: string) =>
@@ -75,7 +78,7 @@ export async function recommendSupplements(
         weight += 2;
       if (
         supplement.gender === answers.gender ||
-        supplement.gender === "Unisex"
+        supplement.gender === "both"
       )
         weight += 2;
       if (
@@ -187,7 +190,7 @@ export async function recommendSupplements(
   //  Initialize totalCost variable, holds the total cost of supplements
   let totalCost = 0;
   //  Cache for supplements filter
-  const recommendedSupplements: ISupplement[] = [];
+  const recommendedSupplements: ISupplementModel[] = [];
   //  Filter out supplement based of relevance, while ensuring totalCost is withing budget range.
   for (const { supplement } of supplementWeights) {
     if (totalCost + supplement.price <= maxBudget) {

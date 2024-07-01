@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
+import type { ISupplement } from "./supplement.type";
 
 interface ISupplementModel extends ISupplement, Document {
 }

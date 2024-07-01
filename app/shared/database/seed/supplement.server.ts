@@ -1,7 +1,9 @@
+import Supplement from "~/supplement/supplement.model";
+import type { ISupplement } from "~/supplement/supplement.type";
 
 const supplements: ISupplement[] = [
   {
-    name: "",
+    name: "yyy",
     price: 0, 
     gender: "both",
     preferences: [""],
@@ -23,8 +25,8 @@ const supplements: ISupplement[] = [
 export const seedSupplement = async () => {
   try {
     await Supplement.deleteMany({});
-    await Supplement.insertMany;
-    console.log('Users seeded successfully');
+    const x = await Supplement.insertMany(supplements);
+    console.log('Supplements seeded successfully');
   } catch (error) {
     console.error('Error seeding users:', error);
   }
