@@ -20,7 +20,7 @@ export const { getSession, commitSession, destroySession } = createFileSessionSt
     name: "__session",
     httpOnly: true,
     //maxAge: 60 * 60 * 24, // 1 day
-    maxAge: 10 , // 1 minutes
+    //maxAge: 10 , // 1 minutes
     path: "/",
     sameSite: "lax",
     secrets: [sessionSecret], // Replace with your own secret

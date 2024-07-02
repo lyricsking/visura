@@ -1,30 +1,42 @@
 import { createCart, recommendSupplements } from "./quiz.server";
 import { ActionFunctionArgs, json } from "@remix-run/node";
+import { getSession } from "~/shared/utils/session";
 import type { ISupplementModel } from "~/supplement/supplement.model";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   // Handle server-side logic for form data
-
-  //  Retrieve the submitted quiz answers as json object
-  const body = await request.json();
-  console.log("The body", body);
+  const url = new URL(request.url);
+  const isFinished = url.searchParams.get("finished");
   
-  //
-  try {
-    const supplements: ISupplementModel[] = await recommendSupplements(body);
-      
-    if (supplements) {
-      await createCart(supplements);
+  const session = await getSession(request.headers.get("Cookie"));
 
-      return json({ success: true });
-    }
-  } catch (error) {
-    console.log(error);
+  if (isFinished && body) {
+    session.unset(GIDS_MAP_KEY);
+    session.unset(ANSWER_KEY);
 
-    return json({
-      success: false,
-      message: "Failed to convert supplements into order.",
+    return redirect("/quiz/confirm", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
     });
+  }
+  //  Validate answer here
+  if (isFinished && answers) {
+    try {
+      const supplements: ISupplementModel[] = await recommendSupplements(
+        answers
+      );
+
+      if (Array.isArray(supplements) && supplements.length > 0) {
+        await createCart(supplements);
+
+        return redirect("/cart");
+      }
+    } catch (error) {
+      console.log(error);
+
+      return redirect("/quiz");
+    }
   }
 };
 

@@ -1,181 +1,241 @@
-import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
-import { createCart, recommendSupplements } from "./quiz.server";
 import {
-  ClientLoaderFunctionArgs,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-} from "@remix-run/react";
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
+import { useNavigate, useLoaderData, useFetcher, useSubmit, useNavigation } from "@remix-run/react";
+
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/shared/components/progress";
-import { useEffect } from "react";
-import { Answers, Question } from "./quiz.type";
-import type { ISupplement } from "~/supplement/supplement.type";
-import { useQuiz } from "./quiz.utils";
-import OptionsHandler from "./components/options-handler";
+import { commitSession, getSession } from "~/shared/utils/session";
+import { questions } from "./quiz.utils";
+import { getNanoid } from "~/shared/utils";
+import { Question } from "./quiz.type";
+import * as lo from "lodash";
+import TextInputForm from "./components/InputTextForm";
+import NumberInputForm from "./components/NumberInputForm";
+import CheckboxGroupForm from "./components/CheckboxGroupForm";
+import RadioGroupForm from "./components/RadioGroupForm";
+
+const GID_KEY = "gId";
+const GIDS_MAP_KEY = "gIdsMap";
+const ANSWER_KEY = "answers";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  //  Retrieve the submitted form quiz answers as json object
+  const data = await request.json();
+  console.log(data);
 
-  const answersString = formData.get("answers") as string;
-  const supplements: ISupplement[] = await recommendSupplements(
-    JSON.parse(answersString)
+  const url = new URL(request.url);
+  const isFinished = url.searchParams.get("finished");
+
+  const session = await getSession(request.headers.get("Cookie"));
+  session.set(ANSWER_KEY, data)
+  
+  const headers = {
+    "Set-Cookie": await commitSession(session),
+  };
+
+  if (isFinished) {
+    return redirect("/quiz/confirm", { headers })
+  }
+  
+  return json(
+    { success: true, data: { answers: data } },
+    { headers }
   );
+};
 
-  if (supplements) {
-    try {
-      await createCart(supplements);
+export const loader = async ({params, request }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  //  Converts the request url to instance of URL for easy manipulation
+  const url = new URL(request.url);
+  //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
+  const currentId = url.searchParams.get(GID_KEY);
+  
+  const answers = session.get(ANSWER_KEY) || {};
+  // Generate a map of unique IDs for questions if not already generated
+  let gIdsMap = session.get(GIDS_MAP_KEY);
+  if (!gIdsMap) {
+    gIdsMap = {};
 
-      return json({ success: true });
-    } catch (error) {
-      return json({
-        success: false,
-        message: "Failed to convert supplements into order.",
+    questions.forEach((question) => {
+      const id = getNanoid(32);
+      gIdsMap[id] = question.id;
+    });
+
+    session.set(GIDS_MAP_KEY, gIdsMap);
+  }
+
+  //  Set header session
+  const headers = {
+    "Set-Cookie": await commitSession(session),
+  };
+  
+  //  Redirect to the first question if question id is not set or provided question id no longer exist, e.g maybe session expired
+  const gIds = Object.keys(gIdsMap);
+  if (!currentId || !gIds.includes(currentId)) {
+    const gId = gIds[0];
+    return redirect(`/quiz?${GID_KEY}=${gId}`, { headers });
+  }
+
+  //  Return a formatted response with the currentId to the quiz component
+  return json({ currentId, gIdsMap, answers }, { headers });
+};
+
+/**
+ * The Quiz page component.
+ *
+ * Handles the quiz page
+ *
+ */
+export default function Quiz() {
+  //  Retrieve the current question id
+  const { currentId, gIdsMap, answers } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+
+  const navigation = useNavigation();
+  const submit = useSubmit();
+  //  Listen for form submission
+  const isSubmitting = navigation.state != "idle";
+
+  //  Get the questionId keyed by currentId
+  const questionId = gIdsMap[currentId];
+  //
+  let questionIndex = 0;
+  const question: Question = questions.find((question, index) => {
+    const bool = question.id === questionId;
+    //  While we are at it, let get it Index as well
+    if (bool) {
+      questionIndex = index;
+    }
+    return bool;
+  });
+
+  const answer = answers[questionId]
+  
+  //  Total number of questions in the quiz
+  const totalQuestionCount = Object.keys(gIdsMap).length;
+
+  //  Form answer submit handler.
+  const handleSubmit = (answer: number|string  | string[]) => {
+
+    const newAnswers = lo.merge(answers, {[question.id]: answer});
+    
+    const nextQuestionIndex = questionIndex + 1;
+    
+    //  Check if we still have questions available
+    if (nextQuestionIndex < totalQuestionCount) {
+      //  We still have one or more question left in the quiz.
+    
+      const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
+      //  Navigate to the next question
+      submit(newAnswers, {
+        action:`/quiz?index&${GID_KEY}=${nextQuestionGId}`,
+        method: "POST",
+        replace: true,
+        encType: "application/json"
+      });
+    } else {
+      //  We have indeed exhausted the questions available.
+      submit(newAnswers, {
+        action: `/quiz?index&finished=${true}`,
+        method: "POST",
+        replace: true,
+        encType: "application/json",
       });
     }
-  }
-};
-export const loader = async ({ request }: ActionFunctionArgs) => {
-  const url = new URL(request.url);
-  const questionId = url.searchParams.get("id");
-
-  if (questionId) return json({ questionId });
-  return redirect("/");
-};
-
-export const clientLoader = async ({
-  serverLoader,
-}: ClientLoaderFunctionArgs) => {
-  const { questionId } = await serverLoader<typeof loader>();
-  return { questionId };
-};
-clientLoader.hydrate = true;
-
-export function HydrateFallback() {
-  return (
-    <div className="flex flex-col h-screen items-center justify-center ">
-      <p className="text-center">Loading quiz...</p>
-    </div>
-  );
-}
-
-export default function Index() {
-  //  Retrieve loader data
-  const { questionId } = useLoaderData<typeof clientLoader>();
-
-  const { answers, getQuestion, getProgress, previousQuestion, saveAnswer } =
-    useQuiz();
-
-  //  Obtain the current question by questionId
-  const question: Question = getQuestion(questionId);
-
-  //const currentAnswer = answers[questionId];
-
-  const progress = getProgress(questionId);
-
-  //  Init navigator
-  const navigate = useNavigate();
-  const gotoQuestion = (id: string) => {
-    navigate(`/quiz?id=${id}`);
   };
 
-  //  init submit function to submit quiz
-  const quizResponse = useFetcher();
-  const isSubmitting = quizResponse.state !== "idle";
-  const isSubmitted = quizResponse.state === "idle" && quizResponse.data;
-
-  useEffect(() => {
-    if (isSubmitted) {
-      navigate(`/cart`);
-    }
-  }, [navigate, isSubmitted]);
-
-  /** Saves the current quiz's answer and move to the next quiz or finish the quiz if otherwise. */
-  const handleNext = (answer: string) => {
-    const nextQuestionId = saveAnswer(questionId as keyof Answers, answer);
-
-    if (!nextQuestionId && progress.ratio >= 1) {
-      quizResponse.submit(
-        {
-          answers: JSON.stringify(answers()),
-        },
-        {
-          method: "post",
-          action: "/quiz?index",
-        }
-      );
-    } else if (nextQuestionId) {
-      gotoQuestion(nextQuestionId);
-    }
-  };
-
+  //  Handles moving back to previous question in quiz
   const handlePrevious = () => {
-    if (progress.ratio > 0) {
-      const prevId = previousQuestion(questionId);
-
-      gotoQuestion(prevId);
+    const prevQuestionIndex = questionIndex - 1;
+    //  Checks if we can actually move back to the previous question
+    if (prevQuestionIndex >= 0) {
+      const prevQuestionId = Object.keys(gIdsMap)[prevQuestionIndex];
+      //  navigate(-1)
+      navigate(`/quiz?${GID_KEY}=${prevQuestionId}`, {});
     }
   };
 
+  const disabled = isSubmitting || questionIndex >= totalQuestionCount;
+  
+  const submitLabel = isSubmitting 
+    ? "Submitting" 
+    : questionIndex === totalQuestionCount - 1
+    ? "Finish"
+    : "Next";
+  
   return (
-    <div className="flex flex-col h-screen">
-      {isSubmitting ? (
-        <div className="flex-1 self-center items-center justify-center">
-          Loading...
-        </div>
-      ) : (
-        <>
-          <div className="border-b">
-            <Button
-              variant="text"
-              size="sm"
-              className="border-e gap-2 h-12"
-              onClick={() => handlePrevious()}
-              disabled={progress.ratio === 0}
-            >
-              <ArrowLeftIcon className="h-5 w-5" />
-              Back
-            </Button>
-          </div>
+    <div className="flex flex-col max-h-screen">
+      <div className="border-b">
+        <Button
+          variant="text"
+          size="sm"
+          className="border-e gap-2 h-12"
+          onClick={() => handlePrevious()}
+          disabled={questionIndex === 0}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+          Back
+        </Button>
+      </div>
 
-          <Progress
-            value={progress.ratio * 100}
-            className="h-4 w-full rounded-none"
-            indicatorColor="bg-indigo-400"
+      <Progress
+        value={Math.min((questionIndex / totalQuestionCount) * 100, 100)}
+        className="h-4 w-full rounded-none"
+        indicatorColor="bg-indigo-400"
+      />
+
+      <div key={question.id} className="flex-1 my-6 py-2 px-4 w-full overflow-y-auto no-scrollbar pb-32">
+        {question.type === "text" ? (
+          <TextInputForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            value={answer}
           />
-
-          <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
-            {question.question}
-          </h3>
-
-          <div className="flex-1 my-6 p-2 w-full">
-            <OptionsHandler
-              answerType={question.type}
-              name={question.id}
-              defaultValue=""
-              onValueChange={() => {}}
-              options={question.options}
-            />
-          </div>
-
-          <div className="flex flex-col gap-4 fixed z-20 bottom-8 right-0 left-0">
-            <Button
-              variant={"fill"}
-              radius={"full"}
-              className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
-              onClick={() => handleNext("Your answer")}
-              disabled={isSubmitting}
-            >
-              {isSubmitting
-                ? "Submitting"
-                : progress.currentIndex >= progress.lastIndex
-                ? "Finish"
-                : "Next"}
-            </Button>
-          </div>
-        </>
-      )}
+        ) : question.type === "number" ? (
+          <NumberInputForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            value={answer}
+          />
+        ) : question.type === "multiple" ? (
+          <CheckboxGroupForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            options={question.options!}
+            selections={answer}
+          />
+        ) : (
+          <RadioGroupForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            options={question.options!}
+            value={answer}
+          />
+        )}
+      </div>
     </div>
   );
+
+
 }

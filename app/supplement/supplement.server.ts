@@ -3,8 +3,9 @@ import {
   connectToDatabase,
   disconnectDatabase,
 } from "~/shared/database/db.server.js";
-import type { ISupplementModel } from "./supplement.model";
+import type { ISupplement, ISupplementModel } from "./supplement.model";
 import Supplement from "./supplement.model";
+import { Gender } from "./supplement.type";
 
 export const findSupplement = async (
   query: Record<string, any>
@@ -30,7 +31,7 @@ const getRandomElements = <T>(arr: T[], minCount: number): T[] => {
 };
 
 const generateRandomSupplement = (): ISupplement => {
-  const genders: Gender[] = [Gender.Male, Gender.Female, Gender.Other];
+  const genders: Gender[] = [Gender.male, Gender.female, Gender.both];
   const activities = ["Low", "Moderate", "High"];
   const healthGoals = ["Weight Loss", "Muscle Gain", "Endurance", "General Health"];
   const healthConcerns = ["Heart Health", "Diabetes", "Joint Pain", "Fatigue"];
@@ -61,6 +62,3 @@ const generateRandomSupplement = (): ISupplement => {
 const generateSupplementsArray = (num: number): ISupplement[] => {
   return Array.from({ length: num }, generateRandomSupplement);
 };
-
-const supplements = generateSupplementsArray(20);
-console.log(supplements);
