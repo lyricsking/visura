@@ -1,7 +1,9 @@
-type Gender = 
-  "male"|
-  "female"|
-  "both";
+export const Gender = {
+  male: "male",
+  female: "female",
+  both: "both"
+};
+export type Gender = typeof Gender[keyof typeof Gender]
 
 export interface ISupplement {
   name: string;
@@ -15,7 +17,7 @@ export interface ISupplement {
   allergies?: string[];
   benefits: string[];
   tags: string[];
-  form?: string;
+  form: string;
   ageRange?: {
     min: number;
     max: number;

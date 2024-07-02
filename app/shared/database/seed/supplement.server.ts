@@ -25,7 +25,7 @@ const supplements: ISupplement[] = [
 export const seedSupplement = async () => {
   try {
     await Supplement.deleteMany({});
-    const x = await Supplement.insertMany(supplements);
+    await Supplement.insertMany(supplements);
     console.log('Supplements seeded successfully');
   } catch (error) {
     console.error('Error seeding users:', error);

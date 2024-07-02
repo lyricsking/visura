@@ -28,7 +28,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(data);
 
   session.set(ANSWER_KEY, data);
-
+  
+  const url = new URL(request.url);
+  const isFinished = url.searchParams.get("finished");
+  
+  if(isFinished){
+    try {
+      const supplement: ISupplementModel[] = await recommendSupplements(body);
+    
+      if (supplements) {
+        await createCart(supplements);
+  
+        return json({ success: true, data: { answers: data } });
+      }
+    } catch (error) {
+      console.log(error);
+    
+      return json({
+        success: false,
+        message: "Failed to convert supplements into order.",
+      });
+    }
+  }
+  
   const headers = {
     "Set-Cookie": await commitSession(session),
   };
@@ -134,7 +156,7 @@ export default function Quiz() {
       //  We have indeed exhausted the questions available.
       submit(newAnswers, {
         method: "POST",
-        action: "/quiz/confirm",
+        action: "/quiz?finished=true",
         replace: true,
         encType: "application/json",
       });
