@@ -19,41 +19,36 @@ import NumberInputForm from "./components/NumberInputForm";
 import CheckboxGroupForm from "./components/CheckboxGroupForm";
 import RadioGroupForm from "./components/RadioGroupForm";
 
+export const GIDS_MAP_KEY = "gIdsMap";
+export const ANSWER_KEY = "answers";
+
 const GID_KEY = "gId";
-const GIDS_MAP_KEY = "gIdsMap";
-const ANSWER_KEY = "answers";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   //  Retrieve the submitted form quiz answers as json object
-  const data = await request.json();
-  console.log(data);
-
-  const url = new URL(request.url);
-  const isFinished = url.searchParams.get("finished");
+  const answers = await request.json();
+  console.log(answers);
 
   const session = await getSession(request.headers.get("Cookie"));
-  session.set(ANSWER_KEY, data)
+  session.set(ANSWER_KEY, answers)
   
   const headers = {
     "Set-Cookie": await commitSession(session),
   };
 
-  if (isFinished) {
-    return redirect("/quiz/confirm", { headers })
-  }
-  
   return json(
-    { success: true, data: { answers: data } },
+    { success: true, data: { answers }},
     { headers }
   );
 };
 
 export const loader = async ({params, request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get("Cookie"));
   //  Converts the request url to instance of URL for easy manipulation
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
   const currentId = url.searchParams.get(GID_KEY);
+  
+  const session = await getSession(request.headers.get("Cookie"));
   
   const answers = session.get(ANSWER_KEY) || {};
   // Generate a map of unique IDs for questions if not already generated
@@ -141,7 +136,7 @@ export default function Quiz() {
     } else {
       //  We have indeed exhausted the questions available.
       submit(newAnswers, {
-        action: `/quiz?index&finished=${true}`,
+        action: `/quiz/submit`,
         method: "POST",
         replace: true,
         encType: "application/json",
