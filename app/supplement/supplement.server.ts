@@ -59,6 +59,6 @@ const generateRandomSupplement = (): ISupplement => {
   };
 };
 
-const generateSupplementsArray = (num: number): ISupplement[] => {
+export const generateSupplementsArray = (num: number): ISupplement[] => {
   return Array.from({ length: num }, generateRandomSupplement);
 };

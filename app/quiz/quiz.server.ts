@@ -42,6 +42,9 @@ export async function createCart(supplements: ISupplementModel[]): Promise<void>
 export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
+  // Todo D3mo quickly return supplements
+  return generateSupplementsArray(10);
+  
   const age = answers.age;
   const budgetRange = (answers["budget"] as string).split(" - ").map(Number);
   const minBudget = budgetRange[0];
