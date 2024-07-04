@@ -1,3 +1,7 @@
+import mongoose from "mongoose";
+import { IItem, IOrder, OrderStatus } from "./order.type";
+import { faker } from "@faker-js/faker" 
+
 export async function checkout(orderId: string) {
   //  Update record whose id equals `order.id` and status is `cart`
   orderId;
@@ -7,11 +11,22 @@ export async function checkout(orderId: string) {
 export async function getOrders() {}
 
 const generateDummyOrder = (): IOrder => {
-  const items: IItem[] = Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => ({
-    name: faker.commerce.productName(),
-    price: parseFloat(faker.commerce.price()),
-    quantity: faker.number.int({ min: 1, max: 10 }),
-  }));
+  
+  const items: IItem[] = Array.from(
+    { length: faker.number.int({ min: 2, max: 7 }) },
+    () => {
+      const price = parseFloat(faker.commerce.price());
+      const quantity = faker.number.int({ min: 1, max: 10 });
+
+      return {
+        productId: new mongoose.Types.ObjectId(),
+        name: faker.commerce.productName(),
+        price: price,
+        quantity: quantity,
+        total: price * quantity,
+      };
+    }
+  );
 
   const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -22,13 +37,13 @@ const generateDummyOrder = (): IOrder => {
     totalPrice,
     paymentDetails: {
       method: faker.finance.transactionType(),
-      transactionId: faker.datatype.uuid(),
+      transactionId: faker.string.uuid(),
     },
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
   } as IOrder;
 };
 
-const generateDummyOrders = (count: number): IOrder[] => {
+export const generateDummyOrders = (count: number): IOrder[] => {
   return Array.from({ length: count }, generateDummyOrder);
 };

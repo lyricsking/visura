@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { generateDummyOrders } from "~/dashboard/order/order.server";
 import Order from "~/dashboard/order/order.type";
 import type { IItem, IOrder } from "~/dashboard/order/order.type";
 import { connectToDatabase, disconnectDatabase } from "~/shared/database/db.server";
@@ -10,11 +11,12 @@ import { connectToDatabase, disconnectDatabase } from "~/shared/database/db.serv
  * @param userId
  */
 export const getCartByUserId = async (
-  userId?: mongoose.Types.ObjectId
+  userId: mongoose.Types.ObjectId
 ): Promise<IOrder | null> => {
   try {
-    const cart = await Order.findOne({ userId, status: "cart" }).exec();
-    return cart;
+    //const cart = await Order.findOne({ userId, status: "cart" }).exec();
+    const cart = generateDummyOrders(1) 
+    return cart[0];
   } catch (err) {
     console.error("Error retrieving cart:", err);
     return null;

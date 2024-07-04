@@ -4,8 +4,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import mongoose from "mongoose";
 
 export const loader = async () => {
-  const cart = await getCartByUserId(new mongoose.Types.ObjectId(""));
-
+  const cart = await getCartByUserId(new mongoose.Types.ObjectId());
   return json({ cart });
 };
 
