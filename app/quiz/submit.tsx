@@ -1,5 +1,6 @@
-import { createCart, recommendSupplements } from "./quiz.server";
 import { ActionFunctionArgs, json } from "@remix-run/node";
+import { useActionData } from "@remix-run/react";
+import { createCart, recommendSupplements } from "./quiz.server";
 import { getSession } from "~/shared/utils/session";
 import type { ISupplementModel } from "~/supplement/supplement.model";
 
@@ -38,5 +39,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Submit() {
-  return <div></div>;
+  const data = useActionData<typeof action>();
+  
+  const [loading, setLoading] = React.useState(true);
+  
+  const navigate = useNavigate();
+  
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000); // Simulating a loading state for 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
+  
+  if (loading) {
+    return <Loading />;
+  }
+  
+  if(!data.success) {
+     return <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+          <h1 className="text-2xl font-bold text-red-600">An error occurred while processing your request.</h1>
+          <Link to="/" className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+            Go Home
+          </Link>
+        </div>
+  }
+  
+  return navigate("/cart")
 }
