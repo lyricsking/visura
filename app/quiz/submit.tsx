@@ -1,8 +1,11 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import { Link, useActionData, useNavigate } from "@remix-run/react";
 import { createCart, recommendSupplements } from "./quiz.server";
-import { getSession } from "~/shared/utils/session";
+import { commitSession, getSession } from "~/shared/utils/session";
 import type { ISupplementModel } from "~/supplement/supplement.model";
+import { ANSWER_KEY, GIDS_MAP_KEY } from ".";
+import React from "react";
+import Loading from "~/shared/components/loading";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   //  Retrieve the submitted form quiz answers as json object
@@ -54,13 +57,19 @@ export default function Submit() {
     return <Loading />;
   }
   
-  if(!data.success) {
-     return <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <h1 className="text-2xl font-bold text-red-600">An error occurred while processing your request.</h1>
-          <Link to="/" className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-            Go Home
-          </Link>
-        </div>
+  if(!data?.success) {
+     return (<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+         <h1 className="text-2xl font-bold text-red-600">
+           An error occurred while processing your request.
+         </h1>
+         <Link
+           to="/"
+           className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+         >
+           Go Home
+         </Link>
+       </div>
+     );
   }
   
   return navigate("/cart")

@@ -2,7 +2,7 @@ import { useFetcher } from "@remix-run/react";
 import React from "react";
 import { EditorType } from "./editor";
 
-export function Link() {}
+function Link() {}
 
 interface LinkData extends EditorType {}
 export function useLinkEditor(params: any): LinkData {
