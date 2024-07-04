@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Order from "~/dashboard/order/order.type";
 import type { IItem, IOrder } from "~/dashboard/order/order.type";
+import { connectToDatabase, disconnectDatabase } from "~/shared/database/db.server";
 
 /**
  * Converts the recommendations to order with status cart
@@ -9,7 +10,7 @@ import type { IItem, IOrder } from "~/dashboard/order/order.type";
  * @param userId
  */
 export const getCartByUserId = async (
-  userId: mongoose.Types.ObjectId
+  userId?: mongoose.Types.ObjectId
 ): Promise<IOrder | null> => {
   try {
     const cart = await Order.findOne({ userId, status: "cart" }).exec();

@@ -50,6 +50,7 @@ export default function Submit() {
   
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000); // Simulating a loading state for 2 seconds
+    
     return () => clearTimeout(timer);
   }, []);
   
@@ -57,7 +58,7 @@ export default function Submit() {
     return <Loading />;
   }
   
-  if(!data?.success) {
+  if(false/*!data?.success*/) {
      return (<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
          <h1 className="text-2xl font-bold text-red-600">
            An error occurred while processing your request.

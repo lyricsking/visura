@@ -5,8 +5,9 @@ import type {  ISupplement} from "~/supplement/supplement.type";
 import { addItemsToCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
 import { Answers } from "./quiz.type";
-import { findSupplement } from "~/supplement/supplement.server";
+import { findSupplement, generateSupplementsArray } from "~/supplement/supplement.server";
 import type { ISupplementModel } from "~/supplement/supplement.model";
+import { getNanoid } from "~/shared/utils";
 
 interface SupplementWithScore {
   supplement: ISupplementModel;
@@ -32,7 +33,7 @@ export async function createCart(supplements: ISupplementModel[]): Promise<void>
     total: supplement.price * 1,
   }));
 
-  return addItemsToCart(new mongoose.Types.ObjectId(""), items);
+  return addItemsToCart(new mongoose.Types.ObjectId(getNanoid(24)), items);
 }
 
 /**
@@ -42,9 +43,6 @@ export async function createCart(supplements: ISupplementModel[]): Promise<void>
 export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
-  // Todo D3mo quickly return supplements
-  return generateSupplementsArray(10);
-  
   const age = answers.age;
   const budgetRange = (answers["budget"] as string).split(" - ").map(Number);
   const minBudget = budgetRange[0];
