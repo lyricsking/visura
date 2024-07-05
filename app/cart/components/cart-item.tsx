@@ -37,7 +37,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         <div className="w-16 h-16 bg-gray-200 rounded-lg mr-4"></div>
       </div>
       
-      <div className="flex-1 flex flex-col items-center space-x-4 divide-y">
+      <div className="flex-1 flex flex-col items-center gap-4 divide-y">
         <div>
           <h2 className="text-lg font-semibold">{item.name}</h2>
         </div>
