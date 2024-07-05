@@ -8,7 +8,7 @@ interface CartItemProps {
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const fetcher = useFetcher();
-  const currentQuantity = parseFloat(fetcher.formData?.get("quantity")as string) || item.quantity;
+  const currentQuantity = parseFloat(fetcher.formData?.get("quantity") as string) || item.quantity;
   const currentSubscription =
     fetcher.formData?.get("isSubscribe") || item.isSubscribe;
 
@@ -32,17 +32,19 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white shadow-md rounded-lg mb-4">
-      <div className="flex items-center mb-4 sm:mb-0">
+    <div className="flex items-center justify-between p-4 bg-white">
+      <div className="w-1/5">
         <div className="w-16 h-16 bg-gray-200 rounded-lg mr-4"></div>
+      </div>
+      
+      <div className="flex-1 flex flex-col items-center space-x-4 divide-y">
         <div>
           <h2 className="text-lg font-semibold">{item.name}</h2>
         </div>
-      </div>
-      <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between gap-4">
         <div className="text-gray-700">
-          <label className="block">Qty: </label>
           <select
+            aria-label="Choose item quantity"
             value={currentQuantity}
             onChange={handleUpdate}
             className="w-16 p-1 border border-gray-300 rounded"
@@ -56,8 +58,8 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
           <span className="block">Price: ${item.price.toFixed(2)}</span>
         </div>
         <div className="text-gray-700">
-          <label className="block">Subscription: </label>
           <select
+            aria-label="Choose purchase frequency"
             name="isSubscribe"
             value={currentSubscription?.toString() || "false"}
             onChange={handleUpdate}
@@ -69,6 +71,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         </div>
         <div className="text-gray-700 font-semibold">
           Total: ${(Number(currentQuantity) * item.price).toFixed(2)}
+        </div>
         </div>
       </div>
     </div>
