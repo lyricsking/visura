@@ -2,6 +2,7 @@ import React from "react";
 import { useFetcher } from "@remix-run/react";
 import type { IItem } from "~/dashboard/order/order.type";
 import { CART_FETCHER_KEY } from "../cart.type";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 interface CartItemProps {
   item: IItem;
@@ -40,20 +41,37 @@ const CartItem = ({ item }: CartItemProps) => {
       </div>
 
       <div className="flex-1 flex flex-col jusstify-between gap-2">
-        <div>
-          <h2 className="text-lg font-semibold">{item.name}</h2>
-          <div className="text-gray-700">
-            <select
-              aria-label="Choose purchase frequency"
-              name="isSubscribe"
-              value={currentSubscription?.toString() || "false"}
-              onChange={handleUpdate}
-              className="text-sm text-blue-500 rounded"
-            >
-              <option value="false">One-time purchase</option>
-              <option value="true">Subscription</option>
-            </select>
+        <div className="flex justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">{item.name}</h2>
+            <div className="text-gray-700">
+              <select
+                aria-label="Choose purchase frequency"
+                name="isSubscribe"
+                value={currentSubscription?.toString() || "false"}
+                onChange={handleUpdate}
+                className="text-sm text-blue-500 rounded"
+              >
+                <option value="false">One-time purchase</option>
+                <option value="true">Subscription</option>
+              </select>
+            </div>
           </div>
+          <button
+            onClick={() =>
+              fetcher.submit(
+                {
+                  productId: item.productId.toString(),
+                  quantity: "0",
+                  isSubscribe: item.isSubscribe?.toString() || "false",
+                },
+                { method: "post" }
+              )
+            }
+            className="ml-4 text-red-500"
+          >
+            <Cross1Icon className="w-6" />
+          </button>
         </div>
 
         <hr className="border-t" />

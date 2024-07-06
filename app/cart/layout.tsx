@@ -32,7 +32,7 @@ export default function Layout() {
         <Outlet context={{ cart }} />
       </div>
 
-      <div className="lg:w-1/4 p-4 mt-4 lg:mt-0 bg-orange-300 rounded shadow">
+      <div className="lg:w-1/4 p-4 mt-4 mb-20 lg:mt-0 lg:mb-0 bg-orange-300 rounded shadow">
         <h2 className="text-lg font-bold mb-4">Order Summary</h2>
         <fetcher.Form method="post" className="mb-4" action="?index">
           <label
@@ -76,8 +76,11 @@ export default function Layout() {
           <span>Estimated Total</span>
           <span>$113.00</span>
         </div>
-        <div className="fixed z-30 bottom-0 left-0 right-0 flex justify-end mt-4 px-4">
-          <button className="bg-black text-white px-4 py-2 rounded">
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center">
+          <div className="font-semibold text-lg md:hidden">
+            Total: ${estimatedTotal.toFixed(2)}
+          </div>
+          <button className="flex-1 bg-black text-white px-4 py-2 rounded-md">
             Checkout
           </button>
         </div>
