@@ -1,13 +1,14 @@
 import React from "react";
 import { useFetcher } from "@remix-run/react";
 import type { IItem } from "~/dashboard/order/order.type";
+import { CART_FETCHER_KEY } from "../cart.type";
 
 interface CartItemProps {
   item: IItem;
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-    const fetcher = useFetcher({ key: CART_FETCHER_KEY});
+  const fetcher = useFetcher({ key: CART_FETCHER_KEY });
 
   const currentQuantity =
     parseFloat(fetcher.formData?.get("quantity") as string) || item.quantity;
