@@ -14,12 +14,12 @@ export const action = async ({ request }: any) => {
 };
 
 export default function Cart() {
-  const {cart}: {cart:IOrder} = useOutletContext();
+  const { cart }: { cart: IOrder } = useOutletContext();
 
   return (
-    <div className="grid grid-rows-2 md:grid-cols-[1fr_30%] md:gap-4 p-4">
+    <div>
       {/* Cart item details */}
-      <div>
+      <div className="divide-y">
         {cart.items &&
           cart.items.map((item, index) => <CartItem key={index} item={item} />)}
       </div>

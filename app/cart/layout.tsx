@@ -12,13 +12,33 @@ export default function Layout() {
   const { cart } = useLoaderData<typeof loader>();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 border rounded-md">
-      <div className="col-span-9 bg-white">
+    <div className="flex flex-col lg:flex-row">
+      <div className="lg:w-3/4 p-4">
         <Outlet context={{ cart }} />
       </div>
 
-      <div className="col-span-3 bg-orange-300">
-        <div></div>
+      <div className="lg:w-1/4 p-4 mt-4 lg:mt-0 bg-orange-300 rounded shadow">
+        <h2 className="text-lg font-bold mb-4">Order Summary</h2>
+        <div className="mb-2 flex justify-between">
+          <span>Subtotal</span>
+          <span>$100.00</span>
+        </div>
+        <div className="mb-2 flex justify-between">
+          <span>Shipping</span>
+          <span>$10.00</span>
+        </div>
+        <div className="mb-2 flex justify-between">
+          <span>Discount</span>
+          <span>-$5.00</span>
+        </div>
+        <div className="mb-2 flex justify-between">
+          <span>Tax</span>
+          <span>$8.00</span>
+        </div>
+        <div className="mt-4 pt-2 border-t flex justify-between font-bold">
+          <span>Estimated Total</span>
+          <span>$113.00</span>
+        </div>
       </div>
     </div>
   );
