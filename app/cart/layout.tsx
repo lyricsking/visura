@@ -10,6 +10,18 @@ export const loader = async () => {
 
 export default function Layout() {
   const { cart } = useLoaderData<typeof loader>();
+  
+    const fetcher = useFetcher({ key: CART_FETCHER_KEY});
+  
+  // Optimistic UI for discount and quantity updates
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const itemTotal = cartItems.reduce((total, item) => total + item.total, 0);
+  const shipping = 5.99; // Example shipping cost
+  const taxRate = 0.08; // Example tax rate (8%)
+  const discount = fetcher.data?.discount || 0;
+  const tax = itemTotal * taxRate;
+  const estimatedTotal = itemTotal + shipping - discount + tax;
+
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -19,6 +31,22 @@ export default function Layout() {
 
       <div className="lg:w-1/4 p-4 mt-4 lg:mt-0 bg-orange-300 rounded shadow">
         <h2 className="text-lg font-bold mb-4">Order Summary</h2>
+        <fetcher.Form method="post" className="mb-4">
+                  <label htmlFor="discountCode" className="block text-sm font-medium text-gray-700">
+                    Discount Code
+                  </label>
+                  <div className="flex mt-1">
+                    <input
+                      type="text"
+                      name="discountCode"
+                      id="discountCode"
+                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+                    />
+                    <button type="submit" className="ml-2 px-4 py-2 bg-black text-white rounded-md">
+                      Apply
+                    </button>
+                  </div>
+                </fetcher.Form>
         <div className="mb-2 flex justify-between">
           <span>Subtotal</span>
           <span>$100.00</span>

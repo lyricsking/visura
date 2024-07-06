@@ -4,13 +4,30 @@ import CartItem from "./components/cart-item";
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
-  const productId = formData.get("productId");
-  const quantity = parseInt(formData.get("quantity"), 10);
-
-  // Here you would update the item quantity in your database
-  // For the sake of this example, we'll just return the new quantity
-
-  return json({ productId, quantity });
+  const discountCode = formData.get('discountCode');
+  const productId = formData.get('productId');
+  const quantity = parseInt(formData.get('quantity'), 10);
+  const isSubscribe = formData.get('isSubscribe') === 'true';
+  
+  let discount = 0;
+  
+  // Handle discount code application
+  if (discountCode) {
+    // Validate the discount code and calculate the discount amount
+    if (discountCode === 'SAVE10') {
+      discount = 10.0;
+    }
+    return json({ discount });
+  }
+  
+  // Handle quantity and subscription updates
+  if (productId && !isNaN(quantity)) {
+    // Update the item quantity and subscription status in your database
+    // For the sake of this example, we'll just return the new values
+    return json({ productId, quantity, isSubscribe });
+  }
+  
+  return null;
 };
 
 export default function Cart() {
