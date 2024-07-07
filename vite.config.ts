@@ -35,6 +35,8 @@ export default defineConfig({
           route("quiz", "quiz/layout.tsx", () => {
             route("", "quiz/index.tsx", { index: true });
             route("submit", "quiz/submit.tsx");
+            route("shipping", "quiz/shipping.tsx");
+            route("payment", "quiz/payment.tsx");
           });
         });
       },
