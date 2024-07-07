@@ -26,6 +26,8 @@ export default defineConfig({
           route("cart", "cart/layout.tsx", () => {
             route("", "cart/index.tsx", { index: true });
             route("checkout", "cart/checkout.tsx");
+            route("shipping", "cart/shipping.tsx");
+            route("payment", "cart/payment.tsx");
           });
           route("dashboard", "dashboard/layout.tsx", () => {
             route("", "dashboard/overview.tsx", { index: true });
@@ -35,8 +37,6 @@ export default defineConfig({
           route("quiz", "quiz/layout.tsx", () => {
             route("", "quiz/index.tsx", { index: true });
             route("submit", "quiz/submit.tsx");
-            route("shipping", "quiz/shipping.tsx");
-            route("payment", "quiz/payment.tsx");
           });
         });
       },

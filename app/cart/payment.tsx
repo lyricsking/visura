@@ -1,5 +1,3 @@
-import WalletItem from "~/components/WalletItem";
-
 const PaymentPage = () => {
   return (
     <div className="max-w-md mx-auto p-4">
@@ -25,26 +23,30 @@ const PaymentPage = () => {
           <span className="text-lg font-semibold">Total price</span>
           <span className="text-lg font-bold">$324.00</span>
         </div>
-        <button className="w-full bg-blue-600 text-white py-3 mt-4 rounded-lg">Pay Now</button>
+        <button className="w-full bg-blue-600 text-white py-3 mt-4 rounded-lg">
+          Pay Now
+        </button>
       </div>
     </div>
   );
 };
 
-
 interface WalletItemProps {
   name: string;
   value: string;
 }
-
-const WalletItem: React.FC<WalletItemProps> = ({ name, value }) => {
+export const WalletItem: React.FC<WalletItemProps> = ({ name, value }) => {
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg mb-2">
       <p className="text-lg">{name}</p>
-      <input type="radio" name="wallet" value={value} className="form-radio h-5 w-5 text-indigo-600" />
+      <input
+        type="radio"
+        name="wallet"
+        value={value}
+        className="form-radio h-5 w-5 text-indigo-600"
+      />
     </div>
   );
 };
 
 export default PaymentPage;
-export WalletItem;

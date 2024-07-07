@@ -1,8 +1,5 @@
-// app/components/AddressItem.tsx
-import React from 'react';
-
-interface AddressItemProps {
-  type: 'Home' | 'Office';
+export interface AddressItemProps {
+  type: "Home" | "Office";
   address: string;
   phone: string;
   selected: boolean;
@@ -10,12 +7,29 @@ interface AddressItemProps {
   onDelete: () => void;
 }
 
-const AddressItem: React.FC<AddressItemProps> = ({ type, address, phone, selected, onEdit, onDelete }) => {
+export const AddressItem = ({
+  type,
+  address,
+  phone,
+  selected,
+  onEdit,
+  onDelete,
+}: AddressItemProps) => {
   return (
-    <div className={`border p-4 rounded-lg mb-4 ${selected ? 'border-black' : 'border-gray-300'}`}>
+    <div
+      className={`border p-4 rounded-lg mb-4 ${
+        selected ? "border-black" : "border-gray-300"
+      }`}
+    >
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center">
-          <input type="radio" name="address" checked={selected} readOnly className="mr-2" />
+          <input
+            type="radio"
+            name="address"
+            checked={selected}
+            readOnly
+            className="mr-2"
+          />
           <span className="font-semibold">{type}</span>
         </div>
         <div className="flex space-x-2">
@@ -32,5 +46,3 @@ const AddressItem: React.FC<AddressItemProps> = ({ type, address, phone, selecte
     </div>
   );
 };
-
-export default AddressItem;
