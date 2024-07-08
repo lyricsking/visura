@@ -111,12 +111,12 @@ export const questions: Question[] = [
     type: "single",
     options: ["1", "2", "3+"],
   },
-  {
+  /*{
     id: "livingEnvironment",
     question: "What type of environment do you live in?",
     type: "single",
     options: ["Urban", "Suburban", "Rural"],
-  },
+  },*/
   {
     id: "smokingStatus",
     question: "Do you smoke?",

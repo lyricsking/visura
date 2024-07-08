@@ -4,13 +4,14 @@ import {
   NavigateFunction,
   useFetcher,
   useLoaderData,
-  useNavigate,
 } from "@remix-run/react";
 import React from "react";
-import { AddressItem, type AddressItemProps } from "./components/address";
+import { AddressForm, AddressItem, type AddressItemProps } from "./components/address";
 
 const ADD_ADDRESS_FORM = "add-new-address";
+const EDIT_ADDRESS_FORM = "update-address";
 const SHOW_ADDRESS_FORM = "new-address";
+const SHOW_EDIT_ADDRESS_FORM = "edit-address";
 
 // Handle form submissions in the action
 export let action = async ({ request }: ActionFunctionArgs) => {
@@ -33,8 +34,6 @@ export let action = async ({ request }: ActionFunctionArgs) => {
 
 // Fetch initial data in the loader
 export let loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const showForm = url.searchParams.get(SHOW_ADDRESS_FORM) === "true";
   const addresses: Pick<
     AddressItemProps,
     "type" | "address" | "phone" | "selected"
@@ -52,7 +51,7 @@ export let loader = async ({ request }: LoaderFunctionArgs) => {
       selected: false,
     },
   ];
-  return json({ addresses, showForm });
+  return json({ addresses });
 };
 
 export const handle = {
@@ -63,88 +62,64 @@ export const handle = {
   },
 };
 const ShippingDetails: React.FC = () => {
-  const { addresses, showForm } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
-  const navigate = useNavigate();
-
-  const toggleFormVisibility = () => {
-    if (showForm) {
-      navigate("?", { replace: true });
-    } else {
-      navigate(`?${SHOW_ADDRESS_FORM}=true`, { replace: true });
+  const { addresses } = useLoaderData<typeof loader>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showForm = searchParams.get(SHOW_ADDRESS_FORM)
+  const editingAddressId = searchParams.get(EDIT_ADDRESS_FORM);
+  
+  const toggleFormVisibility = (action: string, value?: string|boolean) => {
+    if(value){
+    setSearchParams((prev) => {
+      prev.set(action, value);
+      return prev;
+    }, {
+      replace: true
+    });
+    }else {
+      setSearchParams((prev) => {
+      prev.delete(action);
+      return prev;
+    }, {
+      replace: true
+    });
+  
     }
   };
+  
+  const handleDelete = (addressId: string) => {
+    fetcher.submit({ addressId }, { method: 'post', action: '/delete-address' });
+  };
+  
+  const fetcher = useFetcher();
 
   return (
     <div className="container mx-auto p-4">
       {addresses.map((address, index) => (
-        <AddressItem
-          key={index}
+        editingAddressId === address.id 
+        ? <AddressForm 
+            key={address.id}
+            address={address}
+            onCancel={()=>toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM)}
+          />
+        : <AddressItem
+          key={address.id}
           type={address.type}
           address={address.address}
-          phone={address.phone}
-          selected={address.selected}
-          onEdit={() => {}}
-          onDelete={() => {}}
+          onEdit={()=>toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address.id)}
+          onDelete={handleDelete}
         />
       ))}
       {!showForm && (
         <button
-          onClick={toggleFormVisibility}
+          onClick={()=>toggleFormVisibility(SHOW_ADDRESS_FORM,true)}
           className="w-full py-2 border border-gray-300 rounded-lg text-gray-700 mb-4"
         >
           + Add New Address
         </button>
       )}
-      {showForm && (
-        <fetcher.Form method="post" className="border p-4 rounded-lg mb-4">
-          <input type="hidden" name="_action" value="add-new-address" />
-          <div className="mb-2">
-            <label className="block text-gray-700">Type</label>
-            <select
-              name="type"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              required
-            >
-              <option value="Home">Home</option>
-              <option value="Office">Office</option>
-            </select>
-          </div>
-          <div className="mb-2">
-            <label className="block text-gray-700">Address</label>
-            <input
-              name="address"
-              type="text"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label className="block text-gray-700">Phone</label>
-            <input
-              name="phone"
-              type="text"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              required
-            />
-          </div>
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={toggleFormVisibility}
-              className="text-gray-700"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-black text-white px-4 py-2 rounded-md"
-            >
-              Add
-            </button>
-          </div>
-        </fetcher.Form>
-      )}
+      {showForm && (<AddressForm
+            onCancel={()=>toggleFormVisibility(SHOW_ADDRESS_FORM)}
+      />)}
     </div>
   );
 };

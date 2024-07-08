@@ -19,12 +19,12 @@ const PaymentPage = () => {
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="mt-4">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-xl font-semibold" id="payment-method-heading">
           Select your preferred mode of payment.
         </h2>
-        <div className="mt-2">
+        <div className="mt-2" role="radiogroup" aria-labelledby="payment-method-heading">
           {Object.keys(PaymentMethods).map((key) => (
-            <WalletItem
+            <PaymentMethod
               key={key}
               name="paymentMethod"
               value={PaymentMethods[key as PaymentMethods]}
@@ -36,19 +36,25 @@ const PaymentPage = () => {
   );
 };
 
-interface WalletItemProps {
+interface PaymentMethodProps {
   name: string;
   value: string;
 }
-export const WalletItem = ({ name, value }: WalletItemProps) => {
+export const PaymentMethod = ({ name, value }: PaymentMethodProps) => {
+  const id = `payment-method-${value}`;
+
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg mb-2">
-      <p className="text-lg capitalize">{value}</p>
+      <label htmlFor={id} className="text-lg capitalize">
+        {value}
+      </label>
       <input
         type="radio"
         name={name}
         value={value}
+        id={id}
         className="form-radio h-5 w-5 text-indigo-600"
+        aria-labelledby={`payment-method-${value}`}
       />
     </div>
   );

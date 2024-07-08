@@ -1,0 +1,1 @@
+export interface IAddressModel extends IAddress, Document {}
