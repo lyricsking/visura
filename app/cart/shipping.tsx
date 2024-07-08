@@ -1,5 +1,11 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  Form,
+  NavigateFunction,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
 import React from "react";
 import { AddressItem, type AddressItemProps } from "./components/address";
 
@@ -49,6 +55,13 @@ export let loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ addresses, showForm });
 };
 
+export const handle = {
+  buttonLabel: "Payment",
+  name: "Shipping",
+  onSubmit: (navigate: NavigateFunction) => {
+    navigate("payment");
+  },
+};
 const ShippingDetails: React.FC = () => {
   const { addresses, showForm } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
@@ -56,20 +69,14 @@ const ShippingDetails: React.FC = () => {
 
   const toggleFormVisibility = () => {
     if (showForm) {
-      fetcher.submit(null, { action: "get" });
+      navigate("?", { replace: true });
     } else {
-      fetcher.submit({ SHOW_ADDRESS_FORM: true }, { action: "get" });
+      navigate(`?${SHOW_ADDRESS_FORM}=true`, { replace: true });
     }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex items-center mb-4">
-        <button onClick={() => navigate(-1)} className="text-lg mr-2">
-          <i className="fas fa-arrow-left"></i>
-        </button>
-        <h1 className="text-xl font-semibold">Shipping Details</h1>
-      </div>
       {addresses.map((address, index) => (
         <AddressItem
           key={index}
