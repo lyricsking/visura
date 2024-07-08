@@ -1,3 +1,4 @@
+import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { type IAddress } from "~/dashboard/address/address.type";
@@ -63,7 +64,7 @@ export const AddressItem = ({
               className="text-blue-500"
               aria-label={`Edit ${type} address`}
             >
-              <i className="fas fa-edit" aria-hidden="true"></i>
+              <Pencil1Icon className="w-5 h-5" />
             </button>
             <button
               onClick={(e) => {
@@ -73,7 +74,7 @@ export const AddressItem = ({
               className="text-red-500"
               aria-label={`Delete ${type} address`}
             >
-              <i className="fas fa-trash" aria-hidden="true"></i>
+              <Cross1Icon className="w-5 h-5" />
             </button>
           </div>
         </div>
