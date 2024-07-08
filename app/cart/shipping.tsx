@@ -138,12 +138,6 @@ const ShippingDetails: React.FC = () => {
           </div>
         </fetcher.Form>
       )}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white shadow-md flex justify-between items-center">
-        <span className="text-lg font-semibold">Estimated Total: $100</span>
-        <button className="bg-black text-white px-4 py-2 rounded-md">
-          Apply
-        </button>
-      </div>
     </div>
   );
 };

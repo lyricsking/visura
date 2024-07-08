@@ -23,13 +23,40 @@ export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";
 
 const GID_KEY = "gId";
+const ACTION_KEY = "_action";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  //  Converts the request url to instance of URL for easy manipulation
+  const url = new URL(request.url);
   //  Retrieve the submitted form quiz answers as json object
   const answers = await request.json();
   console.log(answers);
 
   const session = await getSession(request.headers.get("Cookie"));
+  
+  if(answers&&url.searchParams.has(ACTION_KEY) && url.searchParams.get(ACTION_KEY)=== "submit") {
+    try {
+      const supplements: ISupplementModel[] = await recommendSupplements(answers);
+    
+      if (Array.isArray(supplements) && supplements.length > 0) {
+        await createCart(supplements);
+        
+        session.unset(GIDS_MAP_KEY)
+        session.unset(ANSWER_KEY)
+    
+        const headers = {
+          "Set-Cookie": await commitSession(session),
+        };
+
+        return json({ success: true, data: { answers } }, { headers });
+      }
+    } catch (error) {
+      console.log(error);
+    
+      return json({ success: false, data: { answers } }, { headers });
+    }
+  }
+  
   session.set(ANSWER_KEY, answers)
   
   const headers = {
@@ -47,6 +74,11 @@ export const loader = async ({params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
   const currentId = url.searchParams.get(GID_KEY);
+  const _action = url.searchParams.get(ACTION_KEY);
+  
+  if(_action && _action === "submit"){
+    redirect("/cart")
+  }
   
   const session = await getSession(request.headers.get("Cookie"));
   
@@ -135,8 +167,8 @@ export default function Quiz() {
       });
     } else {
       //  We have indeed exhausted the questions available.
-      submit(newAnswers, {
-        action: `/quiz/submit`,
+      submit(finalAnswers, {
+        action: `quiz?index&${ACTION_KEY}="submit"`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -154,6 +186,23 @@ export default function Quiz() {
       navigate(`/quiz?${GID_KEY}=${prevQuestionId}`, {});
     }
   };
+  
+  
+  if(isSubmitting && nextQuestionIndex >= totalQuestionCount){
+    return (<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+         <h1 className="text-2xl font-bold text-red-600">
+           An error occurred while processing your request.
+         </h1>
+         <Link
+           to="/"
+           className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+         >
+           Go Home
+         </Link>
+       </div>
+     );
+  }
+
 
   const disabled = isSubmitting || questionIndex >= totalQuestionCount;
   
