@@ -12,7 +12,9 @@ export const loader = async () => {
 export default function Layout() {
   const { cart } = useLoaderData<typeof loader>();
 
+  const matches = useMatches();
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
+  const navigate = useNavigate();
 
   // Optimistic UI for discount and quantity updates
   const totalItems = cart?.items.reduce(
@@ -25,7 +27,16 @@ export default function Layout() {
   const discount = Number(fetcher.formData?.get("discount") || 0);
   const tax = itemTotal || 0 * taxRate;
   const estimatedTotal = itemTotal || 0 + shipping - discount + tax;
-
+  //  Use to handle button clicks to navigate through the checkout process.
+  //  It validates the currect section e.g shipping and then navigate to the next checkout flow.
+  const handleClick = () => {
+    const onSubmit = ([...matches].reverse()).find(
+      (route) => route.handle && route.handle.onSubmit
+    );
+    
+    return onSubmit && onSubmit(navigate)
+  };
+  
   return (
     <div className="flex flex-col lg:flex-row h-screen overflow-y-auto no-scrollbar">
       <div className="flex-1 lg:w-3/4 p-4">
@@ -58,30 +69,32 @@ export default function Layout() {
         </fetcher.Form>
         <div className="mb-2 flex justify-between">
           <span>Subtotal</span>
-          <span>$100.00</span>
+          <span>${itemTotal.toFixed(2)}</span>
         </div>
         <div className="mb-2 flex justify-between">
           <span>Shipping</span>
-          <span>$10.00</span>
+          <span>${shipping.toFixed(2)}</span>
         </div>
         <div className="mb-2 flex justify-between">
           <span>Discount</span>
-          <span>-$5.00</span>
+          <span>-${discount.toFixed(2)}</span>
         </div>
         <div className="mb-2 flex justify-between">
           <span>Tax</span>
-          <span>$8.00</span>
+          <span>${taxRate.toFixed(2)}</span>
         </div>
         <div className="mt-4 pt-2 border-t flex justify-between font-bold">
           <span>Estimated Total</span>
-          <span>$113.00</span>
+          <span>${estimatedTotal.toFixed(2)}</span>
         </div>
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-white shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center">
           <div className="font-semibold text-lg md:hidden">
             Total: ${estimatedTotal.toFixed(2)}
           </div>
-          <button className="flex-1 bg-black text-white px-4 py-2 rounded-md">
-            Checkout
+          <button className="flex-1 bg-black text-white px-4 py-2 rounded-md" onClick={handleClick}>
+            {([...matches].reverse()).find(
+              (route) => route.handle && route.handle.name
+            )||null}
           </button>
         </div>
       </div>

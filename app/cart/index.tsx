@@ -30,6 +30,14 @@ export const action = async ({ request }: any) => {
   return null;
 };
 
+export const handle = {
+  name: "Cart",
+  onSumit: (navigate: any) => {
+    navigate("shipping")
+  },
+  
+}
+
 export default function Cart() {
   const { cart }: { cart: IOrder } = useOutletContext();
 
