@@ -1,16 +1,16 @@
+import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import { type IAddress } from "~/dashboard/address/address.type";
 
 export interface AddressItemProps {
-  address: Pick<Address, "type","address", "phone">
+  address: Pick<IAddress, "address" | "type" | "phone">;
   selected: boolean;
   onEdit: () => void;
   onDelete: () => void;
 }
 
 export const AddressItem = ({
-  type,
-  address,
-  phone,
+  address: { address, phone, type },
   selected,
   onEdit,
   onDelete,
@@ -70,13 +70,15 @@ export const AddressItem = ({
 };
 
 export interface AddressFormProps {
-  address: Pick<Address, "type","address", "phone">;
+  address: Pick<IAddress, "type" | "address" | "phone">;
   action: string;
   onCancel: () => void;
 }
 
 export const AddressForm = ({
-  address, action, onCancel, onSubmit
+  address,
+  action,
+  onCancel,
 }: AddressFormProps) => {
   const fetcher = useFetcher();
   return (
@@ -86,9 +88,13 @@ export const AddressForm = ({
       aria-labelledby="address-form-title"
     >
       <input type="hidden" name="_action" value={action} />
-      <h2 id="address-form-title" className="sr-only">Address Form</h2>
+      <h2 id="address-form-title" className="sr-only">
+        Address Form
+      </h2>
       <div className="mb-2">
-        <label htmlFor="address-type" className="block text-gray-700">Type</label>
+        <label htmlFor="address-type" className="block text-gray-700">
+          Type
+        </label>
         <select
           id="address-type"
           name="type"
@@ -101,7 +107,9 @@ export const AddressForm = ({
         </select>
       </div>
       <div className="mb-2">
-        <label htmlFor="address" className="block text-gray-700">Address</label>
+        <label htmlFor="address" className="block text-gray-700">
+          Address
+        </label>
         <input
           id="address"
           name="address"
@@ -113,7 +121,9 @@ export const AddressForm = ({
         />
       </div>
       <div className="mb-2">
-        <label htmlFor="phone" className="block text-gray-700">Phone</label>
+        <label htmlFor="phone" className="block text-gray-700">
+          Phone
+        </label>
         <input
           id="phone"
           name="phone"
