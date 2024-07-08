@@ -4,7 +4,14 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import { useNavigate, useLoaderData, useFetcher, useSubmit, useNavigation } from "@remix-run/react";
+import {
+  useNavigate,
+  useLoaderData,
+  useFetcher,
+  useSubmit,
+  useNavigation,
+  Link,
+} from "@remix-run/react";
 
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
@@ -18,6 +25,8 @@ import TextInputForm from "./components/InputTextForm";
 import NumberInputForm from "./components/NumberInputForm";
 import CheckboxGroupForm from "./components/CheckboxGroupForm";
 import RadioGroupForm from "./components/RadioGroupForm";
+import { ISupplementModel } from "~/supplement/supplement.model";
+import { createCart, recommendSupplements } from "./quiz.server";
 
 export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";
@@ -33,17 +42,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   console.log(answers);
 
   const session = await getSession(request.headers.get("Cookie"));
-  
-  if(answers&&url.searchParams.has(ACTION_KEY) && url.searchParams.get(ACTION_KEY)=== "submit") {
+
+  if (
+    answers &&
+    url.searchParams.has(ACTION_KEY) &&
+    url.searchParams.get(ACTION_KEY) === "submit"
+  ) {
     try {
-      const supplements: ISupplementModel[] = await recommendSupplements(answers);
-    
+      const supplements: ISupplementModel[] = await recommendSupplements(
+        answers
+      );
+
       if (Array.isArray(supplements) && supplements.length > 0) {
         await createCart(supplements);
-        
-        session.unset(GIDS_MAP_KEY)
-        session.unset(ANSWER_KEY)
-    
+
+        session.unset(GIDS_MAP_KEY);
+        session.unset(ANSWER_KEY);
+
         const headers = {
           "Set-Cookie": await commitSession(session),
         };
@@ -52,36 +67,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
     } catch (error) {
       console.log(error);
-    
-      return json({ success: false, data: { answers } }, { headers });
+
+      return json({ success: false, data: { answers } });
     }
   }
-  
-  session.set(ANSWER_KEY, answers)
-  
+
+  session.set(ANSWER_KEY, answers);
+
   const headers = {
     "Set-Cookie": await commitSession(session),
   };
 
-  return json(
-    { success: true, data: { answers }},
-    { headers }
-  );
+  return json({ success: true, data: { answers } }, { headers });
 };
 
-export const loader = async ({params, request }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   //  Converts the request url to instance of URL for easy manipulation
   const url = new URL(request.url);
   //  Obtain the current generated ID (currentId) from query string if provided or null if otherwise
   const currentId = url.searchParams.get(GID_KEY);
   const _action = url.searchParams.get(ACTION_KEY);
-  
-  if(_action && _action === "submit"){
-    redirect("/cart")
+
+  if (_action && _action === "submit") {
+    redirect("/cart");
   }
-  
+
   const session = await getSession(request.headers.get("Cookie"));
-  
+
   const answers = session.get(ANSWER_KEY) || {};
   // Generate a map of unique IDs for questions if not already generated
   let gIdsMap = session.get(GIDS_MAP_KEY);
@@ -100,7 +112,7 @@ export const loader = async ({params, request }: LoaderFunctionArgs) => {
   const headers = {
     "Set-Cookie": await commitSession(session),
   };
-  
+
   //  Redirect to the first question if question id is not set or provided question id no longer exist, e.g maybe session expired
   const gIds = Object.keys(gIdsMap);
   if (!currentId || !gIds.includes(currentId)) {
@@ -141,34 +153,33 @@ export default function Quiz() {
     return bool;
   });
 
-  const answer = answers[questionId]
-  
+  const answer = answers[questionId];
+
   //  Total number of questions in the quiz
   const totalQuestionCount = Object.keys(gIdsMap).length;
 
   //  Form answer submit handler.
-  const handleSubmit = (answer: number|string  | string[]) => {
+  const handleSubmit = (answer: number | string | string[]) => {
+    const newAnswers = lo.merge(answers, { [question.id]: answer });
 
-    const newAnswers = lo.merge(answers, {[question.id]: answer});
-    
     const nextQuestionIndex = questionIndex + 1;
-    
+
     //  Check if we still have questions available
     if (nextQuestionIndex < totalQuestionCount) {
       //  We still have one or more question left in the quiz.
-    
+
       const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
       //  Navigate to the next question
       submit(newAnswers, {
-        action:`/quiz?index&${GID_KEY}=${nextQuestionGId}`,
+        action: `/quiz?index&${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
         replace: true,
-        encType: "application/json"
+        encType: "application/json",
       });
     } else {
       //  We have indeed exhausted the questions available.
-      submit(finalAnswers, {
-        action: `quiz?index&${ACTION_KEY}="submit"`,
+      submit(newAnswers, {
+        action: `/quiz?index&${ACTION_KEY}="submit"`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -186,32 +197,31 @@ export default function Quiz() {
       navigate(`/quiz?${GID_KEY}=${prevQuestionId}`, {});
     }
   };
-  
-  
-  if(isSubmitting && nextQuestionIndex >= totalQuestionCount){
-    return (<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-         <h1 className="text-2xl font-bold text-red-600">
-           An error occurred while processing your request.
-         </h1>
-         <Link
-           to="/"
-           className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-         >
-           Go Home
-         </Link>
-       </div>
-     );
+
+  if (isSubmitting && questionIndex + 1 >= totalQuestionCount) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <h1 className="text-2xl font-bold text-red-600">
+          An error occurred while processing your request.
+        </h1>
+        <Link
+          to="/"
+          className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+        >
+          Go Home
+        </Link>
+      </div>
+    );
   }
 
-
   const disabled = isSubmitting || questionIndex >= totalQuestionCount;
-  
-  const submitLabel = isSubmitting 
-    ? "Submitting" 
+
+  const submitLabel = isSubmitting
+    ? "Submitting"
     : questionIndex === totalQuestionCount - 1
     ? "Finish"
     : "Next";
-  
+
   return (
     <div className="flex flex-col max-h-screen">
       <div className="border-b">
@@ -233,7 +243,10 @@ export default function Quiz() {
         indicatorColor="bg-indigo-400"
       />
 
-      <div key={question.id} className="flex-1 my-6 py-2 px-4 w-full overflow-y-auto no-scrollbar pb-32">
+      <div
+        key={question.id}
+        className="flex-1 my-6 py-2 px-4 w-full overflow-y-auto no-scrollbar pb-32"
+      >
         {question.type === "text" ? (
           <TextInputForm
             disabled={disabled}
@@ -280,6 +293,4 @@ export default function Quiz() {
       </div>
     </div>
   );
-
-
 }
