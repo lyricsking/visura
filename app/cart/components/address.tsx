@@ -24,53 +24,68 @@ export const AddressItem = ({
   }, [selected]);
 
   return (
-    <div
-      className={`border p-4 rounded-lg mb-4 ${
-        selected ? "border-black" : "border-gray-300"
-      }`}
-      role="radiogroup"
-      aria-labelledby={`address-item-${type}`}
-    >
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center">
-          <input
-            type="radio"
-            name="address"
-            defaultChecked={selected}
-            readOnly
-            aria-labelledby={`address-item-${type}`}
-            className="mr-2"
-          />
-          <span id={`address-item-${type}`} className="font-semibold">
-            {type}
-          </span>
+    <label>
+      <div
+        className={`border p-4 rounded-lg mb-4 cursor-pointer ${
+          selected ? "border-black" : "border-gray-300"
+        }`}
+        role="radio"
+        aria-checked={selected}
+        tabIndex={0}
+        onKeyUp={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            // Focus and trigger click on the radio button
+            document.getElementById(`address-${type}`)?.click();
+          }
+        }}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id={`address-${type}`}
+              name="address"
+              defaultChecked={selected}
+              readOnly
+              className="mr-2"
+              aria-labelledby={`address-label-${type}`}
+            />
+            <span id={`address-label-${type}`} className="font-semibold">
+              {type}
+            </span>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent the container click event
+                onEdit();
+              }}
+              className="text-blue-500"
+              aria-label={`Edit ${type} address`}
+            >
+              <i className="fas fa-edit" aria-hidden="true"></i>
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent the container click event
+                onDelete();
+              }}
+              className="text-red-500"
+              aria-label={`Delete ${type} address`}
+            >
+              <i className="fas fa-trash" aria-hidden="true"></i>
+            </button>
+          </div>
         </div>
-        <div className="flex space-x-2">
-          <button
-            onClick={onEdit}
-            className="text-blue-500"
-            aria-label={`Edit ${type} address`}
-            ref={editButtonRef}
-          >
-            <i className="fas fa-edit" aria-hidden="true"></i>
-          </button>
-          <button
-            onClick={onDelete}
-            className="text-red-500"
-            aria-label={`Delete ${type} address`}
-          >
-            <i className="fas fa-trash" aria-hidden="true"></i>
-          </button>
-        </div>
+        <p>{address}</p>
+        <p className="text-gray-500">Phone no.: {phone}</p>
       </div>
-      <p>{address}</p>
-      <p className="text-gray-500">Phone no.: {phone}</p>
-    </div>
+    </label>
   );
 };
 
 export interface AddressFormProps {
-  address: Pick<IAddress, "type" | "address" | "phone">;
+  address?: Pick<IAddress, "type" | "address" | "phone">;
   action: string;
   onCancel: () => void;
 }
@@ -98,7 +113,7 @@ export const AddressForm = ({
         <select
           id="address-type"
           name="type"
-          defaultValue={address.type}
+          defaultValue={address?.type}
           className="w-full border border-gray-300 rounded-lg p-2"
           required
         >
@@ -114,7 +129,7 @@ export const AddressForm = ({
           id="address"
           name="address"
           type="text"
-          defaultValue={address.address}
+          defaultValue={address?.address}
           className="w-full border border-gray-300 rounded-lg p-2"
           required
           aria-required="true"
@@ -128,7 +143,7 @@ export const AddressForm = ({
           id="phone"
           name="phone"
           type="text"
-          defaultValue={address.phone}
+          defaultValue={address?.phone}
           className="w-full border border-gray-300 rounded-lg p-2"
           required
           aria-required="true"

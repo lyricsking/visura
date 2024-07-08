@@ -107,30 +107,34 @@ const ShippingDetails: React.FC = () => {
           <AddressForm
             key={address.id}
             address={address}
+            action="EDIT_ADDRESS_FORM"
             onCancel={() => toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM)}
           />
         ) : (
           <AddressItem
             key={address.id}
-            type={address.type}
-            address={address.address}
+            address={address}
             onEdit={() =>
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address.id)
             }
-            onDelete={handleDelete}
+            onDelete={() => handleDelete(address.id)}
+            selected={false}
           />
         )
       )}
       {!showForm && (
         <button
-          onClick={() => toggleFormVisibility(SHOW_ADDRESS_FORM, true)}
+          onClick={() => toggleFormVisibility(SHOW_ADDRESS_FORM, "true")}
           className="w-full py-2 border border-gray-300 rounded-lg text-gray-700 mb-4"
         >
           + Add New Address
         </button>
       )}
       {showForm && (
-        <AddressForm onCancel={() => toggleFormVisibility(SHOW_ADDRESS_FORM)} />
+        <AddressForm
+          action="EDIT_ADDRESS_FORM"
+          onCancel={() => toggleFormVisibility(SHOW_ADDRESS_FORM)}
+        />
       )}
     </div>
   );
