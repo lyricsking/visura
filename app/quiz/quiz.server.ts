@@ -18,22 +18,31 @@ export const quizPrefs = createCookie("quizPrefs", {
   maxAge: 1440,
 });
 
+type CreateCartType = {
+  name: string,
+  email: string;
+  supplements: ISupplementModel[];
+}
 /**
  * Converts the recommendations to order with status cart
  * and returns order id.
  *
  * @param supplements
  */
-export async function createCart(supplements: ISupplementModel[]): Promise<void> {
-  const items: IItem[] = supplements.map((supplement) => ({
-    productId: supplement.id,
-    name: supplement.name,
-    quantity: 1,
-    price: supplement.price,
-    total: supplement.price * 1,
-  }));
+export async function createCart({ name, email, supplements }: CreateCartType): Promise<void> {
+  const items: IItem[] = supplements.map((supplement) => {
+    const quantity = 1;
+    
+    return {
+      productId: supplement.id,
+      name: supplement.name,
+      quantity: quantity,
+      price: supplement.price,
+      total: supplement.price * quantity,
+    }
+  });
 
-  return addItemsToCart(new mongoose.Types.ObjectId(getNanoid(24)), items);
+  return addItemsToCart(name, email, items);
 }
 
 /**
@@ -51,7 +60,7 @@ export async function recommendSupplements(
   const query = {
     $and: [
       { preferences: { $in: answers.preferences } },
-      { gender: { $in: [answers.gender, "Unisex"] } },
+      { gender: { $in: [answers.gender, "both"] } },
       { activityLevel: { $in: [answers.activityLevel, "Any"] } },
       { healthGoals: { $in: answers.healthGoals } },
       { healthConcerns: { $in: answers.healthConcerns } },
@@ -66,6 +75,7 @@ export async function recommendSupplements(
   
   //  Get supplement
   const matchedSupplements = await findSupplement(query)
+  console.log("DB query", matchedSupplements);
   
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
   const supplementWeights: SupplementWithScore[] = matchedSupplements.map(

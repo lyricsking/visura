@@ -24,14 +24,15 @@ export const getCartByUserId = async (
 };
 
 export const addItemsToCart = async (
-  userId: mongoose.Types.ObjectId,
+  name: string,
+  email: string,
   newItems: IItem[]
 ): Promise<void> => {
   try {
     await connectToDatabase()
     
     await Order.updateOne(
-      { userId, status: "cart" },
+      { name, email, status: "cart" },
       {
         $push: { items: { $each: newItems } },
         $inc: {

@@ -272,7 +272,7 @@ export const questions: Question[] = [
   },*/
 ];
 
-export function filterQuestions(questions: Question[], answers: Answers) {
+export function filterQuestions(answers: Answers) {
   const filteredQuestions: Question[] = [];
   questions.forEach((question) => {
     if (!question.condition) {

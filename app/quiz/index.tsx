@@ -54,7 +54,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       );
 
       if (Array.isArray(supplements) && supplements.length > 0) {
-        await createCart(supplements);
+        const params = {
+          name: answers["name"],
+          email: answers["email"],
+          supplements
+        };
+        await createCart(params);
 
         session.unset(GIDS_MAP_KEY);
         session.unset(ANSWER_KEY);
@@ -93,8 +98,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   }
 
   const session = await getSession(request.headers.get("Cookie"));
-
-  const answers = session.get(ANSWER_KEY) || {};
+  
   // Generate a map of unique IDs for questions if not already generated
   let gIdsMap = session.get(GIDS_MAP_KEY);
   if (!gIdsMap) {
@@ -113,15 +117,19 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     "Set-Cookie": await commitSession(session),
   };
 
-  //  Redirect to the first question if question id is not set or provided question id no longer exist, e.g maybe session expired
+  //  Redirects if the unique Id is not provided or invalid i.e maybe session expired
   const gIds = Object.keys(gIdsMap);
   if (!currentId || !gIds.includes(currentId)) {
     const gId = gIds[0];
     return redirect(`/quiz?${GID_KEY}=${gId}`, { headers });
   }
-
-  //  Return a formatted response with the currentId to the quiz component
-  return json({ currentId, gIdsMap, answers }, { headers });
+  
+  //  Get the questionId keyed by currentId
+  const questionId = gIdsMap[currentId];
+  const answers = session.get(ANSWER_KEY) || {};
+  
+  //  Return a formatted response with the questionId, question uid to id map and answers, to the quiz component
+  return json({ questionId, gIdsMap, answers }, { headers });
 };
 
 /**
@@ -132,7 +140,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
  */
 export default function Quiz() {
   //  Retrieve the current question id
-  const { currentId, gIdsMap, answers } = useLoaderData<typeof loader>();
+  const { questionId, gIdsMap, answers } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
   const navigation = useNavigation();
@@ -140,8 +148,6 @@ export default function Quiz() {
   //  Listen for form submission
   const isSubmitting = navigation.state != "idle";
 
-  //  Get the questionId keyed by currentId
-  const questionId = gIdsMap[currentId];
   //
   let questionIndex = 0;
   const question: Question = questions.find((question, index) => {
@@ -163,12 +169,15 @@ export default function Quiz() {
     const newAnswers = lo.merge(answers, { [question.id]: answer });
 
     const nextQuestionIndex = questionIndex + 1;
-
+    
+    //  Prepare next question
+    const filteredQuestions = filterQuestions(answers);
+    
     //  Check if we still have questions available
-    if (nextQuestionIndex < totalQuestionCount) {
+    if (nextQuestionIndex < filteredQuestions.length) {
       //  We still have one or more question left in the quiz.
-
-      const nextQuestionGId = Object.keys(gIdsMap)[nextQuestionIndex];
+     
+      const nextQuestionGId = Object.values(gIdsMap)[filteredQuestions[nextQuestionIndex].id];
       //  Navigate to the next question
       submit(newAnswers, {
         action: `/quiz?index&${GID_KEY}=${nextQuestionGId}`,
@@ -179,7 +188,7 @@ export default function Quiz() {
     } else {
       //  We have indeed exhausted the questions available.
       submit(newAnswers, {
-        action: `/quiz?index&${ACTION_KEY}="submit"`,
+        action: `/quiz?index&${ACTION_KEY}=submit`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -198,7 +207,7 @@ export default function Quiz() {
     }
   };
 
-  if (isSubmitting && questionIndex + 1 >= totalQuestionCount) {
+  if (isSubmitting && navigation.formAction === `/quiz?index&${ACTION_KEY}=submit`) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <h1 className="text-2xl font-bold text-red-600">
@@ -224,7 +233,7 @@ export default function Quiz() {
 
   return (
     <div className="flex flex-col max-h-screen">
-      <div className="border-b">
+      <div className="flex-none border-b">
         <Button
           variant="text"
           size="sm"
@@ -239,7 +248,7 @@ export default function Quiz() {
 
       <Progress
         value={Math.min((questionIndex / totalQuestionCount) * 100, 100)}
-        className="h-4 w-full rounded-none"
+        className="flex-none h-4 w-full rounded-none"
         indicatorColor="bg-indigo-400"
       />
 

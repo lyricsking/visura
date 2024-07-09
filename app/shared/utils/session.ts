@@ -8,6 +8,8 @@ const __dirname = path.dirname(__filename);
 const storagePath = path.resolve(__dirname, "./");
 console.log(storagePath);
 
+export const USER_SESSION_KEY = "_user";
+
 const sessionSecret = process.env.SESSION_SECRET || "secret";
 if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
