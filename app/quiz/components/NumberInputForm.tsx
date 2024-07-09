@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
-import Button from '~/shared/components/button';
-import { NumberInputFormType } from '../quiz.type';
-import { Input } from '~/shared/components/input';
+import React, { useRef } from "react";
+import Button from "~/shared/components/button";
+import { NumberInputFormType } from "../quiz.type";
+import { Input } from "~/shared/components/input";
 
 const NumberInputForm = ({
   disabled,
@@ -20,12 +20,12 @@ const NumberInputForm = ({
     const formData = new FormData(form);
     //  Get value from data by name
     const numberInput = formData.get(name) as string;
-    
-    if (!numberInput){
-      alert('Please provide an appropriate answer.');
+
+    if (!numberInput) {
+      alert("Please provide an appropriate answer.");
       return;
     }
-    
+
     onsubmit(numberInput);
   };
 
@@ -39,7 +39,7 @@ const NumberInputForm = ({
 
       <Input
         className="h-20 text-2xl border-2"
-        type='number'
+        type="number"
         id={name}
         name={name}
         defaultValue={value || ""}
@@ -48,7 +48,7 @@ const NumberInputForm = ({
       <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
         <Button
           variant={"fill"}
-          radius={"full"}
+          radius={"md"}
           className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"
           disabled={disabled}

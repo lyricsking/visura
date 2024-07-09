@@ -19,7 +19,8 @@ export default function Hero() {
             {
               //Put your home and office essentials on replay
             }
-            Health is wealth. <br/> Take intentional control of your health life.
+            Health is wealth. <br /> Take intentional control of your health
+            life today.
           </h1>
           <p className="mt-4 text-lg leading-7 text-gray-600">
             Get personalized health and wellness packs.

@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
-import { CheckboxGroupFormType } from '../quiz.type';
-import { cn } from '~/shared/utils';
-import { Input } from '~/shared/components/input';
-import Button from '~/shared/components/button';
+import React, { useRef } from "react";
+import { CheckboxGroupFormType } from "../quiz.type";
+import { cn } from "~/shared/utils";
+import { Input } from "~/shared/components/input";
+import Button from "~/shared/components/button";
 
 const CheckboxGroupForm = ({
   disabled,
@@ -12,7 +12,7 @@ const CheckboxGroupForm = ({
   onsubmit,
   options,
   submitLabel,
-  selections
+  selections,
 }: CheckboxGroupFormType) => {
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,9 +20,9 @@ const CheckboxGroupForm = ({
     const form = document.getElementById(id) as HTMLFormElement;
     const formData = new FormData(form);
     const selectedCheckboxes = formData.getAll(name) as string[];
-    
-    if (selectedCheckboxes.length === 0){
-      alert('Please select at least one answer.');
+
+    if (selectedCheckboxes.length === 0) {
+      alert("Please select at least one answer.");
       return;
     }
     onsubmit(selectedCheckboxes);
@@ -65,7 +65,7 @@ const CheckboxGroupForm = ({
       <div className="flex fixed z-20 bottom-0 right-0 left-0 p-4 bg-white">
         <Button
           variant={"fill"}
-          radius={"full"}
+          radius={"md"}
           className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"
           disabled={disabled}

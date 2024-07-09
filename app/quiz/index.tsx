@@ -17,7 +17,7 @@ import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/shared/components/progress";
 import { commitSession, getSession } from "~/shared/utils/session";
-import { questions } from "./quiz.utils";
+import { filterQuestions, questions } from "./quiz.utils";
 import { getNanoid } from "~/shared/utils";
 import { Question } from "./quiz.type";
 import * as lo from "lodash";
@@ -57,7 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const params = {
           name: answers["name"],
           email: answers["email"],
-          supplements
+          supplements,
         };
         await createCart(params);
 
@@ -98,7 +98,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   }
 
   const session = await getSession(request.headers.get("Cookie"));
-  
+
   // Generate a map of unique IDs for questions if not already generated
   let gIdsMap = session.get(GIDS_MAP_KEY);
   if (!gIdsMap) {
@@ -123,11 +123,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     const gId = gIds[0];
     return redirect(`/quiz?${GID_KEY}=${gId}`, { headers });
   }
-  
+
   //  Get the questionId keyed by currentId
   const questionId = gIdsMap[currentId];
   const answers = session.get(ANSWER_KEY) || {};
-  
+
   //  Return a formatted response with the questionId, question uid to id map and answers, to the quiz component
   return json({ questionId, gIdsMap, answers }, { headers });
 };
@@ -169,15 +169,15 @@ export default function Quiz() {
     const newAnswers = lo.merge(answers, { [question.id]: answer });
 
     const nextQuestionIndex = questionIndex + 1;
-    
+
     //  Prepare next question
     const filteredQuestions = filterQuestions(answers);
-    
     //  Check if we still have questions available
     if (nextQuestionIndex < filteredQuestions.length) {
       //  We still have one or more question left in the quiz.
-     
-      const nextQuestionGId = Object.values(gIdsMap)[filteredQuestions[nextQuestionIndex].id];
+      const nextQuestionGId = Object.keys(gIdsMap).find(
+        (uid) => gIdsMap[uid] === filteredQuestions[nextQuestionIndex].id
+      );
       //  Navigate to the next question
       submit(newAnswers, {
         action: `/quiz?index&${GID_KEY}=${nextQuestionGId}`,
@@ -207,7 +207,10 @@ export default function Quiz() {
     }
   };
 
-  if (isSubmitting && navigation.formAction === `/quiz?index&${ACTION_KEY}=submit`) {
+  if (
+    isSubmitting &&
+    navigation.formAction === `/quiz?index&${ACTION_KEY}=submit`
+  ) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <h1 className="text-2xl font-bold text-red-600">
@@ -248,13 +251,13 @@ export default function Quiz() {
 
       <Progress
         value={Math.min((questionIndex / totalQuestionCount) * 100, 100)}
-        className="flex-none h-4 w-full rounded-none"
+        className="flex-none h-4 w-full rounded-none bg-indigo-100"
         indicatorColor="bg-indigo-400"
       />
 
       <div
         key={question.id}
-        className="flex-1 my-6 py-2 px-4 w-full overflow-y-auto no-scrollbar pb-32"
+        className="flex-1 py-6 px-4 w-full overflow-y-auto no-scrollbar pb-32"
       >
         {question.type === "text" ? (
           <TextInputForm

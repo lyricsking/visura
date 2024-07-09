@@ -1,9 +1,9 @@
 // RadioGroup.js
-import React, { useRef } from 'react';
-import { RadioGroupFormType } from '../quiz.type';
-import { cn } from '~/shared/utils';
-import { Input } from '~/shared/components/input';
-import Button from '~/shared/components/button';
+import React, { useRef } from "react";
+import { RadioGroupFormType } from "../quiz.type";
+import { cn } from "~/shared/utils";
+import { Input } from "~/shared/components/input";
+import Button from "~/shared/components/button";
 
 const RadioGroupForm = ({
   disabled,
@@ -22,11 +22,11 @@ const RadioGroupForm = ({
     const formData = new FormData(form);
     const selectedOption = formData.get(name) as string;
 
-    if (!selectedOption){
-      alert('Please select an answer.');
+    if (!selectedOption) {
+      alert("Please select an answer.");
       return;
     }
-    
+
     onsubmit(selectedOption);
   };
 
@@ -65,7 +65,7 @@ const RadioGroupForm = ({
       <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
         <Button
           variant={"fill"}
-          radius={"full"}
+          radius={"md"}
           className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"
           disabled={disabled}
