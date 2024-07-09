@@ -10,9 +10,9 @@ import { AddressForm, AddressItem } from "./components/address";
 import { IAddressModel } from "~/dashboard/address/address.model";
 import mongoose from "mongoose";
 
-const ADD_ADDRESS_FORM = "add-new-address";
+const ADD_ADDRESS_FORM = "create-address";
 const EDIT_ADDRESS_FORM = "update-address";
-const SHOW_ADDRESS_FORM = "new-address";
+const SHOW_ADDRESS_FORM = "new-address-form";
 const SHOW_EDIT_ADDRESS_FORM = "edit-address";
 
 // Handle form submissions in the action
@@ -61,11 +61,12 @@ export const handle = {
     navigate("payment");
   },
 };
-const ShippingDetails: React.FC = () => {
+
+const ShippingDetails = () => {
   const { addresses } = useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const showForm = searchParams.get(SHOW_ADDRESS_FORM);
-  const editingAddressId = searchParams.get(EDIT_ADDRESS_FORM);
+  const editingAddressId = searchParams.get(SHOW_EDIT_ADDRESS_FORM);
 
   const toggleFormVisibility = (action: string, value?: string) => {
     if (value) {
@@ -117,7 +118,7 @@ const ShippingDetails: React.FC = () => {
             onEdit={() =>
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
-            onDelete={() => handleDelete(address.id)}
+            onDelete={() => handleDelete(address._id)}
             selected={false}
           />
         )
