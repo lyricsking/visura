@@ -34,23 +34,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
+const addresses: IAddressModel[] = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    type: "Home",
+    address: "3501 Maloy Court, East Elmhurst, New York City, NY 11369",
+    phone: "78596 0000",
+  } as IAddressModel,
+  {
+    _id: new mongoose.Types.ObjectId(),
+    type: "Office",
+    address: "8502-8503 Preston Rd. Inglewood Street, Maine 98380",
+    phone: "12100 0023",
+  } as IAddressModel,
+] as IAddressModel[];
+
 // Fetch initial data in the loader
 export const loader = async () => {
-  const addresses: IAddressModel[] = [
-    {
-      _id: new mongoose.Types.ObjectId(),
-      type: "Home",
-      address: "3501 Maloy Court, East Elmhurst, New York City, NY 11369",
-      phone: "78596 0000",
-    } as IAddressModel,
-    {
-      _id: new mongoose.Types.ObjectId(),
-      type: "Office",
-      address: "8502-8503 Preston Rd. Inglewood Street, Maine 98380",
-      phone: "12100 0023",
-    } as IAddressModel,
-  ] as IAddressModel[];
-
   return json({ addresses });
 };
 
@@ -104,7 +104,7 @@ const ShippingDetails = () => {
   return (
     <div className="container mx-auto p-4">
       {addresses.map((address: any, index) =>
-        editingAddressId === address.id ? (
+        editingAddressId === address._id ? (
           <AddressForm
             key={address._id}
             address={address}
