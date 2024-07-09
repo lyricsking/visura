@@ -102,20 +102,20 @@ const ShippingDetails: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {addresses.map((address: any) =>
+      {addresses.map((address: any, index) =>
         editingAddressId === address.id ? (
           <AddressForm
-            key={address.id}
+            key={address._id}
             address={address}
             action="EDIT_ADDRESS_FORM"
             onCancel={() => toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM)}
           />
         ) : (
           <AddressItem
-            key={address.id}
+            key={address._id}
             address={address}
             onEdit={() =>
-              toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address.id)
+              toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
             onDelete={() => handleDelete(address.id)}
             selected={false}
