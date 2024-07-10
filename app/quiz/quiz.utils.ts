@@ -1,3 +1,4 @@
+import { Gender } from "~/supplement/supplement.type";
 import { Answers, Question, QuestionCondition } from "./quiz.type";
 import { useNavigate } from "@remix-run/react";
 
@@ -21,7 +22,7 @@ export const questions: Question[] = [
     id: "gender",
     question: "What is your gender?",
     type: "single",
-    options: ["Male", "Female", "Other"],
+    options: Object.keys(Gender),
   },
   {
     id: "healthGoals",
@@ -151,12 +152,7 @@ export const questions: Question[] = [
     id: "activityLevel",
     question: "What is your activity level?",
     type: "single",
-    options: [
-      "Low",
-      "Lightly Active",
-      "Moderately Active",
-      "Very Active",
-    ],
+    options: ["Low", "Lightly Active", "Moderately Active", "Very Active"],
   },
   {
     id: "exerciseHabits",

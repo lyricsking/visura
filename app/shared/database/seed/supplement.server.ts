@@ -3,7 +3,7 @@ import { Gender, ISupplement } from "~/supplement/supplement.type";
 
 export const seedSupplement = async () => {
   try {
-    const supplements = generateSupplementsArray(200);
+    const supplements = generateSupplementsArray(1000);
 
     await Supplement.deleteMany({});
     await Supplement.insertMany(supplements);
@@ -25,26 +25,28 @@ const getRandomElements = <T>(arr: T[], minCount: number): T[] => {
 
 const generateRandomSupplement = (): ISupplement => {
   const genders: Gender[] = [Gender.male, Gender.female, Gender.both];
-  const activities = ["Low",
+  const activities = [
+    "Low",
     "Lightly Active",
     "Moderately Active",
-    "Very Active"];
+    "Very Active",
+  ];
   const healthGoals = [
-      "Weight Loss",
-      "Muscle Gain",
-      "Energy Boost",
-      "General Wellness",
-      "Improve Digestion",
-      "Better Sleep",
-      "Stress Reduction",
-      "Increased Flexibility",
-      "Cardiovascular Health",
-      "Immune Improvement",
-      "Mood & Emotional Wellness",
-      "Body Detoxification",
-      "Skin Health",
-      "Improve Sexual Health",
-      "Hormone Balance",
+    "Weight Loss",
+    "Muscle Gain",
+    "Energy Boost",
+    "General Wellness",
+    "Improve Digestion",
+    "Better Sleep",
+    "Stress Reduction",
+    "Increased Flexibility",
+    "Cardiovascular Health",
+    "Immune Improvement",
+    "Mood & Emotional Wellness",
+    "Body Detoxification",
+    "Skin Health",
+    "Improve Sexual Health",
+    "Hormone Balance",
   ];
   const healthConcerns = [
     "Joint Pain",
@@ -66,17 +68,18 @@ const generateRandomSupplement = (): ISupplement => {
     "Eye Issues",
     "Liver Issues",
     "Menopause",
-    "Menstrual Issues"
+    "Menstrual Issues",
   ];
   const preferences = ["Vegan", "Non-GMO", "Organic", "Herbal"];
-  const dietaryRestrictions = [
-    "Vegan",
-    "Vegetarian",
-    "Keto",
-    "Paleo",
+  const dietaryRestrictions = ["Vegan", "Vegetarian", "Keto", "Paleo", "None"];
+  const allergies = [
+    "Nuts",
+    "Soy",
+    "Dairy",
+    "Gluten",
+    "Processed Foods",
     "None",
   ];
-  const allergies = ["Nuts", "Soy", "Dairy", "Gluten", "Processed Foods", "None"];
   const benefits = [
     "good-sleep",
     "improve-energy",
@@ -85,7 +88,7 @@ const generateRandomSupplement = (): ISupplement => {
     "improve-bone",
     "low-stress",
     "balanced-diet",
-    "improve-hydration"
+    "improve-hydration",
   ];
   const tags = ["smoker", "drinker"];
   const forms = ["Capsule", "Powder", "Tablet", "Liquid"];
@@ -108,8 +111,8 @@ const generateRandomSupplement = (): ISupplement => {
     tags: getRandomElements(tags, 1),
     form: getRandomElement(forms),
     ageRange: {
-      min: Math.floor(Math.random() * 20) + 10,
-      max: Math.floor(Math.random() * 20) + 50,
+      min: Math.floor(Math.random() * 10) + 10,
+      max: Math.floor(Math.random() * 10) + 50,
     },
   };
 };

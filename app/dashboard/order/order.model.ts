@@ -1,16 +1,19 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { IItem, OrderStatus, type IOrder } from "./order.type";
 
 export interface IOrderModel extends IOrder, Document {}
 
-const itemSchema = new Schema({
-  _id: false,
-  productId: { type: Schema.Types.ObjectId, required: true },
-  name: { type: String, required: true },
-  quantity: { type: Number, required: true },
-  price: { type: Number, required: true },
-  total: { type: Number, required: true },
-  isSubscribe: { type: Boolean, default: false }, //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
-});
+const itemSchema = new Schema<IItem>(
+  {
+    productId: { type: Schema.Types.ObjectId, required: true },
+    name: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    price: { type: Number, required: true },
+    total: { type: Number, required: true },
+    isSubscribe: { type: Boolean, default: false }, //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
+  },
+  { _id: false }
+);
 
 const orderSchema = new Schema({
   name: { type: String, required: true },

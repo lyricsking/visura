@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
-import { generateDummyOrders } from "~/dashboard/order/order.server";
-import Order from "~/dashboard/order/order.type";
-import type { IItem, IOrder } from "~/dashboard/order/order.type";
-import { connectToDatabase, disconnectDatabase } from "~/shared/database/db.server";
+import OrderModel, { IOrderModel } from "~/dashboard/order/order.model";
+import type { IItem } from "~/dashboard/order/order.type";
+import {
+  connectToDatabase,
+  disconnectDatabase,
+} from "~/shared/database/db.server";
 
 /**
  * Converts the recommendations to order with status cart
@@ -12,14 +14,22 @@ import { connectToDatabase, disconnectDatabase } from "~/shared/database/db.serv
  */
 export const getCartByUserId = async (
   userId: mongoose.Types.ObjectId
-): Promise<IOrder | null> => {
+): Promise<IOrderModel | null> => {
   try {
-    //const cart = await Order.findOne({ userId, status: "cart" }).exec();
-    const cart = generateDummyOrders(1) 
-    return cart[0];
+    await connectToDatabase();
+    const cart = await OrderModel.findOne({
+      email: "asaajay775@gmail.com",
+      status: "cart",
+    }).exec();
+    //const cart = generateDummyOrders(1);
+    console.log("Cart", cart);
+
+    return cart;
   } catch (err) {
     console.error("Error retrieving cart:", err);
-    return null;
+    throw err;
+  } finally {
+    await disconnectDatabase();
   }
 };
 
@@ -29,9 +39,9 @@ export const addItemsToCart = async (
   newItems: IItem[]
 ): Promise<void> => {
   try {
-    await connectToDatabase()
-    
-    await Order.updateOne(
+    await connectToDatabase();
+
+    await OrderModel.updateOne(
       { name, email, status: "cart" },
       {
         $push: { items: { $each: newItems } },
@@ -47,7 +57,7 @@ export const addItemsToCart = async (
   } catch (err) {
     console.error("Error adding items to cart:", err);
   } finally {
-    disconnectDatabase()
+    disconnectDatabase();
   }
 };
 
@@ -56,7 +66,7 @@ export const addItemToCart = async (
   newItem: IItem
 ): Promise<void> => {
   try {
-    await Order.findOneAndUpdate(
+    await OrderModel.findOneAndUpdate(
       { userId, status: "cart" },
       {
         $push: { items: newItem },
@@ -79,7 +89,7 @@ export const updateCartItem = async (
   priceIncrement: number
 ): Promise<void> => {
   try {
-    await Order.findOneAndUpdate(
+    await OrderModel.findOneAndUpdate(
       { userId, status: "cart", "items.productId": productId },
       {
         $inc: {

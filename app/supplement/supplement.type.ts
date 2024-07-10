@@ -1,9 +1,9 @@
 export const Gender = {
   male: "male",
   female: "female",
-  both: "both"
-};
-export type Gender = typeof Gender[keyof typeof Gender]
+  both: "both",
+} as const;
+export type Gender = (typeof Gender)[keyof typeof Gender];
 
 export interface ISupplement {
   name: string;

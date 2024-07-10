@@ -27,6 +27,7 @@ import CheckboxGroupForm from "./components/CheckboxGroupForm";
 import RadioGroupForm from "./components/RadioGroupForm";
 import { ISupplementModel } from "~/supplement/supplement.model";
 import { createCart, recommendSupplements } from "./quiz.server";
+import Loading from "~/shared/components/loading";
 
 export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";
@@ -94,7 +95,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const _action = url.searchParams.get(ACTION_KEY);
 
   if (_action && _action === "submit") {
-    redirect("/cart");
+    return redirect("/cart");
   }
 
   const session = await getSession(request.headers.get("Cookie"));
@@ -213,15 +214,7 @@ export default function Quiz() {
   ) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h1 className="text-2xl font-bold text-red-600">
-          An error occurred while processing your request.
-        </h1>
-        <Link
-          to="/"
-          className="mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-          Go Home
-        </Link>
+        <Loading />
       </div>
     );
   }

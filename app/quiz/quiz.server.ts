@@ -57,7 +57,7 @@ export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
   const age = answers.age;
-  
+
   const budget = answers["budget"];
   let budgetRange = [];
   if (budget.includes("+")) {
@@ -76,16 +76,16 @@ export async function recommendSupplements(
   const query = {
     $and: [
       { preferences: { $in: answers.preferences } },
-      { gender: { $in: [answers.gender, "both"] } },
-      { activityLevel: { $in: [answers.activityLevel, "Any"] } },
-      { healthGoals: { $in: answers.healthGoals } },
-      { healthConcerns: { $in: answers.healthConcerns } },
-      { dietaryRestrictions: { $in: answers.dietaryRestrictions } },
-      { allergies: { $nin: answers.allergies } },
-      { form: { $in: answers.supplementForm } },
-      { price: { $gte: minBudget, $lte: maxBudget } },
-      { minAge: { $lte: age } },
-      { maxAge: { $gte: age } },
+      //{ gender: { $in: [answers.gender, "both"] } },
+      //{ activityLevel: { $in: [answers.activityLevel, "Any"] } },
+      //{ healthGoals: { $in: answers.healthGoals } },
+      //{ healthConcerns: { $in: answers.healthConcerns } },
+      //{ dietaryRestrictions: { $in: answers.dietaryRestrictions } },
+      //{ allergies: { $nin: answers.allergies } },
+      //{ form: { $in: answers.supplementForm } },
+      //{ price: { $gte: minBudget, $lte: maxBudget } },
+      //{ minAge: { $lte: age } },
+      //{ maxAge: { $gte: age } },
     ],
   };
 
