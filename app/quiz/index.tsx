@@ -61,8 +61,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         };
         await createCart(params);
 
-        session.unset(GIDS_MAP_KEY);
-        session.unset(ANSWER_KEY);
+        //      session.unset(GIDS_MAP_KEY);
+        //    session.unset(ANSWER_KEY);
 
         const headers = {
           "Set-Cookie": await commitSession(session),

@@ -13,6 +13,8 @@ export const findSupplement = async (
   try {
     await connectToDatabase();
 
+    console.log(await Supplement.countDocuments(query).exec());
+
     return await Supplement.find(query).exec();
   } catch (e) {
     console.log(e);

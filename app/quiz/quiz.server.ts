@@ -1,11 +1,11 @@
 import { createCookie } from "@remix-run/node";
 
 import mongoose from "mongoose";
-import type {  ISupplement} from "~/supplement/supplement.type";
+import type { ISupplement } from "~/supplement/supplement.type";
 import { addItemsToCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
 import { Answers } from "./quiz.type";
-import { findSupplement, generateSupplementsArray } from "~/supplement/supplement.server";
+import { findSupplement } from "~/supplement/supplement.server";
 import type { ISupplementModel } from "~/supplement/supplement.model";
 import { getNanoid } from "~/shared/utils";
 
@@ -19,27 +19,31 @@ export const quizPrefs = createCookie("quizPrefs", {
 });
 
 type CreateCartType = {
-  name: string,
+  name: string;
   email: string;
   supplements: ISupplementModel[];
-}
+};
 /**
  * Converts the recommendations to order with status cart
  * and returns order id.
  *
  * @param supplements
  */
-export async function createCart({ name, email, supplements }: CreateCartType): Promise<void> {
+export async function createCart({
+  name,
+  email,
+  supplements,
+}: CreateCartType): Promise<void> {
   const items: IItem[] = supplements.map((supplement) => {
     const quantity = 1;
-    
+
     return {
       productId: supplement.id,
       name: supplement.name,
       quantity: quantity,
       price: supplement.price,
       total: supplement.price * quantity,
-    }
+    };
   });
 
   return addItemsToCart(name, email, items);
@@ -53,7 +57,19 @@ export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
   const age = answers.age;
-  const budgetRange = (answers["budget"] as string).split(" - ").map(Number);
+  const budget = answers["budget"];
+
+  let budgetRange = [];
+  if (budget.includes("+")) {
+    budgetRange = [
+      parseFloat(budget.replace(",", "").replace("+", "")),
+      Infinity,
+    ];
+  } else {
+    budgetRange = budget
+      .split(" - ")
+      .map((value) => parseFloat(value.replace(",", "")));
+  }
   const minBudget = budgetRange[0];
   const maxBudget = budgetRange[1] || Infinity;
 
@@ -72,11 +88,10 @@ export async function recommendSupplements(
       { maxAge: { $gte: age } },
     ],
   };
-  
+
   //  Get supplement
-  const matchedSupplements = await findSupplement(query)
-  console.log("DB query", matchedSupplements);
-  
+  const matchedSupplements = await findSupplement(query);
+
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
   const supplementWeights: SupplementWithScore[] = matchedSupplements.map(
     (supplement: ISupplementModel) => {
@@ -87,10 +102,7 @@ export async function recommendSupplements(
         )
       )
         weight += 2;
-      if (
-        supplement.gender === answers.gender ||
-        supplement.gender === "both"
-      )
+      if (supplement.gender === answers.gender || supplement.gender === "both")
         weight += 2;
       if (
         answers.healthGoals.some((goal: string) =>
