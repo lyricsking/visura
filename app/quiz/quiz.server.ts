@@ -57,8 +57,8 @@ export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
   const age = answers.age;
+  
   const budget = answers["budget"];
-
   let budgetRange = [];
   if (budget.includes("+")) {
     budgetRange = [
@@ -174,7 +174,7 @@ export async function recommendSupplements(
       )
         weight += 1;
       if (
-        supplement.benefits.includes("well-hydrated") &&
+        supplement.benefits.includes("improve-hydration") &&
         answers.hydration <= 5
       )
         weight += 1;

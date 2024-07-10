@@ -25,30 +25,69 @@ const getRandomElements = <T>(arr: T[], minCount: number): T[] => {
 
 const generateRandomSupplement = (): ISupplement => {
   const genders: Gender[] = [Gender.male, Gender.female, Gender.both];
-  const activities = ["Low", "Moderate", "High"];
+  const activities = ["Low",
+    "Lightly Active",
+    "Moderately Active",
+    "Very Active"];
   const healthGoals = [
-    "Weight Loss",
-    "Muscle Gain",
-    "Endurance",
-    "General Health",
+      "Weight Loss",
+      "Muscle Gain",
+      "Energy Boost",
+      "General Wellness",
+      "Improve Digestion",
+      "Better Sleep",
+      "Stress Reduction",
+      "Increased Flexibility",
+      "Cardiovascular Health",
+      "Immune Improvement",
+      "Mood & Emotional Wellness",
+      "Body Detoxification",
+      "Skin Health",
+      "Improve Sexual Health",
+      "Hormone Balance",
   ];
-  const healthConcerns = ["Heart Health", "Diabetes", "Joint Pain", "Fatigue"];
-  const preferences = ["Vegan", "Gluten-Free", "Non-GMO", "Organic"];
+  const healthConcerns = [
+    "Joint Pain",
+    "Digestive Issues",
+    "Immune Deficiency",
+    "Blood Pressure",
+    "Fatigue",
+    "Cholesterol",
+    "Diabetes",
+    "Inflammation",
+    "Hypertension",
+    "Allergies",
+    "Anxiety",
+    "Stress",
+    "Sleep Disorders",
+    "Depression",
+    "Osteoporosis",
+    "Skin Condition",
+    "Eye Issues",
+    "Liver Issues",
+    "Menopause",
+    "Menstrual Issues"
+  ];
+  const preferences = ["Vegan", "Non-GMO", "Organic", "Herbal"];
   const dietaryRestrictions = [
+    "Vegan",
     "Vegetarian",
     "Keto",
     "Paleo",
-    "Dairy-Free",
     "None",
   ];
-  const allergies = ["Peanuts", "Soy", "Gluten", "Shellfish", "None"];
+  const allergies = ["Nuts", "Soy", "Dairy", "Gluten", "Processed Foods", "None"];
   const benefits = [
-    "Energy Boost",
-    "Immune Support",
-    "Anti-Inflammatory",
-    "Bone Health",
+    "good-sleep",
+    "improve-energy",
+    "improve-immune",
+    "anti-Inflammatory",
+    "improve-bone",
+    "low-stress",
+    "balanced-diet",
+    "improve-hydration"
   ];
-  const tags = ["Fitness", "Health", "Wellness", "Supplement"];
+  const tags = ["smoker", "drinker"];
   const forms = ["Capsule", "Powder", "Tablet", "Liquid"];
 
   return {

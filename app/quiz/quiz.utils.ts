@@ -49,7 +49,7 @@ export const questions: Question[] = [
     id: "dietaryRestrictions",
     question: "Do you have any dietary preferences?",
     type: "multiple",
-    options: ["Vegan", "Vegetarian", "Gluten-Free", "Keto", "Paleo", "None"],
+    options: ["Vegan", "Vegetarian", "Keto", "Paleo", "None"],
   },
   {
     id: "allergies",
@@ -152,7 +152,7 @@ export const questions: Question[] = [
     question: "What is your activity level?",
     type: "single",
     options: [
-      "Sedentary",
+      "Low",
       "Lightly Active",
       "Moderately Active",
       "Very Active",
@@ -238,7 +238,7 @@ export const questions: Question[] = [
     question:
       "What forms of supplements do you prefer? (Select all that apply.)",
     type: "multiple",
-    options: ["Capsule", "Powder", "Liquid"],
+    options: ["Capsule", "Powder", "Tablet", "Liquid"],
   },
   {
     id: "budget",
