@@ -10,15 +10,15 @@ import {
  * Converts the recommendations to order with status cart
  * and returns order id.
  *
- * @param userId
+ * @param emailId
  */
-export const getCartByUserId = async (
-  userId: mongoose.Types.ObjectId
+export const getCartByEmailId = async (
+  emailId: string
 ): Promise<IOrderModel | null> => {
   try {
     await connectToDatabase();
     const cart = await OrderModel.findOne({
-      email: "asaajay775@gmail.com",
+      email: emailId,
       status: "cart",
     }).exec();
     //const cart = generateDummyOrders(1);

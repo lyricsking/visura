@@ -13,7 +13,7 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Button from "~/shared/components/button";
 
 export const loader = async () => {
-  const cart = await getCartByUserId(new mongoose.Types.ObjectId());
+  const cart = await getCartByEmailId(new mongoose.Types.ObjectId());
   return json({ cart });
 };
 

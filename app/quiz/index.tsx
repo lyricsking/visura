@@ -61,9 +61,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           supplements,
         };
         await createCart(params);
-
-        //      session.unset(GIDS_MAP_KEY);
-        //    session.unset(ANSWER_KEY);
+        //  Cache user data in session if not logged in
+        session.set(USER_SESSION_KEY, {
+          name: name,
+          email: email
+        })
+        //  Remove quiz session data, as we no longer need it.
+        session.unset(GIDS_MAP_KEY);
+        session.unset(ANSWER_KEY);
 
         const headers = {
           "Set-Cookie": await commitSession(session),
