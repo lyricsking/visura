@@ -63,7 +63,7 @@ const CheckboxGroupForm = ({
         </div>
       </fieldset>
 
-      <div className="flex fixed z-20 bottom-0 right-0 left-0 p-4 bg-white">
+      <div className="flex fixed z-20 bottom-8 right-0 left-0 p-4 bg-white">
         <Button
           variant={"fill"}
           radius={"md"}
