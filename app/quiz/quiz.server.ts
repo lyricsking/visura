@@ -1,8 +1,8 @@
 import { createCookie } from "@remix-run/node";
 
 import mongoose from "mongoose";
-import type { ISupplement } from "~/supplement/supplement.type";
-import { addItemsToCart } from "~/cart/cart.server";
+import { Gender, type ISupplement } from "~/supplement/supplement.type";
+import { addItemsToCart, deleteCart } from "~/cart/cart.server";
 import type { IItem } from "~/dashboard/order/order.type";
 import { Answers } from "./quiz.type";
 import { findSupplement } from "~/supplement/supplement.server";
@@ -45,7 +45,9 @@ export async function createCart({
       total: supplement.price * quantity,
     };
   });
-
+  
+  await deleteCart(email)
+  
   return addItemsToCart(name, email, items);
 }
 
@@ -56,8 +58,8 @@ export async function createCart({
 export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
-  const age = answers.age;
-
+  const age = Number(answers.age);
+  
   const budget = answers["budget"];
   let budgetRange = [];
   if (budget.includes("+")) {
@@ -72,20 +74,20 @@ export async function recommendSupplements(
   }
   const minBudget = budgetRange[0];
   const maxBudget = budgetRange[1] || Infinity;
-
+  
   const query = {
     $and: [
       { preferences: { $in: answers.preferences } },
-      //{ gender: { $in: [answers.gender, "both"] } },
-      //{ activityLevel: { $in: [answers.activityLevel, "Any"] } },
-      //{ healthGoals: { $in: answers.healthGoals } },
-      //{ healthConcerns: { $in: answers.healthConcerns } },
-      //{ dietaryRestrictions: { $in: answers.dietaryRestrictions } },
-      //{ allergies: { $nin: answers.allergies } },
-      //{ form: { $in: answers.supplementForm } },
-      //{ price: { $gte: minBudget, $lte: maxBudget } },
-      //{ minAge: { $lte: age } },
-      //{ maxAge: { $gte: age } },
+      { gender: { $in: [answers.gender, Gender.both] } },
+      { activityLevel: { $in: [answers.activityLevel, "Any"] } },
+      { healthGoals: { $in: answers.healthGoals } },
+      { healthConcerns: { $in: answers.healthConcerns } },
+      { dietaryRestrictions: { $in: answers.dietaryRestrictions } },
+      { allergies: { $nin: answers.allergies } },
+      { form: { $in: answers.supplementForm } },
+      { price: { $lte: maxBudget } },
+      { 'ageRange.min': { $lte: age } },
+      { 'ageRange.max': { $gte: age } },
     ],
   };
 

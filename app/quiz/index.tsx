@@ -16,7 +16,7 @@ import {
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/shared/components/progress";
-import { commitSession, getSession } from "~/shared/utils/session";
+import { commitSession, getSession, USER_SESSION_KEY } from "~/shared/utils/session";
 import { filterQuestions, questions } from "./quiz.utils";
 import { getNanoid } from "~/shared/utils";
 import { Question } from "./quiz.type";
@@ -60,15 +60,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           email: answers["email"],
           supplements,
         };
+        
         await createCart(params);
         //  Cache user data in session if not logged in
         session.set(USER_SESSION_KEY, {
-          name: name,
-          email: email
+          name: params.name,
+          email: params.email
         })
         //  Remove quiz session data, as we no longer need it.
-        session.unset(GIDS_MAP_KEY);
-        session.unset(ANSWER_KEY);
+        //session.unset(GIDS_MAP_KEY);
+        //session.unset(ANSWER_KEY);
 
         const headers = {
           "Set-Cookie": await commitSession(session),

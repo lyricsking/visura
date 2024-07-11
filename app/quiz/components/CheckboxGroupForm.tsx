@@ -40,6 +40,7 @@ const CheckboxGroupForm = ({
         <div>
           {options.map((option) => (
             <label
+              key={option}
               className={cn(
                 "flex items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
                 "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

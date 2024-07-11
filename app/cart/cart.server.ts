@@ -14,7 +14,7 @@ import {
  */
 export const getCartByEmailId = async (
   emailId: string
-): Promise<IOrderModel | null> => {
+): Promise<IOrderModel| null > => {
   try {
     await connectToDatabase();
     const cart = await OrderModel.findOne({
@@ -104,5 +104,17 @@ export const updateCartItem = async (
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
+  }
+};
+
+export const deleteCart = async (
+  email: string,
+): Promise<void> => {
+  try {
+    await OrderModel.deleteOne(
+      { email: email, status: "cart"} );
+    console.log("Item deleted successfully.");
+  } catch (err) {
+    console.error("Error deleting item in cart:", err);
   }
 };

@@ -1,5 +1,5 @@
-import { getCartByUserId } from "./cart.server";
-import { json } from "@remix-run/node";
+import { getCartByEmailId } from "./cart.server";
+import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   Outlet,
   useFetcher,
@@ -11,14 +11,25 @@ import mongoose from "mongoose";
 import { CART_FETCHER_KEY } from "./cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Button from "~/shared/components/button";
+import { getSession, USER_SESSION_KEY } from "~/shared/utils/session";
+import { IOrderModel } from "~/dashboard/order/order.model";
 
-export const loader = async () => {
-  const cart = await getCartByEmailId(new mongoose.Types.ObjectId());
-  return json({ cart });
+type LoaderDataType = {
+  cart: IOrderModel | null
+}
+
+export const loader = async ({ request }:LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  
+  const user = session.get(USER_SESSION_KEY);
+  if (!user) return redirect("/");
+
+  const cart: IOrderModel | null = await getCartByEmailId(user["email"]);
+  return json<LoaderDataType>({ cart });
 };
 
 export default function Layout() {
-  const { cart } = useLoaderData<typeof loader>();
+  const { cart } = useLoaderData() as LoaderDataType;
 
   const matches = useMatches();
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
