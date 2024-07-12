@@ -22,7 +22,7 @@ export const loader = async ({ request }:LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   
   const user = session.get(USER_SESSION_KEY);
-  if (!user) return redirect("/");
+  //if (!user) return redirect("/");
 
   const cart: IOrderModel | null = await getCartByEmailId(user["email"]);
   return json<LoaderDataType>({ cart });
@@ -54,7 +54,7 @@ export default function Layout() {
   //  It validates the currect section e.g shipping and then navigate to the next checkout flow.
   const handleClick = () => {
     if (currentRoute && currentRoute.handle && currentRoute.handle.onSubmit) {
-      currentRoute.handle.onSubmit(navigate);
+      currentRoute.handle.onSubmit(cart, navigate);
     }
   };
 

@@ -57,16 +57,25 @@ export const loader = async () => {
 export const handle = {
   buttonLabel: "Payment",
   name: "Shipping",
-  onSubmit: (navigate: NavigateFunction) => {
+  onSubmit: (cart: IOrder, navigate: NavigateFunction) => {
     navigate("payment");
   },
 };
 
 const ShippingDetails = () => {
   const { addresses } = useLoaderData<typeof loader>();
+  
+  const fetcher = useFetcher({key: CART_FETCHER_KEY});
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const showForm = searchParams.get(SHOW_ADDRESS_FORM);
   const editingAddressId = searchParams.get(SHOW_EDIT_ADDRESS_FORM);
+
+const handleAddressChanged = (addressId: string)=>{
+  fetcher.submit(
+  {  }, 
+  {  })
+}
 
   const toggleFormVisibility = (action: string, value?: string) => {
     if (value) {
@@ -99,8 +108,6 @@ const ShippingDetails = () => {
     );
   };
 
-  const fetcher = useFetcher();
-
   return (
     <div className="container mx-auto p-4">
       {addresses.map((address: any, index) =>
@@ -119,6 +126,7 @@ const ShippingDetails = () => {
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
             onDelete={() => handleDelete(address._id)}
+            onSubmit={(handleAddressChanged)}
             selected={false}
           />
         )

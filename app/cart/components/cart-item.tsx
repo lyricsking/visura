@@ -13,22 +13,30 @@ const CartItem = ({ item }: CartItemProps) => {
 
   const currentQuantity =
     parseFloat(fetcher.formData?.get("quantity") as string) || item.quantity;
-  const currentSubscription =
-    fetcher.formData?.get("isSubscribe") || item.isSubscribe;
+  const currentPurchaseMode =
+    fetcher.formData?.get("purchaseMode") || item.purchaseMode;
 
-  const handleUpdate = (
+
+  const handleDlete = () => {
+    fetcher.submit({
+      productId: item.productId.toString()
+    },
+    { method: "post" })
+}
+
+const handleUpdate = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
     const formData = new FormData();
 
     formData.append("productId", item.productId.toString());
     formData.append("quantity", currentQuantity.toString());
-    formData.append("isSubscribe", currentSubscription?.toString() || "false");
+    formData.append("purchaseMode", currentPurchaseMode?.toString() || "false");
 
     if (e.target.name === "quantity") {
       formData.set("quantity", e.target.value);
-    } else if (e.target.name === "isSubscribe") {
-      formData.set("isSubscribe", e.target.value);
+    } else if (e.target.name === "purchaseMode") {
+      formData.set("purchaseMode", e.target.value);
     }
 
     fetcher.submit(formData, { method: "post" });
@@ -47,27 +55,18 @@ const CartItem = ({ item }: CartItemProps) => {
             <div className="text-gray-700">
               <select
                 aria-label="Choose purchase frequency"
-                name="isSubscribe"
-                value={currentSubscription?.toString() || "false"}
+                name="purchaseMode"
+                value={currentPurchaseMode?.toString() || "false"}
                 onChange={handleUpdate}
                 className="text-sm text-blue-500 rounded"
               >
-                <option value="false">One-time purchase</option>
-                <option value="true">Subscription</option>
+              {Object.keys(PurchaseMode).map((mode)=>
+                <option key={mode} value={mode} className="capitalize">{mode}</option>)}
               </select>
             </div>
           </div>
           <button
-            onClick={() =>
-              fetcher.submit(
-                {
-                  productId: item.productId.toString(),
-                  quantity: "0",
-                  isSubscribe: item.isSubscribe?.toString() || "false",
-                },
-                { method: "post" }
-              )
-            }
+            onClick={handleDelete}
             className="ml-4 text-red-500"
           >
             <Cross1Icon className="w-6" />

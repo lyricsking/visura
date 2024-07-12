@@ -2,6 +2,9 @@ import { NavigateFunction, json, useOutletContext } from "@remix-run/react";
 import type { IOrder } from "~/dashboard/order/order.type";
 import CartItem from "./components/cart-item";
 
+export const DELETE_ACTION_KEY="DELETE";
+export const UPDATE_ACTION_KEY="UPDATE";
+
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
   const discountCode = formData.get("discountCode");
@@ -33,8 +36,12 @@ export const action = async ({ request }: any) => {
 export const handle = {
   buttonLabel: "Checkout",
   name: "Cart",
-  onSubmit: (navigate: NavigateFunction) => {
-    navigate("shipping");
+  onSubmit: (cart: IOrder, navigate: NavigateFunction) => {
+    if(Array.isArray(cart.items) && cart.items.length > 0){
+      return navigate("shipping");
+    }
+    
+    alert("No Items added to cart")
   },
 };
 

@@ -18,7 +18,8 @@ export const getCartByEmailId = async (
   try {
     await connectToDatabase();
     const cart = await OrderModel.findOne({
-      email: emailId,
+      //email: emailId,
+      email: "asaajay775@gmail.com",
       status: "cart",
     }).exec();
     //const cart = generateDummyOrders(1);

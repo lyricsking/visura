@@ -10,7 +10,7 @@ type PaymentMethods = keyof typeof PaymentMethods;
 export const handle = {
   name: "Payment",
   buttonLabel: "Pay Now",
-  onSubmit: (navigate: NavigateFunction) => {
+  onSubmit: (cart: IOrder, navigate: NavigateFunction) => {
     navigate("shipping");
   },
 };

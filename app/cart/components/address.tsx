@@ -4,27 +4,53 @@ import { useEffect, useRef } from "react";
 import { type IAddress } from "~/dashboard/address/address.type";
 
 export interface AddressItemProps {
-  address: Pick<IAddress, "address" | "type" | "phone">;
+  address: Pick<IAddressModel, "address" | "type" | "phone">;
   selected: boolean;
   onEdit: () => void;
   onDelete: () => void;
+  onSubmit: (addressId: string) => void;
 }
 
 export const AddressItem = ({
-  address: { address, phone, type },
+  address: { _id, address, phone, type },
   selected,
   onEdit,
   onDelete,
+  onSubmit
 }: AddressItemProps) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const editButtonRef = useRef<HTMLButtonElement>(null);
+  
 
   useEffect(() => {
     if (selected && editButtonRef.current) {
       editButtonRef.current.focus();
     }
   }, [selected]);
+  
+  
+  const handleSelect = () => {
+    if (formRef.current) {
+      formRef.current.submit();
+    }
+  };
+  
+  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if(!formRef.current) return;
+    
+    const formData = new FormData(formRef.current);
+    const addressId = formData.get("address") as string;
+
+    if (!addressId) {
+      return;
+    }
+
+    onSubmit(addressId);
+  };
 
   return (
+    <Form ref={formRef} onSubmit={handleSubmit}>
     <label>
       <div
         className={`border p-4 rounded-lg mb-4 cursor-pointer ${
@@ -33,6 +59,7 @@ export const AddressItem = ({
         role="radio"
         aria-checked={selected}
         tabIndex={0}
+        onClick={handleSelect}
         onKeyUp={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             // Focus and trigger click on the radio button
@@ -47,6 +74,7 @@ export const AddressItem = ({
               id={`address-${type}`}
               name="address"
               defaultChecked={selected}
+              value={_id}
               readOnly
               className="mr-2"
               aria-labelledby={`address-label-${type}`}
@@ -82,6 +110,7 @@ export const AddressItem = ({
         <p className="text-gray-500">Phone no.: {phone}</p>
       </div>
     </label>
+    </Form>
   );
 };
 
