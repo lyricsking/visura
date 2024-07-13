@@ -19,6 +19,7 @@ const CartItem = ({ item }: CartItemProps) => {
 
   const handleDlete = () => {
     fetcher.submit({
+      _action: DELETE_ACTION_KEY,
       productId: item.productId.toString()
     },
     { method: "post" })
@@ -28,7 +29,7 @@ const handleUpdate = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
     const formData = new FormData();
-
+    formData.append(_action, UPDATE_ACTION_KEY);
     formData.append("productId", item.productId.toString());
     formData.append("quantity", currentQuantity.toString());
     formData.append("purchaseMode", currentPurchaseMode?.toString() || "false");

@@ -21,7 +21,6 @@ export const AddressItem = ({
   const formRef = useRef<HTMLFormElement>(null);
   const editButtonRef = useRef<HTMLButtonElement>(null);
   
-
   useEffect(() => {
     if (selected && editButtonRef.current) {
       editButtonRef.current.focus();
@@ -73,7 +72,7 @@ export const AddressItem = ({
               type="radio"
               id={`address-${type}`}
               name="address"
-              defaultChecked={selected}
+              defaultChecked={selected === _id}
               value={_id}
               readOnly
               className="mr-2"
@@ -132,10 +131,12 @@ export const AddressForm = ({
       className="border p-4 rounded-lg mb-4"
       aria-labelledby="address-form-title"
     >
-      <input type="hidden" name="_action" value={action} />
       <h2 id="address-form-title" className="sr-only">
         Address Form
       </h2>
+      <label for="_action" class="sr-only">Order Id</label>
+      <input id="_action" type="hidden" name="_action" value={action} />
+    
       <div className="mb-2">
         <label htmlFor="address-type" className="block text-gray-700">
           Type

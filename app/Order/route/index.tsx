@@ -1,36 +1,48 @@
 import { NavigateFunction, json, useOutletContext } from "@remix-run/react";
 import type { IOrder } from "~/dashboard/order/order.type";
 import CartItem from "./components/cart-item";
+import { getSession, USER_SESSION_KEY } from "~/shared/utils/session";
 
-export const DELETE_ACTION_KEY="DELETE";
-export const UPDATE_ACTION_KEY="UPDATE";
+export const DELETE_ACTION_KEY="_delete";
+export const UPDATE_ACTION_KEY="_update";
 
 export const action = async ({ request }: any) => {
+  const session = await getSession(request.headers.get("Cookie"));
   const formData = await request.formData();
-  const discountCode = formData.get("discountCode");
+  
+  const _action = formData.get("_action");
   const productId = formData.get("productId");
-  const quantity = parseInt(formData.get("quantity"), 10);
-  const isSubscribe = formData.get("isSubscribe") === "true";
-
-  let discount = 0;
-
-  // Handle discount code application
-  if (discountCode) {
-    // Validate the discount code and calculate the discount amount
-    if (discountCode === "SAVE10") {
-      discount = 10.0;
-    }
-    return json({ discount });
+  const quantity = formData.get("quantity");
+  const purchaseMode = formData.get("purchaseMode");
+  
+  if(!user || !user["email"]) { 
+    console.log("Cannot process, No user info available.");
+    return json({ success: false });
   }
-
+  
+  if(!_action) { 
+    console.log("Cannot process, No _action provided.");
+    return json({ success: false });
+  }
+  
+  if(!productId) { 
+    console.log("Cannot process, No productId provided.");
+    return json({ success: false });
+  }
+  
+  const email = user["email"]
+  
   // Handle quantity and subscription updates
-  if (productId && !isNaN(quantity)) {
+  if (_action === UPDATE_ACTION_KEY && productId && (!isNaN(quantity) || purchaseMode)) {
     // Update the item quantity and subscription status in your database
+    await updateCartItem(email, productId, quantity, purchaseMode)
     // For the sake of this example, we'll just return the new values
-    return json({ productId, quantity, isSubscribe });
+    return json({ success: true });
+  } else if(_action === DELETE_ACTION_KEY && productId) {
+    await deleteCart(email, productId)
+    
+    return json({ success: true });
   }
-
-  return null;
 };
 
 export const handle = {

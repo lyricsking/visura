@@ -35,9 +35,14 @@ export interface IOrder {
   status: OrderStatus;
   items: IItem[];
   totalPrice: number;
+  address: {type: addressSchema };
   paymentDetails?: {
     method: string;
     transactionId: string;
+  };
+  discount: {
+    type: string;
+    value: number
   };
   createdAt: Date;
   updatedAt: Date;

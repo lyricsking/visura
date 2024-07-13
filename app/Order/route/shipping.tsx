@@ -15,25 +15,6 @@ const EDIT_ADDRESS_FORM = "update-address";
 const SHOW_ADDRESS_FORM = "new-address-form";
 const SHOW_EDIT_ADDRESS_FORM = "edit-address";
 
-// Handle form submissions in the action
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const actionType = formData.get("_action");
-
-  switch (actionType) {
-    case ADD_ADDRESS_FORM:
-      const newAddress = {
-        type: formData.get("type"),
-        address: formData.get("address"),
-        phone: formData.get("phone"),
-      };
-      // Add logic to save the new address
-      return json({ message: "Address added successfully", newAddress });
-    default:
-      return json({ message: "Unknown action" });
-  }
-};
-
 const addresses: IAddressModel[] = [
   {
     _id: new mongoose.Types.ObjectId(),
@@ -49,8 +30,41 @@ const addresses: IAddressModel[] = [
   } as IAddressModel,
 ] as IAddressModel[];
 
+// Handle form submissions in the action
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const actionType = formData.get("_action");
+  
+  const newAddress = {
+    type: formData.get("type"),
+    address: formData.get("address"),
+    phone: formData.get("phone"),
+  };
+  
+  switch (actionType) {
+    case ADD_ADDRESS_FORM:
+      // Add logic to save the new address
+      await addAddress({address: newAddress});
+      return json(
+        { 
+          success: true, 
+          message: "Address added successfully", 
+          data:newAddress 
+      
+        });
+    case EDIT_ADDRESS_FORM:
+      // code
+      
+      break;
+    
+    default:
+      return json({ message: "Unknown action" });
+  }
+};
+
 // Fetch initial data in the loader
 export const loader = async () => {
+  //  Todo Fetch address and address regions here
   return json({ addresses });
 };
 
@@ -71,7 +85,7 @@ const ShippingDetails = () => {
   const showForm = searchParams.get(SHOW_ADDRESS_FORM);
   const editingAddressId = searchParams.get(SHOW_EDIT_ADDRESS_FORM);
 
-const handleAddressChanged = (addressId: string)=>{
+const handleAddressSelected = (addressId: string)=>{
   fetcher.submit(
   {  }, 
   {  })
@@ -126,7 +140,7 @@ const handleAddressChanged = (addressId: string)=>{
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
             onDelete={() => handleDelete(address._id)}
-            onSubmit={(handleAddressChanged)}
+            onSubmit={handleAddressSelected}
             selected={false}
           />
         )

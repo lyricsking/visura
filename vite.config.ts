@@ -23,11 +23,12 @@ export default defineConfig({
             route("signin", "auth/signin.tsx");
             route("signup", "auth/signup.tsx");
           });
-          route("cart", "cart/layout.tsx", () => {
-            route("", "cart/index.tsx", { index: true });
-            route("checkout", "cart/checkout.tsx");
-            route("shipping", "cart/shipping.tsx");
-            route("payment", "cart/payment.tsx");
+          route("order", "order/route/layout.tsx", () => {
+            route("", "order/route/index.tsx", { index: true });
+            route("checkout", "order/route/checkout.tsx");
+            route("shipping", "order/route/shipping.tsx");
+            route("payment", "order/route/payment.tsx");
+            route("confirm", "order/route/confirm.tsx");
           });
           route("dashboard", "dashboard/layout.tsx", () => {
             route("", "dashboard/overview.tsx", { index: true });

@@ -14,6 +14,26 @@ import Button from "~/shared/components/button";
 import { getSession, USER_SESSION_KEY } from "~/shared/utils/session";
 import { IOrderModel } from "~/dashboard/order/order.model";
 
+
+export const action = async ({ request }: any) => {
+  const formData = await request.formData();
+  const discountCode = formData.get("discountCode");
+  const orderId = formData.get("orderId");
+
+  let discount = 0;
+
+  // Handle discount code application
+  if (orderId && discountCode) {
+    //  Get the associated discount data from db
+    const order = await applyDiscount({orderId, discountCode});
+    
+    return json({ success: true, data: order });
+  }
+
+  return json({ success: false });
+};
+
+
 type LoaderDataType = {
   cart: IOrderModel | null
 }
@@ -73,7 +93,11 @@ export default function Layout() {
 
         <div className="flex-1 lg:w-1/4 p-4 mt-4 lg:mt-0 bg-orange-300 rounded shadow">
           <h2 className="text-lg font-bold mb-4">Order Summary</h2>
-          <fetcher.Form method="post" className="mb-4" action="?index">
+          <fetcher.Form method="post" className="mb-4">
+          
+            <label for="orderId" class="sr-only">Order Id</label>
+            <input type="hidden" id="orderId" name="orderId" value={cart.id} />
+    
             <label
               htmlFor="discountCode"
               className="block text-sm font-medium text-gray-700"

@@ -40,6 +40,7 @@ interface PaymentMethodProps {
   name: string;
   value: string;
 }
+
 export const PaymentMethod = ({ name, value }: PaymentMethodProps) => {
   const id = `payment-method-${value}`;
 
