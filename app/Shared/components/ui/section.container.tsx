@@ -1,5 +1,5 @@
 import React from "react";
-import { CommonProps } from "~/shared/types/common.props";
+import { CommonProps } from "~/Shared/types/common.props";
 
 type Params = Pick<CommonProps<React.ReactNode>, "children"> & {
   title: string;

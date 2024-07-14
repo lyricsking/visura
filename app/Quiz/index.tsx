@@ -13,12 +13,12 @@ import {
   Link,
 } from "@remix-run/react";
 
-import Button from "~/shared/components/button";
+import Button from "~/Shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { Progress } from "~/shared/components/progress";
-import { commitSession, getSession, USER_SESSION_KEY } from "~/shared/utils/session";
+import { Progress } from "~/Shared/components/progress";
+import { commitSession, getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
 import { filterQuestions, questions } from "./quiz.utils";
-import { getNanoid } from "~/shared/utils";
+import { getNanoid } from "~/Shared/utils";
 import { Question } from "./quiz.type";
 import * as lo from "lodash";
 import TextInputForm from "./components/InputTextForm";
@@ -27,7 +27,7 @@ import CheckboxGroupForm from "./components/CheckboxGroupForm";
 import RadioGroupForm from "./components/RadioGroupForm";
 import { ISupplementModel } from "~/supplement/supplement.model";
 import { createCart, recommendSupplements } from "./quiz.server";
-import Loading from "~/shared/components/loading";
+import Loading from "~/Shared/components/loading";
 
 export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";

@@ -2,7 +2,7 @@ export async function getSupplements() {}
 import {
   connectToDatabase,
   disconnectDatabase,
-} from "~/shared/database/db.server.js";
+} from "~/Shared/database/db.server.js";
 import type {  ISupplementModel } from "./supplement.model";
 import Supplement from "./supplement.model";
 

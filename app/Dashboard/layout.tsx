@@ -4,9 +4,9 @@ import {
   PageLayoutContent,
   PageLayoutHeader,
   PageLayoutHeaderItem,
-} from "~/shared/components/ui/page.layout";
+} from "~/Shared/components/ui/page.layout";
 import pkg from "../../package.json";
-import AccountMenuButton from "~/shared/components/ui/account.menu.button";
+import AccountMenuButton from "~/Shared/components/ui/account.menu.button";
 import {
   Sheet,
   SheetContent,
@@ -14,9 +14,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "~/shared/components/sheet";
+} from "~/Shared/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
-import Breadcrumb from "~/shared/components/breadcrumb";
+import Breadcrumb from "~/Shared/components/breadcrumb";
 import { Dispatch, SetStateAction, useState } from "react";
 
 export const handle = {

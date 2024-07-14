@@ -1,7 +1,7 @@
 import React from "react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { cn } from "~/shared/utils";
+import { cn } from "~/Shared/utils";
 import { BlockProps } from "~/dashboard/pages/components/block";
 import { EditorType } from "./editor";
 import {
@@ -12,8 +12,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "~/shared/components/select";
-import { FontDescriptor, fonts } from "~/shared/data/fonts";
+} from "~/Shared/components/select";
+import { FontDescriptor, fonts } from "~/Shared/data/fonts";
 import {
   Bars3BottomLeftIcon,
   Bars3BottomRightIcon,
@@ -27,19 +27,19 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
 } from "@radix-ui/react-icons";
-import Button from "~/shared/components/button";
-import { Textarea } from "~/shared/components/textarea";
+import Button from "~/Shared/components/button";
+import { Textarea } from "~/Shared/components/textarea";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "~/shared/components/popover";
+} from "~/Shared/components/popover";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import { colors as presetColors } from "../data/colors";
 import { twMerge } from "tailwind-merge";
-import { ToggleGroup, ToggleGroupItem } from "~/shared/components/toggle.group";
-import { Toggle } from "~/shared/components/toggle";
-import { Label } from "~/shared/components/label";
+import { ToggleGroup, ToggleGroupItem } from "~/Shared/components/toggle.group";
+import { Toggle } from "~/Shared/components/toggle";
+import { Label } from "~/Shared/components/label";
 
 const alignments = {
   left: "text-left",

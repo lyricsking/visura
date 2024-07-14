@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { getOrders } from "./order.server";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import { Tabs, TabsList, TabsTrigger } from "~/shared/components/tabs";
+import { Tabs, TabsList, TabsTrigger } from "~/Shared/components/tabs";
 import { OrderStatus } from "./order.type";
 import { NoOrder } from "./components/order-selector";
 

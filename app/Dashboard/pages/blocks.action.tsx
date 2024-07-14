@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { Theme, isTheme } from "~/shared/components/ThemeProvider";
-import { getBlocksSession } from "~/shared/theme.server";
+import { Theme, isTheme } from "~/Shared/components/ThemeProvider";
+import { getBlocksSession } from "~/Shared/theme.server";
 
 // Writes the theme state to cookie
 export async function action({ request }: ActionFunctionArgs) {

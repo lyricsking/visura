@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { CommonProps } from "~/shared/types/common.props";
+import { CommonProps } from "~/Shared/types/common.props";
 
 type Props = CommonProps & {
   title: string;

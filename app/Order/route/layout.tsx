@@ -10,8 +10,8 @@ import {
 import mongoose from "mongoose";
 import { CART_FETCHER_KEY } from "./cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import Button from "~/shared/components/button";
-import { getSession, USER_SESSION_KEY } from "~/shared/utils/session";
+import Button from "~/Shared/components/button";
+import { getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
 import { IOrderModel } from "~/dashboard/order/order.model";
 
 

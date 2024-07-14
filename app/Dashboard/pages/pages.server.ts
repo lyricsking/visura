@@ -1,6 +1,6 @@
-import { cookieStorage } from "~/shared/utils/cookie";
+import { cookieStorage } from "~/Shared/utils/cookie";
 import { PageProps } from "./components/page";
-import { dbClient } from "~/shared/database/db.server";
+import { dbClient } from "~/Shared/database/db.server";
 import { ObjectId } from "mongodb";
 
 async function getEditPageSession(request: Request) {

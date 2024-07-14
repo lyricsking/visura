@@ -1,15 +1,15 @@
 import { Link, Outlet } from "@remix-run/react";
-import Footer from "~/shared/components/ui/footer";
+import Footer from "~/Shared/components/ui/footer";
 import {
   PageLayout,
   PageLayoutContent,
   PageLayoutFooter,
   PageLayoutHeader,
   PageLayoutHeaderItem,
-} from "~/shared/components/ui/page.layout";
+} from "~/Shared/components/ui/page.layout";
 import pkg from "../../package.json";
 import { useQuiz } from "~/quiz/quiz.utils";
-import Button from "~/shared/components/button";
+import Button from "~/Shared/components/button";
 
 export default function Layout() {
   const { initQuiz } = useQuiz();

@@ -4,7 +4,7 @@ import type { IItem } from "~/dashboard/order/order.type";
 import {
   connectToDatabase,
   disconnectDatabase,
-} from "~/shared/database/db.server";
+} from "~/Shared/database/db.server";
 
 /**
  * Converts the recommendations to order with status cart

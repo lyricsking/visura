@@ -4,7 +4,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "~/shared/components/sheet";
+} from "~/Shared/components/sheet";
 import { BlockButtons } from "./blocks.button";
 import { BlockProps } from "./block";
 import { DashboardSidebarProps } from "~/dashboard/layout";

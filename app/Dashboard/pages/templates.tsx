@@ -1,6 +1,6 @@
 import { DialogOverlay } from "@radix-ui/react-dialog";
 import { Link, useNavigate } from "@remix-run/react";
-import Button from "~/shared/components/button";
+import Button from "~/Shared/components/button";
 
 export const handle = {
   pageName: "Templates",

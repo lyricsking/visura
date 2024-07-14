@@ -1,4 +1,4 @@
-import { CommonProps } from "~/shared/types/common.props";
+import { CommonProps } from "~/Shared/types/common.props";
 
 export type StatParams = {
   counter: number;

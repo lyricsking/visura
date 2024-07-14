@@ -1,18 +1,18 @@
 import { json, useFetcher, useSubmit } from "@remix-run/react";
 import { useTextEditor } from "./text";
 import { BlockEditorKey, BlockProps } from "./block";
-import { Switch } from "~/shared/components/switch";
-import { Label } from "~/shared/components/label";
-import { Input } from "~/shared/components/input";
-import { Slider } from "~/shared/components/slider";
+import { Switch } from "~/Shared/components/switch";
+import { Label } from "~/Shared/components/label";
+import { Input } from "~/Shared/components/input";
+import { Slider } from "~/Shared/components/slider";
 import React, { ChangeEvent } from "react";
-import { Divider } from "~/shared/components/divider";
+import { Divider } from "~/Shared/components/divider";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "~/shared/components/popover";
-import Button from "~/shared/components/button";
+} from "~/Shared/components/popover";
+import Button from "~/Shared/components/button";
 import {
   HexAlphaColorPicker,
   HexColorInput,
@@ -21,7 +21,7 @@ import {
 import { colors as presetColors } from "../data/colors";
 import { useLinkEditor } from "./link";
 import { useSectionEditor } from "./section";
-import { SheetClose } from "~/shared/components/sheet";
+import { SheetClose } from "~/Shared/components/sheet";
 
 export type EditorType = Omit<BlockProps, "id" | "type"> & {
   contentEditor: React.ReactElement;

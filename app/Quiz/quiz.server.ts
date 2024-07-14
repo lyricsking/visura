@@ -7,7 +7,7 @@ import type { IItem } from "~/dashboard/order/order.type";
 import { Answers } from "./quiz.type";
 import { findSupplement } from "~/supplement/supplement.server";
 import type { ISupplementModel } from "~/supplement/supplement.model";
-import { getNanoid } from "~/shared/utils";
+import { getNanoid } from "~/Shared/utils";
 
 interface SupplementWithScore {
   supplement: ISupplementModel;

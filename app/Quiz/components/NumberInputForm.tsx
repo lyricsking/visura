@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import Button from "~/shared/components/button";
+import Button from "~/Shared/components/button";
 import { NumberInputFormType } from "../quiz.type";
-import { Input } from "~/shared/components/input";
+import { Input } from "~/Shared/components/input";
 
 const NumberInputForm = ({
   disabled,

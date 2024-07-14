@@ -1,7 +1,7 @@
 import { useQuiz } from "~/quiz/quiz.utils";
-import Button, { buttonVariants } from "~/shared/components/button";
-import { findFontByName } from "~/shared/data/fonts";
-import { cn } from "~/shared/utils";
+import Button, { buttonVariants } from "~/Shared/components/button";
+import { findFontByName } from "~/Shared/data/fonts";
+import { cn } from "~/Shared/utils";
 
 export default function Hero() {
   const { initQuiz } = useQuiz();

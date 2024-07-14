@@ -5,8 +5,8 @@ import {
   LockClosedIcon,
   MapPinIcon,
 } from "@heroicons/react/24/outline";
-import Social from "~/shared/component/social";
-import { CommonProps } from "~/shared/types/common.props";
+import Social from "~/Shared/component/social";
+import { CommonProps } from "~/Shared/types/common.props";
 
 export type Item = {
   name: string;

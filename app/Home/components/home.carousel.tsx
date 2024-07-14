@@ -2,7 +2,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from "~/shared/components/carousel";
+} from "~/Shared/components/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
 const images = [

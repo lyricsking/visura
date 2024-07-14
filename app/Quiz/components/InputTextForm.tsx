@@ -1,8 +1,8 @@
 // InputText.js
 import React, { useRef } from "react";
 import { TextInputFormType } from "../quiz.type";
-import Button from "~/shared/components/button";
-import { Input } from "~/shared/components/input";
+import Button from "~/Shared/components/button";
+import { Input } from "~/Shared/components/input";
 
 const TextInputForm = ({
   disabled,

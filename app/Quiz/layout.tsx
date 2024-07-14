@@ -2,7 +2,7 @@ import { Outlet } from "@remix-run/react";
 import {
   PageLayout,
   PageLayoutContent,
-} from "~/shared/components/ui/page.layout";
+} from "~/Shared/components/ui/page.layout";
 
 export default function Layout() {
 

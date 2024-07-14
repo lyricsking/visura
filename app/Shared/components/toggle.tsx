@@ -4,7 +4,7 @@ import * as React from "react";
 import * as TogglePrimitive from "@radix-ui/react-toggle";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "~/shared/utils";
+import { cn } from "~/Shared/utils";
 
 const toggleVariants = cva(
   "inline-flex items-center justify-center text-sm font-medium transition-colors hover:bg-gray-200 hover:text-sky-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-blue-200 data-[state=on]:text-gray-600",

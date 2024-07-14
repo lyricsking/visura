@@ -8,9 +8,9 @@ import pkg from "../../package.json";
 import Hero from "./components/hero";
 import HomeCarousel from "./components/home.carousel";
 import Explanation from "./components/explanation";
-import { findFontByName } from "~/shared/data/fonts";
+import { findFontByName } from "~/Shared/data/fonts";
 import { useQuiz } from "~/quiz/quiz.utils";
-import Button from "~/shared/components/button";
+import Button from "~/Shared/components/button";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");

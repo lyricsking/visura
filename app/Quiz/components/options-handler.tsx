@@ -1,9 +1,9 @@
-import { RadioGroup, RadioGroupItem } from "~/shared/components/radio";
-import { Label } from "~/shared/components/label";
-import { Checkbox } from "~/shared/components/checkbox";
+import { RadioGroup, RadioGroupItem } from "~/Shared/components/radio";
+import { Label } from "~/Shared/components/label";
+import { Checkbox } from "~/Shared/components/checkbox";
 import { AnswerType } from "../quiz.type";
-import { Input } from "~/shared/components/input";
-import { cn } from "~/shared/utils";
+import { Input } from "~/Shared/components/input";
+import { cn } from "~/Shared/utils";
 
 type OptionsType = {
   name: string;

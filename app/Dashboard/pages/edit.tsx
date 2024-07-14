@@ -6,14 +6,14 @@ import {
   json,
 } from "@remix-run/node";
 import { Link, useLoaderData, useParams, useSubmit } from "@remix-run/react";
-import { IPhoneMockup, TabletMockup } from "~/shared/components/mockup";
+import { IPhoneMockup, TabletMockup } from "~/Shared/components/mockup";
 import { getEditPageSession, getPageFromServer } from "./pages.server";
 import { EditPageSidebar } from "./components/edit.page.sidebar";
 import { BlockProps } from "./components/block";
 import { DashboardSidebarProps } from "../layout";
 import { getTemplate } from "./data/templates";
 import { BlockEditorKey } from "./components/block";
-import { fonts } from "~/shared/data/fonts";
+import { fonts } from "~/Shared/data/fonts";
 import Page from "./components/page";
 
 // Writes the theme state to cookie
