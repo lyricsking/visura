@@ -12,8 +12,8 @@ import {
   useRouteLoaderData,
 } from "@remix-run/react";
 import clsx from "clsx";
-import { getThemeSession } from "./shared/theme/theme.server";
-import { Theme, ThemeProvider } from "./shared/theme/theme.provider";
+import { getThemeSession } from "./Shared/theme/theme.server";
+import { Theme, ThemeProvider } from "./Shared/theme/theme.provider";
 
 export type LoaderData = {
   theme: Theme | null;

@@ -16,27 +16,27 @@ export default defineConfig({
       // serverBuildPath: "build/index.js",
       routes(defineRoutes) {
         return defineRoutes((route) => {
-          route("", "home/layout.tsx", () => {
-            route("", "home/index.tsx", { index: true });
+          route("", "Home/layout.tsx", () => {
+            route("", "Home/index.tsx", { index: true });
           });
-          route("auth", "auth/layout.tsx", () => {
-            route("signin", "auth/signin.tsx");
-            route("signup", "auth/signup.tsx");
+          route("auth", "Auth/layout.tsx", () => {
+            route("signin", "Auth/signin.tsx");
+            route("signup", "Auth/signup.tsx");
           });
-          route("order", "order/route/layout.tsx", () => {
-            route("", "order/route/index.tsx", { index: true });
-            route("checkout", "order/route/checkout.tsx");
-            route("shipping", "order/route/shipping.tsx");
-            route("payment", "order/route/payment.tsx");
-            route("confirm", "order/route/confirm.tsx");
+          route("order", "Order/route/layout.tsx", () => {
+            route("", "Order/route/index.tsx", { index: true });
+            route("checkout", "Order/route/checkout.tsx");
+            route("shipping", "Order/route/shipping.tsx");
+            route("payment", "Order/route/payment.tsx");
+            route("confirm", "Order/route/confirm.tsx");
           });
-          route("dashboard", "dashboard/layout.tsx", () => {
-            route("", "dashboard/overview.tsx", { index: true });
-            route("settings", "dashboard/settings.tsx");
+          route("dashboard", "Dashboard/layout.tsx", () => {
+            route("", "Dashboard/overview.tsx", { index: true });
+            route("settings", "Dashboard/settings.tsx");
           });
-          route("theme/update", "shared/theme/theme.action.tsx");
-          route("quiz", "quiz/layout.tsx", () => {
-            route("", "quiz/index.tsx", { index: true });
+          route("theme/update", "Shared/theme/theme.action.tsx");
+          route("quiz", "Quiz/layout.tsx", () => {
+            route("", "Quiz/index.tsx", { index: true });
           });
         });
       },
