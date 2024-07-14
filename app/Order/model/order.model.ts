@@ -10,7 +10,7 @@ const itemSchema = new Schema<IItem>(
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
     total: { type: Number, required: true },
-    purchaseMode: { type: Boolean, default: false }, //  If `true`, the user choose to purchase as subscription and if `false` user is buy one-time.
+    purchaseMode: { type: String, enum: Object.value(OrderPurchaseMode) },
   },
   { _id: false }
 );

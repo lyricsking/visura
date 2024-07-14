@@ -54,6 +54,8 @@ export default function Layout() {
   const matches = useMatches();
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
   const navigate = useNavigate();
+ 
+  const childMethodRef = useRef<any>(null);
 
   // Optimistic UI for discount and quantity updates
   const totalItems = cart?.items.reduce(
@@ -73,11 +75,13 @@ export default function Layout() {
   //  Use to handle button clicks to navigate through the checkout process.
   //  It validates the currect section e.g shipping and then navigate to the next checkout flow.
   const handleClick = () => {
-    if (currentRoute && currentRoute.handle && currentRoute.handle.onSubmit) {
-      currentRoute.handle.onSubmit(cart, navigate);
+    if (childMethodRef.current) {
+      childMethodRef.current();
     }
   };
-
+  
+  const isSubmitting = fetcher.state !== "idle";
+  
   return (
     <div className="min-h-screen no-scrollbar pb-20 md:pb-0">
       <div className="flex items-center py-2 border-b">
@@ -88,7 +92,7 @@ export default function Layout() {
       </div>
       <div className="flex flex-col lg:flex-row overflow-hidden">
         <div className="flex-1 lg:w-3/4 p-4">
-          <Outlet context={{ cart }} />
+          <Outlet context={{ cart, childMethodRef }} />
         </div>
 
         <div className="flex-1 lg:w-1/4 p-4 mt-4 lg:mt-0 bg-orange-300 rounded shadow">
@@ -146,6 +150,7 @@ export default function Layout() {
             <button
               className="flex-1 bg-black text-white px-4 py-2 rounded-md"
               onClick={handleClick}
+              disabled={isSubmitting}
             >
               {currentRoute.handle.buttonLabel || ""}
             </button>

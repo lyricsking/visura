@@ -17,15 +17,15 @@ const CartItem = ({ item }: CartItemProps) => {
     fetcher.formData?.get("purchaseMode") || item.purchaseMode;
 
 
-  const handleDlete = () => {
+  const handleDelete = () => {
     fetcher.submit({
       _action: DELETE_ACTION_KEY,
       productId: item.productId.toString()
     },
     { method: "post" })
-}
-
-const handleUpdate = (
+  }
+  
+  const handleUpdate = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
     const formData = new FormData();

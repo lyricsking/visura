@@ -104,49 +104,6 @@ export const applyDiscount = async (orderId, code): Promise<void> => {
   }
 }
 
-export const createAndUpdateAddress = async (orderId: string,address: IAddrese): Promise<void> => {
-  try {
-    await connectToDatabase();
-    
-    const address = await AddressModel.create(address);
-    
-    await OrderModel.updateOne({ _id: orderId, status: "cart"}, {
-      $set: {
-        type: address.type,
-        address: address,
-      }
-    });
-      
-    console.log("Discount applied on order successfully.");
-  } catch (err) {
-    console.error("Error applying discount on order", err);
-  }finally{
-    disconnectDatabase();
-  }
-}
-
-export const updateAddress = async (orderId: string,addressId: string, address: IAddrese): Promise<void> => {
-  try {
-    await connectToDatabase();
-    
-    const address = await AddressModel.findOneAndUpdate({_id: addressId}, { $set: address });
-    
-    await OrderModel.updateOne({ _id: orderId, status: "cart"}, {
-      $set: {
-        type: address.type,
-        address: address.address,
-        //  region: address.region
-      }
-    });
-    
-    console.log("Discount applied on order successfully.");
-  } catch (err) {
-    console.error("Error applying discount on order", err);
-  }finally{
-    disconnectDatabase();
-  }
-}
-
 export const updateCartItem = async (
   email: string,
   productId: mongoose.Types.ObjectId,
@@ -166,7 +123,7 @@ export const updateCartItem = async (
         },
       },
       { new: true }
-    );
+    ).exec()
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
