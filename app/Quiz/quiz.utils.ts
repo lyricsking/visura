@@ -1,4 +1,4 @@
-import { Gender } from "~/supplement/supplement.type";
+import { Gender } from "~/Supplement/supplement.type";
 import { Answers, Question, QuestionCondition } from "./quiz.type";
 import { useNavigate } from "@remix-run/react";
 

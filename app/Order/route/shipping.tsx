@@ -5,10 +5,14 @@ import {
   useLoaderData,
   useSearchParams,
 } from "@remix-run/react";
-import React from "react";
-import { AddressForm, AddressItem } from "./components/address";
-import { IAddressModel } from "~/dashboard/address/address.model";
 import mongoose from "mongoose";
+import { IAddressModel } from "~/Dashboard/address/address.model";
+import { createOrUpdateAddress } from "../server/address.server";
+import { IAddress } from "~/Dashboard/address/address.type";
+import { IOrder } from "../type/order.type";
+import { CART_FETCHER_KEY } from "../type/cart.type";
+import { AddressForm } from "../components/address-form";
+import { AddressItem } from "../components/address-item";
 
 const ADD_ADDRESS_FORM = "create-address";
 const EDIT_ADDRESS_FORM = "update-address";
@@ -44,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (actionType) {
     case ADD_ADDRESS_FORM:
       // Add logic to save the new address
-      await addAddress({address: newAddress});
+      await createOrUpdateAddress({address: newAddress as IAddress});
       return json(
         { 
           success: true, 

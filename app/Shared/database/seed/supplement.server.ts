@@ -1,5 +1,5 @@
-import Supplement from "~/supplement/supplement.model";
-import { Gender, ISupplement } from "~/supplement/supplement.type";
+import Supplement from "~/Supplement/supplement.model";
+import { Gender, ISupplement } from "~/Supplement/supplement.type";
 
 export const seedSupplement = async () => {
   try {
@@ -92,7 +92,7 @@ const generateRandomSupplement = (): ISupplement => {
   ];
   const tags = ["smoker", "drinker"];
   const forms = ["Capsule", "Powder", "Tablet", "Liquid"];
-  
+
   const min = Math.floor(Math.random() * 21); // min ranges from 0 to 20 (inclusive)
   const max = min + Math.floor(Math.random() * (61 - min)); // max ranges from min to 60 (inclusive)
 
@@ -114,7 +114,9 @@ const generateRandomSupplement = (): ISupplement => {
     tags: getRandomElements(tags, 1),
     form: getRandomElement(forms),
     ageRange: {
-      min,max},
+      min,
+      max,
+    },
   };
 };
 

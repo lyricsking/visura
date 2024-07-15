@@ -1,13 +1,13 @@
 import { createCookie } from "@remix-run/node";
 
 import mongoose from "mongoose";
-import { Gender, type ISupplement } from "~/supplement/supplement.type";
-import { addItemsToCart, deleteCart } from "~/cart/cart.server";
-import type { IItem } from "~/dashboard/order/order.type";
+import { Gender, type ISupplement } from "~/Supplement/supplement.type";
 import { Answers } from "./quiz.type";
-import { findSupplement } from "~/supplement/supplement.server";
-import type { ISupplementModel } from "~/supplement/supplement.model";
+import { findSupplement } from "~/Supplement/supplement.server";
+import type { ISupplementModel } from "~/Supplement/supplement.model";
 import { getNanoid } from "~/Shared/utils";
+import { IItem } from "~/Order/type/order.type";
+import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
 
 interface SupplementWithScore {
   supplement: ISupplementModel;
@@ -43,11 +43,12 @@ export async function createCart({
       quantity: quantity,
       price: supplement.price,
       total: supplement.price * quantity,
+      purchaseMode: "monthly"
     };
   });
-  
-  await deleteCart(email)
-  
+
+  await deleteCart(email);
+
   return addItemsToCart(name, email, items);
 }
 
@@ -59,7 +60,7 @@ export async function recommendSupplements(
   answers: Answers
 ): Promise<ISupplementModel[]> {
   const age = Number(answers.age);
-  
+
   const budget = answers["budget"];
   let budgetRange = [];
   if (budget.includes("+")) {
@@ -74,7 +75,7 @@ export async function recommendSupplements(
   }
   const minBudget = budgetRange[0];
   const maxBudget = budgetRange[1] || Infinity;
-  
+
   const query = {
     $and: [
       { preferences: { $in: answers.preferences } },
@@ -86,8 +87,8 @@ export async function recommendSupplements(
       { allergies: { $nin: answers.allergies } },
       { form: { $in: answers.supplementForm } },
       { price: { $lte: maxBudget } },
-      { 'ageRange.min': { $lte: age } },
-      { 'ageRange.max': { $gte: age } },
+      { "ageRange.min": { $lte: age } },
+      { "ageRange.max": { $gte: age } },
     ],
   };
 

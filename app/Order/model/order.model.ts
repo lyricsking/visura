@@ -1,5 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IItem, OrderStatus, type IOrder } from "./order.type";
+import { IItem, IOrder, OrderPurchaseMode, OrderStatus } from "../type/order.type";
+import { discountSchema } from "./discount.model";
+import { addressSchema } from "~/Dashboard/address/address.model";
 
 export interface IOrderModel extends IOrder, Document {}
 
@@ -10,7 +12,7 @@ const itemSchema = new Schema<IItem>(
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
     total: { type: Number, required: true },
-    purchaseMode: { type: String, enum: Object.value(OrderPurchaseMode) },
+    purchaseMode: { type: String, enum: Object.values(OrderPurchaseMode) },
   },
   { _id: false }
 );

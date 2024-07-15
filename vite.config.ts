@@ -23,12 +23,10 @@ export default defineConfig({
             route("signin", "Auth/signin.tsx");
             route("signup", "Auth/signup.tsx");
           });
-          route("order", "Order/route/layout.tsx", () => {
+          route("cart", "Order/route/layout.tsx", () => {
             route("", "Order/route/index.tsx", { index: true });
-            route("checkout", "Order/route/checkout.tsx");
             route("shipping", "Order/route/shipping.tsx");
             route("payment", "Order/route/payment.tsx");
-            route("confirm", "Order/route/confirm.tsx");
           });
           route("dashboard", "Dashboard/layout.tsx", () => {
             route("", "Dashboard/overview.tsx", { index: true });

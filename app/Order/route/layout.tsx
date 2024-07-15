@@ -1,4 +1,4 @@
-import { getCartByEmailId } from "./cart.server";
+import { getCartByEmailId } from "./../server/cart.server";
 import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   Outlet,
@@ -8,11 +8,13 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import mongoose from "mongoose";
-import { CART_FETCHER_KEY } from "./cart.type";
+import { CART_FETCHER_KEY } from "./../type/cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Button from "~/Shared/components/button";
 import { getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
-import { IOrderModel } from "~/dashboard/order/order.model";
+import { IOrderModel } from "~/Order/model/order.model";
+import { useRef } from "react";
+import { applyDiscount } from "../server/cart.server";
 
 
 export const action = async ({ request }: any) => {
@@ -25,7 +27,7 @@ export const action = async ({ request }: any) => {
   // Handle discount code application
   if (orderId && discountCode) {
     //  Get the associated discount data from db
-    const order = await applyDiscount({orderId, discountCode});
+    const order = await applyDiscount({orderId, code:discountCode});
     
     return json({ success: true, data: order });
   }
@@ -42,8 +44,8 @@ export const loader = async ({ request }:LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   
   const user = session.get(USER_SESSION_KEY);
-  //if (!user) return redirect("/");
-
+  if (!user) return redirect("/");
+  
   const cart: IOrderModel | null = await getCartByEmailId(user["email"]);
   return json<LoaderDataType>({ cart });
 };
@@ -99,8 +101,8 @@ export default function Layout() {
           <h2 className="text-lg font-bold mb-4">Order Summary</h2>
           <fetcher.Form method="post" className="mb-4">
           
-            <label for="orderId" class="sr-only">Order Id</label>
-            <input type="hidden" id="orderId" name="orderId" value={cart.id} />
+            <label htmlFor="orderId" className="sr-only">Order Id</label>
+            <input type="hidden" id="orderId" name="orderId" value={cart?.id} />
     
             <label
               htmlFor="discountCode"

@@ -8,7 +8,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/Shared/components/ui/page.layout";
 import pkg from "../../package.json";
-import { useQuiz } from "~/quiz/quiz.utils";
+import { useQuiz } from "~/Quiz/quiz.utils";
 import Button from "~/Shared/components/button";
 
 export default function Layout() {

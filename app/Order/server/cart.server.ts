@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
-import OrderModel, { IOrderModel } from "~/dashboard/order/order.model";
-import type { IItem } from "~/dashboard/order/order.type";
-import {
-  connectToDatabase,
-  disconnectDatabase,
-} from "~/Shared/database/db.server";
+import OrderModel, { IOrderModel } from "../model/order.model";
+import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
+import { IItem } from "../type/order.type";
+import DiscountModel from "../model/discount.model";
 
 /**
  * Converts the recommendations to order with status cart
@@ -86,11 +84,11 @@ export const addItemToCart = async (
   }
 };
 
-export const applyDiscount = async (orderId, code): Promise<void> => {
+export const applyDiscount = async ({ orderId,code}:{ orderId:any, code:any }): Promise<void> => {
   try {
     await connectToDatabase();
     
-    const discount = await OrderDiscount.findOne({code});
+    const discount = await DiscountModel.findOne({code});
     
     if(!discount) return;
     
@@ -118,7 +116,7 @@ export const updateCartItem = async (
       {
         $set: {
           ...(quantity && { "items.$.quantity": quantity }),
-          ...(purchaseMode && { "purchaseMode": purchaseMode }),
+          ...(purchaseMode && { "items.$.purchaseMode": purchaseMode }),
           updatedAt: new Date() 
         },
       },
@@ -128,7 +126,7 @@ export const updateCartItem = async (
   } catch (err) {
     console.error("Error updating item in cart:", err);
   }finally{
-    disconnectDatabase();
+    await disconnectDatabase();
   }
 };
 
@@ -137,13 +135,12 @@ export const deleteCart = async (
 ): Promise<void> => {
   try {
     await connectToDatabase();
-    
-    await OrderModel.deleteOne(
-      { email: email, status: "cart"} );
+
+    await OrderModel.deleteOne({ email: email, status: "cart" });
     console.log("Item deleted successfully.");
   } catch (err) {
     console.error("Error deleting item in cart:", err);
-  }finally{
-    disconnectDatabase();
+  } finally {
+    await disconnectDatabase();
   }
 };

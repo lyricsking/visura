@@ -1,4 +1,4 @@
-import { useQuiz } from "~/quiz/quiz.utils";
+import { useQuiz } from "~/Quiz/quiz.utils";
 import Button, { buttonVariants } from "~/Shared/components/button";
 import { findFontByName } from "~/Shared/data/fonts";
 import { cn } from "~/Shared/utils";
