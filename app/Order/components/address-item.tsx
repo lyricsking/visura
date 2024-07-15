@@ -1,57 +1,50 @@
 import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { type IAddress } from "~/dashboard/address/address.type";
+import { IAddressModel } from "~/Dashboard/address/address.model";
+import { CART_FETCHER_KEY } from "../type/cart.type";
+import {
+  DELETE_ADDRESS_ACTION,
+  SELECT_ADDRESS_ACTION,
+} from "../route/shipping";
 
 export interface AddressItemProps {
-  address: Pick<IAddressModel, "address" | "type" | "phone">;
+  address: Pick<IAddressModel, "_id" | "address" | "type" | "phone">;
   selected: boolean;
   onEdit: () => void;
-  onDelete: () => void;
-  onSubmit: (addressId: string) => void;
 }
 
 export const AddressItem = ({
   address: { _id, address, phone, type },
   selected,
   onEdit,
-  onDelete,
-  onSubmit
 }: AddressItemProps) => {
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
-  
+
   const formRef = useRef<HTMLFormElement>(null);
   const editButtonRef = useRef<HTMLButtonElement>(null);
-  
+
   useEffect(() => {
     if (selected && editButtonRef.current) {
       editButtonRef.current.focus();
     }
   }, [selected]);
-  
-  
-  const handleSelect = () => {
-    if (formRef.current) {
-      formRef.current.submit();
-    }
+
+  const handleSelect = (addressId: string) => {
+    fetcher.submit(
+      { _action: SELECT_ADDRESS_ACTION, addressId: addressId },
+      { method: "post" }
+    );
   };
-  
-  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if(!formRef.current) return;
-    
-    const formData = new FormData(formRef.current);
-    const addressId = formData.get("address") as string;
 
-    if (!addressId) {
-      return;
-    }
-
-    //  onSubmit(addressId);
+  const handleDelete = (addressId: string) => {
+    fetcher.submit(
+      { _action: DELETE_ADDRESS_ACTION, addressId: addressId },
+      { method: "post" }
+    );
   };
 
   return (
-    <fetcher.Form ref={formRef} onSubmit={handleSubmit}>
     <label htmlFor={`address-${type}`}>
       <div
         className={`border p-4 rounded-lg mb-4 cursor-pointer ${
@@ -60,7 +53,6 @@ export const AddressItem = ({
         role="radio"
         aria-checked={selected}
         tabIndex={0}
-        onClick={handleSelect}
         onKeyUp={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             // Focus and trigger click on the radio button
@@ -73,12 +65,13 @@ export const AddressItem = ({
             <input
               type="radio"
               id={`address-${type}`}
-              name="address"
+              name="addressId"
               defaultChecked={selected === _id}
-              value={_id}
+              value={_id as string}
               readOnly
               className="mr-2"
               aria-labelledby={`address-label-${type}`}
+              onClick={() => handleSelect(_id as string)}
             />
             <span id={`address-label-${type}`} className="font-semibold">
               {type}
@@ -98,7 +91,7 @@ export const AddressItem = ({
             <button
               onClick={(e) => {
                 e.stopPropagation(); // Prevent the container click event
-                onDelete();
+                handleDelete(_id as string);
               }}
               className="text-red-500"
               aria-label={`Delete ${type} address`}
@@ -111,6 +104,5 @@ export const AddressItem = ({
         <p className="text-gray-500">Phone no.: {phone}</p>
       </div>
     </label>
-    </fetcher.Form>
   );
 };

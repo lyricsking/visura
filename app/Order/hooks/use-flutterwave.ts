@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { FlutterWaveProps } from "../type/flutterwave.type";
 
 const useFlutterwavePayment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const initiatePayment = (paymentDetails: FlutterWaveProps) => {
+  const initiatePayment = (
+    paymentDetails: FlutterWaveProps,
+    callback: (params: any) => void
+  ) => {
     if (!window.FlutterwaveCheckout) {
-      callback({ status: 'error', message: 'Flutterwave script not loaded' });
+      callback({
+        status: "error",
+        message: "Flutterwave script not loaded",
+      });
       return;
     }
 
@@ -23,7 +30,7 @@ const useFlutterwavePayment = () => {
         paymentDetails.onclose();
       },
     };
-    
+
     window.FlutterwaveCheckout(config);
   };
 

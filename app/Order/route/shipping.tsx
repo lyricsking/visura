@@ -3,6 +3,8 @@ import {
   NavigateFunction,
   useFetcher,
   useLoaderData,
+  useNavigate,
+  useOutletContext,
   useSearchParams,
 } from "@remix-run/react";
 import mongoose from "mongoose";
@@ -13,11 +15,15 @@ import { IOrder } from "../type/order.type";
 import { CART_FETCHER_KEY } from "../type/cart.type";
 import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
+import { useEffect } from "react";
 
-const ADD_ADDRESS_FORM = "create-address";
-const EDIT_ADDRESS_FORM = "update-address";
-const SHOW_ADDRESS_FORM = "new-address-form";
-const SHOW_EDIT_ADDRESS_FORM = "edit-address";
+export const ADD_ADDRESS_ACTION = "create-address";
+export const EDIT_ADDRESS_ACTION = "update-address";
+export const SELECT_ADDRESS_ACTION = "select-address";
+export const DELETE_ADDRESS_ACTION = "delete-address";
+
+export const SHOW_ADDRESS_FORM = "new-address-form";
+export const SHOW_EDIT_ADDRESS_FORM = "edit-address";
 
 const addresses: IAddressModel[] = [
   {
@@ -38,32 +44,36 @@ const addresses: IAddressModel[] = [
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const actionType = formData.get("_action");
-  
-  const newAddress = {
-    type: formData.get("type"),
-    address: formData.get("address"),
-    phone: formData.get("phone"),
-  };
-  
+
   switch (actionType) {
-    case ADD_ADDRESS_FORM:
+    case ADD_ADDRESS_ACTION:
+      const newAddress = {
+        type: formData.get("type"),
+        address: formData.get("address"),
+        phone: formData.get("phone"),
+      };
+
       // Add logic to save the new address
-      await createOrUpdateAddress({address: newAddress as IAddress});
-      return json(
-        { 
-          success: true, 
-          message: "Address added successfully", 
-          data:newAddress 
-      
-        });
-    case EDIT_ADDRESS_FORM:
+      await createOrUpdateAddress({ address: newAddress as IAddress });
+
+      return json({
+        success: true,
+        message: "Address added successfully",
+        data: newAddress,
+      });
+
+    case EDIT_ADDRESS_ACTION:
       // code
-      
+
       break;
-    
-    default:
-      return json({ message: "Unknown action" });
+    case SELECT_ADDRESS_ACTION:
+      console.log("select ", formData.get("addressId"));
+      break;
+    case DELETE_ADDRESS_ACTION:
+      console.log("delete", formData.get("addressId"));
+      break;
   }
+  return json({ message: "Unknown action" });
 };
 
 // Fetch initial data in the loader
@@ -82,18 +92,14 @@ export const handle = {
 
 const ShippingDetails = () => {
   const { addresses } = useLoaderData<typeof loader>();
-  
-  const fetcher = useFetcher({key: CART_FETCHER_KEY});
-  
+  const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
+    useOutletContext();
+
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const showForm = searchParams.get(SHOW_ADDRESS_FORM);
   const editingAddressId = searchParams.get(SHOW_EDIT_ADDRESS_FORM);
-
-const handleAddressSelected = (addressId: string)=>{
-  fetcher.submit(
-  {  }, 
-  {  })
-}
 
   const toggleFormVisibility = (action: string, value?: string) => {
     if (value) {
@@ -119,12 +125,17 @@ const handleAddressSelected = (addressId: string)=>{
     }
   };
 
-  const handleDelete = (addressId: string) => {
-    fetcher.submit(
-      { addressId },
-      { method: "post", action: "/delete-address" }
-    );
-  };
+  useEffect(() => {
+    if (childMethodRef) {
+      childMethodRef.current = () => {
+        if (Array.isArray(cart.items) && cart.items.length > 0) {
+          return navigate("/cart/payment");
+        }
+
+        alert("No Items added to cart");
+      };
+    }
+  }, [childMethodRef]);
 
   return (
     <div className="container mx-auto p-4">
@@ -143,8 +154,6 @@ const handleAddressSelected = (addressId: string)=>{
             onEdit={() =>
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
-            onDelete={() => handleDelete(address._id)}
-            onSubmit={handleAddressSelected}
             selected={false}
           />
         )

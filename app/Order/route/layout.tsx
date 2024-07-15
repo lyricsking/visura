@@ -16,7 +16,6 @@ import { IOrderModel } from "~/Order/model/order.model";
 import { useRef } from "react";
 import { applyDiscount } from "../server/cart.server";
 
-
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
   const discountCode = formData.get("discountCode");
@@ -27,25 +26,24 @@ export const action = async ({ request }: any) => {
   // Handle discount code application
   if (orderId && discountCode) {
     //  Get the associated discount data from db
-    const order = await applyDiscount({orderId, code:discountCode});
-    
+    const order = await applyDiscount({ orderId, code: discountCode });
+
     return json({ success: true, data: order });
   }
 
   return json({ success: false });
 };
 
-
 type LoaderDataType = {
-  cart: IOrderModel | null
-}
+  cart: IOrderModel | null;
+};
 
-export const loader = async ({ request }:LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
-  
+
   const user = session.get(USER_SESSION_KEY);
   if (!user) return redirect("/");
-  
+
   const cart: IOrderModel | null = await getCartByEmailId(user["email"]);
   return json<LoaderDataType>({ cart });
 };
@@ -56,7 +54,7 @@ export default function Layout() {
   const matches = useMatches();
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
   const navigate = useNavigate();
- 
+
   const childMethodRef = useRef<any>(null);
 
   // Optimistic UI for discount and quantity updates
@@ -81,9 +79,9 @@ export default function Layout() {
       childMethodRef.current();
     }
   };
-  
+
   const isSubmitting = fetcher.state !== "idle";
-  
+
   return (
     <div className="min-h-screen no-scrollbar pb-20 md:pb-0">
       <div className="flex items-center py-2 border-b">
@@ -100,10 +98,11 @@ export default function Layout() {
         <div className="flex-1 lg:w-1/4 p-4 mt-4 lg:mt-0 bg-orange-300 rounded shadow">
           <h2 className="text-lg font-bold mb-4">Order Summary</h2>
           <fetcher.Form method="post" className="mb-4">
-          
-            <label htmlFor="orderId" className="sr-only">Order Id</label>
+            <label htmlFor="orderId" className="sr-only">
+              Order Id
+            </label>
             <input type="hidden" id="orderId" name="orderId" value={cart?.id} />
-    
+
             <label
               htmlFor="discountCode"
               className="block text-sm font-medium text-gray-700"
@@ -146,16 +145,18 @@ export default function Layout() {
             <span>${estimatedTotal.toFixed(2)}</span>
           </div>
           <div className="fixed bottom-0 left-0 right-0 p-4 bg-white shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center">
-            <div className="font-semibold text-lg md:hidden">
+            <div className="flex-1 font-semibold text-lg md:hidden">
               Total: ${estimatedTotal.toFixed(2)}
             </div>
-            <button
+            <Button
               className="flex-1 bg-black text-white px-4 py-2 rounded-md"
               onClick={handleClick}
               disabled={isSubmitting}
             >
-              {currentRoute.handle.buttonLabel || ""}
-            </button>
+              {isSubmitting
+                ? "Updating cart..."
+                : currentRoute.handle.buttonLabel || ""}
+            </Button>
           </div>
         </div>
       </div>

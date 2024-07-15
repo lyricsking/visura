@@ -1,10 +1,11 @@
 import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { type IAddress } from "~/dashboard/address/address.type";
+import { IAddressModel } from "~/Dashboard/address/address.model";
+import { CART_FETCHER_KEY } from "../type/cart.type";
 
 export interface AddressFormProps {
-  address?: Pick<IAddress, "type" | "address" | "phone">;
+  address?: Pick<IAddressModel, "id" | "type" | "address" | "phone">;
   action: string;
   onCancel: () => void;
 }
@@ -15,7 +16,7 @@ export const AddressForm = ({
   onCancel,
 }: AddressFormProps) => {
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
-  
+
   return (
     <fetcher.Form
       method="post"
@@ -25,9 +26,11 @@ export const AddressForm = ({
       <h2 id="address-form-title" className="sr-only">
         Address Form
       </h2>
-      <label for="_action" class="sr-only">Order Id</label>
+      <label htmlFor="_action" className="sr-only">
+        Order Id
+      </label>
       <input id="_action" type="hidden" name="_action" value={action} />
-    
+
       <div className="mb-2">
         <label htmlFor="address-type" className="block text-gray-700">
           Type
@@ -85,7 +88,7 @@ export const AddressForm = ({
           className="bg-black text-white px-4 py-2 rounded-md"
           aria-label="Add"
         >
-          Add
+          Save
         </button>
       </div>
     </fetcher.Form>
