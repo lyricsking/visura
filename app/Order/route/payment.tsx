@@ -48,7 +48,28 @@ const PaymentPage = () => {
       "Press \"OK\" to proceed with the payment?"
     );
     if (shouldProceed) {
-      const details = {} as FlutterWaveProps;
+      const details: FlutterWaveProps = {
+        tx_ref: 'unique-transaction-ref-123',
+        amount: 5000,
+        customer: {
+          email: 'customer@example.com',
+          phone_number: '08012345678',
+          name: 'John Doe',
+        },
+        customizations: {
+          title: 'Payment for Services',
+          description: 'Payment for the services rendered',
+          logo: 'https://yourcompany.com/logo.png',
+        },
+        payment_options: 'card, ussd, mobilemoney',
+        callback: (data) => {
+          console.log('Payment successful:', data);
+        },
+        onclose: () => {
+          console.log('Payment modal closed');
+        },
+        public_key: '',
+      };
 
       initiatePayment(details, responseCallback);
     }
