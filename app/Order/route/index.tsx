@@ -52,18 +52,26 @@ export const action = async ({ request }: any) => {
 export const handle = {
   buttonLabel: "Checkout",
   name: "Cart",
-  onSubmit: (cart: IOrder, navigate: NavigateFunction) => {
-    if(Array.isArray(cart.items) && cart.items.length > 0){
-      return navigate("shipping");
-    }
-    
-    alert("No Items added to cart")
-  },
+  onSubmit: ()=>{},
 };
 
 export default function Cart() {
-  const { cart }: { cart: IOrder } = useOutletContext();
+  const { cart , childMethodRef}: { cart: IOrder,childMethodRef: any } = useOutletContext();
+  
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (childMethodRef) {
+      childMethodRef.current = (cart: IOrder, navigate: NavigateFunction) => {
+        if (Array.isArray(cart.items) && cart.items.length > 0) {
+          return navigate("shipping");
+        }
+        
+        alert("No Items added to cart")
+      };
+    }
+  }, [childMethodRef, handleCallMethod]);
+  
   return (
     <div>
       {/* Cart item details */}
