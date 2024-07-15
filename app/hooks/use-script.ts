@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useScript = (src) => {
+const useScript = (src: string) => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
   useEffect(() => {

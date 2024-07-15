@@ -11,7 +11,7 @@
   /**
    * currency to charge in. Defaults to NGN
    */
-  currency?: 'NGN' | string;
+  currency: 'NGN' | string;
   /**
    * 	This is a sha256 hash of your FlutterwaveCheckout values, it is used for passing secured values to the payment gateway.
    */

@@ -20,7 +20,6 @@ const useFlutterwavePayment = () => {
 
     const config: FlutterWaveProps = {
       ...paymentDetails,
-      public_key: "YOUR_FLUTTERWAVE_PUBLIC_KEY",
       callback: (response) => {
         setIsProcessing(false);
         paymentDetails.callback(response);

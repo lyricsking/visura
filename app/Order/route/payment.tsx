@@ -1,6 +1,8 @@
 import {
+  json,
   NavigateFunction,
   useFetcher,
+  useLoaderData,
   useOutletContext,
 } from "@remix-run/react";
 import { useEffect, useRef } from "react";
@@ -15,15 +17,23 @@ import { CART_FETCHER_KEY } from "../type/cart.type";
 import { IOrderModel } from "../model/order.model";
 
 const PaymentMethods = {
-  card: "card",
-  deposit: "deposit",
-  direct: "direct",
+  "Card": "card",
+  "Bank Transfer": "banktransfer",
+  "# USSD": "ussd",
+  "Direct Bank": "account",
+  "Google Pay": "googlepay",
+  "Apple Pay": "applepay",
 } as const;
 type PaymentMethods = keyof typeof PaymentMethods;
 
 export const action = async () => {
   return null;
 };
+
+export const loader = async () => {
+  const flPublicKey = process.env.FLUTTERWAVE_PUBLIC_KEY;;
+  return json({ flPublicKey });
+}
 
 export const handle = {
   name: "Payment",
@@ -34,6 +44,7 @@ export const handle = {
 };
 
 const PaymentPage = () => {
+  const { flPublicKey } = useLoaderData<typeof loader>();
   const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } =
     useOutletContext();
 
@@ -41,16 +52,20 @@ const PaymentPage = () => {
   const { initiatePayment, isProcessing } = useFlutterwavePayment();
 
   const handlePayment = () => {
-    //    if (!isScriptLoaded || isProcessing) return;
+
+    //if (!isScriptLoaded) return;
     const responseCallback = (response: FlutterWaveResponse) => {};
 
     const shouldProceed = window.confirm(
       'Press "OK" to proceed with the payment?'
-    );
+    );      
+    
     if (shouldProceed) {
       const details: FlutterWaveProps = {
-        tx_ref: "unique-transaction-ref-123",
+        public_key: flPublicKey || "",
+        tx_ref: "dyfhurrghgfe37iojhffhhhhrfh",
         amount: 5000,
+        currency: "NGN",
         customer: {
           email: "customer@example.com",
           phone_number: "08012345678",
@@ -61,16 +76,15 @@ const PaymentPage = () => {
           description: "Payment for the services rendered",
           logo: "https://yourcompany.com/logo.png",
         },
-        payment_options: "card, ussd, mobilemoney",
-        callback: (data) => {
+        payment_options: "googlepay",
+        callback: (data: any) => {
           console.log("Payment successful:", data);
         },
         onclose: () => {
           console.log("Payment modal closed");
         },
-        public_key: process.env.FLUTTERWAVE_PUBLIC_KEY || "",
       };
-
+      
       initiatePayment(details, responseCallback);
     }
   };
@@ -80,7 +94,7 @@ const PaymentPage = () => {
       childMethodRef.current = handlePayment;
     }
   }, [childMethodRef]);
-
+  
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="mt-4">
@@ -96,6 +110,7 @@ const PaymentPage = () => {
             <PaymentMethod
               key={key}
               name="paymentMethod"
+              label={key}
               value={PaymentMethods[key as PaymentMethods]}
             />
           ))}
@@ -108,10 +123,11 @@ export default PaymentPage;
 
 interface PaymentMethodProps {
   name: string;
+  label: string,
   value: string;
 }
 
-export const PaymentMethod = ({ name, value }: PaymentMethodProps) => {
+export const PaymentMethod = ({ name,label, value }: PaymentMethodProps) => {
   const fetcher = useFetcher();
 
   const handleSelect = (method: string) => {
@@ -121,8 +137,8 @@ export const PaymentMethod = ({ name, value }: PaymentMethodProps) => {
   const id = `payment-method-${value}`;
 
   return (
-    <label className="flex items-center justify-between p-4 text-lg capitalize border rounded-lg mb-2">
-      <span id="payment-method-label">{value}</span>
+    <label className="flex items-center justify-between p-4 text-lg border rounded-lg mb-2">
+      <span id="payment-method-label">{label}</span>
       <input
         type="radio"
         name={name}
