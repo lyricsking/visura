@@ -77,9 +77,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 // Fetch initial data in the loader
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
   //  Todo Fetch address and address regions here
-  return json({ addresses });
+  const user = session.get(USER_SESSION_KEY);
+  
+  const [addresses, regions] = await Promise.all([
+      getAddressesByEmail(user["email"]),
+       getAddressRegions()
+    ]);
+    
+  return json({ addresses,regions });
 };
 
 export const handle = {
@@ -91,7 +100,7 @@ export const handle = {
 };
 
 const ShippingDetails = () => {
-  const { addresses } = useLoaderData<typeof loader>();
+  const { addresses, regions } = useLoaderData<typeof loader>();
   const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
     useOutletContext();
 

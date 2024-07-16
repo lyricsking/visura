@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 export interface IAddressRegion {
-  name: string,// Defined as regionNameCharsSeparatedByHyphen_CITY e.g idi-ape_IBADAN
-  city: string, //  Defined as city_twoOrThreeStateNameUppercaseChars e.g ibadan_OYO
+  name: string,// Defined as CITY_regionNameCharsSeparatedByHyphen e.g IBADAN_idi-ape
+  city: string, //  Defined as twoOrThreeStateNameUppercaseChars_city e.g OYO_ibadan
   shippingFee: number //  Shipping fee to the region
 }
 
@@ -16,5 +16,6 @@ export interface IAddress {
   type: AddressType;
   address: string;
   region: mongoose.Types.ObjectId|IAddressRegion;
+  email: string;
   phone: string;
 }

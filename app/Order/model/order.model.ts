@@ -20,9 +20,6 @@ const itemSchema = new Schema<IItem>(
 const newDiscountSchema = discountSchema.clone();
 newDiscountSchema.path("_id", false);
 
-const newAddressSchema = addressSchema.clone();
-newAddressSchema.path("_id", false);
-
 const orderSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
@@ -30,7 +27,7 @@ const orderSchema = new Schema({
   items: { type: [itemSchema], required: true },
   totalPrice: { type: Number, required: true },
   discount: { type: newDiscountSchema },
-  address: { type: newAddressSchema },
+  address: { type: Schema.Types.ObjectId, ref: "Address" },
   paymentDetails: {
     method: { type: String },
     transactionId: { type: String },

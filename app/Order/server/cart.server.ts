@@ -56,7 +56,7 @@ export const addItemsToCart = async (
   } catch (err) {
     console.error("Error adding items to cart:", err);
   } finally {
-    disconnectDatabase();
+    await disconnectDatabase();
   }
 };
 
@@ -79,8 +79,8 @@ export const addItemToCart = async (
     console.log("Item added to cart successfully.");
   } catch (err) {
     console.error("Error adding item to cart:", err);
-  }finally{
-    disconnectDatabase()
+  } finally {
+    await disconnectDatabase()
   }
 };
 
@@ -97,8 +97,8 @@ export const applyDiscount = async ({ orderId,code}:{ orderId:any, code:any }): 
     });
   } catch (err) {
     console.error("Error applying discount on order", err);
-  }finally{
-    disconnectDatabase();
+  } finally {
+    await disconnectDatabase();
   }
 }
 
@@ -125,7 +125,7 @@ export const updateCartItem = async (
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
-  }finally{
+  } finally {
     await disconnectDatabase();
   }
 };
@@ -140,6 +140,31 @@ export const deleteCart = async (
     console.log("Item deleted successfully.");
   } catch (err) {
     console.error("Error deleting item in cart:", err);
+  } finally {
+    await disconnectDatabase();
+  }
+};
+
+export const updatePaymentMethod = async (
+  {orderId, paymentMethod}:{orderId: string,
+  paymentMethod: string,
+}): Promise<void> => {
+  try {
+    await connectToDatabase();
+    
+    await OrderModel.findOneAndUpdate(
+      { _id: orderId, status: "cart" },
+      {
+        $set: {
+          "paymentDetails.method": paymentMethod,
+          updatedAt: new Date() 
+        },
+      },
+      { new: true }
+    ).exec()
+    console.log("Order payment updated successfully.");
+  } catch (err) {
+    console.error("Error updating order payment method:", err);
   } finally {
     await disconnectDatabase();
   }

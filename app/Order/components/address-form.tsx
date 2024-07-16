@@ -5,13 +5,15 @@ import { IAddressModel } from "~/Dashboard/address/address.model";
 import { CART_FETCHER_KEY } from "../type/cart.type";
 
 export interface AddressFormProps {
-  address?: Pick<IAddressModel, "id" | "type" | "address" | "phone">;
+  address?: Pick<IAddressModel, "id" | "type" | "address" | "region"| "phone">;
+  regions: IAddressRegion
   action: string;
   onCancel: () => void;
 }
 
 export const AddressForm = ({
   address,
+  regions,
   action,
   onCancel,
 }: AddressFormProps) => {
@@ -55,6 +57,41 @@ export const AddressForm = ({
           name="address"
           type="text"
           defaultValue={address?.address}
+          className="w-full border border-gray-300 rounded-lg p-2"
+          required
+          aria-required="true"
+        />
+      </div>
+      
+      <div className="mb-2">
+        <label htmlFor="address-region" className="block text-gray-700">
+          Region
+        </label>
+        <select
+          id="address-region"
+          name="region"
+          defaultValue={address?.region}
+          className="w-full border border-gray-300 rounded-lg p-2"
+          required
+        >
+          {
+            regions.map((region) => <option key={region._id} value={region._id}>
+            <div>{region.city}</div>
+            <div>{region.name}</div>
+            </option>
+            )
+          }
+        </select>
+      </div>
+      <div className="mb-2">
+        <label htmlFor="email" className="block text-gray-700">
+          Email
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="text"
+          defaultValue={address?.email}
           className="w-full border border-gray-300 rounded-lg p-2"
           required
           aria-required="true"

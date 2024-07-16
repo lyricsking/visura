@@ -18,9 +18,10 @@ export interface IAddressModel extends IAddress, Document {}
 
 export const addressSchema = new Schema<IAddressModel>(
   {
-    type: { type: String, required: true },
+    type: { type: String, enum: AddressType, required: true },
     address: { type: String, required: true },
-    region: {type: Schema.Types.ObjectId, ref: "AddressRegion", required: true, index: { unique: true} },
+    region: { type: Schema.Types.ObjectId, ref: "AddressRegion", required: true },
+    email: {type: String, required: true },
     phone: { type: String, required: true },
   },
 );

@@ -19,19 +19,28 @@ import { IOrderModel } from "../model/order.model";
 const PaymentMethods = {
   "Card": "card",
   "Bank Transfer": "banktransfer",
+  "Opay": "opay",
   "# USSD": "ussd",
-  "Direct Bank": "account",
-  "Google Pay": "googlepay",
-  "Apple Pay": "applepay",
+  "Direct Debit": "account",
+//  "Google Pay": "googlepay",
+//  "Apple Pay": "applepay",
 } as const;
 type PaymentMethods = keyof typeof PaymentMethods;
 
-export const action = async () => {
-  return null;
+export const action = async ({  request }: ActionFunctionArgs) => {
+  
+  const formData = await request.formData();
+  const paymentMethod = formData.get("paymentMethod");
+  const orderId = formData.get("orderId");
+  
+  await updatePaymentMethod({ orderId, paymentMethod })
+  
+  return json({success: true});
 };
 
 export const loader = async () => {
-  const flPublicKey = process.env.FLUTTERWAVE_PUBLIC_KEY;;
+  const flPublicKey = process.env.FLUTTERWAVE_PUBLIC_KEY;
+  
   return json({ flPublicKey });
 }
 
@@ -45,15 +54,14 @@ export const handle = {
 
 const PaymentPage = () => {
   const { flPublicKey } = useLoaderData<typeof loader>();
-  const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } =
-    useOutletContext();
+  const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } = useOutletContext();
 
   const isScriptLoaded = useScript("https://checkout.flutterwave.com/v3.js");
   const { initiatePayment, isProcessing } = useFlutterwavePayment();
 
-  const handlePayment = () => {
+  const handlePayment = (isScriptLoaded: boolean, paymentOption: string) => {
 
-    //if (!isScriptLoaded) return;
+    if (!isScriptLoaded) return;
     const responseCallback = (response: FlutterWaveResponse) => {};
 
     const shouldProceed = window.confirm(
@@ -76,7 +84,7 @@ const PaymentPage = () => {
           description: "Payment for the services rendered",
           logo: "https://yourcompany.com/logo.png",
         },
-        payment_options: "googlepay",
+        payment_options: paymentOption,
         callback: (data: any) => {
           console.log("Payment successful:", data);
         },
@@ -91,9 +99,9 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (childMethodRef) {
-      childMethodRef.current = handlePayment;
+      childMethodRef.current = () => handlePayment(isScriptLoaded);
     }
-  }, [childMethodRef]);
+  }, [childMethodRef, isScriptLoaded]);
   
   return (
     <div className="max-w-md mx-auto p-4">
@@ -122,23 +130,29 @@ const PaymentPage = () => {
 export default PaymentPage;
 
 interface PaymentMethodProps {
+  orderId: string;
   name: string;
   label: string,
   value: string;
 }
 
-export const PaymentMethod = ({ name,label, value }: PaymentMethodProps) => {
-  const fetcher = useFetcher();
+export const PaymentMethod = ({orderId, name, label, value }: PaymentMethodProps) => {
+  const fetcher = useFetcher({key: CART_FETCHER_KEY});
 
   const handleSelect = (method: string) => {
-    fetcher.submit({}, {});
+    fetcher.submit({
+      orderId: orderId,
+      paymentMethod: method
+    }, {
+      method: "post"
+    });
   };
 
   const id = `payment-method-${value}`;
 
   return (
     <label className="flex items-center justify-between p-4 text-lg border rounded-lg mb-2">
-      <span id="payment-method-label">{label}</span>
+      <span id="payment-method-label">Pay with {label}</span>
       <input
         type="radio"
         name={name}

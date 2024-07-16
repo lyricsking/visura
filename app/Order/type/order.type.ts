@@ -35,15 +35,15 @@ export interface IOrder {
   status: OrderStatus;
   items: IItem[];
   totalPrice: number;
-  address: {type: addressSchema };
+  address: IAddress;
   paymentDetails?: {
     method: string;
     transactionId: string;
   };
   discount: {
     type: string;
-    value: number
-  };
+    value: number;
+  }
   createdAt: Date;
   updatedAt: Date;
 }
