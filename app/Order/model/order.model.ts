@@ -19,6 +19,9 @@ const itemSchema = new Schema<IItem>(
 
 const newDiscountSchema = discountSchema.clone();
 newDiscountSchema.path("_id", false);
+//  Create new address schema for order, this is neccessary to keep record of delivery address even after the mani address is modified or deleted.
+//const newAddressSchema = addressSchema.clone();
+//newAddressSchema.path("_id", false);
 
 const orderSchema = new Schema({
   name: { type: String, required: true },
@@ -27,7 +30,7 @@ const orderSchema = new Schema({
   items: { type: [itemSchema], required: true },
   totalPrice: { type: Number, required: true },
   discount: { type: newDiscountSchema },
-  address: { type: Schema.Types.ObjectId, ref: "Address" },
+  address: { type: newAddressSchema }, //  Pass and entire schema obj, this is neccessary to keep record of delivery address even after the main address is modified or deleted.
   paymentDetails: {
     method: { type: String },
     transactionId: { type: String },

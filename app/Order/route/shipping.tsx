@@ -43,16 +43,25 @@ const addresses: IAddressModel[] = [
 // Handle form submissions in the action
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const actionType = formData.get("_action");
+  
+  const formDataObj = {};
+  formData.forEach((value, key) => {
+    // If the key already exists, it means it's an array
+    if (formDataObj[key]) {
+      if (!Array.isArray(formDataObj[key])) {
+        formDataObj[key] = [formDataObj[key]]; // Convert to array if it's not already
+      }
+      formDataObj[key].push(value);
+    } else {
+      formDataObj[key] = value;
+    }
+  });
+  
+  const {_action, orderId, ...newAddress} = formDataObj;
 
-  switch (actionType) {
+  switch (_action) {
+    case EDIT_ADDRESS_ACTION:
     case ADD_ADDRESS_ACTION:
-      const newAddress = {
-        type: formData.get("type"),
-        address: formData.get("address"),
-        phone: formData.get("phone"),
-      };
-
       // Add logic to save the new address
       await createOrUpdateAddress({ address: newAddress as IAddress });
 
@@ -61,19 +70,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         message: "Address added successfully",
         data: newAddress,
       });
-
-    case EDIT_ADDRESS_ACTION:
-      // code
-
-      break;
     case SELECT_ADDRESS_ACTION:
+      await updateCartAddress({orderId, newAddress})
+      
       console.log("select ", formData.get("addressId"));
-      break;
+      
+      return json({
+        success: true,
+        message: "Address added successfully",
+        data: newAddress,
+      });
     case DELETE_ADDRESS_ACTION:
+      await deleteAddress(newAddress.id)
+      
       console.log("delete", formData.get("addressId"));
-      break;
+      
+      return json({
+        success: true,
+        message: "Address added successfully",
+        data: newAddress,
+      });
+    default: 
+      return json({ message: "Unknown action" });
   }
-  return json({ message: "Unknown action" });
 };
 
 // Fetch initial data in the loader
@@ -103,6 +122,7 @@ const ShippingDetails = () => {
   const { addresses, regions } = useLoaderData<typeof loader>();
   const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
     useOutletContext();
+  const fetcher = useFetcher({ key: CART_FETCHER_KEY });
 
   const navigate = useNavigate();
 
@@ -134,6 +154,27 @@ const ShippingDetails = () => {
     }
   };
 
+  const handleSelect = (address: IAddressModel) => {
+    fetcher.submit(
+      { 
+        _action: SELECT_ADDRESS_ACTION,
+        orderId: cart._id,
+        ...address
+      },
+      { method: "post" }
+    );
+  };
+
+  const handleDelete = (id: id) => {
+    fetcher.submit(
+      { 
+        _action: DELETE_ADDRESS_ACTION,
+        id
+      },
+      { method: "post" }
+    );
+  };
+
   useEffect(() => {
     if (childMethodRef) {
       childMethodRef.current = () => {
@@ -160,10 +201,12 @@ const ShippingDetails = () => {
           <AddressItem
             key={address._id}
             address={address}
+            selected={address._id === cart.address._id}
             onEdit={() =>
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
-            selected={false}
+            onSelect={()=>handleSelect(address)}
+            onDelete={()=>handleDelete(address._id)}
           />
         )
       )}

@@ -130,6 +130,31 @@ export const updateCartItem = async (
   }
 };
 
+export const updateCartAddress = async ({orderId, address}:{orderId: string,address: IAddressModel}): Promise<void> => {
+  try {
+    await connectToDatabase();
+    
+    await OrderModel.findOneAndUpdate(
+      { 
+        id: new mongoose.Types.ObjectId(id),
+        status: "cart"
+      },
+      {
+        $set: {
+          address: address,
+          updatedAt: new Date() 
+        },
+      },
+      { new: true }
+    ).exec()
+    console.log("Item updated successfully.");
+  } catch (err) {
+    console.error("Error updating item in cart:", err);
+  } finally {
+    await disconnectDatabase();
+  }
+};
+
 export const deleteCart = async (
   email: string,
 ): Promise<void> => {

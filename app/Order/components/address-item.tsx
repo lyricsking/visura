@@ -12,16 +12,18 @@ export interface AddressItemProps {
   address: Pick<IAddressModel, "_id" | "address" | "type" | "phone">;
   selected: boolean;
   onEdit: () => void;
+  onSelect: () => void
+  onDelete: () => void
 }
 
 export const AddressItem = ({
   address: { _id, address, phone, type },
   selected,
   onEdit,
+  onSelect,
+  onDelete
 }: AddressItemProps) => {
-  const fetcher = useFetcher({ key: CART_FETCHER_KEY });
-
-  const formRef = useRef<HTMLFormElement>(null);
+  
   const editButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -29,20 +31,6 @@ export const AddressItem = ({
       editButtonRef.current.focus();
     }
   }, [selected]);
-
-  const handleSelect = (addressId: string) => {
-    fetcher.submit(
-      { _action: SELECT_ADDRESS_ACTION, addressId: addressId },
-      { method: "post" }
-    );
-  };
-
-  const handleDelete = (addressId: string) => {
-    fetcher.submit(
-      { _action: DELETE_ADDRESS_ACTION, addressId: addressId },
-      { method: "post" }
-    );
-  };
 
   return (
     <label htmlFor={`address-${type}`}>
@@ -71,7 +59,7 @@ export const AddressItem = ({
               readOnly
               className="mr-2"
               aria-labelledby={`address-label-${type}`}
-              onClick={() => handleSelect(_id as string)}
+              onClick={onSelect}
             />
             <span id={`address-label-${type}`} className="font-semibold">
               {type}
@@ -89,10 +77,7 @@ export const AddressItem = ({
               <Pencil1Icon className="w-5 h-5" />
             </button>
             <button
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent the container click event
-                handleDelete(_id as string);
-              }}
+              onClick={onDelete}
               className="text-red-500"
               aria-label={`Delete ${type} address`}
             >

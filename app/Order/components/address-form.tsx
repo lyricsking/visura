@@ -29,10 +29,18 @@ export const AddressForm = ({
         Address Form
       </h2>
       <label htmlFor="_action" className="sr-only">
-        Order Id
+        Address Action
       </label>
       <input id="_action" type="hidden" name="_action" value={action} />
-
+      
+      { id &&
+      <>
+      <label htmlFor="id" className="sr-only">
+        Order Id
+      </label>
+      <input id="id" type="hidden" name="id" value={id} />
+      </>
+      }
       <div className="mb-2">
         <label htmlFor="address-type" className="block text-gray-700">
           Type

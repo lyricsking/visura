@@ -2,7 +2,7 @@ import AddressModel from "~/Dashboard/address/address.model";
 import { IAddress } from "~/Dashboard/address/address.type";
 import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
 
-export const createOrUpdateAddress = async ({id,address}:{id?: string, address: IAddress}): Promise<void> => {
+export const createOrUpdateAddress = async ({id, address}:{id?: string, address: IAddress}): Promise<void> => {
   try {
     await connectToDatabase();
     
