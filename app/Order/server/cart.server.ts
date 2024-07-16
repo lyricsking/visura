@@ -3,6 +3,7 @@ import OrderModel, { IOrderModel } from "../model/order.model";
 import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
 import { IItem } from "../type/order.type";
 import DiscountModel from "../model/discount.model";
+import { IAddressModel } from "../model/address.model";
 
 /**
  * Converts the recommendations to order with status cart
@@ -136,7 +137,7 @@ export const updateCartAddress = async ({orderId, address}:{orderId: string,addr
     
     await OrderModel.findOneAndUpdate(
       { 
-        id: new mongoose.Types.ObjectId(id),
+        id: new mongoose.Types.ObjectId(orderId),
         status: "cart"
       },
       {

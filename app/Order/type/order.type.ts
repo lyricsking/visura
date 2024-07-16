@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { IAddress } from "./address.type";
 
 export const OrderStatus = {
   cart: "cart", //  Orders still in cart

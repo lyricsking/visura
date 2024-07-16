@@ -15,6 +15,8 @@ import {
 import useFlutterwavePayment from "../hooks/use-flutterwave";
 import { CART_FETCHER_KEY } from "../type/cart.type";
 import { IOrderModel } from "../model/order.model";
+import { updatePaymentMethod } from "../server/cart.server";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 const PaymentMethods = {
   "Card": "card",
@@ -25,15 +27,14 @@ const PaymentMethods = {
 //  "Google Pay": "googlepay",
 //  "Apple Pay": "applepay",
 } as const;
-type PaymentMethods = keyof typeof PaymentMethods;
+type PaymentMethods = typeof PaymentMethods[keyof typeof PaymentMethods];
 
 export const action = async ({  request }: ActionFunctionArgs) => {
   
   const formData = await request.formData();
-  const paymentMethod = formData.get("paymentMethod");
+  const paymentMethod = formData.get("paymentMethod") ;
   const orderId = formData.get("orderId");
-  
-  await updatePaymentMethod({ orderId, paymentMethod })
+  if(orderId && paymentMethod) await updatePaymentMethod({ orderId: orderId as string, paymentMethod: paymentMethod as string })
   
   return json({success: true});
 };
@@ -55,6 +56,20 @@ export const handle = {
 const PaymentPage = () => {
   const { flPublicKey } = useLoaderData<typeof loader>();
   const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } = useOutletContext();
+  
+  const fetcher = useFetcher({ key: CART_FETCHER_KEY });
+
+  const handleSelect = (method: PaymentMethods) => {
+    fetcher.submit(
+      {
+        orderId: cart.id,
+        paymentMethod: method,
+      },
+      {
+        method: "post",
+      }
+    );
+  };
 
   const isScriptLoaded = useScript("https://checkout.flutterwave.com/v3.js");
   const { initiatePayment, isProcessing } = useFlutterwavePayment();
@@ -99,7 +114,7 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (childMethodRef) {
-      childMethodRef.current = () => handlePayment(isScriptLoaded);
+      childMethodRef.current = () => handlePayment(isScriptLoaded, cart.paymentDetails?.method as string);
     }
   }, [childMethodRef, isScriptLoaded]);
   
@@ -119,7 +134,10 @@ const PaymentPage = () => {
               key={key}
               name="paymentMethod"
               label={key}
-              value={PaymentMethods[key as PaymentMethods]}
+              value={PaymentMethods[key as keyof typeof PaymentMethods]}
+              onSelect={() =>
+                handleSelect(PaymentMethods[key as keyof typeof PaymentMethods])
+              }
             />
           ))}
         </div>
@@ -130,23 +148,13 @@ const PaymentPage = () => {
 export default PaymentPage;
 
 interface PaymentMethodProps {
-  orderId: string;
   name: string;
   label: string,
   value: string;
+  onSelect:()=>void
 }
 
-export const PaymentMethod = ({orderId, name, label, value }: PaymentMethodProps) => {
-  const fetcher = useFetcher({key: CART_FETCHER_KEY});
-
-  const handleSelect = (method: string) => {
-    fetcher.submit({
-      orderId: orderId,
-      paymentMethod: method
-    }, {
-      method: "post"
-    });
-  };
+export const PaymentMethod = ({name, label, value ,onSelect}: PaymentMethodProps) => {
 
   const id = `payment-method-${value}`;
 
@@ -157,7 +165,7 @@ export const PaymentMethod = ({orderId, name, label, value }: PaymentMethodProps
         type="radio"
         name={name}
         value={value}
-        onClick={() => handleSelect(value)}
+        onClick={onSelect}
         id={id}
         className="form-radio h-5 w-5 text-indigo-600"
         aria-labelledby="payment-method-label"

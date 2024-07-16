@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
-import { IAddressRegion, type IAddress } from "./address.type";
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import { AddressType, IAddress, IAddressRegion } from "../type/address.type";
 
 export interface IAddressRegionModel extends IAddressRegion, Document {}
 

@@ -15,7 +15,7 @@ export type AddressType = typeof AddressType[keyof typeof AddressType]
 export interface IAddress {
   type: AddressType;
   address: string;
-  region: mongoose.Types.ObjectId|IAddressRegion;
+  region: IAddressRegion;
   email: string;
   phone: string;
 }

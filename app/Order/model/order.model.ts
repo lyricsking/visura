@@ -1,9 +1,11 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { IItem, IOrder, OrderPurchaseMode, OrderStatus } from "../type/order.type";
 import { discountSchema } from "./discount.model";
-import { addressSchema } from "~/Dashboard/address/address.model";
+import { addressSchema } from "./address.model";
 
-export interface IOrderModel extends IOrder, Document {}
+export interface IOrderModel extends IOrder, Document {
+  
+}
 
 const itemSchema = new Schema<IItem>(
   {
@@ -23,14 +25,14 @@ newDiscountSchema.path("_id", false);
 //const newAddressSchema = addressSchema.clone();
 //newAddressSchema.path("_id", false);
 
-const orderSchema = new Schema({
+const orderSchema = new Schema<IOrderModel>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   status: { type: String, enum: OrderStatus, required: true },
   items: { type: [itemSchema], required: true },
   totalPrice: { type: Number, required: true },
   discount: { type: newDiscountSchema },
-  address: { type: newAddressSchema }, //  Pass and entire schema obj, this is neccessary to keep record of delivery address even after the main address is modified or deleted.
+  address: { type: addressSchema }, //  Pass and entire schema obj, this is neccessary to keep record of delivery address even after the main address is modified or deleted.
   paymentDetails: {
     method: { type: String },
     transactionId: { type: String },

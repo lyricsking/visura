@@ -1,6 +1,7 @@
-import AddressModel from "~/Dashboard/address/address.model";
-import { IAddress } from "~/Dashboard/address/address.type";
 import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
+import AddressModel, { AddressRegionModel } from "../model/address.model";
+import { IAddress } from "../type/address.type";
+import mongoose from "mongoose";
 
 export const createOrUpdateAddress = async ({id, address}:{id?: string, address: IAddress}): Promise<void> => {
   try {
@@ -22,7 +23,7 @@ export const createOrUpdateAddress = async ({id, address}:{id?: string, address:
   }
 }
 
-export const getAddress = (id: string) => {
+export const getAddress = async (id: string) => {
   try {
     await connectToDatabase();
     
@@ -37,7 +38,7 @@ export const getAddress = (id: string) => {
   }
 }
 
-export const getAddressesByEmail = (email: string) => {
+export const getAddressesByEmail = async (email: string) => {
   try {
     await connectToDatabase();
     
@@ -52,7 +53,7 @@ export const getAddressesByEmail = (email: string) => {
   }
 }
 
-export const getAddressRegions = () => {
+export const getAddressRegions = async() => {
   try {
     await connectToDatabase();
     
@@ -67,3 +68,5 @@ export const getAddressRegions = () => {
     await disconnectDatabase();
   }
 }
+
+export const deleteAddress = async (id: mongoose.Types.ObjectId) => {  }

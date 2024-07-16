@@ -1,12 +1,13 @@
 import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { IAddressModel } from "~/Dashboard/address/address.model";
 import { CART_FETCHER_KEY } from "../type/cart.type";
+import { IAddressRegion } from "../type/address.type";
+import { IAddressModel } from "../model/address.model";
 
 export interface AddressFormProps {
-  address?: Pick<IAddressModel, "id" | "type" | "address" | "region"| "phone">;
-  regions: IAddressRegion
+  address?: IAddressModel;
+  regions: IAddressRegion[]
   action: string;
   onCancel: () => void;
 }
@@ -33,12 +34,12 @@ export const AddressForm = ({
       </label>
       <input id="_action" type="hidden" name="_action" value={action} />
       
-      { id &&
+      { address &&
       <>
       <label htmlFor="id" className="sr-only">
         Order Id
       </label>
-      <input id="id" type="hidden" name="id" value={id} />
+      <input id="id" type="hidden" name="id" value={address._id as string} />
       </>
       }
       <div className="mb-2">
@@ -78,12 +79,12 @@ export const AddressForm = ({
         <select
           id="address-region"
           name="region"
-          defaultValue={address?.region}
+          defaultValue={address?.region.name}
           className="w-full border border-gray-300 rounded-lg p-2"
           required
         >
           {
-            regions.map((region) => <option key={region._id} value={region._id}>
+            regions.map((region) => <option key={region.name} value={region.name}>
             <div>{region.city}</div>
             <div>{region.name}</div>
             </option>

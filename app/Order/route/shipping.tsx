@@ -8,14 +8,17 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import mongoose from "mongoose";
-import { IAddressModel } from "~/Dashboard/address/address.model";
-import { createOrUpdateAddress } from "../server/address.server";
-import { IAddress } from "~/Dashboard/address/address.type";
+import { createOrUpdateAddress, deleteAddress, getAddressesByEmail, getAddressRegions } from "../server/address.server";
 import { IOrder } from "../type/order.type";
 import { CART_FETCHER_KEY } from "../type/cart.type";
 import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
 import { useEffect } from "react";
+import { IAddressModel } from "../model/address.model";
+import { updateCartAddress } from "../server/cart.server";
+import { IAddress } from "../type/address.type";
+import { getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
+import { IOrderModel } from "../model/order.model";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";
@@ -44,7 +47,7 @@ const addresses: IAddressModel[] = [
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   
-  const formDataObj = {};
+  const formDataObj: any = {};
   formData.forEach((value, key) => {
     // If the key already exists, it means it's an array
     if (formDataObj[key]) {
@@ -63,7 +66,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case EDIT_ADDRESS_ACTION:
     case ADD_ADDRESS_ACTION:
       // Add logic to save the new address
-      await createOrUpdateAddress({ address: newAddress as IAddress });
+      await createOrUpdateAddress({ address: newAddress as IAddressModel });
 
       return json({
         success: true,
@@ -71,7 +74,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         data: newAddress,
       });
     case SELECT_ADDRESS_ACTION:
-      await updateCartAddress({orderId, newAddress})
+      await updateCartAddress({ orderId:orderId, newAddress: newAddress as IAddressModel})
       
       console.log("select ", formData.get("addressId"));
       
@@ -81,7 +84,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         data: newAddress,
       });
     case DELETE_ADDRESS_ACTION:
-      await deleteAddress(newAddress.id)
+      await deleteAddress(newAddress["_id"])
       
       console.log("delete", formData.get("addressId"));
       
@@ -120,7 +123,7 @@ export const handle = {
 
 const ShippingDetails = () => {
   const { addresses, regions } = useLoaderData<typeof loader>();
-  const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
+  const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } =
     useOutletContext();
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
 
@@ -159,17 +162,17 @@ const ShippingDetails = () => {
       { 
         _action: SELECT_ADDRESS_ACTION,
         orderId: cart._id,
-        ...address
+        //...address
       },
       { method: "post" }
     );
   };
 
-  const handleDelete = (id: id) => {
+  const handleDelete = (id: mongoose.Types.ObjectId) => {
     fetcher.submit(
       { 
         _action: DELETE_ADDRESS_ACTION,
-        id
+        id:id.toString()
       },
       { method: "post" }
     );
