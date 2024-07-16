@@ -1,10 +1,9 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 import type { ISupplement } from "./supplement.type";
 
-interface ISupplementModel extends ISupplement, Document {
-}
-
-const SupplementSchema: Schema = new Schema<ISupplementModel>({
+export type SupplementModel = Model<ISupplement>
+const supplementSchema: Schema = new Schema<ISupplement, SupplementModel>({
+  _id: { type: Schema.Types.ObjectId },
   name: { type: String, required: true },
   price: { type: Number, required: true },
   gender: { type: String },
@@ -23,8 +22,6 @@ const SupplementSchema: Schema = new Schema<ISupplementModel>({
   },
 });
 
-const Supplement: Model<ISupplementModel> =
+export const Supplement: SupplementModel =
   mongoose.models.Supplement ||
-  mongoose.model<ISupplementModel>("Supplement", SupplementSchema);
-export default Supplement;
-export type { ISupplement, ISupplementModel };
+  mongoose.model<ISupplement, SupplementModel>("Supplement", supplementSchema);

@@ -22,7 +22,7 @@ export const OrderPurchaseMode = {
 export type OrderPurchaseMode = typeof OrderPurchaseMode[keyof typeof OrderPurchaseMode];
 
 export interface IItem {
-  productId: mongoose.Types.ObjectId;
+  productId: Types.ObjectId;
   name: string;
   quantity: number;
   price: number;
@@ -31,6 +31,7 @@ export interface IItem {
 }
 
 export interface IOrder {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   status: OrderStatus;

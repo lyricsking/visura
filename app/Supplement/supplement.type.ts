@@ -6,6 +6,7 @@ export const Gender = {
 export type Gender = (typeof Gender)[keyof typeof Gender];
 
 export interface ISupplement {
+  _id: Types.ObjectId,
   name: string;
   price: number;
   gender: Gender;

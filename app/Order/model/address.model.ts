@@ -1,23 +1,20 @@
-import { Document } from "mongoose";
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import { Model, Schema, Types } from "mongoose";
 import { AddressType, IAddress, IAddressRegion } from "../type/address.type";
 
-export interface IAddressRegionModel extends IAddressRegion, Document {}
-
- const addressRegionSchema = new Schema<IAddressRegionModel>({
-  name: String,
-  city: String,
-  shippingFee: {type: Number, required: true}
+export type AddressRegionModel = Model<IAddressRegion>
+const addressRegionSchema = new Schema<IAddressRegion, AddressRegionModel>({
+    _id: { type: Types.ObjectId },
+  name: { type: String, required: true },
+  city: { type: String, required: true },
+  shippingFee: { type: Number, required: true }
 })
 
-export const AddressRegionModel: mongoose.Model<IAddressRegionModel> =
-  mongoose.models.Address || mongoose.model<IAddressRegionModel>("AddressRegion", addressRegionSchema);
+export const AddressRegion: AddressRegionModel = mongoose.models.AddressRegion || mongoose.model<IAddressRegion, AddressRegionModel>("AddressRegion", addressRegionSchema);
 
-export interface IAddressModel extends IAddress, Document {}
-
-export const addressSchema = new Schema<IAddressModel>(
+export type AddressModel = Model<IAddress>
+export const addressSchema = new Schema<IAddress, AddressModel>(
   {
+    _id: { type: Types.ObjectId },
     type: { type: String, enum: AddressType, required: true },
     address: { type: String, required: true },
     region: { type: Schema.Types.ObjectId, ref: "AddressRegion", required: true },
@@ -26,6 +23,6 @@ export const addressSchema = new Schema<IAddressModel>(
   },
 );
 
-const AddressModel: mongoose.Model<IAddressModel> =
-  mongoose.models.Address || mongoose.model<IAddressModel>("Address", addressSchema);
-export default AddressModel;
+export const Address: AddressModel =
+  mongoose.models.Address || mongoose.model<IAddress, AddressModel>("Address", addressSchema);
+
