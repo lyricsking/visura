@@ -1,16 +1,10 @@
-import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
-import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { IAddressModel } from "~/Dashboard/address/address.model";
-import { CART_FETCHER_KEY } from "../type/cart.type";
-import {
-  DELETE_ADDRESS_ACTION,
-  SELECT_ADDRESS_ACTION,
-} from "../route/shipping";
+import { IAddress } from "../type/address.type";
+import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 
 export interface AddressItemProps {
-  address: Pick<IAddressModel, "_id" | "address" | "type" | "phone">;
-  selected: boolean;
+  address: IAddress
+  selected: string;
   onEdit: () => void;
   onSelect: () => void
   onDelete: () => void
@@ -39,7 +33,7 @@ export const AddressItem = ({
           selected ? "border-black" : "border-gray-300"
         }`}
         role="radio"
-        aria-checked={selected}
+        aria-checked={selected===_id.toString()}
         tabIndex={0}
         onKeyUp={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -54,8 +48,8 @@ export const AddressItem = ({
               type="radio"
               id={`address-${type}`}
               name="addressId"
-              defaultChecked={selected === _id}
-              value={_id as string}
+              defaultChecked={selected === _id.toString()}
+              value={_id.toString()}
               readOnly
               className="mr-2"
               aria-labelledby={`address-label-${type}`}

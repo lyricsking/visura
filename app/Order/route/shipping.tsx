@@ -14,11 +14,10 @@ import { CART_FETCHER_KEY } from "../type/cart.type";
 import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
 import { useEffect } from "react";
-import { IAddressModel } from "../model/address.model";
 import { updateCartAddress } from "../server/cart.server";
-import { IAddress } from "../type/address.type";
 import { getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
-import { IOrderModel } from "../model/order.model";
+import { Address } from "~/Order/model/address.model";
+import { IAddress, IAddressRegion } from "../type/address.type";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";
@@ -28,20 +27,20 @@ export const DELETE_ADDRESS_ACTION = "delete-address";
 export const SHOW_ADDRESS_FORM = "new-address-form";
 export const SHOW_EDIT_ADDRESS_FORM = "edit-address";
 
-const addresses: IAddressModel[] = [
+const addresses:IAddress[] = [
   {
     _id: new mongoose.Types.ObjectId(),
     type: "Home",
     address: "3501 Maloy Court, East Elmhurst, New York City, NY 11369",
     phone: "78596 0000",
-  } as IAddressModel,
+  } as IAddress,
   {
     _id: new mongoose.Types.ObjectId(),
     type: "Office",
     address: "8502-8503 Preston Rd. Inglewood Street, Maine 98380",
     phone: "12100 0023",
-  } as IAddressModel,
-] as IAddressModel[];
+  } as IAddress,
+] as IAddress[];
 
 // Handle form submissions in the action
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -60,13 +59,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   });
   
-  const {_action, orderId, ...newAddress} = formDataObj;
+  const { _action, orderId, ...newAddress } = formDataObj;
 
   switch (_action) {
     case EDIT_ADDRESS_ACTION:
     case ADD_ADDRESS_ACTION:
       // Add logic to save the new address
-      await createOrUpdateAddress({ address: newAddress as IAddressModel });
+      await createOrUpdateAddress({ address: newAddress });
 
       return json({
         success: true,
@@ -74,7 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         data: newAddress,
       });
     case SELECT_ADDRESS_ACTION:
-      await updateCartAddress({ orderId:orderId, newAddress: newAddress as IAddressModel})
+      await updateCartAddress({ orderId: orderId, address: newAddress });
       
       console.log("select ", formData.get("addressId"));
       
@@ -106,11 +105,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = session.get(USER_SESSION_KEY);
   
   const [addresses, regions] = await Promise.all([
-      getAddressesByEmail(user["email"]),
-       getAddressRegions()
-    ]);
+    getAddressesByEmail(user["email"]),
+    getAddressRegions(),
+  ]);
     
-  return json({ addresses,regions });
+  return json({ addresses, regions });
 };
 
 export const handle = {
@@ -123,7 +122,7 @@ export const handle = {
 
 const ShippingDetails = () => {
   const { addresses, regions } = useLoaderData<typeof loader>();
-  const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } =
+  const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
     useOutletContext();
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
 
@@ -157,11 +156,11 @@ const ShippingDetails = () => {
     }
   };
 
-  const handleSelect = (address: IAddressModel) => {
+  const handleSelect = (address: IAddress) => {
     fetcher.submit(
       { 
         _action: SELECT_ADDRESS_ACTION,
-        orderId: cart._id,
+        orderId: cart._id.toString(),
         //...address
       },
       { method: "post" }
@@ -192,19 +191,20 @@ const ShippingDetails = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {addresses.map((address: any, index) =>
+      {addresses && addresses.map((address: any) =>
         editingAddressId === address._id ? (
           <AddressForm
             key={address._id}
             address={address}
-            action="EDIT_ADDRESS_FORM"
+            regions={regions as IAddressRegion[]}
+            action={EDIT_ADDRESS_ACTION}
             onCancel={() => toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM)}
           />
         ) : (
           <AddressItem
             key={address._id}
             address={address}
-            selected={address._id === cart.address._id}
+            selected={cart.address._id.toString()}
             onEdit={() =>
               toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
             }
@@ -223,7 +223,8 @@ const ShippingDetails = () => {
       )}
       {showForm && (
         <AddressForm
-          action="EDIT_ADDRESS_FORM"
+          regions={regions as IAddressRegion[]}
+          action={ADD_ADDRESS_ACTION}
           onCancel={() => toggleFormVisibility(SHOW_ADDRESS_FORM)}
         />
       )}

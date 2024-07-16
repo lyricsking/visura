@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface IAddressRegion {
   _id: Types.ObjectId
   name: string,// Defined as CITY_regionNameCharsSeparatedByHyphen e.g IBADAN_idi-ape

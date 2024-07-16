@@ -1,12 +1,9 @@
-import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useRef } from "react";
 import { CART_FETCHER_KEY } from "../type/cart.type";
-import { IAddressRegion } from "../type/address.type";
-import { IAddressModel } from "../model/address.model";
+import { IAddress, IAddressRegion } from "../type/address.type";
 
 export interface AddressFormProps {
-  address?: IAddressModel;
+  address?: IAddress;
   regions: IAddressRegion[]
   action: string;
   onCancel: () => void;
@@ -39,7 +36,7 @@ export const AddressForm = ({
       <label htmlFor="id" className="sr-only">
         Order Id
       </label>
-      <input id="id" type="hidden" name="id" value={address._id as string} />
+      <input id="id" type="hidden" name="id" value={address._id.toString()} />
       </>
       }
       <div className="mb-2">

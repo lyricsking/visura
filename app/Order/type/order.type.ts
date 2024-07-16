@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import type { Types } from "mongoose";
 import { IAddress } from "./address.type";
 
 export const OrderStatus = {

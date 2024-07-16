@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export const DiscountType = {
   percent: "percent",
   flat: "flat"

@@ -1,11 +1,7 @@
-import mongoose, { Document, Schema } from "mongoose";
+import {  model, models, Schema, type Model } from "mongoose";
 import { IItem, IOrder, OrderPurchaseMode, OrderStatus } from "../type/order.type";
 import { discountSchema } from "./discount.model";
 import { addressSchema } from "./address.model";
-
-export interface IOrderModel extends IOrder, Document {
-  
-}
 
 const itemSchema = new Schema<IItem>(
   {
@@ -24,8 +20,8 @@ newDiscountSchema.path("_id", false);
 //  Create new address schema for order, this is neccessary to keep record of delivery address even after the mani address is modified or deleted.
 //const newAddressSchema = addressSchema.clone();
 //newAddressSchema.path("_id", false);
-
-const orderSchema = new Schema<IOrderModel>({
+export type OrderModel = Model<IOrder>
+const orderSchema = new Schema<IOrder, OrderModel>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   status: { type: String, enum: OrderStatus, required: true },
@@ -41,6 +37,5 @@ const orderSchema = new Schema<IOrderModel>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-const OrderModel: mongoose.Model<IOrderModel> =
-  mongoose.models.Order || mongoose.model<IOrderModel>("Order", orderSchema);
-export default OrderModel;
+export const Order: OrderModel =
+  models.Order || model<IOrder, OrderModel>("Order", orderSchema);

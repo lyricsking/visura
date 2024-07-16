@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import OrderModel, { IOrderModel } from "../model/order.model";
 import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
-import { IItem } from "../type/order.type";
-import DiscountModel from "../model/discount.model";
-import { IAddressModel } from "../model/address.model";
+import { IItem, IOrder } from "../type/order.type";
+import { Order, type OrderModel } from "../model/order.model";
+import { Discount } from "../model/discount.model";
+import { IAddress } from "../type/address.type";
+import { AddressModel } from "../model/address.model";
 
 /**
  * Converts the recommendations to order with status cart
@@ -13,10 +14,10 @@ import { IAddressModel } from "../model/address.model";
  */
 export const getCartByEmailId = async (
   emailId: string
-): Promise<IOrderModel| null > => {
+): Promise<IOrder| null > => {
   try {
     await connectToDatabase();
-    const cart = await OrderModel.findOne({
+    const cart = await Order.findOne({
       //email: emailId,
       email: "asaajay775@gmail.com",
       status: "cart",
@@ -41,7 +42,7 @@ export const addItemsToCart = async (
   try {
     await connectToDatabase();
 
-    await OrderModel.updateOne(
+    await Order.updateOne(
       { name, email, status: "cart" },
       {
         $push: { items: { $each: newItems } },
@@ -68,7 +69,7 @@ export const addItemToCart = async (
   try {
     await connectToDatabase();
     
-    await OrderModel.findOneAndUpdate(
+    await Order.findOneAndUpdate(
       { userId, status: "cart" },
       {
         $push: { items: newItem },
@@ -89,11 +90,11 @@ export const applyDiscount = async ({ orderId,code}:{ orderId:any, code:any }): 
   try {
     await connectToDatabase();
     
-    const discount = await DiscountModel.findOne({code});
+    const discount = await Discount.findOne({code});
     
     if(!discount) return;
     
-    await OrderModel.updateOne({ _id: orderId, status: "cart"}, {
+    await Order.updateOne({ _id: orderId, status: "cart"}, {
       $set: { discount: {type:discount.type, value:discount.value} }
     });
   } catch (err) {
@@ -112,7 +113,7 @@ export const updateCartItem = async (
   try {
     await connectToDatabase();
     
-    await OrderModel.findOneAndUpdate(
+    await Order.findOneAndUpdate(
       { email, status: "cart", "items.productId": productId },
       {
         $set: {
@@ -131,23 +132,29 @@ export const updateCartItem = async (
   }
 };
 
-export const updateCartAddress = async ({orderId, address}:{orderId: string,address: IAddressModel}): Promise<void> => {
+export const updateCartAddress = async ({
+  orderId,
+  address,
+}: {
+  orderId: string;
+  address: IAddress;
+}): Promise<void> => {
   try {
     await connectToDatabase();
-    
-    await OrderModel.findOneAndUpdate(
-      { 
+
+    await Order.findOneAndUpdate(
+      {
         id: new mongoose.Types.ObjectId(orderId),
-        status: "cart"
+        status: "cart",
       },
       {
         $set: {
           address: address,
-          updatedAt: new Date() 
+          updatedAt: new Date(),
         },
       },
       { new: true }
-    ).exec()
+    ).exec();
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
@@ -162,7 +169,7 @@ export const deleteCart = async (
   try {
     await connectToDatabase();
 
-    await OrderModel.deleteOne({ email: email, status: "cart" });
+    await Order.deleteOne({ email: email, status: "cart" });
     console.log("Item deleted successfully.");
   } catch (err) {
     console.error("Error deleting item in cart:", err);
@@ -178,7 +185,7 @@ export const updatePaymentMethod = async (
   try {
     await connectToDatabase();
     
-    await OrderModel.findOneAndUpdate(
+    await Order.findOneAndUpdate(
       { _id: orderId, status: "cart" },
       {
         $set: {

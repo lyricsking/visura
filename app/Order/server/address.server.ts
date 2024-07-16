@@ -1,13 +1,20 @@
 import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
-import AddressModel, { AddressRegionModel } from "../model/address.model";
-import { IAddress } from "../type/address.type";
-import mongoose from "mongoose";
+import { Address, AddressRegion, AddressRegionModel, type AddressModel } from "../model/address.model";
+import { HydratedDocument, Types } from "mongoose";
+import { OrderModel } from "../model/order.model";
+import { IAddress, IAddressRegion } from "../type/address.type";
 
-export const createOrUpdateAddress = async ({id, address}:{id?: string, address: IAddress}): Promise<void> => {
+export const createOrUpdateAddress = async ({
+  id,
+  address,
+}: {
+  id?: string;
+  address: AddressModel;
+}): Promise<void> => {
   try {
     await connectToDatabase();
-    
-    await AddressModel.findOneAndUpdate(
+
+    await Address.findOneAndUpdate(
       { _id: id },
       {
         $set: { ...address, updatedAt: new Date() },
@@ -18,16 +25,16 @@ export const createOrUpdateAddress = async ({id, address}:{id?: string, address:
     console.log("Address saved successfully.");
   } catch (err) {
     console.error("Error saving address.", err);
-  } finally{
+  } finally {
     await disconnectDatabase();
   }
-}
+};
 
 export const getAddress = async (id: string) => {
   try {
     await connectToDatabase();
     
-    const address = await AddressModel.findById(id).exec();
+    const address = await Address.findById(id).exec();
     console.log("Fetched address success: ", address);
     
     return address;
@@ -38,35 +45,39 @@ export const getAddress = async (id: string) => {
   }
 }
 
-export const getAddressesByEmail = async (email: string) => {
+export const getAddressesByEmail = async (
+  email: string
+): Promise<IAddress[]> => {
   try {
     await connectToDatabase();
-    
-    const addresses = await AddressModel.findOne({email: email}).exec();
+
+    const addresses = await Address.find({ email: email }).exec();
     console.log("Fetched addresses success: ", addresses);
-    
+
     return addresses;
   } catch (e) {
-    console.log("Failed to fetch addresses:", e)
+    console.log("Failed to fetch addresses:", e);
+    throw e;
   } finally {
     await disconnectDatabase();
   }
-}
+};
 
-export const getAddressRegions = async() => {
+export const getAddressRegions = async (): Promise<HydratedDocument<IAddressRegion>[]> => {
   try {
     await connectToDatabase();
-    
-    const regions = await AddressRegionModel.find({}).exec();
-    
+
+    const regions = await AddressRegion.find({}).exec();
+
     console.log("Fetched regions success: ", regions);
-    
+
     return regions;
   } catch (e) {
-    console.log("Failed to fetch regions :", e)
+    console.log("Failed to fetch regions :", e);
+    throw e;
   } finally {
     await disconnectDatabase();
   }
-}
+};
 
-export const deleteAddress = async (id: mongoose.Types.ObjectId) => {  }
+export const deleteAddress = async (id: Types.ObjectId) => {  }

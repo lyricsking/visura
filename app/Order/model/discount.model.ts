@@ -1,14 +1,12 @@
-import mongoose, { Document, Schema } from "mongoose";
+import { model, Model, models, Schema } from "mongoose";
 import { DiscountType, IDiscount } from "../type/discount.type";
 
-export interface IDiscountModel extends IDiscount, Document {}
-
-export const discountSchema = new Schema<IDiscountModel>({
+export type DiscountModel = Model<IDiscount>;
+export const discountSchema = new Schema<IDiscount, DiscountModel>({
   code: String,
   type: {type: String, enum: Object.values(DiscountType)},
   value: {type: Number, requured: true}
 });
 
-const DiscountModel: mongoose.Model<IDiscountModel> =
-  mongoose.models.Discount || mongoose.model<IDiscountModel>("Discount", discountSchema);
-export default DiscountModel;
+export const Discount: DiscountModel =
+  models.Discount || model<IDiscount, DiscountModel>("Discount", discountSchema);
