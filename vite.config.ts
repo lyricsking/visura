@@ -32,7 +32,7 @@ export default defineConfig({
             route("payment", "Order/route/payment.tsx");
           });
           route("dashboard", "Dashboard/layout.tsx", () => {
-            route("", "Dashboard/overview.tsx", { index: true });
+            route("", "Dashboard/routes/overview.tsx", { index: true });
             route("settings", "Dashboard/settings.tsx");
           });
           route("theme/update", "Shared/theme/theme.action.tsx");
