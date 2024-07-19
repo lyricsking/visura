@@ -4,23 +4,23 @@ import { Link, useOutletContext } from "@remix-run/react";
 export default function Signin() {
   const { appname }: { appname: string } = useOutletContext();
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
-        <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-          <div className="mt-12 flex flex-col items-center">
-            <img
-              className="h-12 w-12"
-              src="https://www.svgrepo.com/show/157006/user.svg"
-              alt="User Icon"
-            />
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Welcome back
-            </h2>
-
-            <div className="w-full flex-1 mt-8">
-              <div className="flex flex-col items-center">
-                <Link
-                  to="google/login"
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
+      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-md">
+        <div className="flex flex-col items-center">
+          <img
+            className="h-12 w-12"
+            src="https://www.svgrepo.com/show/157006/user.svg"
+            alt={appname + " Logo"}
+          />
+          
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Welcome back
+          </h2>
+        </div>
+        <div className="w-full flex-1 mt-8">
+          <div className="flex flex-col items-center">
+            <Link
+              to="google/login"
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
                 >
                   <div className="bg-white p-2 rounded-full">
@@ -102,8 +102,6 @@ export default function Signin() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   );
 }
