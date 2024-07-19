@@ -1,4 +1,4 @@
-import {  model, models, Schema, type Model } from "mongoose";
+import mongoose, {  model, Schema, type Model } from "mongoose";
 import { IItem, IOrder, OrderPurchaseMode, OrderStatus } from "../type/order.type";
 import { discountSchema } from "./discount.model";
 import { addressSchema } from "./address.model";
@@ -38,4 +38,4 @@ const orderSchema = new Schema<IOrder, OrderModel>({
 });
 
 export const Order: OrderModel =
-  models.Order || model<IOrder, OrderModel>("Order", orderSchema);
+  mongoose.models.Order || model<IOrder, OrderModel>("Order", orderSchema);

@@ -5,7 +5,8 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/Shared/components/ui/page.layout";
-import pkg from "../../package.json";
+import pkg from "~/../package.json";
+
 import Button from "~/Shared/components/button";
 
 export default function Layout() {

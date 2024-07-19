@@ -1,3 +1,4 @@
+import { TriangleUpIcon } from "@radix-ui/react-icons";
 import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
 import { defineConfig } from "vite";
@@ -20,8 +21,10 @@ export default defineConfig({
             route("", "Home/index.tsx", { index: true });
           });
           route("auth", "Auth/route/layout.tsx", () => {
-            route("signin", "Auth/route/signin.tsx");
+            route("", "Auth/route/signin.tsx", { index: true });
             route("signup", "Auth/route/signup.tsx");
+            route("google/callback", "Auth/route/google-callback.tsx");
+            route("google/login", "Auth/route/google-login.tsx");
           });
           route("cart", "Order/route/layout.tsx", () => {
             route("", "Order/route/index.tsx", { index: true });

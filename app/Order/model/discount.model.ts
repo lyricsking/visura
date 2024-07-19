@@ -1,4 +1,4 @@
-import { model, Model, models, Schema } from "mongoose";
+import mongoose, { model, Model, mongo, Schema } from "mongoose";
 import { DiscountType, IDiscount } from "../type/discount.type";
 
 export type DiscountModel = Model<IDiscount>;
@@ -9,4 +9,4 @@ export const discountSchema = new Schema<IDiscount, DiscountModel>({
 });
 
 export const Discount: DiscountModel =
-  models.Discount || model<IDiscount, DiscountModel>("Discount", discountSchema);
+  mongoose.models.Discount || model<IDiscount, DiscountModel>("Discount", discountSchema);
