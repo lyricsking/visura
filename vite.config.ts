@@ -19,9 +19,9 @@ export default defineConfig({
           route("", "Home/layout.tsx", () => {
             route("", "Home/index.tsx", { index: true });
           });
-          route("auth", "Auth/layout.tsx", () => {
-            route("signin", "Auth/signin.tsx");
-            route("signup", "Auth/signup.tsx");
+          route("auth", "Auth/route/layout.tsx", () => {
+            route("signin", "Auth/route/signin.tsx");
+            route("signup", "Auth/route/signup.tsx");
           });
           route("cart", "Order/route/layout.tsx", () => {
             route("", "Order/route/index.tsx", { index: true });
