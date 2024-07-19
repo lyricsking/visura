@@ -15,7 +15,7 @@ if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
 }
 
-export const { getSession, commitSession, destroySession } = createFileSessionStorage({
+export const sessionStorage  = createFileSessionStorage({
   dir: "../sessions",
   //dir: storagePath,
   cookie: {
@@ -29,3 +29,5 @@ export const { getSession, commitSession, destroySession } = createFileSessionSt
     secure: process.env.NODE_ENV === "production",
   },
 });
+
+export const { getSession, commitSession, destroySession } = sessionStorage;
