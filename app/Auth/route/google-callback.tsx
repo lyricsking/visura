@@ -6,6 +6,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   
   await authenticator.authenticate("google", request, {
     successRedirect,
-    failureRedirect: "/login",
+    failureRedirect: "/auth",
   });
 };
