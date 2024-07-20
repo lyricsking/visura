@@ -1,4 +1,4 @@
-import ScrollToTop from "~/Shared/components/ui/scroll.to.top";
+import ScrollToTop from "~/components/ui/scroll.to.top";
 import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";

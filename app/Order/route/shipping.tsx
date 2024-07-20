@@ -8,14 +8,19 @@ import {
   useSearchParams,
 } from "@remix-run/react";
 import mongoose from "mongoose";
-import { createOrUpdateAddress, deleteAddress, getAddressesByEmail, getAddressRegions } from "../server/address.server";
+import {
+  createOrUpdateAddress,
+  deleteAddress,
+  getAddressesByEmail,
+  getAddressRegions,
+} from "../server/address.server";
 import { IOrder } from "../type/order.type";
 import { CART_FETCHER_KEY } from "../type/cart.type";
 import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
 import { useEffect } from "react";
 import { updateCartAddress } from "../server/cart.server";
-import { getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
+import { getSession, USER_SESSION_KEY } from "~/utils/session";
 import { Address } from "~/Order/model/address.model";
 import { IAddress, IAddressRegion } from "../type/address.type";
 
@@ -27,7 +32,7 @@ export const DELETE_ADDRESS_ACTION = "delete-address";
 export const SHOW_ADDRESS_FORM = "new-address-form";
 export const SHOW_EDIT_ADDRESS_FORM = "edit-address";
 
-const addresses:IAddress[] = [
+const addresses: IAddress[] = [
   {
     _id: new mongoose.Types.ObjectId(),
     type: "Home",
@@ -45,7 +50,7 @@ const addresses:IAddress[] = [
 // Handle form submissions in the action
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  
+
   const formDataObj: any = {};
   formData.forEach((value, key) => {
     // If the key already exists, it means it's an array
@@ -58,7 +63,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       formDataObj[key] = value;
     }
   });
-  
+
   const { _action, orderId, ...newAddress } = formDataObj;
 
   switch (_action) {
@@ -74,25 +79,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
     case SELECT_ADDRESS_ACTION:
       await updateCartAddress({ orderId: orderId, address: newAddress });
-      
+
       console.log("select ", formData.get("addressId"));
-      
+
       return json({
         success: true,
         message: "Address added successfully",
         data: newAddress,
       });
     case DELETE_ADDRESS_ACTION:
-      await deleteAddress(newAddress["_id"])
-      
+      await deleteAddress(newAddress["_id"]);
+
       console.log("delete", formData.get("addressId"));
-      
+
       return json({
         success: true,
         message: "Address added successfully",
         data: newAddress,
       });
-    default: 
+    default:
       return json({ message: "Unknown action" });
   }
 };
@@ -103,12 +108,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   //  Todo Fetch address and address regions here
   const user = session.get(USER_SESSION_KEY);
-  
+
   const [addresses, regions] = await Promise.all([
     getAddressesByEmail(user["email"]),
     getAddressRegions(),
   ]);
-    
+
   return json({ addresses, regions });
 };
 
@@ -158,7 +163,7 @@ const ShippingDetails = () => {
 
   const handleSelect = (address: IAddress) => {
     fetcher.submit(
-      { 
+      {
         _action: SELECT_ADDRESS_ACTION,
         orderId: cart._id.toString(),
         //...address
@@ -169,9 +174,9 @@ const ShippingDetails = () => {
 
   const handleDelete = (id: mongoose.Types.ObjectId) => {
     fetcher.submit(
-      { 
+      {
         _action: DELETE_ADDRESS_ACTION,
-        id:id.toString()
+        id: id.toString(),
       },
       { method: "post" }
     );
@@ -191,28 +196,29 @@ const ShippingDetails = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {addresses && addresses.map((address: any) =>
-        editingAddressId === address._id ? (
-          <AddressForm
-            key={address._id}
-            address={address}
-            regions={regions as IAddressRegion[]}
-            action={EDIT_ADDRESS_ACTION}
-            onCancel={() => toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM)}
-          />
-        ) : (
-          <AddressItem
-            key={address._id}
-            address={address}
-            selected={cart.address._id.toString()}
-            onEdit={() =>
-              toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
-            }
-            onSelect={()=>handleSelect(address)}
-            onDelete={()=>handleDelete(address._id)}
-          />
-        )
-      )}
+      {addresses &&
+        addresses.map((address: any) =>
+          editingAddressId === address._id ? (
+            <AddressForm
+              key={address._id}
+              address={address}
+              regions={regions as IAddressRegion[]}
+              action={EDIT_ADDRESS_ACTION}
+              onCancel={() => toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM)}
+            />
+          ) : (
+            <AddressItem
+              key={address._id}
+              address={address}
+              selected={cart.address._id.toString()}
+              onEdit={() =>
+                toggleFormVisibility(SHOW_EDIT_ADDRESS_FORM, address._id)
+              }
+              onSelect={() => handleSelect(address)}
+              onDelete={() => handleDelete(address._id)}
+            />
+          )
+        )}
       {!showForm && (
         <button
           onClick={() => toggleFormVisibility(SHOW_ADDRESS_FORM, "true")}

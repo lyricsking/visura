@@ -1,9 +1,6 @@
 export async function getSupplements() {}
-import {
-  connectToDatabase,
-  disconnectDatabase,
-} from "~/Shared/database/db.server.js";
-import type {  ISupplementModel } from "./supplement.model";
+import { connectToDatabase, disconnectDatabase } from "~/database/db.server.js";
+import type { ISupplementModel } from "./supplement.model";
 import Supplement from "./supplement.model";
 
 export const findSupplement = async (

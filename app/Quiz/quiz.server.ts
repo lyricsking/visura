@@ -5,7 +5,7 @@ import { Gender, type ISupplement } from "~/Supplement/supplement.type";
 import { Answers } from "./quiz.type";
 import { findSupplement } from "~/Supplement/supplement.server";
 import type { ISupplementModel } from "~/Supplement/supplement.model";
-import { getNanoid } from "~/Shared/utils";
+import { getNanoid } from "~/utils";
 import { IItem } from "~/Order/type/order.type";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
 
@@ -43,7 +43,7 @@ export async function createCart({
       quantity: quantity,
       price: supplement.price,
       total: supplement.price * quantity,
-      purchaseMode: "monthly"
+      purchaseMode: "monthly",
     };
   });
 

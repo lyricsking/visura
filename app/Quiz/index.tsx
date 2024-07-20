@@ -13,16 +13,12 @@ import {
   Link,
 } from "@remix-run/react";
 
-import Button from "~/Shared/components/button";
+import Button from "~/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { Progress } from "~/Shared/components/progress";
-import {
-  commitSession,
-  getSession,
-  USER_SESSION_KEY,
-} from "~/Shared/utils/session";
+import { Progress } from "~/components/progress";
+import { commitSession, getSession, USER_SESSION_KEY } from "~/utils/session";
 import { filterQuestions, questions } from "./quiz.utils";
-import { getNanoid } from "~/Shared/utils";
+import { getNanoid } from "~/utils";
 import { Question } from "./quiz.type";
 import * as lo from "lodash";
 import TextInputForm from "./components/InputTextForm";
@@ -31,7 +27,7 @@ import CheckboxGroupForm from "./components/CheckboxGroupForm";
 import RadioGroupForm from "./components/RadioGroupForm";
 import { ISupplementModel } from "~/Supplement/supplement.model";
 import { createCart, recommendSupplements } from "./quiz.server";
-import Loading from "~/Shared/components/loading";
+import Loading from "~/components/loading";
 
 export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";
@@ -64,7 +60,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           email: answers["email"],
           supplements,
         };
-        
+
         console.log("params", params);
 
         await createCart(params);
@@ -73,7 +69,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           name: params.name,
           email: params.email,
         });
-        
+
         //  Remove quiz session data, as we no longer need it.
         //session.unset(GIDS_MAP_KEY);
         //session.unset(ANSWER_KEY);

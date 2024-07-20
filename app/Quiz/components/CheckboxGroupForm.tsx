@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { CheckboxGroupFormType } from "../quiz.type";
-import { cn } from "~/Shared/utils";
-import { Input } from "~/Shared/components/input";
-import Button from "~/Shared/components/button";
+import { cn } from "~/utils";
+import { Input } from "~/components/input";
+import Button from "~/components/button";
 
 const CheckboxGroupForm = ({
   disabled,

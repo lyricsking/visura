@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
+import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
 import { IItem, IOrder } from "../type/order.type";
 import { Order, type OrderModel } from "../model/order.model";
 import { Discount } from "../model/discount.model";
@@ -14,7 +14,7 @@ import { AddressModel } from "../model/address.model";
  */
 export const getCartByEmailId = async (
   emailId: string
-): Promise<IOrder| null > => {
+): Promise<IOrder | null> => {
   try {
     await connectToDatabase();
     const cart = await Order.findOne({
@@ -68,7 +68,7 @@ export const addItemToCart = async (
 ): Promise<void> => {
   try {
     await connectToDatabase();
-    
+
     await Order.findOneAndUpdate(
       { userId, status: "cart" },
       {
@@ -82,27 +82,36 @@ export const addItemToCart = async (
   } catch (err) {
     console.error("Error adding item to cart:", err);
   } finally {
-    await disconnectDatabase()
+    await disconnectDatabase();
   }
 };
 
-export const applyDiscount = async ({ orderId,code}:{ orderId:any, code:any }): Promise<void> => {
+export const applyDiscount = async ({
+  orderId,
+  code,
+}: {
+  orderId: any;
+  code: any;
+}): Promise<void> => {
   try {
     await connectToDatabase();
-    
-    const discount = await Discount.findOne({code});
-    
-    if(!discount) return;
-    
-    await Order.updateOne({ _id: orderId, status: "cart"}, {
-      $set: { discount: {type:discount.type, value:discount.value} }
-    });
+
+    const discount = await Discount.findOne({ code });
+
+    if (!discount) return;
+
+    await Order.updateOne(
+      { _id: orderId, status: "cart" },
+      {
+        $set: { discount: { type: discount.type, value: discount.value } },
+      }
+    );
   } catch (err) {
     console.error("Error applying discount on order", err);
   } finally {
     await disconnectDatabase();
   }
-}
+};
 
 export const updateCartItem = async (
   email: string,
@@ -112,18 +121,18 @@ export const updateCartItem = async (
 ): Promise<void> => {
   try {
     await connectToDatabase();
-    
+
     await Order.findOneAndUpdate(
       { email, status: "cart", "items.productId": productId },
       {
         $set: {
           ...(quantity && { "items.$.quantity": quantity }),
           ...(purchaseMode && { "items.$.purchaseMode": purchaseMode }),
-          updatedAt: new Date() 
+          updatedAt: new Date(),
         },
       },
       { new: true }
-    ).exec()
+    ).exec();
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
@@ -163,9 +172,7 @@ export const updateCartAddress = async ({
   }
 };
 
-export const deleteCart = async (
-  email: string,
-): Promise<void> => {
+export const deleteCart = async (email: string): Promise<void> => {
   try {
     await connectToDatabase();
 
@@ -178,23 +185,26 @@ export const deleteCart = async (
   }
 };
 
-export const updatePaymentMethod = async (
-  {orderId, paymentMethod}:{orderId: string,
-  paymentMethod: string,
+export const updatePaymentMethod = async ({
+  orderId,
+  paymentMethod,
+}: {
+  orderId: string;
+  paymentMethod: string;
 }): Promise<void> => {
   try {
     await connectToDatabase();
-    
+
     await Order.findOneAndUpdate(
       { _id: orderId, status: "cart" },
       {
         $set: {
           "paymentDetails.method": paymentMethod,
-          updatedAt: new Date() 
+          updatedAt: new Date(),
         },
       },
       { new: true }
-    ).exec()
+    ).exec();
     console.log("Order payment updated successfully.");
   } catch (err) {
     console.error("Error updating order payment method:", err);

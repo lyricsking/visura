@@ -6,7 +6,7 @@ import {
   json,
 } from "@remix-run/node";
 import { Link, useLoaderData, useParams, useSubmit } from "@remix-run/react";
-import { IPhoneMockup, TabletMockup } from "~/Shared/components/mockup";
+import { IPhoneMockup, TabletMockup } from "~/components/mockup";
 import { getEditPageSession, getPageFromServer } from "./pages.server";
 import { EditPageSidebar } from "./components/edit.page.sidebar";
 import { BlockProps } from "./components/block";

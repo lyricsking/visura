@@ -6,7 +6,7 @@ import {
   FeatureItemType,
   Features,
   FeaturesParams,
-} from "~/Shared/components/ui/features";
+} from "~/components/ui/features";
 import { findFontByName } from "~/Shared/data/fonts";
 
 const feature: FeaturesParams = {

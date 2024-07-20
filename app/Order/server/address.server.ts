@@ -1,5 +1,10 @@
-import { connectToDatabase, disconnectDatabase } from "~/Shared/database/db.server";
-import { Address, AddressRegion, AddressRegionModel, type AddressModel } from "../model/address.model";
+import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
+import {
+  Address,
+  AddressRegion,
+  AddressRegionModel,
+  type AddressModel,
+} from "../model/address.model";
 import { HydratedDocument, Types } from "mongoose";
 import { OrderModel } from "../model/order.model";
 import { IAddress, IAddressRegion } from "../type/address.type";
@@ -33,17 +38,17 @@ export const createOrUpdateAddress = async ({
 export const getAddress = async (id: string) => {
   try {
     await connectToDatabase();
-    
+
     const address = await Address.findById(id).exec();
     console.log("Fetched address success: ", address);
-    
+
     return address;
   } catch (e) {
-    console.log("Failed to fetch address:", e)
+    console.log("Failed to fetch address:", e);
   } finally {
     await disconnectDatabase();
   }
-}
+};
 
 export const getAddressesByEmail = async (
   email: string
@@ -63,7 +68,9 @@ export const getAddressesByEmail = async (
   }
 };
 
-export const getAddressRegions = async (): Promise<HydratedDocument<IAddressRegion>[]> => {
+export const getAddressRegions = async (): Promise<
+  HydratedDocument<IAddressRegion>[]
+> => {
   try {
     await connectToDatabase();
 
@@ -80,4 +87,4 @@ export const getAddressRegions = async (): Promise<HydratedDocument<IAddressRegi
   }
 };
 
-export const deleteAddress = async (id: Types.ObjectId) => {  }
+export const deleteAddress = async (id: Types.ObjectId) => {};

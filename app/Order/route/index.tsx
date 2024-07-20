@@ -4,7 +4,7 @@ import {
   useNavigate,
   useOutletContext,
 } from "@remix-run/react";
-import { getSession, USER_SESSION_KEY } from "~/Shared/utils/session";
+import { getSession, USER_SESSION_KEY } from "~/utils/session";
 import { deleteCart, updateCartItem } from "../server/cart.server";
 import { IOrder } from "../type/order.type";
 import CartItem from "../components/cart-item";

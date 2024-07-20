@@ -18,9 +18,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
-import Button from "~/Shared/components/button";
-import { Checkbox } from "~/Shared/components/checkbox";
-import { DataTable, DataTablePagination } from "~/Shared/components/data.table";
+import Button from "~/components/button";
+import { Checkbox } from "~/components/checkbox";
+import { DataTable, DataTablePagination } from "~/components/data.table";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -29,13 +29,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/Shared/components/dropdown.menu";
-import { Input } from "~/Shared/components/input";
-import {
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "~/Shared/components/sheet";
+} from "~/components/dropdown.menu";
+import { Input } from "~/components/input";
+import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 
 export function loader(args: LoaderFunctionArgs) {
   const data: Payment[] = [

@@ -1,10 +1,6 @@
 import { useFetcher, useParams, useSubmit } from "@remix-run/react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import {
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "~/Shared/components/sheet";
+import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 import { BlockButtons } from "./blocks.button";
 import { BlockProps } from "./block";
 import { DashboardSidebarProps } from "~/dashboard/layout";

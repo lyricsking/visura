@@ -4,10 +4,10 @@ import {
   PageLayoutContent,
   PageLayoutHeader,
   PageLayoutHeaderItem,
-} from "~/Shared/components/ui/page.layout";
+} from "~/components/ui/page.layout";
 import pkg from "~/../package.json";
 
-import Button from "~/Shared/components/button";
+import Button from "~/components/button";
 
 export default function Layout() {
   return (

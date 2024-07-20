@@ -1,4 +1,4 @@
-import Button from "~/Shared/components/button";
+import Button from "~/components/button";
 import { BlockProps, TagEditors } from "./block";
 import { customAlphabet } from "nanoid";
 

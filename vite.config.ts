@@ -31,9 +31,9 @@ export default defineConfig({
             route("shipping", "Order/route/shipping.tsx");
             route("payment", "Order/route/payment.tsx");
           });
-          route("dashboard", "Dashboard/layout.tsx", () => {
+          route("dashboard", "Dashboard/routes/layout.tsx", () => {
             route("", "Dashboard/routes/overview.tsx", { index: true });
-            route("settings", "Dashboard/settings.tsx");
+            route("settings", "Dashboard/roures/settings.tsx");
           });
           route("theme/update", "Shared/theme/theme.action.tsx");
           route("quiz", "Quiz/layout.tsx", () => {

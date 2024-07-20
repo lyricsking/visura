@@ -1,4 +1,4 @@
-import Button from "~/Shared/components/button";
+import Button from "~/components/button";
 import React, { useState } from "react";
 import Editor from "./editor";
 import {
@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "~/Shared/components/sheet";
+} from "~/components/sheet";
 import { Link } from "./link";
 import { Text } from "./text";
 import { Section } from "./section";
