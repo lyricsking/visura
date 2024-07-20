@@ -6,24 +6,49 @@ export const loader = async ({ request }) => {
     name: "Jamiu Adeniyi",
     avatar: "/illustrations/avatar.svg",
     subscriptionStatus: "Pending",
-    nextDelivery: "",
-    healthTips: "",
-    notifications: "",
+    nextDelivery: "31th July, 2024",
+    healthTips: "Make hay before sundown",
+    notifications: "You have 3 notifications",
     recentActivities: [
-      "Order delivery"
+      "Order delivery",
+      "Order Shipped",
+      "Order Processed",
+      "Order Received"
     ],
     recommendedProducts:[
       {
         name: "Product 1",
-        description: "Product descritpion Lorem so si huio faciid Mopery. Ipsy duo para kate bouyth Lala koko fenfe ni agabti yawo de lati sabo ngari  lo wa jeun ta."
+        description: "Product descritpion in lorem so si huio faciid Mopery. Ipsy duo para kate bouyth Lala koko fenfe ni agabti yawo de lati sabo ngari lo wa jeun ta."
       }
     ]
   };
   return json({ user });
 };
 
+export const handle = {
+  pageName: "Overview",
+  breadcrumb: () => <span>Overview</span>
+};
+
 export default function Dashboard() {
   const { user } = useLoaderData();
+  
+  const { sidebarMenuRef }: { sidebarMenuRef: any } = useOutletContext();
+  
+  useEffect(() => {
+    if (sidebarMenuRef) {
+      sidebarMenuRef.current = () => (
+        <SheetHeader>
+          <SheetTitle>
+            Are you absolutely sure?
+          </SheetTitle>
+          <SheetDescription>
+            This is from handle func
+          </SheetDescription>
+        </SheetHeader>
+      )
+    }
+  }, [sidebarMenuRef]);
 
   return (
     <div className="min-h-screen bg-gray-100">
