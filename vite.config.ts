@@ -26,19 +26,25 @@ export default defineConfig({
             route("google/callback", "Auth/route/google-callback.tsx");
             route("google/login", "Auth/route/google-login.tsx");
           });
-          route("cart", "Order/route/layout.tsx", () => {
-            route("", "Order/route/index.tsx", { index: true });
-            route("shipping", "Order/route/shipping.tsx");
-            route("payment", "Order/route/payment.tsx");
+          route("cart", "Order/routes/layout.tsx", () => {
+            route("", "Order/routes/index.tsx", { index: true });
+            route("orders", "Order/routes/shipping.tsx");
+            route("payment", "Order/routes/payment.tsx");
           });
           route("dashboard", "Dashboard/routes/layout.tsx", () => {
             route("", "Dashboard/routes/overview.tsx", { index: true });
+            route("orders", "Dashboard/routes/orders.tsx");
+            route("profile", "Dashboard/routes/orders.tsx");
             route("settings", "Dashboard/routes/settings.tsx");
+            route("subscriptions", "Dashboard/routes/subscriptions.tsx");
           });
-          route("theme/update", "Theme/theme.action.tsx");
+          route("support", "Support/routes/layout.tsx", () => {
+            route("", "Support/routes/index.tsx", { index: true });
+          });
           route("quiz", "Quiz/layout.tsx", () => {
             route("", "Quiz/index.tsx", { index: true });
           });
+          route("theme/update", "Theme/theme.action.tsx");
         });
       },
     }),
