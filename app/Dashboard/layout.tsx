@@ -31,7 +31,26 @@ export const handle = {
 
 export default function Layout() {
   const matches = useMatches();
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const sidebarMenuRef = useRef<any>(null);
+  const getSidebarMenu = () => {
+    if (sidebarMenuRef.current) {
+      return sidebarMenuRef.current();
+    }
+    return null;
+  };
 
+  const isSidebarOpen = searchParams.get('sidebar') === 'open';
+  const toggleSidebar = () => {
+    if (isSidebarOpen) {
+      searchParams.delete('sidebar');
+    } else {
+      searchParams.set('sidebar', 'open');
+    }
+    setSearchParams(searchParams, { replace: true });
+  };
+  
   const breadcrumbs: any[] = [];
   matches.forEach((match: any) => {
     if (match && match.handle && match.handle.breadcrumb) {
@@ -59,7 +78,7 @@ export default function Layout() {
           spacing={"compact"}
           className="border-b border-s border-e"
         >
-          <DrawerMenu routes={[...matches].reverse()} />
+          <DrawerMenu isOpen={isSidebarOpen} children={getSidebarMenu()} />
           <div className="w-full md:hidden">
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
@@ -72,36 +91,27 @@ export default function Layout() {
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet context={{ appname: pkg.name }} />
+        <Outlet context={{ appname: pkg.name, sidebarMenuRef }} />
       </PageLayoutContent>
     </PageLayout>
   );
 }
 
-export type DashboardSidebarProps = {
-  route: any;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+export type DrawerMenuProps = {
+  children?: React.ReactNode;
+  isOpen: boolean;
 };
 
-function DrawerMenu({ routes }: { routes: any[] }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const route = routes.find(
-    (route) => route.handle && route.handle.sidebarContent
-  );
-
-  const params: DashboardSidebarProps = {
-    route,
-    setIsOpen,
-  };
-
+function DrawerMenu({ children, isOpen }: DrawerMenuProps) {
+  
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen}>
       <SheetTrigger>
         <Bars3Icon className="h-5 w-5" />
       </SheetTrigger>
       <SheetContent>
         {/* Handle func sidebar func call here */}
-        {route.handle.sidebarContent(params)}
+        { children }
       </SheetContent>
     </Sheet>
   );
