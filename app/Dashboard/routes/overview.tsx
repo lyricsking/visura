@@ -1,7 +1,7 @@
-import { Link, json, useLoaderData, } from 'remix';
-import { getUserData } from '~/utils/userUtils';
+import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = {
     name: "Jamiu Adeniyi",
     avatar: "/illustrations/avatar.svg",
@@ -120,7 +120,7 @@ export default function Dashboard() {
             <section className="mt-6 bg-white shadow rounded-lg p-6">
               <h2 className="text-2xl font-semibold text-gray-900">Recent Activity</h2>
               <ul className="mt-4 space-y-4">
-                {user.recentActivities.map((activity, index) => (
+                {user.recentActivities.map((activity: string, index: number) => (
                   <li key={index} className="text-gray-600">{activity}</li>
                 ))}
               </ul>
