@@ -3,7 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { IItem, OrderPurchaseMode } from "../type/order.type";
 import { CART_FETCHER_KEY } from "../type/cart.type";
-import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../route";
+import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../routes";
 
 interface CartItemProps {
   item: IItem;

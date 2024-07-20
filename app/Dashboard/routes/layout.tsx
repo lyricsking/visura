@@ -6,7 +6,6 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import pkg from "../../../package.json";
-import AccountMenuButton from "~/components/ui/account.menu.button";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +14,7 @@ import {
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
 import { useRef } from "react";
+import AccountMenuButton from "../components/account-menu-button";
 
 export const handle = {
   breadcrumb: () => <Link to="/dashboard">Dashboard</Link>

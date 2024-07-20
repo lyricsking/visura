@@ -1,30 +1,38 @@
-// routes/profile.tsx
-import { useLoaderData, Form, redirect } from 'remix';
-import { getUserData, updateUserData, changeUserPassword, deleteUserAccount } from '~/utils/userUtils';
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ request }) => {
-  const user = await getUserData(request);
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = {
+    id: "",
+    name: "",
+    email: "",
+  }
   return user;
 };
 
-export const action = async ({ request }) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const actionType = formData.get('_action');
   
   if (actionType === 'updateProfile') {
-    await updateUserData(formData);
+    //await updateUserData(formData);
   } else if (actionType === 'changePassword') {
-    await changeUserPassword(formData);
+    //await changeUserPassword(formData);
   } else if (actionType === 'deleteAccount') {
-    await deleteUserAccount(formData.get('userId'));
+    //await deleteUserAccount(formData.get('userId'));
     return redirect('/logout');
   }
   
   return redirect('/profile');
 };
 
+export const handle = {
+  pageName: "Overview",
+  breadcrumb: () => <span>Overview</span>,
+};
+
 export default function Profile() {
-  const user = useLoaderData();
+  const user = useLoaderData<typeof loader>();
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

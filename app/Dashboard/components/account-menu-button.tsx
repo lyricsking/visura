@@ -1,5 +1,4 @@
 import { UserCircleIcon } from "@heroicons/react/20/solid";
-import { ButtonProps } from "../button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +6,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown.menu";
+} from "~/components/dropdown.menu";
+import { ButtonProps } from "~/components/button";
 
 type Props = ButtonProps;
 

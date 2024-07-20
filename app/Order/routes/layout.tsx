@@ -12,9 +12,9 @@ import { CART_FETCHER_KEY } from "./../type/cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Button from "~/components/button";
 import { getSession, USER_SESSION_KEY } from "~/utils/session";
-import { IOrderModel } from "~/Order/model/order.model";
 import { useRef } from "react";
 import { applyDiscount } from "../server/cart.server";
+import { IOrder } from "../type/order.type";
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
@@ -35,7 +35,7 @@ export const action = async ({ request }: any) => {
 };
 
 type LoaderDataType = {
-  cart: IOrderModel | null;
+  cart: IOrder | null;
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -44,7 +44,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = session.get(USER_SESSION_KEY);
   if (!user) return redirect("/");
 
-  const cart: IOrderModel | null = await getCartByEmailId(user["email"]);
+  const cart: IOrder | null = await getCartByEmailId(user["email"]);
   return json<LoaderDataType>({ cart });
 };
 
@@ -101,7 +101,7 @@ export default function Layout() {
             <label htmlFor="orderId" className="sr-only">
               Order Id
             </label>
-            <input type="hidden" id="orderId" name="orderId" value={cart?.id} />
+            <input type="hidden" id="orderId" name="orderId" value={cart?._id.toString()} />
 
             <label
               htmlFor="discountCode"

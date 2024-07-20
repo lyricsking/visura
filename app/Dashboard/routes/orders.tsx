@@ -1,14 +1,25 @@
-// routes/orders.tsx
-import { useLoaderData } from 'remix';
-import { getUserOrders } from '~/utils/orderUtils';
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ request }) => {
-  const orders = await getUserOrders(request);
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const orders = [
+    {
+      id: "",
+      date: Date.now(),
+      total: 5999.99,
+      status: "pending"
+    }
+  ]
   return { orders };
 };
 
+export const handle = {
+  pageName: "Overview",
+  breadcrumb: () => <span>Overview</span>,
+};
+
 export default function Orders() {
-  const { orders } = useLoaderData();
+  const { orders } = useLoaderData<typeof loader>();
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
