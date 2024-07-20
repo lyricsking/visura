@@ -33,9 +33,9 @@ export default defineConfig({
           });
           route("dashboard", "Dashboard/routes/layout.tsx", () => {
             route("", "Dashboard/routes/overview.tsx", { index: true });
-            route("settings", "Dashboard/roures/settings.tsx");
+            route("settings", "Dashboard/routes/settings.tsx");
           });
-          route("theme/update", "Shared/theme/theme.action.tsx");
+          route("theme/update", "Theme/theme.action.tsx");
           route("quiz", "Quiz/layout.tsx", () => {
             route("", "Quiz/index.tsx", { index: true });
           });

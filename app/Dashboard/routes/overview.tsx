@@ -1,5 +1,7 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
+import { useEffect } from "react";
+import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = {
@@ -27,11 +29,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const handle = {
   pageName: "Overview",
-  breadcrumb: () => <span>Overview</span>
+  breadcrumb: () => <span>Overview</span>,
 };
 
 export default function Dashboard() {
-  const { user } = useLoaderData();
+  const { user } = useLoaderData<typeof loader>();
   
   const { sidebarMenuRef }: { sidebarMenuRef: any } = useOutletContext();
   
@@ -39,38 +41,15 @@ export default function Dashboard() {
     if (sidebarMenuRef) {
       sidebarMenuRef.current = () => (
         <SheetHeader>
-          <SheetTitle>
-            Are you absolutely sure?
-          </SheetTitle>
-          <SheetDescription>
-            This is from handle func
-          </SheetDescription>
+          <SheetTitle>Are you absolutely sure?</SheetTitle>
+          <SheetDescription>This is from handle func</SheetDescription>
         </SheetHeader>
-      )
+      );
     }
   }, [sidebarMenuRef]);
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-700">{user.name}</span>
-            <img
-              className="h-8 w-8 rounded-full"
-              src={user.avatar}
-              alt="User avatar"
-            />
-            <nav>
-              <Link to="/profile" className="text-gray-700">Profile</Link>
-              <Link to="/logout" className="text-gray-700 ml-4">Logout</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="py-10">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

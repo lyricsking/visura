@@ -1,4 +1,4 @@
-import { Link, Outlet, UIMatch, useMatches } from "@remix-run/react";
+import { Link, Outlet, UIMatch, useLocation, useMatches, useSearchParams } from "@remix-run/react";
 import {
   PageLayout,
   PageLayoutContent,
@@ -10,27 +10,41 @@ import AccountMenuButton from "~/components/ui/account.menu.button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useRef } from "react";
 
 export const handle = {
-  breadcrumb: () => <Link to="/dashboard">Dashboard</Link>,
-  sidebarContent: () => (
-    <SheetHeader>
-      <SheetTitle>Are you absolutely sure?</SheetTitle>
-      <SheetDescription>This is from layout.tsx handle func</SheetDescription>
-    </SheetHeader>
-  ),
+  breadcrumb: () => <Link to="/dashboard">Dashboard</Link>
 };
 
 export default function Layout() {
   const matches = useMatches();
+  
+  const currentRoute: any = matches.at(-1);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isSidebarOpen = searchParams.get("sidebar") === "open";
+  const toggleSidebar = () => {
+  
+
+    if (isSidebarOpen) {
+      searchParams.delete("sidebar");
+    } else {
+      searchParams.set("sidebar", "open");
+    }
+    setSearchParams(searchParams, { replace: true });
+  };
+ 
+  const sidebarMenuRef = useRef<any>(null);
+  const getSidebarMenu = () => {
+    if (sidebarMenuRef.current) {
+      return sidebarMenuRef.current();
+    }
+    return null;
+  };
 
   const breadcrumbs: any[] = [];
   matches.forEach((match: any) => {
@@ -46,7 +60,7 @@ export default function Layout() {
 
   return (
     <PageLayout>
-      <PageLayoutHeader>
+      <PageLayoutHeader position={"sticky"} className="bg-white" >
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace className="w-full">
             <h1 className="text-[28px] font-bold text-center tracking-tight">
@@ -59,7 +73,11 @@ export default function Layout() {
           spacing={"compact"}
           className="border-b border-s border-e"
         >
-          <DrawerMenu routes={[...matches].reverse()} />
+          <DrawerMenu
+            children={getSidebarMenu()}
+            isOpen={isSidebarOpen}
+            setIsOpen={toggleSidebar}
+          />
           <div className="w-full md:hidden">
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
@@ -72,28 +90,23 @@ export default function Layout() {
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet context={{ appname: pkg.name }} />
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">{currentRoute.handle.pageName}</h1> 
+        </div>
+        <Outlet context={{ appname: pkg.name, sidebarMenuRef }} />
       </PageLayoutContent>
     </PageLayout>
   );
 }
 
-export type DashboardSidebarProps = {
-  route: any;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+export type DrawerMenuProps = {
+  children?: React.ReactNode;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean)=>void
 };
 
-function DrawerMenu({ routes }: { routes: any[] }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const route = routes.find(
-    (route) => route.handle && route.handle.sidebarContent
-  );
-
-  const params: DashboardSidebarProps = {
-    route,
-    setIsOpen,
-  };
-
+function DrawerMenu({ children, isOpen, setIsOpen }: DrawerMenuProps) {
+  
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger>
@@ -101,7 +114,7 @@ function DrawerMenu({ routes }: { routes: any[] }) {
       </SheetTrigger>
       <SheetContent>
         {/* Handle func sidebar func call here */}
-        {route.handle.sidebarContent(params)}
+        {children}
       </SheetContent>
     </Sheet>
   );

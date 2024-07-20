@@ -1,4 +1,4 @@
-import { EllipsisVerticalIcon } from "@heroicons/react/16/solid";
+import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { ButtonProps } from "../button";
 import {
   DropdownMenu,
@@ -14,10 +14,10 @@ type Props = ButtonProps;
 export default function AccountMenuButton(props: Props) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <EllipsisVerticalIcon className={`h-5 w-5 ${props.className}`} />
+      <DropdownMenuTrigger className="p-2 bg-gray-200 rounded-full">
+        <UserCircleIcon className="h-5 w-5" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="bg-white">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
