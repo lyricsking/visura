@@ -22,6 +22,8 @@ const supplementSchema: Schema = new Schema<ISupplement, SupplementModel>({
   },
 });
 
-export const Supplement: SupplementModel =
+const Supplement: SupplementModel =
   mongoose.models.Supplement ||
   mongoose.model<ISupplement, SupplementModel>("Supplement", supplementSchema);
+
+export default Supplement;

@@ -9,11 +9,14 @@ import pkg from "../../../package.json";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import AccountMenuButton from "../components/account-menu-button";
 
 export const handle = {
@@ -28,8 +31,6 @@ export default function Layout() {
   const [searchParams, setSearchParams] = useSearchParams();
   const isSidebarOpen = searchParams.get("sidebar") === "open";
   const toggleSidebar = () => {
-  
-
     if (isSidebarOpen) {
       searchParams.delete("sidebar");
     } else {
@@ -57,6 +58,18 @@ export default function Layout() {
       }
     }
   });
+
+  useEffect(() => {
+    if (sidebarMenuRef) {
+      sidebarMenuRef.current = () => (
+        <SheetHeader>
+          <SheetTitle>Are you absolutely sure?</SheetTitle>
+          <SheetDescription>This is from parent</SheetDescription>
+          
+        </SheetHeader>
+      );
+    }
+  }, [sidebarMenuRef]);
 
   return (
     <PageLayout>

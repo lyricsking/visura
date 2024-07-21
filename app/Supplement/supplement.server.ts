@@ -1,11 +1,10 @@
 export async function getSupplements() {}
 import { connectToDatabase, disconnectDatabase } from "~/database/db.server.js";
-import type { ISupplementModel } from "./supplement.model";
-import Supplement from "./supplement.model";
+import Supplement, { SupplementModel } from "./supplement.model";
 
 export const findSupplement = async (
   query: Record<string, any>
-): Promise<ISupplementModel[]> => {
+): Promise<SupplementModel[]> => {
   try {
     await connectToDatabase();
 
