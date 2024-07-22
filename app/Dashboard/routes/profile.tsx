@@ -1,31 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = {
-    id: "",
-    name: "",
-    email: "",
-  }
-  return user;
-};
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const actionType = formData.get('_action');
-  
-  if (actionType === 'updateProfile') {
-    //await updateUserData(formData);
-  } else if (actionType === 'changePassword') {
-    //await changeUserPassword(formData);
-  } else if (actionType === 'deleteAccount') {
-    //await deleteUserAccount(formData.get('userId'));
-    return redirect('/logout');
-  }
-  
-  return redirect('/profile');
-};
-
 export const handle = {
   pageName: "Overview",
   breadcrumb: () => <span>Overview</span>,
@@ -108,3 +83,27 @@ className = "mt-1 p-2 border border-gray-300 rounded-md w-full" />
           </div> </div> </Form> </div>
 );
 }
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = {
+    id: "",
+    name: "",
+    email: "",
+  }
+  return user;
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const actionType = formData.get('_action');
+  
+  if (actionType === 'updateProfile') {
+    //await updateUserData(formData);
+  } else if (actionType === 'changePassword') {
+    //await changeUserPassword(formData);
+  } else if (actionType === 'deleteAccount') {
+    //await deleteUserAccount(formData.get('userId'));
+    return redirect('/logout');
+  }
+  
+  return redirect('/profile');
+};

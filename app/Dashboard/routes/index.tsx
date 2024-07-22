@@ -3,51 +3,61 @@ import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import { useEffect } from "react";
 import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = {
-    name: "Jamiu Adeniyi",
-    avatar: "/illustrations/avatar.svg",
-    subscriptionStatus: "Pending",
-    nextDelivery: "31th July, 2024",
-    healthTips: "Make hay before sundown",
-    notifications: "You have 3 notifications",
-    recentActivities: [
-      "Order delivery",
-      "Order Shipped",
-      "Order Processed",
-      "Order Received"
-    ],
-    recommendedProducts:[
-      {
-        name: "Product 1",
-        description: "Product descritpion in lorem so si huio faciid Mopery. Ipsy duo para kate bouyth Lala koko fenfe ni agabti yawo de lati sabo ngari lo wa jeun ta."
-      }
-    ]
-  };
-  return json({ user });
-};
-
 export const handle = {
   pageName: "Overview",
-  breadcrumb: () => <span>Overview</span>,
+  breadcrumb: {
+    id: "overview",
+    label: "Overview"
+  }
 };
-
+  
 export default function Dashboard() {
   const { user } = useLoaderData<typeof loader>();
   
-  const { sidebarMenuRef }: { sidebarMenuRef: any } = useOutletContext();
+  const { sidebarMenuRef }: any = useOutletContext();
   
   useEffect(() => {
-    if (sidebarMenuRef) {
-      sidebarMenuRef.current = () => (
-        <SheetHeader>
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
-          <SheetDescription>This is from handle func</SheetDescription>
-        </SheetHeader>
-      );
+    if(sidebarMenuRef) {
+      sidebarMenuRef.current = [
+      //{
+        //id: "profile",
+        //label: "Profile",
+        //url: "/dashboard/settings/profile"
+      //},
+        {
+          id: "orders",
+          label: "Orders",
+          url: "/dashboard/orders"
+        },
+        {
+          id: "subscriptions",
+          label: "Subscription",
+          url: "/dashboard/subscriptions"
+        },
+        {
+          id: "invoices",
+          label: "Invoices",
+          url: "/dashboard/invoices"
+        },
+        {
+          id: "transaction",
+          label: "Transactions",
+          url: "/dashboard/transactions"
+        },
+        {
+          id: "settings",
+          label: "Settings",
+          url: "/dashboard/settings"
+        },
+        {
+          id: "support",
+          label: "Support Center",
+          url: "/support"
+        }
+      ]
     }
   }, [sidebarMenuRef]);
-
+  
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Main Content */}
@@ -65,20 +75,30 @@ export default function Dashboard() {
             {/* Key Metrics and Notifications */}
             <section className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white shadow rounded-lg p-6">
-                <h3 className="text-lg font-medium text-gray-900">Subscription Status</h3>
-                <p className="mt-2 text-gray-600">{user.subscriptionStatus}</p>
+                <h3 className="text-lg font-medium text-gray-900">
+                  Subscription Status
+                </h3>
+                <p className="mt-2 text-gray-600">
+                  {user.subscriptionStatus}
+                </p>
               </div>
               <div className="bg-white shadow rounded-lg p-6">
                 <h3 className="text-lg font-medium text-gray-900">Next Delivery</h3>
-                <p className="mt-2 text-gray-600">{user.nextDelivery}</p>
+                <p className="mt-2 text-gray-600">
+                  {user.nextDelivery}
+                </p>
               </div>
               <div className="bg-white shadow rounded-lg p-6">
                 <h3 className="text-lg font-medium text-gray-900">Health Tips</h3>
-                <p className="mt-2 text-gray-600">{user.healthTips}</p>
+                <p className="mt-2 text-gray-600">
+                  {user.healthTips}
+                </p>
               </div>
               <div className="bg-white shadow rounded-lg p-6">
                 <h3 className="text-lg font-medium text-gray-900">Notifications</h3>
-                <p className="mt-2 text-gray-600">{user.notifications}</p>
+                <p className="mt-2 text-gray-600">
+                  {user.notifications}
+                </p>
               </div>
             </section>
 
@@ -100,7 +120,9 @@ export default function Dashboard() {
               <h2 className="text-2xl font-semibold text-gray-900">Recent Activity</h2>
               <ul className="mt-4 space-y-4">
                 {user.recentActivities.map((activity: string, index: number) => (
-                  <li key={index} className="text-gray-600">{activity}</li>
+                  <li key={index} className="text-gray-600">
+                    {activity}
+                  </li>
                 ))}
               </ul>
             </section>
@@ -135,3 +157,27 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = {
+    name: "Jamiu Adeniyi",
+    avatar: "/illustrations/avatar.svg",
+    subscriptionStatus: "Pending",
+    nextDelivery: "31th July, 2024",
+    healthTips: "Make hay before sundown",
+    notifications: "You have 3 notifications",
+    recentActivities: [
+      "Order delivery",
+      "Order Shipped",
+      "Order Processed",
+      "Order Received"
+    ],
+    recommendedProducts:[
+      {
+        name: "Product 1",
+        description: "Product descritpion in lorem so si huio faciid Mopery. Ipsy duo para kate bouyth Lala koko fenfe ni agabti yawo de lati sabo ngari lo wa jeun ta."
+      }
+    ]
+  };
+  return json({ user });
+};

@@ -1,42 +1,32 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const subscriptions = [
-    {
-      id: "748",
-      nextDelivery: "31st January, 2024",
-      status: "pending",
-      frequency: 4
-    }
-  ]
-  return { subscriptions };
-};
-
-export const action = async ({ request }:ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const actionType = formData.get('_action');
-  const subscriptionId = formData.get('subscriptionId');
-  
-  if (actionType === 'updateSubscription') {
-    //await updateUserSubscription(subscriptionId, formData);
-  } else if (actionType === 'pauseSubscription') {
-    //await pauseUserSubscription(subscriptionId);
-  } else if (actionType === 'cancelSubscription') {
-    //await cancelUserSubscription(subscriptionId);
-  }
-  
-  return redirect('/subscriptions');
-};
-
 export const handle = {
-  pageName: "Overview",
-  breadcrumb: () => <span>Overview</span>,
+  pageName: "Subscriptions",
+  breadcrumb: [
+    {
+      id: "subscriptions",
+      label: "Subscriptions"
+    }
+  ],
 };
 
 export default function Subscriptions() {
   const { subscriptions } = useLoaderData<typeof loader>();
 
+  const { sidebarMenuRef }: any = useOutletContext();
+  useEffect(() => {
+    if(sidebarMenuRef){
+      sidebarMenuRef.current= [
+        {
+          id: "pending",
+          label: "Pending",
+          url: "?status=pending"
+        }
+      ]
+    }
+  }, [sidebarMenuRef]);
+  
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-900">Subscriptions</h1>
@@ -75,3 +65,31 @@ export default function Subscriptions() {
     </div>
   );
 }
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const subscriptions = [
+    {
+      id: "748",
+      nextDelivery: "31st January, 2024",
+      status: "pending",
+      frequency: 4
+    }
+  ]
+  return { subscriptions };
+};
+
+export const action = async ({ request }:ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const actionType = formData.get('_action');
+  const subscriptionId = formData.get('subscriptionId');
+  
+  if (actionType === 'updateSubscription') {
+    //await updateUserSubscription(subscriptionId, formData);
+  } else if (actionType === 'pauseSubscription') {
+    //await pauseUserSubscription(subscriptionId);
+  } else if (actionType === 'cancelSubscription') {
+    //await cancelUserSubscription(subscriptionId);
+  }
+  
+  return redirect('/subscriptions');
+};

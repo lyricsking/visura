@@ -20,37 +20,29 @@ import { useEffect, useRef } from "react";
 import AccountMenuButton from "../components/account-menu-button";
 
 export const handle = {
-  breadcrumb: () => <Link to="/dashboard">Dashboard</Link>
+  breadcrumb: {
+    id: "dashboard",
+    label: "Dashboard",
+    path:"/dashboard"
+  }
 };
 
 export default function Layout() {
   const matches = useMatches();
-  
   const currentRoute: any = matches.at(-1);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isSidebarOpen = searchParams.get("sidebar") === "open";
-  const toggleSidebar = () => {
-    if (isSidebarOpen) {
-      searchParams.delete("sidebar");
-    } else {
-      searchParams.set("sidebar", "open");
-    }
-    setSearchParams(searchParams, { replace: true });
-  };
- 
   const sidebarMenuRef = useRef<any>(null);
   const getSidebarMenu = () => {
     if (sidebarMenuRef.current) {
-      return sidebarMenuRef.current();
+      return sidebarMenuRef.current;
     }
-    return null;
+    return [];
   };
 
   const breadcrumbs: any[] = [];
   matches.forEach((match: any) => {
     if (match && match.handle && match.handle.breadcrumb) {
-      const mBreadcrumbs = match.handle.breadcrumb();
+      const mBreadcrumbs = match.handle.breadcrumb;
       if (Array.isArray(mBreadcrumbs)) {
         breadcrumbs.push(...mBreadcrumbs);
       } else {
@@ -58,18 +50,6 @@ export default function Layout() {
       }
     }
   });
-
-  useEffect(() => {
-    if (sidebarMenuRef) {
-      sidebarMenuRef.current = () => (
-        <SheetHeader>
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
-          <SheetDescription>This is from parent</SheetDescription>
-          
-        </SheetHeader>
-      );
-    }
-  }, [sidebarMenuRef]);
 
   return (
     <PageLayout>
@@ -86,11 +66,7 @@ export default function Layout() {
           spacing={"compact"}
           className="border-b border-s border-e"
         >
-          <DrawerMenu
-            children={getSidebarMenu()}
-            isOpen={isSidebarOpen}
-            setIsOpen={toggleSidebar}
-          />
+          <DrawerMenu menus={getSidebarMenu()}  />
           <div className="w-full md:hidden">
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
@@ -112,22 +88,19 @@ export default function Layout() {
   );
 }
 
-export type DrawerMenuProps = {
-  children?: React.ReactNode;
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean)=>void
+type DrawerMenuProps = {
+  menus: SidebarContentProps;
 };
 
-function DrawerMenu({ children, isOpen, setIsOpen }: DrawerMenuProps) {
+function DrawerMenu({ menus }: DrawerMenuProps) {
   
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet>
       <SheetTrigger>
         <Bars3Icon className="h-5 w-5" />
       </SheetTrigger>
       <SheetContent>
-        {/* Handle func sidebar func call here */}
-        {children}
+        <SidebarContent menus={menus} />
       </SheetContent>
     </Sheet>
   );

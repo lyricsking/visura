@@ -1,26 +1,31 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const orders = [
-    {
-      id: "",
-      date: Date.now(),
-      total: 5999.99,
-      status: "pending"
-    }
-  ]
-  return { orders };
-};
-
 export const handle = {
-  pageName: "Overview",
-  breadcrumb: () => <span>Overview</span>,
+  pageName: "Orders",
+  breadcrumb: {
+    id: "orders",
+    label: "Orders"
+  },
 };
 
 export default function Orders() {
   const { orders } = useLoaderData<typeof loader>();
-
+  
+  const { sidebarMenuRef }: any = useOutletContext();
+  
+  useEffect(() => {
+    if(sidebarMenuRef){
+      sidebarMenuRef.current= [
+        {
+          id: "pending",
+          label: "Pending",
+          url: "?status=pending"
+        }
+      ]
+    }
+  }, [sidebarMenuRef]);
+  
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-900">Order History</h1>
@@ -38,3 +43,15 @@ export default function Orders() {
     </div>
   );
 }
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const orders = [
+    {
+      id: "",
+      date: Date.now(),
+      total: 5999.99,
+      status: "pending"
+    }
+  ]
+  return { orders };
+};
