@@ -10,8 +10,7 @@ export default function Profile() {
   const user = useLoaderData<typeof loader>();
 
   return (
-    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
+    <>
       <div className="mt-6 bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-lg leading-6 font-medium text-gray-900">Profile Information</h2>
@@ -80,7 +79,7 @@ className = "mt-1 p-2 border border-gray-300 rounded-md w-full" />
             <div className="mt-4">
             <button type="submit" className="bg-red-500 text-white py-2 px-4 rounded-md">Delete Account</button>
             </div>
-          </div> </div> </Form> </div>
+          </div> </div> </Form> </>
 );
 }
 export const loader = async ({ request }: LoaderFunctionArgs) => {

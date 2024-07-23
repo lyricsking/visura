@@ -49,7 +49,7 @@ export default function Layout() {
   });
 
   return (
-    <PageLayout>
+    <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace className="w-full">
