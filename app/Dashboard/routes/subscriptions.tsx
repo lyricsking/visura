@@ -17,13 +17,13 @@ export default function Subscriptions() {
 
   const { sidebarMenuRef }: any = useOutletContext();
     if(sidebarMenuRef){
-      sidebarMenuRef.current= [
+      sidebarMenuRef.current = () => [
         {
-          id: "pending",
-          label: "Pending",
-          url: "?status=pending"
-        }
-      ]
+          id: "active",
+          label: "Active",
+          url: "?status=active",
+        },
+      ];
     }
   
   return (

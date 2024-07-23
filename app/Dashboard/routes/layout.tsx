@@ -35,7 +35,7 @@ export default function Layout() {
   const sidebarMenuRef = useRef<any>(null);
   const getSidebarMenu = () => {
     if(!sidebarMenuRef.current) {
-      sidebarMenuRef.current = [
+      sidebarMenuRef.current = () => [
         {
           id: "orders",
           label: "Orders",
@@ -69,7 +69,7 @@ export default function Layout() {
       ]
     }
   
-    return sidebarMenuRef.current;
+    return sidebarMenuRef.current();
   };
 
   const breadcrumbs: any[] = [];
@@ -106,7 +106,7 @@ export default function Layout() {
           <AccountMenuButton />
         </PageLayoutHeaderItem>
 
-        <PageLayoutHeaderItem className="hidden md:inline-flex">
+        <PageLayoutHeaderItem className="hidden sticky md:inline-flex">
           <Breadcrumb breadcrumbs={breadcrumbs} />
         </PageLayoutHeaderItem>
       </PageLayoutHeader>

@@ -14,15 +14,14 @@ export default function Orders() {
   const { orders } = useLoaderData<typeof loader>();
   
   const { sidebarMenuRef }: any = useOutletContext();
-  
     if(sidebarMenuRef){
-      sidebarMenuRef.current= [
+      sidebarMenuRef.current = () => [
         {
           id: "pending",
           label: "Pending",
-          url: "?status=pending"
-        }
-      ]
+          url: "?status=pending",
+        },
+      ];
     }
   
   return (
