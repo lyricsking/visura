@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useOutletContext } from "@remix-run/react";
+import { useEffect } from "react";
 
 export const handle = {
   pageName: "Orders",

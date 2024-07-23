@@ -18,6 +18,7 @@ import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
 import { useEffect, useRef } from "react";
 import AccountMenuButton from "../components/account-menu-button";
+import { SidebarContent, SidebarContentProps, SidebarMenuProps } from "../components/sidebar-content";
 
 export const handle = {
   breadcrumb: {
@@ -89,7 +90,7 @@ export default function Layout() {
 }
 
 type DrawerMenuProps = {
-  menus: SidebarContentProps;
+  menus: SidebarMenuProps[];
 };
 
 function DrawerMenu({ menus }: DrawerMenuProps) {
