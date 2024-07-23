@@ -34,10 +34,42 @@ export default function Layout() {
 
   const sidebarMenuRef = useRef<any>(null);
   const getSidebarMenu = () => {
-    if (sidebarMenuRef.current) {
-      return sidebarMenuRef.current;
+    if(!sidebarMenuRef.current) {
+      sidebarMenuRef.current = [
+        {
+          id: "orders",
+          label: "Orders",
+          url: "/dashboard/orders"
+        },
+        {
+          id: "subscriptions",
+          label: "Subscription",
+          url: "/dashboard/subscriptions"
+        },
+        {
+          id: "invoices",
+          label: "Invoices",
+          url: "/dashboard/invoices"
+        },
+        {
+          id: "transaction",
+          label: "Transactions",
+          url: "/dashboard/transactions"
+        },
+        {
+          id: "settings",
+          label: "Settings",
+          url: "/dashboard/settings"
+        },
+        {
+          id: "support",
+          label: "Support Center",
+          url: "/support"
+        }
+      ]
     }
-    return [];
+  
+    return sidebarMenuRef.current;
   };
 
   const breadcrumbs: any[] = [];

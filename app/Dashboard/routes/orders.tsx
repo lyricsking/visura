@@ -15,7 +15,6 @@ export default function Orders() {
   
   const { sidebarMenuRef }: any = useOutletContext();
   
-  useEffect(() => {
     if(sidebarMenuRef){
       sidebarMenuRef.current= [
         {
@@ -25,7 +24,6 @@ export default function Orders() {
         }
       ]
     }
-  }, [sidebarMenuRef]);
   
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

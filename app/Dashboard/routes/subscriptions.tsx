@@ -16,7 +16,6 @@ export default function Subscriptions() {
   const { subscriptions } = useLoaderData<typeof loader>();
 
   const { sidebarMenuRef }: any = useOutletContext();
-  useEffect(() => {
     if(sidebarMenuRef){
       sidebarMenuRef.current= [
         {
@@ -26,7 +25,6 @@ export default function Subscriptions() {
         }
       ]
     }
-  }, [sidebarMenuRef]);
   
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
