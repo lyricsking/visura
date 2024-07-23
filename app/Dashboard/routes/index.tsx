@@ -14,6 +14,44 @@ export const handle = {
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
   
+  const { sidebarMenuRef }: any = useOutletContext();
+  useEffect(() => {
+    if (sidebarMenuRef) {
+      sidebarMenuRef.current = () => [
+        {
+          id: "orders",
+          label: "Orders",
+          url: "/dashboard/orders",
+        },
+        {
+          id: "subscriptions",
+          label: "Subscription",
+          url: "/dashboard/subscriptions",
+        },
+        {
+          id: "invoices",
+          label: "Invoices",
+          url: "/dashboard/invoices",
+        },
+        {
+          id: "transaction",
+          label: "Transactions",
+          url: "/dashboard/transactions",
+        },
+        {
+          id: "settings",
+          label: "Settings",
+          url: "/dashboard/settings",
+        },
+        {
+          id: "support",
+          label: "Support Center",
+          url: "/support",
+        },
+      ];
+    }
+  }, [sidebarMenuRef])
+
   return (
     <div className="p-4 space-y-8">
       {/* Welcome Message */}

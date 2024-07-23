@@ -16,9 +16,10 @@ import {
 } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
-import { useEffect, useRef } from "react";
+import { MutableRefObject, Ref, useCallback, useEffect, useRef, useState } from "react";
 import AccountMenuButton from "../components/account-menu-button";
-import { SidebarContent, SidebarContentProps, SidebarMenuProps } from "../components/sidebar-content";
+import { MenuFunctionType, SidebarContent, SidebarContentProps, SidebarMenuProps } from "../components/sidebar-content";
+import { set } from "mongoose";
 
 export const handle = {
   breadcrumb: {
@@ -30,41 +31,11 @@ export const handle = {
 
 export default function Layout() {
   const matches = useMatches();
+  const location = useLocation();
   const currentRoute: any = matches.at(-1);
 
-  const sidebarMenuRef = useRef<MenuFunctionType|null>(() => [
-      {
-        id: "orders",
-        label: "Orders",
-        url: "/dashboard/orders"
-            },
-      {
-        id: "subscriptions",
-        label: "Subscription",
-        url: "/dashboard/subscriptions"
-            },
-      {
-        id: "invoices",
-        label: "Invoices",
-        url: "/dashboard/invoices"
-            },
-      {
-        id: "transaction",
-        label: "Transactions",
-        url: "/dashboard/transactions"
-            },
-      {
-        id: "settings",
-        label: "Settings",
-        url: "/dashboard/settings"
-            },
-      {
-        id: "support",
-        label: "Support Center",
-        url: "/support"
-      }
-    ]);
-
+  const sidebarMenuRef = useRef<MenuFunctionType | null>(null);
+  
   const breadcrumbs: any[] = [];
   matches.forEach((match: any) => {
     if (match && match.handle && match.handle.breadcrumb) {
@@ -79,7 +50,7 @@ export default function Layout() {
 
   return (
     <PageLayout>
-      <PageLayoutHeader position={"sticky"} className="bg-white" >
+      <PageLayoutHeader position={"sticky"} className="bg-white">
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace className="w-full">
             <h1 className="text-[28px] font-bold text-center tracking-tight">
@@ -92,7 +63,7 @@ export default function Layout() {
           spacing={"compact"}
           className="border-b border-s border-e"
         >
-          <DrawerMenu menusFn={sidebarMenuRef.current}  />
+          <DrawerMenu menusFnRef={sidebarMenuRef} />
           <div className="w-full md:hidden">
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
@@ -106,7 +77,9 @@ export default function Layout() {
 
       <PageLayoutContent>
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">{currentRoute.handle.pageName}</h1> 
+          <h1 className="text-3xl font-bold text-gray-900">
+            {currentRoute.handle.pageName}
+          </h1>
         </div>
         <Outlet context={{ appname: pkg.name, sidebarMenuRef }} />
       </PageLayoutContent>
@@ -115,31 +88,48 @@ export default function Layout() {
 }
 
 type DrawerMenuProps = {
-  menusFn: MenuFunctionType;
+  menusFnRef: MutableRefObject<MenuFunctionType | null>;
 };
 
-function DrawerMenu({ menusFn }: DrawerMenuProps) {
-  
+function DrawerMenu({ menusFnRef }: DrawerMenuProps) {
+  const location = useLocation();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const isOpen = searchParams.get("showMenu") === "true";
-  const setIsOpen = useCallback(() => {
-    (isOpen: boolean) => {
-      if (!isOpen) {
-        searchParams.delete("showMenu");
-      } else {
-        searchParams.set("showMenu", isOpen)
-      }
-      setSearchParams(searchParams);
-    }
-  }, [])
+
+  const [menus, setMenus] = useState<SidebarMenuProps[]>();
   
+  const toggleSidebar = () => {
+    if (isOpen) {
+      searchParams.delete("showMenu");
+    } else {
+      searchParams.set("showMenu", "true");
+    }
+
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (menusFnRef.current) {
+      setMenus(menusFnRef.current());
+    }
+  }, [menusFnRef.current, location.pathname]);
+
   return (
-    <Sheet open={isOpen} onOpenChanged={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={toggleSidebar}>
       <SheetTrigger>
         <Bars3Icon className="h-5 w-5" />
       </SheetTrigger>
-      <SheetContent>
-        <SidebarContent menus={menusFn ? menusFn(): []} />
+      <SheetContent className="w-5/6">
+        <div className="flex flex-col" aria-label="Sidebar">
+          <div className="flex items-center justify-center h-20 border-b border-gray-100 dark:border-gray-700">
+            <h1 className="text-2xl font-semibold" aria-label="Logo">
+              {pkg.name}
+            </h1>
+          </div>
+
+          <SidebarContent menus={menus!} />
+        </div>
       </SheetContent>
     </Sheet>
   );

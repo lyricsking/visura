@@ -19,7 +19,12 @@ export default function Orders() {
         {
           id: "pending",
           label: "Pending",
-          url: "?status=pending",
+          url: "orders",
+        },
+        {
+          id: "processing",
+          label: "Processing",
+          url: "orders/processing",
         },
       ];
     }
