@@ -32,45 +32,38 @@ export default function Layout() {
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
 
-  const sidebarMenuRef = useRef<any>(null);
-  const getSidebarMenu = () => {
-    if(!sidebarMenuRef.current) {
-      sidebarMenuRef.current = () => [
-        {
-          id: "orders",
-          label: "Orders",
-          url: "/dashboard/orders"
-        },
-        {
-          id: "subscriptions",
-          label: "Subscription",
-          url: "/dashboard/subscriptions"
-        },
-        {
-          id: "invoices",
-          label: "Invoices",
-          url: "/dashboard/invoices"
-        },
-        {
-          id: "transaction",
-          label: "Transactions",
-          url: "/dashboard/transactions"
-        },
-        {
-          id: "settings",
-          label: "Settings",
-          url: "/dashboard/settings"
-        },
-        {
-          id: "support",
-          label: "Support Center",
-          url: "/support"
-        }
-      ]
-    }
-  
-    return sidebarMenuRef.current();
-  };
+  const sidebarMenuRef = useRef<MenuFunctionType|null>(() => [
+      {
+        id: "orders",
+        label: "Orders",
+        url: "/dashboard/orders"
+            },
+      {
+        id: "subscriptions",
+        label: "Subscription",
+        url: "/dashboard/subscriptions"
+            },
+      {
+        id: "invoices",
+        label: "Invoices",
+        url: "/dashboard/invoices"
+            },
+      {
+        id: "transaction",
+        label: "Transactions",
+        url: "/dashboard/transactions"
+            },
+      {
+        id: "settings",
+        label: "Settings",
+        url: "/dashboard/settings"
+            },
+      {
+        id: "support",
+        label: "Support Center",
+        url: "/support"
+      }
+    ]);
 
   const breadcrumbs: any[] = [];
   matches.forEach((match: any) => {
@@ -99,7 +92,7 @@ export default function Layout() {
           spacing={"compact"}
           className="border-b border-s border-e"
         >
-          <DrawerMenu menus={getSidebarMenu()}  />
+          <DrawerMenu menusFn={sidebarMenuRef.current}  />
           <div className="w-full md:hidden">
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
@@ -122,18 +115,31 @@ export default function Layout() {
 }
 
 type DrawerMenuProps = {
-  menus: SidebarMenuProps[];
+  menusFn: MenuFunctionType;
 };
 
-function DrawerMenu({ menus }: DrawerMenuProps) {
+function DrawerMenu({ menusFn }: DrawerMenuProps) {
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isOpen = searchParams.get("showMenu") === "true";
+  const setIsOpen = useCallback(() => {
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        searchParams.delete("showMenu");
+      } else {
+        searchParams.set("showMenu", isOpen)
+      }
+      setSearchParams(searchParams);
+    }
+  }, [])
   
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChanged={setIsOpen}>
       <SheetTrigger>
         <Bars3Icon className="h-5 w-5" />
       </SheetTrigger>
       <SheetContent>
-        <SidebarContent menus={menus} />
+        <SidebarContent menus={menusFn ? menusFn(): []} />
       </SheetContent>
     </Sheet>
   );

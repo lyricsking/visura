@@ -6,6 +6,8 @@ export type SidebarMenuProps = {
   url: string
 }
 
+export type MenuFunctionType = () => SidebarMenuProps[]
+
 export type SidebarContentProps = {
   menus: SidebarMenuProps[]
 }
