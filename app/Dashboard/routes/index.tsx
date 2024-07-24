@@ -53,11 +53,9 @@ export default function Dashboard() {
   }, [sidebarMenuRef])
 
   return (
-    <div className="p-4 space-y-8">
+    <div className="space-y-8">
       {/* Welcome Message */}
-      <div className="text-2xl font-semibold">
-        Welcome back, {data.userName}!
-      </div>
+      <div className="italic font-semibold">Welcome back, {data.userName}!</div>
 
       {/* Account Summary */}
       <div className="bg-white shadow rounded-lg p-6">
@@ -70,9 +68,11 @@ export default function Dashboard() {
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium mb-4">Active Subscriptions</h2>
         <ul>
-          {data.subscriptions.map(subscription => (
+          {data.subscriptions.map((subscription) => (
             <li key={subscription.id} className="mb-2">
-              <p>{subscription.name} - {subscription.status}</p>
+              <p>
+                {subscription.name} - {subscription.status}
+              </p>
               <p>Next Delivery Date: {subscription.nextDeliveryDate}</p>
             </li>
           ))}
@@ -83,7 +83,7 @@ export default function Dashboard() {
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium mb-4">Recent Orders</h2>
         <ul>
-          {data.orders.map(order => (
+          {data.orders.map((order) => (
             <li key={order.id} className="mb-2">
               <p>Order ID: {order.id}</p>
               <p>Date: {order.date}</p>
@@ -95,9 +95,11 @@ export default function Dashboard() {
 
       {/* Invoices for Upcoming Sub Renewals */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-medium mb-4">Upcoming Subscription Renewals</h2>
+        <h2 className="text-lg font-medium mb-4">
+          Upcoming Subscription Renewals
+        </h2>
         <ul>
-          {data.invoices.map(invoice => (
+          {data.invoices.map((invoice) => (
             <li key={invoice.id} className="mb-2">
               <p>Invoice ID: {invoice.id}</p>
               <p>Due Date: {invoice.dueDate}</p>
@@ -111,7 +113,7 @@ export default function Dashboard() {
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium mb-4">Notifications</h2>
         <ul>
-          {data.notifications.map(notification => (
+          {data.notifications.map((notification) => (
             <li key={notification.id} className="mb-2">
               <p>{notification.message}</p>
               <p>Date: {notification.date}</p>
@@ -124,7 +126,7 @@ export default function Dashboard() {
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium mb-4">Health & Wellness Tips</h2>
         <ul>
-          {data.healthTips.map(tip => (
+          {data.healthTips.map((tip) => (
             <li key={tip.id} className="mb-2">
               <h3 className="font-semibold">{tip.title}</h3>
               <p>{tip.content}</p>
@@ -137,7 +139,7 @@ export default function Dashboard() {
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium mb-4">Recommended Products</h2>
         <ul>
-          {data.recommendedProducts.map(product => (
+          {data.recommendedProducts.map((product) => (
             <li key={product.id} className="mb-2">
               <h3 className="font-semibold">{product.name}</h3>
               <p>{product.description}</p>

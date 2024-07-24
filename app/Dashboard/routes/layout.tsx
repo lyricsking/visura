@@ -76,12 +76,14 @@ export default function Layout() {
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">
             {currentRoute.handle.pageName}
           </h1>
+          <div className="py-8">
+            <Outlet context={{ appname: pkg.name, sidebarMenuRef }} />
+          </div>
         </div>
-        <Outlet context={{ appname: pkg.name, sidebarMenuRef }} />
       </PageLayoutContent>
     </PageLayout>
   );
@@ -122,7 +124,7 @@ function DrawerMenu({ menusFnRef }: DrawerMenuProps) {
       </SheetTrigger>
       <SheetContent className="w-5/6">
         <div className="flex flex-col" aria-label="Sidebar">
-          <div className="flex items-center justify-center h-20 border-b border-gray-100 dark:border-gray-700">
+          <div className="flex items-center justify-center h-20 border-b border-gray-300 dark:border-gray-700">
             <h1 className="text-2xl font-semibold" aria-label="Logo">
               {pkg.name}
             </h1>
