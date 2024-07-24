@@ -41,9 +41,10 @@ export default function Orders() {
     <Tabs
       defaultValue={status}
       onValueChange={onStatus}
-    >
+        className="flex flex-col w-[300px] shadow-[0_2px_10px]"
+   >
       <TabsList
-      className="grid w-full grid-cols-2">
+      className="">
         <TabsTrigger value="pending">Account</TabsTrigger>
         <TabsTrigger value="processing">Password</TabsTrigger>
       </TabsList>
