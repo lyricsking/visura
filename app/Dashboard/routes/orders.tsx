@@ -38,22 +38,21 @@ export default function Orders() {
   }
   
   return (
-    <Tabs
-      defaultValue={status}
-      onValueChange={onStatus}
-        className="flex flex-col w-[300px] shadow-[0_2px_10px]"
-   >
-      <TabsList
-      className="">
+    <Tabs defaultValue={status} onValueChange={onStatus}>
+      <TabsList className="border-violet-400">
         <TabsTrigger value="pending">Account</TabsTrigger>
-        <TabsTrigger value="processing">Password</TabsTrigger>
+        <TabsTrigger
+          value="processing"
+        >
+          Password
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="pending">
-        <div className="mt-6 bg-white shadow sm:rounded-lg">
+        <div className="">
           {orders.map((order) => (
             <div
               key={order.id}
-              className="px-4 py-5 sm:p-6 border-b border-gray-200"
+              className="px-4 py-5 sm:p-6"
             >
               <h2 className="text-lg leading-6 font-medium text-gray-900">
                 Order #{order.id}

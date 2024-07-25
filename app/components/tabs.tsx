@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { cn } from "~/utils";
 
+import { cn } from "~/utils";
 
 const Tabs = TabsPrimitive.Root;
 
@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-    "shrink-0 flex border-b border-gray-200 text-muted-foreground",
+      "shrink-0 flex border-b outline-none",
       className
     )}
     {...props}
@@ -29,7 +29,8 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-         "bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-violet11 data-[state=active]:text-violet11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-black outline-none cursor-default",
+      "bg-white px-5 h-[45px] flex-1 flex items-center justify-center outline-none cursor-default",
+      "first:rounded-tl-md last:rounded-tr-md data-[state=active]:border-b data-[state=active]:border-inherit",
       className
     )}
     {...props}
@@ -44,7 +45,8 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-    "grow p-5 bg-white rounded-b-md  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "grow p-5 bg-white rounded-b-md outline-none",
+      "ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}
     {...props}
