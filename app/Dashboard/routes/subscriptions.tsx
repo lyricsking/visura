@@ -1,14 +1,18 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
-import { useEffect } from 'react';
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
+import { Form, useLoaderData, useOutletContext } from "@remix-run/react";
+import { useEffect } from "react";
 
 export const handle = {
   pageName: "Subscriptions",
   breadcrumb: [
     {
       id: "subscriptions",
-      label: "Subscriptions"
-    }
+      label: "Subscriptions",
+    },
   ],
 };
 
@@ -16,16 +20,16 @@ export default function Subscriptions() {
   const { subscriptions } = useLoaderData<typeof loader>();
 
   const { sidebarMenuRef }: any = useOutletContext();
-    if(sidebarMenuRef){
-      sidebarMenuRef.current = () => [
-        {
-          id: "active",
-          label: "Active",
-          url: "?status=active",
-        },
-      ];
-    }
-  
+  if (sidebarMenuRef) {
+    sidebarMenuRef.current = () => [
+      {
+        id: "active",
+        label: "Active",
+        url: "?status=active",
+      },
+    ];
+  }
+
   return (
     <>
       {subscriptions.map((subscription) => (
@@ -50,55 +54,60 @@ export default function Subscriptions() {
                 value={subscription.id}
               />
               <input type="hidden" name="_action" value="updateSubscription" />
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Delivery Frequency
-                </label>
-                <select
-                  name="frequency"
-                  defaultValue={subscription.frequency}
-                  className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-                >
-                  <option value="weekly">Weekly</option>
-                  <option value="bi-weekly">Bi-Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-              </div>
+              <label className="block text-sm font-medium text-gray-700">
+                Delivery Frequency
+              </label>
+              <select
+                name="frequency"
+                defaultValue={subscription.frequency}
+                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+              >
+                <option value="weekly">Weekly</option>
+                <option value="bi-weekly">Bi-Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+
               <button
                 type="submit"
                 className="bg-blue-500 text-white py-2 px-4 rounded-md"
               >
-                Update Subscription
+                Update
               </button>
             </Form>
-            <Form method="post" className="mt-4 space-y-4">
-              <input
-                type="hidden"
-                name="subscriptionId"
-                value={subscription.id}
-              />
-              <input type="hidden" name="_action" value="pauseSubscription" />
-              <button
-                type="submit"
-                className="bg-yellow-500 text-white py-2 px-4 rounded-md"
-              >
-                Pause Subscription
-              </button>
-            </Form>
-            <Form method="post" className="mt-4 space-y-4">
-              <input
-                type="hidden"
-                name="subscriptionId"
-                value={subscription.id}
-              />
-              <input type="hidden" name="_action" value="cancelSubscription" />
-              <button
-                type="submit"
-                className="bg-red-500 text-white py-2 px-4 rounded-md"
-              >
-                Cancel Subscription
-              </button>
-            </Form>
+            <div className="flex items-center justify-center gap-4">
+              <Form method="post" className="mt-4 space-y-4">
+                <input
+                  type="hidden"
+                  name="subscriptionId"
+                  value={subscription.id}
+                />
+                <input type="hidden" name="_action" value="pauseSubscription" />
+                <button
+                  type="submit"
+                  className="bg-yellow-500 text-white py-2 px-4 rounded-md"
+                >
+                  Pause
+                </button>
+              </Form>
+              <Form method="post" className="mt-4 space-y-4">
+                <input
+                  type="hidden"
+                  name="subscriptionId"
+                  value={subscription.id}
+                />
+                <input
+                  type="hidden"
+                  name="_action"
+                  value="cancelSubscription"
+                />
+                <button
+                  type="submit"
+                  className="bg-red-500 text-white py-2 px-4 rounded-md"
+                >
+                  Cancel
+                </button>
+              </Form>
+            </div>
           </div>
         </div>
       ))}
@@ -112,24 +121,24 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       id: "748",
       nextDelivery: "31st January, 2024",
       status: "pending",
-      frequency: 4
-    }
-  ]
+      frequency: 4,
+    },
+  ];
   return { subscriptions };
 };
 
-export const action = async ({ request }:ActionFunctionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const actionType = formData.get('_action');
-  const subscriptionId = formData.get('subscriptionId');
-  
-  if (actionType === 'updateSubscription') {
+  const actionType = formData.get("_action");
+  const subscriptionId = formData.get("subscriptionId");
+
+  if (actionType === "updateSubscription") {
     //await updateUserSubscription(subscriptionId, formData);
-  } else if (actionType === 'pauseSubscription') {
+  } else if (actionType === "pauseSubscription") {
     //await pauseUserSubscription(subscriptionId);
-  } else if (actionType === 'cancelSubscription') {
+  } else if (actionType === "cancelSubscription") {
     //await cancelUserSubscription(subscriptionId);
   }
-  
-  return redirect('/subscriptions');
+
+  return redirect("/subscriptions");
 };

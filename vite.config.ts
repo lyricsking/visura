@@ -34,7 +34,9 @@ export default defineConfig({
           route("dashboard", "Dashboard/routes/layout.tsx", () => {
             route("", "Dashboard/routes/index.tsx", { index: true });
             route("orders/:status?", "Dashboard/routes/orders.tsx");
-            route("settings/profile", "Dashboard/routes/profile.tsx");
+            route("invoices", "Dashboard/routes/invoices.tsx");
+            route("invoices/:id", "Dashboard/routes/invoice-id.tsx");
+            route("subscriptions", "Dashboard/routes/subscriptions.tsx");
             route("settings", "Dashboard/routes/settings.tsx");
             route("subscriptions", "Dashboard/routes/subscriptions.tsx");
           });
