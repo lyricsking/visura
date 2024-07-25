@@ -35,7 +35,11 @@ export default function InvoiceDetails({
       </ul>
 
       <div className="mt-4">
-        <Link to="/invoices" className="text-blue-500 underline">
+        <Link
+          to="/dashboard/invoices"
+          replace
+          className="text-blue-500 underline"
+        >
           Back to Invoices
         </Link>
       </div>

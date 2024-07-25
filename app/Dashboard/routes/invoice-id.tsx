@@ -25,15 +25,11 @@ const mockData = {
   ],
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const invoice = mockData.invoices.find((inv) => inv.id === params.invoiceId);
-  if (!invoice) {
-    throw new Response("Not Found", { status: 404 });
-  }
-  return json(invoice);
+export const handle = {
+  pageName: "Invoices",
 };
 
-export default function InvoiceDetailsPage() {
+export default function InvoiceId() {
   const invoice = useLoaderData<(typeof mockData.invoices)[0]>();
 
   return (
@@ -42,3 +38,11 @@ export default function InvoiceDetailsPage() {
     </div>
   );
 }
+
+export const loader: LoaderFunction = async ({ params }) => {
+  const invoice = mockData.invoices.find((inv) => inv.id === params.id);
+  if (!invoice) {
+    throw new Response("Not Found", { status: 404 });
+  }
+  return json(invoice);
+};

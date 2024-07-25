@@ -10,9 +10,12 @@ const mockData = {
   ],
 };
 
-export const loader: LoaderFunction = async () => {
-  // Replace with actual data fetching logic
-  return json(mockData);
+export const handle = {
+  pageName: "Invoices",
+  breadcrumb: {
+    id: "orders",
+    label: "Orders",
+  },
 };
 
 export default function Invoices() {
@@ -25,3 +28,8 @@ export default function Invoices() {
     </div>
   );
 }
+
+export const loader: LoaderFunction = async () => {
+  // Replace with actual data fetching logic
+  return json(mockData);
+};

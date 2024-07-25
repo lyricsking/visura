@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from "@remix-run/react";
 
 interface Invoice {
   id: string;
@@ -16,9 +16,13 @@ export default function InvoiceList({ invoices }: InvoiceListProps) {
     <div className="bg-white shadow rounded-lg p-6">
       <h2 className="text-lg font-medium mb-4">Invoices</h2>
       <ul>
-        {invoices.map(invoice => (
+        {invoices.map((invoice) => (
           <li key={invoice.id} className="mb-2">
-            <Link to={`/invoices/${invoice.id}`} className="text-blue-500 underline">
+            <Link
+              to={`${invoice.id}`}
+              replace
+              className="text-blue-500 underline"
+            >
               Invoice ID: {invoice.id}
             </Link>
             <p>Due Date: {invoice.dueDate}</p>
