@@ -13,6 +13,7 @@ export const handle = {
   breadcrumb: {
     id: "orders",
     label: "Orders",
+    path: "/dashboard/orders"
   },
 };
 
@@ -43,6 +44,7 @@ export default function Orders() {
   }
 
   return (
+    <>
     <Tabs defaultValue={status} onValueChange={onStatus}>
       <TabsList className="border-violet-400">
         <TabsTrigger value="pending">Pending</TabsTrigger>
@@ -71,6 +73,8 @@ export default function Orders() {
       </TabsContent>
       <TabsContent value="processing">Change your password here.</TabsContent>
     </Tabs>
+    <Outlet />
+    </>
   );
 }
 

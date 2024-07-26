@@ -9,7 +9,12 @@ import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 export const handle = {
-  pageName: "Settings"
+  pageName: "Settings",
+  breadcrumb: {
+    id: "settings",
+    label: "Settings",
+    path: "/dashboard/settings"
+  },
 };
 
 export default function Settings() {
@@ -26,14 +31,14 @@ export default function Settings() {
   if (sidebarMenuRef) {
     sidebarMenuRef.current = () => [
       {
-        id: "pending",
-        label: "Pending",
-        url: "orders",
+        id: "account",
+        label: "Account",
+        url: "settings",
       },
       {
         id: "processing",
         label: "Processing",
-        url: "orders/processing",
+        url: "setrings/processing",
       },
     ];
   }

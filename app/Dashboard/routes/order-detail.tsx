@@ -2,11 +2,6 @@
 import { useLoaderData } from 'remix';
 import { getOrderDetails } from '~/utils/orderUtils';
 
-export const loader = async ({ params }) => {
-  const order = await getOrderDetails(params.orderId);
-  return { order };
-};
-
 export default function OrderDetails() {
   const { order } = useLoaderData();
 
@@ -51,6 +46,10 @@ export default function OrderDetails() {
   );
 }
 
+export const loader = async ({ params }) => {
+  const order = await getOrderDetails(params.orderId);
+  return { order };
+};
 
 async function getOrderFromDatabase(orderId: string) {
   // Replace with your database fetching logic

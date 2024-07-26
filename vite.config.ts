@@ -32,11 +32,14 @@ export default defineConfig({
             route("payment", "Order/routes/payment.tsx");
           });
           route("dashboard", "Dashboard/routes/layout.tsx", () => {
-            route("", "Dashboard/routes/index.tsx", { index: true });
-            route("orders/:status?", "Dashboard/routes/orders.tsx");
-            route("invoices", "Dashboard/routes/invoices.tsx", () => {
+            route("", "Dashboard/routes/overview.tsx", { index: true });
+            route("invoices/:status?", "Dashboard/routes/invoices.tsx", () => {
               route(":id", "Dashboard/routes/invoice-id.tsx", { index: true });
             });
+            route("orders/:status?", "Dashboard/routes/orders.tsx", () => {
+              route(":id", "Dashboard/routes/order-detail.tsx");
+            });
+            route("profile", "Dashboard/routes/profile.tsx");
             route("settings", "Dashboard/routes/settings.tsx");
             route("subscriptions", "Dashboard/routes/subscriptions.tsx");
             route("transactions", "Dashboard/routes/transactions.tsx");

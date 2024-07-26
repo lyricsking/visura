@@ -11,7 +11,7 @@ export const handle = {
   }
 };
   
-export default function Dashboard() {
+export default function Overview() {
   const data = useLoaderData<typeof loader>();
   
   const { sidebarMenuRef }: any = useOutletContext();

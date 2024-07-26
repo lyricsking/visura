@@ -13,13 +13,44 @@ const mockData = {
 export const handle = {
   pageName: "Invoices",
   breadcrumb: {
-    id: "orders",
-    label: "Orders",
+    id: "invoices",
+    label: "Invoices",
+    path: "/dashboard/invoices"
   },
 };
 
 export default function Invoices() {
   const data = useLoaderData<typeof mockData>();
+
+  const navigate = useNavigate();
+  const params = useParams();
+
+  const status = params["status"] || "pending";
+  const onStatus = (newStatus: string) => {
+    navigate(`/dashboard/orders/${newStatus}`);
+  };
+
+  const { sidebarMenuRef }: any = useOutletContext();
+  if (sidebarMenuRef) {
+    sidebarMenuRef.current = () => [
+      {
+        id: "pending",
+        label: "Pending",
+        url: "orders",
+      },
+      {
+        id: "expired",
+        label: "Processing",
+        url: "orders/processing",
+      },
+       {
+        id: "paid",
+        label: "Processing",
+        url: "invoices/paid",
+      },
+    
+    ];
+  }
 
   return (
     <div className="p-4 space-y-8">

@@ -11,10 +11,10 @@ const mockData = {
 };
 
 export const handle = {
-  pageName: "Invoices",
+  pageName: "Transactions",
   breadcrumb: {
-    id: "orders",
-    label: "Orders",
+    id: "transactions",
+    label: "Transactions",
   },
 };
 
