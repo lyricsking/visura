@@ -39,10 +39,12 @@ export default defineConfig({
             });
             route("settings", "Dashboard/routes/settings.tsx");
             route("subscriptions", "Dashboard/routes/subscriptions.tsx");
+            route("transactions", "Dashboard/routes/transactions.tsx");
           });
-          //route("support", "Support/routes/layout.tsx", () => {
-          //  route("", "Support/routes/index.tsx", { index: true });
-          //});
+          route("support", "Support/routes/index.tsx", () => {
+            route("articles", "Support/routes/article-category.tsx");
+            route("articles/:id", "Support/routes/article.tsx");
+          });
           route("quiz", "Quiz/layout.tsx", () => {
             route("", "Quiz/index.tsx", { index: true });
           });

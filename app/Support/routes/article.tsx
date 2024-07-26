@@ -1,13 +1,14 @@
-import { useLoaderData } from 'remix';
-import { getArticleDetails } from '~/utils/supportUtils';
+import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { getArticleDetails } from ".";
 
-export const loader = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const article = await getArticleDetails(params.articleId);
   return { article };
 };
 
 export default function ArticleDetails() {
-  const { article } = useLoaderData();
+  const { article } = useLoaderData<typeof loader>();
 
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
