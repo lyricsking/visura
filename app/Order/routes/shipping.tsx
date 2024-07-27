@@ -14,15 +14,15 @@ import {
   getAddressesByEmail,
   getAddressRegions,
 } from "../server/address.server";
-import { IOrder } from "../type/order.type";
-import { CART_FETCHER_KEY } from "../type/cart.type";
+import { IOrder } from "../types/order.type";
+import { CART_FETCHER_KEY } from "../types/cart.type";
 import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
 import { useEffect } from "react";
 import { updateCartAddress } from "../server/cart.server";
 import { getSession, USER_SESSION_KEY } from "~/utils/session";
-import { Address } from "~/Order/model/address.model";
-import { IAddress, IAddressRegion } from "../type/address.type";
+import { Address } from "~/Order/models/address.model";
+import { IAddress, IAddressRegion } from "../types/address.type";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";

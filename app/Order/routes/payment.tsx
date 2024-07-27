@@ -7,43 +7,46 @@ import {
 } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import useScript from "~/hooks/use-script";
-import { IOrder } from "../type/order.type";
+import { IOrder } from "../types/order.type";
 import {
   FlutterWaveProps,
   FlutterWaveResponse,
-} from "../type/flutterwave.type";
+} from "../types/flutterwave.type";
 import useFlutterwavePayment from "../hooks/use-flutterwave";
-import { CART_FETCHER_KEY } from "../type/cart.type";
-import { IOrderModel } from "../model/order.model";
+import { CART_FETCHER_KEY } from "../types/cart.type";
+import {} from "../models/order.model";
 import { updatePaymentMethod } from "../server/cart.server";
 import { ActionFunctionArgs } from "@remix-run/node";
 
 const PaymentMethods = {
-  "Card": "card",
+  Card: "card",
   "Bank Transfer": "banktransfer",
-  "Opay": "opay",
+  Opay: "opay",
   "# USSD": "ussd",
   "Direct Debit": "account",
-//  "Google Pay": "googlepay",
-//  "Apple Pay": "applepay",
+  //  "Google Pay": "googlepay",
+  //  "Apple Pay": "applepay",
 } as const;
-type PaymentMethods = typeof PaymentMethods[keyof typeof PaymentMethods];
+type PaymentMethods = (typeof PaymentMethods)[keyof typeof PaymentMethods];
 
-export const action = async ({  request }: ActionFunctionArgs) => {
-  
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const paymentMethod = formData.get("paymentMethod") ;
+  const paymentMethod = formData.get("paymentMethod");
   const orderId = formData.get("orderId");
-  if(orderId && paymentMethod) await updatePaymentMethod({ orderId: orderId as string, paymentMethod: paymentMethod as string })
-  
-  return json({success: true});
+  if (orderId && paymentMethod)
+    await updatePaymentMethod({
+      orderId: orderId as string,
+      paymentMethod: paymentMethod as string,
+    });
+
+  return json({ success: true });
 };
 
 export const loader = async () => {
   const flPublicKey = process.env.FLUTTERWAVE_PUBLIC_KEY;
-  
+
   return json({ flPublicKey });
-}
+};
 
 export const handle = {
   name: "Payment",
@@ -55,14 +58,15 @@ export const handle = {
 
 const PaymentPage = () => {
   const { flPublicKey } = useLoaderData<typeof loader>();
-  const { cart, childMethodRef }: { cart: IOrderModel; childMethodRef: any } = useOutletContext();
-  
+  const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
+    useOutletContext();
+
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
 
   const handleSelect = (method: PaymentMethods) => {
     fetcher.submit(
       {
-        orderId: cart.id,
+        orderId: cart._id.toString(),
         paymentMethod: method,
       },
       {
@@ -75,14 +79,13 @@ const PaymentPage = () => {
   const { initiatePayment, isProcessing } = useFlutterwavePayment();
 
   const handlePayment = (isScriptLoaded: boolean, paymentOption: string) => {
-
     if (!isScriptLoaded) return;
     const responseCallback = (response: FlutterWaveResponse) => {};
 
     const shouldProceed = window.confirm(
       'Press "OK" to proceed with the payment?'
-    );      
-    
+    );
+
     if (shouldProceed) {
       const details: FlutterWaveProps = {
         public_key: flPublicKey || "",
@@ -107,17 +110,18 @@ const PaymentPage = () => {
           console.log("Payment modal closed");
         },
       };
-      
+
       initiatePayment(details, responseCallback);
     }
   };
 
   useEffect(() => {
     if (childMethodRef) {
-      childMethodRef.current = () => handlePayment(isScriptLoaded, cart.paymentDetails?.method as string);
+      childMethodRef.current = () =>
+        handlePayment(isScriptLoaded, cart.paymentDetails?.method as string);
     }
   }, [childMethodRef, isScriptLoaded]);
-  
+
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="mt-4">
@@ -149,13 +153,17 @@ export default PaymentPage;
 
 interface PaymentMethodProps {
   name: string;
-  label: string,
+  label: string;
   value: string;
-  onSelect:()=>void
+  onSelect: () => void;
 }
 
-export const PaymentMethod = ({name, label, value ,onSelect}: PaymentMethodProps) => {
-
+export const PaymentMethod = ({
+  name,
+  label,
+  value,
+  onSelect,
+}: PaymentMethodProps) => {
   const id = `payment-method-${value}`;
 
   return (

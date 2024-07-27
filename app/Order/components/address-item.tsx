@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
-import { IAddress } from "../type/address.type";
+import { IAddress } from "../types/address.type";
 import { Cross1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 
 export interface AddressItemProps {
-  address: IAddress
+  address: IAddress;
   selected: string;
   onEdit: () => void;
-  onSelect: () => void
-  onDelete: () => void
+  onSelect: () => void;
+  onDelete: () => void;
 }
 
 export const AddressItem = ({
@@ -15,9 +15,8 @@ export const AddressItem = ({
   selected,
   onEdit,
   onSelect,
-  onDelete
+  onDelete,
 }: AddressItemProps) => {
-  
   const editButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -33,7 +32,7 @@ export const AddressItem = ({
           selected ? "border-black" : "border-gray-300"
         }`}
         role="radio"
-        aria-checked={selected===_id.toString()}
+        aria-checked={selected === _id.toString()}
         tabIndex={0}
         onKeyUp={(e) => {
           if (e.key === "Enter" || e.key === " ") {

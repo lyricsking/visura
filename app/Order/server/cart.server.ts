@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
-import { IItem, IOrder } from "../type/order.type";
-import { Order, type OrderModel } from "../model/order.model";
-import { Discount } from "../model/discount.model";
-import { IAddress } from "../type/address.type";
-import { AddressModel } from "../model/address.model";
+import { IItem, IOrder } from "../types/order.type";
+import { Order, type OrderModel } from "../models/order.model";
+import { Discount } from "../models/discount.model";
+import { IAddress } from "../types/address.type";
+import { AddressModel } from "../models/address.model";
 
 /**
  * Converts the recommendations to order with status cart

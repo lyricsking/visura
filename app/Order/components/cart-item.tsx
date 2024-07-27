@@ -1,9 +1,9 @@
 import React from "react";
 import { useFetcher } from "@remix-run/react";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { IItem, OrderPurchaseMode } from "../type/order.type";
-import { CART_FETCHER_KEY } from "../type/cart.type";
-import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../routes";
+import { IItem, OrderPurchaseMode } from "../types/order.type";
+import { CART_FETCHER_KEY } from "../types/cart.type";
+import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../utils/constants";
 
 interface CartItemProps {
   item: IItem;
@@ -16,13 +16,15 @@ const CartItem = ({ item }: CartItemProps) => {
   const currentPurchaseMode = item.purchaseMode;
 
   const handleDelete = () => {
-    fetcher.submit({
-      _action: DELETE_ACTION_KEY,
-      productId: item.productId.toString()
-    },
-    { method: "post" })
-  }
-  
+    fetcher.submit(
+      {
+        _action: DELETE_ACTION_KEY,
+        productId: item.productId.toString(),
+      },
+      { method: "post" }
+    );
+  };
+
   const handleUpdate = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
@@ -37,7 +39,7 @@ const CartItem = ({ item }: CartItemProps) => {
     } else if (e.target.name === "purchaseMode") {
       formData.set("purchaseMode", e.target.value);
     }
-    
+
     fetcher.submit(formData, { method: "post" });
   };
 
@@ -59,15 +61,15 @@ const CartItem = ({ item }: CartItemProps) => {
                 onChange={handleUpdate}
                 className="text-sm text-blue-500 rounded"
               >
-              {Object.keys(OrderPurchaseMode).map((mode)=>
-                <option key={mode} value={mode} className="capitalize">{mode}</option>)}
+                {Object.keys(OrderPurchaseMode).map((mode) => (
+                  <option key={mode} value={mode} className="capitalize">
+                    {mode}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
-          <button
-            onClick={handleDelete}
-            className="ml-4 text-red-500"
-          >
+          <button onClick={handleDelete} className="ml-4 text-red-500">
             <Cross1Icon className="w-6" />
           </button>
         </div>

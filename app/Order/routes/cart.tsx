@@ -6,12 +6,10 @@ import {
 } from "@remix-run/react";
 import { getSession, USER_SESSION_KEY } from "~/utils/session";
 import { deleteCart, updateCartItem } from "../server/cart.server";
-import { IOrder } from "../type/order.type";
+import { IOrder } from "../types/order.type";
 import CartItem from "../components/cart-item";
 import { useEffect } from "react";
-
-export const DELETE_ACTION_KEY = "_delete";
-export const UPDATE_ACTION_KEY = "_update";
+import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../utils/constants";
 
 export const action = async ({ request }: any) => {
   const session = await getSession(request.headers.get("Cookie"));

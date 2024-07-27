@@ -1,17 +1,22 @@
 import mongoose, { model, Model, Schema, Types } from "mongoose";
-import { AddressType, IAddress, IAddressRegion } from "../type/address.type";
+import { AddressType, IAddress, IAddressRegion } from "../types/address.type";
 
-export type AddressRegionModel = Model<IAddressRegion>
+export type AddressRegionModel = Model<IAddressRegion>;
 const addressRegionSchema = new Schema<IAddressRegion, AddressRegionModel>({
   _id: { type: Schema.Types.ObjectId },
   name: { type: String, required: true },
   city: { type: String, required: true },
-  shippingFee: { type: Number, required: true }
-})
+  shippingFee: { type: Number, required: true },
+});
 
-export const AddressRegion: AddressRegionModel = mongoose.models.AddressRegion || model<IAddressRegion, AddressRegionModel>("AddressRegion", addressRegionSchema);
+export const AddressRegion: AddressRegionModel =
+  mongoose.models.AddressRegion ||
+  model<IAddressRegion, AddressRegionModel>(
+    "AddressRegion",
+    addressRegionSchema
+  );
 
-export type AddressModel = Model<IAddress>
+export type AddressModel = Model<IAddress>;
 export const addressSchema = new Schema<IAddress, AddressModel>({
   _id: { type: Schema.Types.ObjectId },
   type: { type: String, enum: AddressType, required: true },
@@ -22,4 +27,5 @@ export const addressSchema = new Schema<IAddress, AddressModel>({
 });
 
 export const Address: AddressModel =
-  mongoose.models.Address || model<IAddress, AddressModel>("Address", addressSchema);
+  mongoose.models.Address ||
+  model<IAddress, AddressModel>("Address", addressSchema);

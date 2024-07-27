@@ -1,3 +1,5 @@
-export default function SingleOrder(order: OrderType){
-  return <></>
+import { IOrder } from "../types/order.type";
+
+export default function SingleOrder(order: IOrder) {
+  return <></>;
 }

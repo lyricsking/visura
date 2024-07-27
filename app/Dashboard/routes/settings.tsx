@@ -13,9 +13,19 @@ export const handle = {
   breadcrumb: {
     id: "settings",
     label: "Settings",
-    path: "/dashboard/settings"
+    path: "/dashboard/settings",
   },
 };
+
+const accountKeys = [
+  "account",
+  "notifications",
+  "display",
+  "privacy",
+  "order",
+  "health",
+  "payment",
+];
 
 export default function Settings() {
   const { orders } = useLoaderData<typeof loader>();
@@ -46,8 +56,11 @@ export default function Settings() {
   return (
     <Tabs defaultValue={status} onValueChange={onStatus}>
       <TabsList className="border-violet-400">
-        <TabsTrigger value="pending">Pending</TabsTrigger>
-        <TabsTrigger value="processing">Processing</TabsTrigger>
+        {accountKeys.map((key, index) => (
+          <TabsTrigger key={key} value={key} className="capitalize">
+            {key}
+          </TabsTrigger>
+        ))}
       </TabsList>
       <TabsContent value="pending">
         <div className="">

@@ -4,10 +4,9 @@ import {
   AddressRegion,
   AddressRegionModel,
   type AddressModel,
-} from "../model/address.model";
+} from "../models/address.model";
 import { HydratedDocument, Types } from "mongoose";
-import { OrderModel } from "../model/order.model";
-import { IAddress, IAddressRegion } from "../type/address.type";
+import { IAddress, IAddressRegion } from "../types/address.type";
 
 export const createOrUpdateAddress = async ({
   id,

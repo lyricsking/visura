@@ -27,8 +27,8 @@ export default defineConfig({
             route("google/login", "Auth/route/google-login.tsx");
           });
           route("cart", "Order/routes/layout.tsx", () => {
-            route("", "Order/routes/index.tsx", { index: true });
-            route("orders", "Order/routes/shipping.tsx");
+            route("", "Order/routes/cart.tsx", { index: true });
+            route("shipping", "Order/routes/shipping.tsx");
             route("payment", "Order/routes/payment.tsx");
           });
           route("dashboard", "Dashboard/routes/layout.tsx", () => {

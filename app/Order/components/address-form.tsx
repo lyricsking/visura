@@ -1,10 +1,10 @@
 import { useFetcher } from "@remix-run/react";
-import { CART_FETCHER_KEY } from "../type/cart.type";
-import { IAddress, IAddressRegion } from "../type/address.type";
+import type { IAddress, IAddressRegion } from "../types/address.type";
+import { CART_FETCHER_KEY } from "../types/cart.type";
 
 export interface AddressFormProps {
   address?: IAddress;
-  regions: IAddressRegion[]
+  regions: IAddressRegion[];
   action: string;
   onCancel: () => void;
 }
@@ -30,15 +30,20 @@ export const AddressForm = ({
         Address Action
       </label>
       <input id="_action" type="hidden" name="_action" value={action} />
-      
-      { address &&
-      <>
-      <label htmlFor="id" className="sr-only">
-        Order Id
-      </label>
-      <input id="id" type="hidden" name="id" value={address._id.toString()} />
-      </>
-      }
+
+      {address && (
+        <>
+          <label htmlFor="id" className="sr-only">
+            Order Id
+          </label>
+          <input
+            id="id"
+            type="hidden"
+            name="id"
+            value={address._id.toString()}
+          />
+        </>
+      )}
       <div className="mb-2">
         <label htmlFor="address-type" className="block text-gray-700">
           Type
@@ -68,7 +73,7 @@ export const AddressForm = ({
           aria-required="true"
         />
       </div>
-      
+
       <div className="mb-2">
         <label htmlFor="address-region" className="block text-gray-700">
           Region
@@ -80,13 +85,12 @@ export const AddressForm = ({
           className="w-full border border-gray-300 rounded-lg p-2"
           required
         >
-          {
-            regions.map((region) => <option key={region.name} value={region.name}>
-            <div>{region.city}</div>
-            <div>{region.name}</div>
+          {regions.map((region) => (
+            <option key={region.name} value={region.name}>
+              <div>{region.city}</div>
+              <div>{region.name}</div>
             </option>
-            )
-          }
+          ))}
         </select>
       </div>
       <div className="mb-2">

@@ -1,9 +1,9 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { getOrders } from "./order.server";
+import { getOrders } from "../server/order.server";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { Tabs, TabsList, TabsTrigger } from "~/components/tabs";
-import { OrderStatus } from "./order.type";
-import { NoOrder } from "./components/order-selector";
+import { OrderStatus } from "../types/order.type";
+import { NoOrder } from "../components/order-selector";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // Parse the search params for `?status=`

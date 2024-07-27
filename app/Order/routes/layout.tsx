@@ -8,13 +8,13 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import mongoose from "mongoose";
-import { CART_FETCHER_KEY } from "./../type/cart.type";
+import { CART_FETCHER_KEY } from "./../types/cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Button from "~/components/button";
 import { getSession, USER_SESSION_KEY } from "~/utils/session";
 import { useRef } from "react";
 import { applyDiscount } from "../server/cart.server";
-import { IOrder } from "../type/order.type";
+import type { IOrder } from "../types/order.type";
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
@@ -101,7 +101,12 @@ export default function Layout() {
             <label htmlFor="orderId" className="sr-only">
               Order Id
             </label>
-            <input type="hidden" id="orderId" name="orderId" value={cart?._id.toString()} />
+            <input
+              type="hidden"
+              id="orderId"
+              name="orderId"
+              value={cart?._id.toString()}
+            />
 
             <label
               htmlFor="discountCode"
@@ -162,5 +167,4 @@ export default function Layout() {
       </div>
     </div>
   );
-
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FlutterWaveProps } from "../type/flutterwave.type";
+import { FlutterWaveProps } from "../types/flutterwave.type";
 
 const useFlutterwavePayment = () => {
   const [isProcessing, setIsProcessing] = useState(false);

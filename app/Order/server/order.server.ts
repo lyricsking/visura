@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { IItem, IOrder, OrderStatus } from "../type/order.type";
-import {faker} from "@faker-js/faker"
+import { faker } from "@faker-js/faker";
+import { OrderStatus, type IItem, type IOrder } from "../types/order.type";
+
 export async function checkout(orderId: string) {
   //  Update record whose id equals `order.id` and status is `cart`
   orderId;

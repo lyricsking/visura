@@ -1,4 +1,4 @@
-import { Schema, model, Types, Document } from 'mongoose';
+import { Schema, model, Types, Document } from "mongoose";
 
 interface IAccount {
   name: string;
@@ -9,7 +9,7 @@ interface IAccount {
 }
 
 interface INotification {
-  preferredSupportChannel: 'email' | 'chat' | 'phone';
+  preferredSupportChannel: "email" | "chat" | "phone";
   orderUpdates: boolean;
   promotional: boolean;
   subscriptionReminders: boolean;
@@ -17,7 +17,7 @@ interface INotification {
 }
 
 interface IDisplay {
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   language: string;
   currency: string;
 }
@@ -30,7 +30,7 @@ interface IPrivacy {
 
 interface IOrder {
   deliveryInstructions: string;
-  packaging: 'standard' | 'eco-friendly' | 'discreet';
+  packaging: "standard" | "eco-friendly" | "discreet";
 }
 
 interface IHealth {
@@ -43,7 +43,7 @@ interface IPayment {
   savedMethods: { type: string; last4: string }[];
 }
 
-interface IUserPreferences {
+export interface IUserPreferences {
   _id: Types.ObjectId;
   account: IAccount;
   notifications: INotification;

@@ -112,8 +112,41 @@ function DrawerMenu({ menusFnRef }: DrawerMenuProps) {
   };
 
   useEffect(() => {
+    defaultMenusFnRef= [
+        {
+          id: "orders",
+          label: "Orders",
+          url: "/dashboard/orders",
+        },
+        {
+          id: "subscriptions",
+          label: "Subscription",
+          url: "/dashboard/subscriptions",
+        },
+        {
+          id: "invoices",
+          label: "Invoices",
+          url: "/dashboard/invoices",
+        },
+        {
+          id: "transactions",
+          label: "Transactions",
+          url: "/dashboard/transactions",
+        },
+        {
+          id: "settings",
+          label: "Settings",
+          url: "/dashboard/settings",
+        },
+        {
+          id: "support",
+          label: "Support Center",
+          url: "/support",
+        },
+      ];
+    
     if (menusFnRef.current) {
-      setMenus(menusFnRef.current());
+      setMenus(menusFnRef.current()|| defaultMenusFnRef);
     }
   }, [menusFnRef.current, location.pathname]);
 
