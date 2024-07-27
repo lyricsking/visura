@@ -11,20 +11,24 @@ const PaymentMethods = {
 } as const;
 type PaymentMethods = typeof PaymentMethods[keyof typeof PaymentMethods];
 
+const PaymentStatus = {
+  "Pending": "pending",
+  "Completed": "completed",
+  "Failed": "failed",
+  } as const;
+type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
+
 export interface ITransaction {
   _id: Types.ObjectId;
-  transactionId: string;
+  invoiceId: Types.ObjectId;
+  transactionId?: string;
   amount: number;
+  fees: number;
   currency: string;
   date: Date;
-  status: 'pending' | 'completed' | 'failed';
+  status: PaymentStatus;
   paymentMethod: PaymentMethods;
   description: string;
-  accountId: Types.ObjectId;
-  merchant: {
-    name: string;
-    merchantId: string;
-  };
-  transactionType: 'debit' | 'credit';
-  fees: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
