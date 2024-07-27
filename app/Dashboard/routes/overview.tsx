@@ -34,7 +34,7 @@ export default function Overview() {
           url: "/dashboard/invoices",
         },
         {
-          id: "transaction",
+          id: "transactions",
           label: "Transactions",
           url: "/dashboard/transactions",
         },

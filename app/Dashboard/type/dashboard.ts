@@ -1,4 +1,4 @@
-interface DashboardData {
+interface IOverview {
   userName: string;
   accountSummary: {
     recentActivity: string;
