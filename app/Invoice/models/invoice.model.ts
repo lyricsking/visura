@@ -10,7 +10,6 @@ const InvoiceItemSchema: Schema = new Schema<IInvoiceItem>({
 });
 
 export type InvoiceModel = Model<IInvoice>
-
 // Define the Invoice schema
 const InvoiceSchema: Schema = new Schema<IInvoice, InvoiceModel>({
   subscriptionId: { type: Schema.Types.ObjectId, ref: 'Subscription', required: true },
