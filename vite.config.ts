@@ -1,4 +1,3 @@
-import { TriangleUpIcon } from "@radix-ui/react-icons";
 import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
 import { defineConfig } from "vite";
@@ -40,7 +39,7 @@ export default defineConfig({
               route(":id", "Dashboard/routes/order-detail.tsx");
             });
             route("profile", "Dashboard/routes/profile.tsx");
-            route("settings", "Dashboard/routes/settings.tsx");
+            route("settings/:screen?", "Dashboard/routes/settings.tsx");
             route("subscriptions", "Dashboard/routes/subscriptions.tsx");
             route("transactions", "Dashboard/routes/transactions.tsx");
           });

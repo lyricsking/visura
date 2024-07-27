@@ -1,4 +1,11 @@
-import { Link, Outlet, UIMatch, useLocation, useMatches, useSearchParams } from "@remix-run/react";
+import {
+  Link,
+  Outlet,
+  UIMatch,
+  useLocation,
+  useMatches,
+  useSearchParams,
+} from "@remix-run/react";
 import {
   PageLayout,
   PageLayoutContent,
@@ -16,17 +23,29 @@ import {
 } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
-import { MutableRefObject, Ref, useCallback, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  Ref,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import AccountMenuButton from "../components/account-menu-button";
-import { MenuFunctionType, SidebarContent, SidebarContentProps, SidebarMenuProps } from "../components/sidebar-content";
+import {
+  MenuFunctionType,
+  SidebarContent,
+  SidebarContentProps,
+  SidebarMenuProps,
+} from "../components/sidebar-content";
 import { set } from "mongoose";
 
 export const handle = {
   breadcrumb: {
     id: "dashboard",
     label: "Dashboard",
-    path:"/dashboard"
-  }
+    path: "/dashboard",
+  },
 };
 
 export default function Layout() {
@@ -35,7 +54,7 @@ export default function Layout() {
   const currentRoute: any = matches.at(-1);
 
   const sidebarMenuRef = useRef<MenuFunctionType | null>(null);
-  
+
   const breadcrumbs: any[] = [];
   matches.forEach((match: any) => {
     if (match && match.handle && match.handle.breadcrumb) {
@@ -100,7 +119,7 @@ function DrawerMenu({ menusFnRef }: DrawerMenuProps) {
   const isOpen = searchParams.get("showMenu") === "true";
 
   const [menus, setMenus] = useState<SidebarMenuProps[]>();
-  
+
   const toggleSidebar = () => {
     if (isOpen) {
       searchParams.delete("showMenu");
@@ -112,41 +131,41 @@ function DrawerMenu({ menusFnRef }: DrawerMenuProps) {
   };
 
   useEffect(() => {
-    defaultMenusFnRef= [
-        {
-          id: "orders",
-          label: "Orders",
-          url: "/dashboard/orders",
-        },
-        {
-          id: "subscriptions",
-          label: "Subscription",
-          url: "/dashboard/subscriptions",
-        },
-        {
-          id: "invoices",
-          label: "Invoices",
-          url: "/dashboard/invoices",
-        },
-        {
-          id: "transactions",
-          label: "Transactions",
-          url: "/dashboard/transactions",
-        },
-        {
-          id: "settings",
-          label: "Settings",
-          url: "/dashboard/settings",
-        },
-        {
-          id: "support",
-          label: "Support Center",
-          url: "/support",
-        },
-      ];
-    
+    const defaultMenusFnRef = [
+      {
+        id: "orders",
+        label: "Orders",
+        url: "/dashboard/orders",
+      },
+      {
+        id: "subscriptions",
+        label: "Subscription",
+        url: "/dashboard/subscriptions",
+      },
+      {
+        id: "invoices",
+        label: "Invoices",
+        url: "/dashboard/invoices",
+      },
+      {
+        id: "transactions",
+        label: "Transactions",
+        url: "/dashboard/transactions",
+      },
+      {
+        id: "settings",
+        label: "Settings",
+        url: "/dashboard/settings",
+      },
+      {
+        id: "support",
+        label: "Support Center",
+        url: "/support",
+      },
+    ];
+
     if (menusFnRef.current) {
-      setMenus(menusFnRef.current()|| defaultMenusFnRef);
+      setMenus(menusFnRef.current() || defaultMenusFnRef);
     }
   }, [menusFnRef.current, location.pathname]);
 

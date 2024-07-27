@@ -7,6 +7,15 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
+import AccountSettings from "../components/account-settings";
+import NotificationSettings from "../components/notification-settings";
+import DisplaySettings from "../components/display-settings";
+import PrivacySettings from "../components/privacy-settings";
+import OrderSettings from "~/Order/components/order-settings";
+import HealthPreferences from "../components/health-settings";
+import HealthSettings from "../components/health-settings";
+import PaymentSettings from "~/Transaction/components/payment-settings";
+import Profile from "./profile";
 
 export const handle = {
   pageName: "Settings",
@@ -17,73 +26,49 @@ export const handle = {
   },
 };
 
-const accountKeys = [
-  "account",
-  "notifications",
-  "display",
-  "privacy",
-  "order",
-  "health",
-  "payment",
-];
+const accountKeys = {
+  account: Profile,
+  notifications: NotificationSettings,
+  display: DisplaySettings,
+  privacy: PrivacySettings,
+  order: OrderSettings,
+  health: HealthSettings,
+  payment: PaymentSettings,
+};
 
 export default function Settings() {
   const { orders } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const params = useParams();
 
-  const status = params["status"] || "pending";
+  const status = params["screen"] || "account";
   const onStatus = (newStatus: string) => {
     navigate(`/dashboard/settings/${newStatus}`);
   };
 
   const { sidebarMenuRef }: any = useOutletContext();
   if (sidebarMenuRef) {
-    sidebarMenuRef.current = () => [
-      {
-        id: "account",
-        label: "Account",
-        url: "settings",
-      },
-      {
-        id: "processing",
-        label: "Processing",
-        url: "setrings/processing",
-      },
-    ];
+    sidebarMenuRef.current = () => null;
   }
 
   return (
     <Tabs defaultValue={status} onValueChange={onStatus}>
-      <TabsList className="border-violet-400">
-        {accountKeys.map((key, index) => (
+      <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
+        {Object.keys(accountKeys).map((key, index) => (
           <TabsTrigger key={key} value={key} className="capitalize">
             {key}
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent value="pending">
-        <div className="">
-          {orders.map((order) => (
-            <div key={order.id} className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg leading-6 font-medium text-gray-900">
-                Order #{order.id}
-              </h2>
-              <p className="mt-1 text-sm text-gray-600">Date: {order.date}</p>
-              <p className="mt-1 text-sm text-gray-600">
-                Total: ${order.total}
-              </p>
-              <p className="mt-1 text-sm text-gray-600">
-                Status: {order.status}
-              </p>
-              <button className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-md">
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
-      </TabsContent>
-      <TabsContent value="processing">Change your password here.</TabsContent>
+      {Object.keys(accountKeys).map((key, index) => {
+        const Tag = accountKeys[key as keyof typeof accountKeys];
+
+        return (
+          <TabsContent key={key} value={key} className="h-fit">
+            {<Tag />}
+          </TabsContent>
+        );
+      })}
     </Tabs>
   );
 }

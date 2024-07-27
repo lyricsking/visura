@@ -13,10 +13,7 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn(
-      "shrink-0 flex border-b outline-none",
-      className
-    )}
+    className={cn("shrink-0 flex border-b outline-none", className)}
     {...props}
   />
 ));
@@ -30,7 +27,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "bg-white px-5 h-[45px] flex-1 flex items-center justify-center outline-none cursor-default",
-      "first:rounded-tl-md last:rounded-tr-md data-[state=active]:border-b data-[state=active]:border-inherit",
+      "first:rounded-tl-md last:rounded-tr-md data-[state=active]:border-b-4 data-[state=active]:border-inherit",
       className
     )}
     {...props}
