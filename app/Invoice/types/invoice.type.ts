@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 
 export interface IInvoiceItem {
   product: Types.ObjectId;
@@ -6,12 +6,12 @@ export interface IInvoiceItem {
   quantity: number;
 }
 
-const InvoiceStatus = {
-  "Unpaid": "unpaid",
-  "Paid": "paid",
-  "Overdue": "overdue",
+export const InvoiceStatus = {
+  Unpaid: "unpaid",
+  Paid: "paid",
+  Overdue: "overdue",
 } as const;
-type InvoiceStatus = typeof InvoiceStatus[keyof typeof InvoiceStatus];
+export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus];
 
 export interface IInvoice {
   _id: Types.ObjectId;
@@ -29,5 +29,5 @@ export interface IInvoice {
   subTotal: number;
   tax: number;
   total: number;
-  status: InvoiceStatus
+  status: InvoiceStatus;
 }

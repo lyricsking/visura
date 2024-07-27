@@ -1,22 +1,23 @@
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 
-const PaymentMethods = {
-  "Card": "card",
+export const PaymentMethods = {
+  Card: "card",
   "Bank Transfer": "banktransfer",
-  "Opay": "opay",
+  Opay: "opay",
   "# USSD": "ussd",
   "Direct Debit": "account",
   //  "Google Pay": "googlepay",
   //  "Apple Pay": "applepay",
 } as const;
-type PaymentMethods = typeof PaymentMethods[keyof typeof PaymentMethods];
+export type PaymentMethods =
+  (typeof PaymentMethods)[keyof typeof PaymentMethods];
 
-const PaymentStatus = {
-  "Pending": "pending",
-  "Completed": "completed",
-  "Failed": "failed",
-  } as const;
-type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
+export const PaymentStatus = {
+  Pending: "pending",
+  Completed: "completed",
+  Failed: "failed",
+} as const;
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];
 
 export interface ITransaction {
   _id: Types.ObjectId;

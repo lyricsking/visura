@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { Outlet, useLoaderData, Link } from "@remix-run/react";
-import InvoiceList from "../components/invoice-list";
+import InvoiceList from "~/Invoice/components/invoice-list";
 
 // Mock data for demonstration
 const mockData = {

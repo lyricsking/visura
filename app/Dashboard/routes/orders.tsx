@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import {
+  Outlet,
   useLoaderData,
   useNavigate,
   useOutletContext,
@@ -13,7 +14,7 @@ export const handle = {
   breadcrumb: {
     id: "orders",
     label: "Orders",
-    path: "/dashboard/orders"
+    path: "/dashboard/orders",
   },
 };
 
@@ -45,35 +46,35 @@ export default function Orders() {
 
   return (
     <>
-    <Tabs defaultValue={status} onValueChange={onStatus}>
-      <TabsList className="border-violet-400">
-        <TabsTrigger value="pending">Pending</TabsTrigger>
-        <TabsTrigger value="processing">Processing</TabsTrigger>
-      </TabsList>
-      <TabsContent value="pending">
-        <div className="">
-          {orders.map((order) => (
-            <div key={order.id} className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg leading-6 font-medium text-gray-900">
-                Order #{order.id}
-              </h2>
-              <p className="mt-1 text-sm text-gray-600">Date: {order.date}</p>
-              <p className="mt-1 text-sm text-gray-600">
-                Total: ${order.total}
-              </p>
-              <p className="mt-1 text-sm text-gray-600">
-                Status: {order.status}
-              </p>
-              <button className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-md">
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
-      </TabsContent>
-      <TabsContent value="processing">Change your password here.</TabsContent>
-    </Tabs>
-    <Outlet />
+      <Tabs defaultValue={status} onValueChange={onStatus}>
+        <TabsList className="border-violet-400">
+          <TabsTrigger value="pending">Pending</TabsTrigger>
+          <TabsTrigger value="processing">Processing</TabsTrigger>
+        </TabsList>
+        <TabsContent value="pending">
+          <div className="">
+            {orders.map((order) => (
+              <div key={order.id} className="px-4 py-5 sm:p-6">
+                <h2 className="text-lg leading-6 font-medium text-gray-900">
+                  Order #{order.id}
+                </h2>
+                <p className="mt-1 text-sm text-gray-600">Date: {order.date}</p>
+                <p className="mt-1 text-sm text-gray-600">
+                  Total: ${order.total}
+                </p>
+                <p className="mt-1 text-sm text-gray-600">
+                  Status: {order.status}
+                </p>
+                <button className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-md">
+                  View Details
+                </button>
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="processing">Change your password here.</TabsContent>
+      </Tabs>
+      <Outlet />
     </>
   );
 }

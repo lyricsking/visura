@@ -1,4 +1,4 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import { useEffect } from "react";
 import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
@@ -7,13 +7,13 @@ export const handle = {
   pageName: "Overview",
   breadcrumb: {
     id: "overview",
-    label: "Overview"
-  }
+    label: "Overview",
+  },
 };
-  
+
 export default function Overview() {
   const data = useLoaderData<typeof loader>();
-  
+
   const { sidebarMenuRef }: any = useOutletContext();
   useEffect(() => {
     if (sidebarMenuRef) {
@@ -50,7 +50,7 @@ export default function Overview() {
         },
       ];
     }
-  }, [sidebarMenuRef])
+  }, [sidebarMenuRef]);
 
   return (
     <div className="space-y-8">
@@ -154,38 +154,70 @@ export default function Overview() {
 
 // Mock data for demonstration
 const mockData = {
-  userName: 'John Doe',
+  userName: "John Doe",
   accountSummary: {
-    recentActivity: 'Ordered Vitamin D Supplement',
-    nextDeliveryDate: '2024-07-25',
+    recentActivity: "Ordered Vitamin D Supplement",
+    nextDeliveryDate: "2024-07-25",
   },
   subscriptions: [
-    { id: '1', name: 'Vitamin D', status: 'Active', nextDeliveryDate: '2024-07-25' },
-    { id: '2', name: 'Omega-3', status: 'Paused', nextDeliveryDate: '2024-08-01' },
+    {
+      id: "1",
+      name: "Vitamin D",
+      status: "Active",
+      nextDeliveryDate: "2024-07-25",
+    },
+    {
+      id: "2",
+      name: "Omega-3",
+      status: "Paused",
+      nextDeliveryDate: "2024-08-01",
+    },
   ],
   orders: [
-    { id: '101', date: '2024-07-10', status: 'Delivered' },
-    { id: '102', date: '2024-07-15', status: 'Processing' },
+    { id: "101", date: "2024-07-10", status: "Delivered" },
+    { id: "102", date: "2024-07-15", status: "Processing" },
   ],
   invoices: [
-    { id: '301', dueDate: '2024-08-01', amount: '$29.99' },
-    { id: '302', dueDate: '2024-08-15', amount: '$19.99' },
+    { id: "301", dueDate: "2024-08-01", amount: "$29.99" },
+    { id: "302", dueDate: "2024-08-15", amount: "$19.99" },
   ],
   notifications: [
-    { id: '201', message: 'Your Vitamin D Supplement has been shipped', date: '2024-07-11' },
-    { id: '202', message: 'New health tips available', date: '2024-07-12' },
+    {
+      id: "201",
+      message: "Your Vitamin D Supplement has been shipped",
+      date: "2024-07-11",
+    },
+    { id: "202", message: "New health tips available", date: "2024-07-12" },
   ],
   healthTips: [
-    { id: '401', title: 'Stay Hydrated', content: 'Drink at least 8 glasses of water daily.' },
-    { id: '402', title: 'Regular Exercise', content: 'Engage in physical activity for at least 30 minutes a day.' },
+    {
+      id: "401",
+      title: "Stay Hydrated",
+      content: "Drink at least 8 glasses of water daily.",
+    },
+    {
+      id: "402",
+      title: "Regular Exercise",
+      content: "Engage in physical activity for at least 30 minutes a day.",
+    },
   ],
   recommendedProducts: [
-    { id: '501', name: 'Vitamin C', description: 'Boost your immune system with our Vitamin C supplement.', price: '$15.99' },
-    { id: '502', name: 'Multivitamin', description: 'Complete multivitamin for daily health.', price: '$25.99' },
+    {
+      id: "501",
+      name: "Vitamin C",
+      description: "Boost your immune system with our Vitamin C supplement.",
+      price: "$15.99",
+    },
+    {
+      id: "502",
+      name: "Multivitamin",
+      description: "Complete multivitamin for daily health.",
+      price: "$25.99",
+    },
   ],
 };
 
 export const loader: LoaderFunction = async () => {
   // Replace with actual data fetching logic
-  return json(mockData)
-}
+  return json(mockData);
+};

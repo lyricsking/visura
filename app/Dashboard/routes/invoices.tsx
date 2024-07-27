@@ -1,6 +1,13 @@
 import { LoaderFunction, json } from "@remix-run/node";
-import { Outlet, useLoaderData, Link } from "@remix-run/react";
-import InvoiceList from "../components/invoice-list";
+import {
+  Outlet,
+  useLoaderData,
+  Link,
+  useNavigate,
+  useParams,
+  useOutletContext,
+} from "@remix-run/react";
+import InvoiceList from "~/Invoice/components/invoice-list";
 
 // Mock data for demonstration
 const mockData = {
@@ -15,7 +22,7 @@ export const handle = {
   breadcrumb: {
     id: "invoices",
     label: "Invoices",
-    path: "/dashboard/invoices"
+    path: "/dashboard/invoices",
   },
 };
 
@@ -43,12 +50,11 @@ export default function Invoices() {
         label: "Processing",
         url: "orders/processing",
       },
-       {
+      {
         id: "paid",
         label: "Processing",
         url: "invoices/paid",
       },
-    
     ];
   }
 
