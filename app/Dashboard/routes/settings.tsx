@@ -41,9 +41,9 @@ export default function Settings() {
   const navigate = useNavigate();
   const params = useParams();
 
-  const status = params["screen"] || "account";
-  const onStatus = (newStatus: string) => {
-    navigate(`/dashboard/settings/${newStatus}`);
+  const settingScreen = params["screen"] || "account";
+  const onsettingScreen = (newsettingScreen: string) => {
+    navigate(`/dashboard/settings/${newsettingScreen}`);
   };
 
   const { sidebarMenuRef }: any = useOutletContext();
@@ -52,7 +52,7 @@ export default function Settings() {
   }
 
   return (
-    <Tabs defaultValue={status} onValueChange={onStatus}>
+    <Tabs defaultValue={settingScreen} onValueChange={onsettingScreen}>
       <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
         {Object.keys(settingsKeys).map((key, index) => (
           <TabsTrigger key={key} value={key} className="capitalize">
@@ -73,16 +73,12 @@ export default function Settings() {
   );
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const orders = [
-    {
-      id: "",
-      date: new Date(),
-      total: 5999.99,
-      status: "pending",
-    },
-  ];
-  return { orders };
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const settingScreen = params.screen || "account";
+  
+  
+  
+  return { };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

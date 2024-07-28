@@ -24,7 +24,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
   },
   roles: {
     type: [String],
-    enum: ['user', 'admin', 'support'],
+    enum: Object.values(UserRoles),
     default: ['user'],
     required: true
   },
