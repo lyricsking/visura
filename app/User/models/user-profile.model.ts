@@ -55,6 +55,7 @@ const UserProfileSchema = new Schema<IUserProfile, UserProfileModel>({
   userId: {
     type: Types.ObjectId,
     ref: 'User',
+    unique: true,
     required: true
   },
   firstName: { type: String, required: true },
