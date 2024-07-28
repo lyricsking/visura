@@ -1,13 +1,6 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 
-export const handle = {
-  pageName: "Overview",
-  breadcrumb: () => <span>Overview</span>,
-};
-
-export default function Profile() {
-  const user = useLoaderData<typeof loader>();
+export default function ProfileSettings() {
 
   return (
     <>
@@ -82,27 +75,3 @@ className = "mt-1 p-2 border border-gray-300 rounded-md w-full" />
           </div> </div> </Form> </>
 );
 }
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = {
-    id: "",
-    name: "",
-    email: "",
-  }
-  return user;
-};
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const actionType = formData.get('_action');
-  
-  if (actionType === 'updateProfile') {
-    //await updateUserData(formData);
-  } else if (actionType === 'changePassword') {
-    //await changeUserPassword(formData);
-  } else if (actionType === 'deleteAccount') {
-    //await deleteUserAccount(formData.get('userId'));
-    return redirect('/logout');
-  }
-  
-  return redirect('/profile');
-};
