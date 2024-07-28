@@ -1,8 +1,8 @@
 // Create User
 const createUser = async (email: string, password: string, roles: UserRoles[] = ['user']) => {
-  const exists = await UserModel.count({email}).exec();
-  if(count > 0){
-    throw new Error('User already exists');
+  const existingUser = await UserModel.findOne({email}).exec();
+  if(existingUser){
+    return existingUser;
   }
   const newUser = new UserModel({ email, password, roles });
   

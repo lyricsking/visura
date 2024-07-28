@@ -5,10 +5,14 @@ interface IUserMethods {
   isValidPassword(): Promise<boolean>;
 }
 
-export type UserModel = Model<IUser, {}, IUserMethods>
+interface IUserVirtuals {
+  isValidPassword(): Promise<boolean>;
+}
+
+export type UserModel = Model<IUser, {}, IUserMethods, IUserVirtuals>
 
 // Create the Mongoose schema
-const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
+const UserSchema = new Schema<IUser, UserModel, IUserMethods, {}, IUserVirtuals>({
   email: {
     type: String,
     required: true,
@@ -60,6 +64,14 @@ UserSchema.pre('save', function(next) {
 // Instance method to check password validity
 UserSchema.methods("isValidPassword", async function(password: string): Promise<boolean> {
   return bcrypt.compare(password, this.password);
+});
+
+// Virtual for user's profile
+UserSchema.virtual('profile', {
+  ref: 'UserProfile',
+  localField: '_id',
+  foreignField: 'userId',
+  justOne: true,
 });
 
 // Create and export the User model
