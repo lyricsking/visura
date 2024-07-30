@@ -26,13 +26,9 @@ interface IOrder {
 }
 
 interface IHealth {
-  supplementPreferences: string[];
-  healthGoals: string;
-  allergies: string[];
-}
-
-interface IPayment {
-  savedMethods: { type: string; last4: string }[];
+  supplementPreferences?: string[];
+  healthGoals?: string;
+  allergies?: string[];
 }
 
 export interface IUserProfile {
@@ -41,12 +37,12 @@ export interface IUserProfile {
   firstName: string;
   lastName: string;
   phone: string;
+  photo: string;
   preferences: {
     notifications: INotification;
     display: IDisplay;
     privacy: IPrivacy;
     order: IOrder;
-    health: IHealth;
-    payment: IPayment;
+    health?: IHealth;
   };
 }

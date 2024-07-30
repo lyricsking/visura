@@ -61,6 +61,7 @@ const UserProfileSchema = new Schema<IUserProfile, UserProfileModel>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   phone: { type: String, required: true },
+  photo: { type: String, required: true },
   preferences: {
     notifications: { type: NotificationSchema, required: true },
     display: { type: DisplaySchema, required: true },

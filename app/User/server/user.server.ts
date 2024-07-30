@@ -1,18 +1,63 @@
+export type CreateUserProps = {
+  email: string, 
+  password?: string, 
+  roles: UserRoles[] = ['user'], 
+  populate: any[]
+}
 // Create User
-const createUser = async (email: string, password: string, roles: UserRoles[] = ['user']) => {
-  const existingUser = await UserModel.findOne({email}).exec();
+export const createUser = async (props: CreateUserProps) => {
+  const { email, password, roles, populate } = props;
+  
+  console.log("Creating user");
+
+  let existingUser = await UserModel.findOne({email}).populate(populate).exec();
+  
   if(existingUser){
     return existingUser;
   }
-  const newUser = new UserModel({ email, password, roles });
   
-  return await newUser.save();
+  let newUser = new User({ 
+    email, 
+    ...( password && { password }),
+    roles
+  });
+  
+  await newUser.save()
+  /*.then(user => {
+    const preferences = {
+      notifications: {
+        preferredSupportChannel: 'email',
+        orderUpdates: true,
+        promotional: true,
+        subscriptionReminders: true,
+        supportNotification: true,
+      },
+      display: {
+        theme: 'light',
+        language: 'en',
+        currency: 'NGN',
+      },
+      privacy: {
+        dataSharing: true,
+        activityTracking: true,
+        accountVisibility: true,
+      },
+      order: {
+        deliveryInstructions: 'Leave at door',
+        packaging: 'eco-friendly',
+      },
+    };
+  });
+  */
+  
+  // Query the saved user and populate the virtual field
+  return await User.findById(newUser._id).populate(populate).exec();
 };
 
 // Read User
 const getUserById = async (userId: Types.ObjectId) => {
   
-  const user= await UserModel.findById(userId).exec();
+  const user = await UserModel.findById(userId).exec();
   
   if (!user) {
     throw new Error('User not found');

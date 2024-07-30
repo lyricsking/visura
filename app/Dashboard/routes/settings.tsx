@@ -37,13 +37,12 @@ const settingsKeys = {
 };
 
 export default function Settings() {
-  const { orders } = useLoaderData<typeof loader>();
+  const { profile, setting, users } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const params = useParams();
 
-  const settingScreen = params["screen"] || "account";
-  const onsettingScreen = (newsettingScreen: string) => {
-    navigate(`/dashboard/settings/${newsettingScreen}`);
+  const onSettingChange = (newSetting: string) => {
+    navigate(`/dashboard/settings/${newSetting}`);
   };
 
   const { sidebarMenuRef }: any = useOutletContext();
@@ -52,7 +51,7 @@ export default function Settings() {
   }
 
   return (
-    <Tabs defaultValue={settingScreen} onValueChange={onsettingScreen}>
+    <Tabs defaultValue={setting} onValueChange={onSettingChange}>
       <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
         {Object.keys(settingsKeys).map((key, index) => (
           <TabsTrigger key={key} value={key} className="capitalize">
@@ -65,7 +64,7 @@ export default function Settings() {
 
         return (
           <TabsContent key={key} value={key} className="h-fit">
-            {<Tag />}
+            {<Tag profile={profile} />}
           </TabsContent>
         );
       })}
@@ -74,11 +73,16 @@ export default function Settings() {
 }
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const settingScreen = params.screen || "account";
+  const settingsType = params.setting || "account";
   
+  // Manually get the session
+  let session = await getSession(request.headers.get("cookie"));
   
+  const authUser: AuthUser = session.get(authenticator.sessionKey);
   
-  return { };
+  const userProfile = await getProfileByUserId(user.id);
+  
+  return json({ profile: userProfile, setting: settingsType, user: authUser });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

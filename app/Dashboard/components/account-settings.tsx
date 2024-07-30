@@ -1,4 +1,4 @@
-export default function AccountSettings() {
+export default function AccountSettings(props: Partial<SettingsType>) {
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Account Settings</h2>

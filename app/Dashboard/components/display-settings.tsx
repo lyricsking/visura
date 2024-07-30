@@ -1,4 +1,5 @@
-export default function DisplaySettings() {
+export default function DisplaySettings
+(props: Partial<SettingsType>) {
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Display Settings</h2>

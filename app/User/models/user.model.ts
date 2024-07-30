@@ -21,9 +21,12 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods, {}, IUserVirtuals>
     lowercase: true,
     match: [/.+@.+\..+/, 'Please enter a valid email address']
   },
+  hasPassword: {
+    type: Boolean, 
+    default: false,
+  },
   password: {
     type: String,
-    required: true,
     minlength: 6
   },
   roles: {

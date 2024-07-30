@@ -38,7 +38,6 @@ import {
   SidebarContentProps,
   SidebarMenuProps,
 } from "../components/sidebar-content";
-import { set } from "mongoose";
 
 export const handle = {
   breadcrumb: {
@@ -49,6 +48,8 @@ export const handle = {
 };
 
 export default function Layout() {
+  const data = useLoaderData<typeof loader>();
+  
   const matches = useMatches();
   const location = useLocation();
   const currentRoute: any = matches.at(-1);
@@ -106,6 +107,15 @@ export default function Layout() {
       </PageLayoutContent>
     </PageLayout>
   );
+}
+
+export const loader: LoaderFunction = async () => {
+  
+  const user: AuthUser = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/auth",
+  });
+  
+  return json({ user });
 }
 
 type DrawerMenuProps = {
