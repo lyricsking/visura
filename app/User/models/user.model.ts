@@ -1,11 +1,12 @@
-import { Schema, model, Types, Document } from 'mongoose';
+import mongoose, { Schema, Model, Types, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { IUser, UserRoles } from '../types/user.types';
 
-interface IUserMethods {
+export interface IUserMethods {
   isValidPassword(): Promise<boolean>;
 }
 
-interface IUserVirtuals {
+export interface IUserVirtuals {
   isValidPassword(): Promise<boolean>;
 }
 
@@ -51,9 +52,9 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods, {}, IUserVirtuals>
 
 // Middleware to hash password before saving user document
 UserSchema.pre('save', async function(next) {
-  if (this.isModified('password')) {
+  if (this.password && this.isModified('password')) {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password =  await bcrypt.hash(this.password, salt);
   }
   next();
 });
@@ -65,8 +66,8 @@ UserSchema.pre('save', function(next) {
 });
 
 // Instance method to check password validity
-UserSchema.methods("isValidPassword", async function(password: string): Promise<boolean> {
-  return bcrypt.compare(password, this.password);
+UserSchema.method("isValidPassword", async function isValidPassword(password: string): Promise<boolean> {
+  return this.password && bcrypt.compare(password, this.password) || false;
 });
 
 // Virtual for user's profile

@@ -1,29 +1,41 @@
+import { Types } from "mongoose";
+import User, { UserModel } from "../models/user.model";
+import { IUser, UserRoles } from "../types/user.types";
+import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
+
 export type CreateUserProps = {
   email: string, 
   password?: string, 
-  roles: UserRoles[] = ['user'], 
+  roles: UserRoles[], 
   populate: any[]
 }
 // Create User
-export const createUser = async (props: CreateUserProps) => {
-  const { email, password, roles, populate } = props;
-  
+export const createUser = async (
+  props: CreateUserProps
+) => {
+  const { email, password, roles, populate = [] } = props;
+
   console.log("Creating user");
 
-  let existingUser = await UserModel.findOne({email}).populate(populate).exec();
-  
-  if(existingUser){
-    return existingUser;
-  }
-  
-  let newUser = new User({ 
-    email, 
-    ...( password && { password }),
-    roles
-  });
-  
-  await newUser.save()
-  /*.then(user => {
+  try {
+    await connectToDatabase();
+    
+    let existingUser = await User.findOne({ email })
+      .populate(populate || [])
+      .exec();
+
+    if (existingUser) {
+      return existingUser;
+    }
+
+    let newUser = new User({
+      email,
+      ...(password && { password }),
+      roles,
+    });
+
+    await newUser.save();
+    /*.then(user => {
     const preferences = {
       notifications: {
         preferredSupportChannel: 'email',
@@ -49,15 +61,22 @@ export const createUser = async (props: CreateUserProps) => {
     };
   });
   */
-  
-  // Query the saved user and populate the virtual field
-  return await User.findById(newUser._id).populate(populate).exec();
+
+    // Query the saved user and populate the virtual field
+    const user= await User.findById(newUser._id).populate(populate).exec();
+    if (user) return user;
+    throw new Error()
+  } catch (error) {
+    throw new Error("User could not be created");
+  } finally {
+    await disconnectDatabase();
+  }
 };
 
 // Read User
-const getUserById = async (userId: Types.ObjectId) => {
+export const getUserById = async (userId: Types.ObjectId) => {
   
-  const user = await UserModel.findById(userId).exec();
+  const user = await User.findById(userId).exec();
   
   if (!user) {
     throw new Error('User not found');
@@ -67,8 +86,8 @@ const getUserById = async (userId: Types.ObjectId) => {
 };
 
 // Update User
-const updateUser = async (userId: Types.ObjectId, updateData: Partial<IUser>) => {
-  const updatedUser =  await UserModel.findByIdAndUpdate(userId, updateData, { new: true }).exec();
+export const updateUser = async (userId: Types.ObjectId, updateData: Partial<IUser>) => {
+  const updatedUser =  await User.findByIdAndUpdate(userId, updateData, { new: true }).exec();
   
   if (!updatedUser ) {
     throw new Error('User or profile not found');
@@ -78,12 +97,12 @@ const updateUser = async (userId: Types.ObjectId, updateData: Partial<IUser>) =>
 };
 
 // Delete User
-const deleteUser = async (userId: Types.ObjectId) => {
-  const deletedUser= await UserModel.findByIdAndDelete(userId).exec();
-  
-  if(!deletedUser){
-    throw new Error('User not found');
+export const deleteUser = async (userId: Types.ObjectId) => {
+  const deletedUser = await User.findByIdAndDelete(userId).exec();
+
+  if (!deletedUser) {
+    throw new Error("User not found");
   }
-  
+
   return deletedUser;
 };

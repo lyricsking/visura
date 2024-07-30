@@ -2,6 +2,7 @@ import {
   Link,
   Outlet,
   UIMatch,
+  useLoaderData,
   useLocation,
   useMatches,
   useSearchParams,
@@ -38,6 +39,9 @@ import {
   SidebarContentProps,
   SidebarMenuProps,
 } from "../components/sidebar-content";
+import { json, LoaderFunction } from "@remix-run/node";
+import { AuthUser } from "~/Auth/types/auth-user.type";
+import { authenticator } from "~/Auth/server/auth.server";
 
 export const handle = {
   breadcrumb: {
@@ -109,14 +113,13 @@ export default function Layout() {
   );
 }
 
-export const loader: LoaderFunction = async () => {
-  
+export const loader: LoaderFunction = async ({ request }) => {
   const user: AuthUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/auth",
   });
-  
+
   return json({ user });
-}
+};
 
 type DrawerMenuProps = {
   menusFnRef: MutableRefObject<MenuFunctionType | null>;

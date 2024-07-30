@@ -1,3 +1,7 @@
+import { Types } from "mongoose";
+import UserProfile from "../models/user-profile.model";
+import { IUserProfile } from "../types/user-profile.type";
+
 type CreateUserProfileProps = {
   userId: Types.ObjectId,
   firstName: string,
@@ -7,24 +11,36 @@ type CreateUserProfileProps = {
   preferences: IUserProfile['preferences']
 }
 // Create User Profile
-const createUserProfile = async (props: CreateUserProfileProps) => {
+export const createUserProfile = async (props: CreateUserProfileProps) => {
   const { userId, firstName, lastName, phone, photo, preferences } = props;
-  
-  const newUserProfile = new UserProfileModel({ userId, firstName, lastName, phone, photo, preferences });
+
+  const newUserProfile = new UserProfile({
+    userId,
+    firstName,
+    lastName,
+    phone,
+    photo,
+    preferences,
+  });
   return await newUserProfile.save();
 };
 
 // Read User Profile
-const getProfileByUserId = async (userId: Types.ObjectId) => {
-  return await UserProfileModel.findOne({ userId }).exec();
+export const getProfileByUserId = async (userId: Types.ObjectId) => {
+  return await UserProfile.findOne({ userId }).exec();
 };
 
 // Update User Profile
-const updateUserProfile = async (userId: Types.ObjectId, updateData: Partial<IUserProfile>) => {
-  return await UserProfileModel.findOneAndUpdate({ userId }, updateData, { new: true }).exec();
+export const updateUserProfile = async (
+  userId: Types.ObjectId,
+  updateData: Partial<IUserProfile>
+) => {
+  return await UserProfile.findOneAndUpdate({ userId }, updateData, {
+    new: true,
+  }).exec();
 };
 
 // Delete User Profile
-const deleteUserProfile = async (userId: Types.ObjectId) => {
-  return await UserProfileModel.findOneAndDelete({ userId }).exec();
+export const deleteUserProfile = async (userId: Types.ObjectId) => {
+  return await UserProfile.findOneAndDelete({ userId }).exec();
 };

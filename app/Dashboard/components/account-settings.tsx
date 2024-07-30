@@ -1,3 +1,5 @@
+import { SettingsType } from "../type/settings.type";
+
 export default function AccountSettings(props: Partial<SettingsType>) {
   return (
     <div>

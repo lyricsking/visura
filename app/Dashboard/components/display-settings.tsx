@@ -1,3 +1,5 @@
+import { SettingsType } from "../type/settings.type";
+
 export default function DisplaySettings
 (props: Partial<SettingsType>) {
   return (

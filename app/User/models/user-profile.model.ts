@@ -1,4 +1,5 @@
-import { Schema, model, Types, Document } from "mongoose";
+import mongoose, { Schema, Model, Types, Document } from "mongoose";
+import { IUserProfile } from "../types/user-profile.type";
 
 // Define sub-schemas for each preference type
 const NotificationSchema = new Schema({
@@ -53,7 +54,7 @@ export type UserProfileModel = Model<IUserProfile>
 // Define the main user profile schema
 const UserProfileSchema = new Schema<IUserProfile, UserProfileModel>({
   userId: {
-    type: Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     unique: true,
     required: true
