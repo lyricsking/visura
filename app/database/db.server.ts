@@ -3,31 +3,46 @@ import mongoose from "mongoose";
 // Declare mongoose global variable
 declare global {
   // eslint-disable-next-line no-var
-  var __mongoClient: typeof mongoose | null;
+  var mongoose: { conn: any; promise: any };
 }
 
-global.__mongoClient = global.__mongoClient || null;
+const MONGODB_URI = process.env.MONGODB_URI;
 
-export const connectToDatabase = async (): Promise<typeof mongoose> => {
-  if (!global.__mongoClient) {
-    try {
-      // Replace the connection string with your MongoDB URI
-      global.__mongoClient = await mongoose.connect(process.env.MONGODB_URI || "");
-      console.log("Connected to the database");
-    } catch (error) {
-      global.__mongoClient = null;
-      console.error("Error connecting to the database", error);
-      throw error;
-    }
+if (!MONGODB_URI) {
+  throw new Error(
+    "Please define the MONGODB_URI environment variable inside .env"
+  );
+}
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectToDatabase() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  return global.__mongoClient;
-};
-
-export const disconnectDatabase = async (): Promise<void> => {
-  if (global.__mongoClient) {
-    await mongoose.disconnect();
-    global.__mongoClient = null;
-    console.log("Disconnected from the database");
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI!).then((mongoose) => {
+      return mongoose;
+    });
   }
-};
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await mongoose.connection.close();
+  process.exit(0);
+});
+
+export default connectToDatabase;

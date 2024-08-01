@@ -1,10 +1,11 @@
 export async function getSupplements() {}
-import { connectToDatabase, disconnectDatabase } from "~/database/db.server.js";
+import connectToDatabase from "~/database/db.server.js";
 import Supplement, { SupplementModel } from "./supplement.model";
+import { ISupplement } from "./supplement.type";
 
 export const findSupplement = async (
   query: Record<string, any>
-): Promise<SupplementModel[]> => {
+): Promise<ISupplement[]> => {
   try {
     await connectToDatabase();
 
@@ -14,7 +15,5 @@ export const findSupplement = async (
   } catch (e) {
     console.log(e);
     throw e;
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };

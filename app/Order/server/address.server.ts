@@ -1,4 +1,4 @@
-import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
+import connectToDatabase from "~/database/db.server";
 import {
   Address,
   AddressRegion,
@@ -29,9 +29,7 @@ export const createOrUpdateAddress = async ({
     console.log("Address saved successfully.");
   } catch (err) {
     console.error("Error saving address.", err);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const getAddress = async (id: string) => {
@@ -44,9 +42,7 @@ export const getAddress = async (id: string) => {
     return address;
   } catch (e) {
     console.log("Failed to fetch address:", e);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const getAddressesByEmail = async (
@@ -62,8 +58,6 @@ export const getAddressesByEmail = async (
   } catch (e) {
     console.log("Failed to fetch addresses:", e);
     throw e;
-  } finally {
-    await disconnectDatabase();
   }
 };
 
@@ -81,9 +75,7 @@ export const getAddressRegions = async (): Promise<
   } catch (e) {
     console.log("Failed to fetch regions :", e);
     throw e;
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const deleteAddress = async (id: Types.ObjectId) => {};

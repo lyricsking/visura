@@ -1,7 +1,7 @@
-import { Types } from "mongoose";
-import User, { UserModel } from "../models/user.model";
+import { HydratedDocument, NullExpression, Types } from "mongoose";
+import User, { IUserMethods, IUserVirtuals, UserModel } from "../models/user.model";
 import { IUser, UserRoles } from "../types/user.types";
-import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
+import connectToDatabase from "~/database/db.server";
 
 export type CreateUserProps = {
   email: string, 
@@ -68,21 +68,20 @@ export const createUser = async (
     throw new Error()
   } catch (error) {
     throw new Error("User could not be created");
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 // Read User
-export const getUserById = async (userId: Types.ObjectId) => {
-  
-  const user = await User.findById(userId).exec();
-  
-  if (!user) {
-    throw new Error('User not found');
-  }
-  
-  return user;
+export const getUserById = async (
+  userId: Types.ObjectId
+): Promise<HydratedDocument<IUser, IUserMethods & IUserVirtuals> | null> => {
+  try {
+    await connectToDatabase();
+
+    return await User.findById(userId).exec();
+  } catch (err) {
+    throw err;
+  } 
 };
 
 // Update User

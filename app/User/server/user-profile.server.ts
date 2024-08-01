@@ -1,6 +1,8 @@
 import { Types } from "mongoose";
 import UserProfile from "../models/user-profile.model";
 import { IUserProfile } from "../types/user-profile.type";
+import { HydratedDocument } from "mongoose";
+import connectToDatabase from "~/database/db.server";
 
 type CreateUserProfileProps = {
   userId: Types.ObjectId,
@@ -11,7 +13,7 @@ type CreateUserProfileProps = {
   preferences: IUserProfile['preferences']
 }
 // Create User Profile
-export const createUserProfile = async (props: CreateUserProfileProps) => {
+export const createUserProfile = async (props: CreateUserProfileProps): Promise<IUserProfile> => {
   const { userId, firstName, lastName, phone, photo, preferences } = props;
 
   const newUserProfile = new UserProfile({
@@ -26,8 +28,16 @@ export const createUserProfile = async (props: CreateUserProfileProps) => {
 };
 
 // Read User Profile
-export const getProfileByUserId = async (userId: Types.ObjectId) => {
-  return await UserProfile.findOne({ userId }).exec();
+export const getProfileByUserId = async (
+  userId: Types.ObjectId
+): Promise<HydratedDocument<IUserProfile> | null> => {
+  try {
+    await connectToDatabase();
+
+    return await UserProfile.findOne({ userId }).exec();
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Update User Profile

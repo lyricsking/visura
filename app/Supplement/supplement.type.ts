@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export const Gender = {
   male: "male",
   female: "female",

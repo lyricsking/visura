@@ -1,4 +1,3 @@
-import { Link } from 'remix';
 
 export default function About() {
   return (
@@ -43,9 +42,9 @@ export default function About() {
             height="450"
             frameBorder="0"
             style={{ border: 0 }}
-            allowFullScreen=""
+            allowFullScreen
             aria-hidden="false"
-            tabIndex="0"
+            tabIndex={0}
           ></iframe>
         </div>
       </section>

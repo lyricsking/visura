@@ -5,7 +5,7 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 import ProfileSettings from "../components/profile-settings";
@@ -22,6 +22,7 @@ import { authenticator } from "~/Auth/server/auth.server";
 import { getUserById } from "~/User/server/user.server";
 import { SchemaTypeOptions, Types } from "mongoose";
 import { getProfileByUserId } from "~/User/server/user-profile.server";
+import { SettingsType } from "../type/settings.type";
 
 export const handle = {
   pageName: "Settings",
@@ -32,7 +33,7 @@ export const handle = {
   },
 };
 
-const settingsKeys = {
+const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
   notifications: NotificationSettings,
   display: DisplaySettings,
@@ -70,7 +71,12 @@ export default function Settings() {
 
         return (
           <TabsContent key={key} value={key} className="h-fit">
-            {<Tag profile={profile} user={user} />}
+            {
+              <Tag
+                profile={profile as SettingsType["profile"]}
+                user={user as SettingsType["user"]}
+              />
+            }
           </TabsContent>
         );
       })}
@@ -89,7 +95,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const [user, profile] = await Promise.all([
     await getUserById(new Types.ObjectId(authUser.id)),
     await getProfileByUserId(new Types.ObjectId(authUser.id)),
-  ]);
+  ])
   return json({ profile: profile, setting: settingsType, user: user });
 };
 

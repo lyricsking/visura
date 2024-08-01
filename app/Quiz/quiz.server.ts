@@ -4,13 +4,13 @@ import mongoose from "mongoose";
 import { Gender, type ISupplement } from "~/Supplement/supplement.type";
 import { Answers } from "./quiz.type";
 import { findSupplement } from "~/Supplement/supplement.server";
-import type { ISupplementModel } from "~/Supplement/supplement.model";
 import { getNanoid } from "~/utils";
-import { IItem } from "~/Order/type/order.type";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
+import { IItem } from "~/Order/types/order.type";
+import { SupplementModel } from "~/Supplement/supplement.model";
 
 interface SupplementWithScore {
-  supplement: ISupplementModel;
+  supplement: ISupplement;
   weight: number; //  Calculated weight based on relevance to user's selections
 }
 
@@ -21,7 +21,7 @@ export const quizPrefs = createCookie("quizPrefs", {
 type CreateCartType = {
   name: string;
   email: string;
-  supplements: ISupplementModel[];
+  supplements: ISupplement[];
 };
 /**
  * Converts the recommendations to order with status cart
@@ -38,7 +38,7 @@ export async function createCart({
     const quantity = 1;
 
     return {
-      productId: supplement.id,
+      productId: supplement._id,
       name: supplement.name,
       quantity: quantity,
       price: supplement.price,
@@ -58,7 +58,7 @@ export async function createCart({
  */
 export async function recommendSupplements(
   answers: Answers
-): Promise<ISupplementModel[]> {
+): Promise<ISupplement[]> {
   const age = Number(answers.age);
 
   const budget = answers["budget"];
@@ -97,7 +97,7 @@ export async function recommendSupplements(
 
   //  Weighting mechanism to rank supplements based on how well they match the user's criteria. This ensures that the most relevant supplements are considered first
   const supplementWeights: SupplementWithScore[] = matchedSupplements.map(
-    (supplement: ISupplementModel) => {
+    (supplement: any) => {
       let weight = 0;
       if (
         answers.preferences.some((pref: string) =>
@@ -216,7 +216,7 @@ export async function recommendSupplements(
   //  Initialize totalCost variable, holds the total cost of supplements
   let totalCost = 0;
   //  Cache for supplements filter
-  const recommendedSupplements: ISupplementModel[] = [];
+  const recommendedSupplements: ISupplement[] = [];
   //  Filter out supplement based of relevance, while ensuring totalCost is withing budget range.
   for (const { supplement } of supplementWeights) {
     if (totalCost + supplement.price <= maxBudget) {

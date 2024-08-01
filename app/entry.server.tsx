@@ -11,6 +11,7 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import connectToDatabase from "./database/db.server";
 
 const ABORT_DELAY = 5_000;
 
@@ -138,3 +139,6 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
+
+// Init db connection
+await connectToDatabase()

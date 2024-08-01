@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { connectToDatabase, disconnectDatabase } from "~/database/db.server";
+import connectToDatabase from "~/database/db.server";
 import { IItem, IOrder } from "../types/order.type";
 import { Order, type OrderModel } from "../models/order.model";
 import { Discount } from "../models/discount.model";
@@ -29,9 +29,7 @@ export const getCartByEmailId = async (
   } catch (err) {
     console.error("Error retrieving cart:", err);
     throw err;
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const addItemsToCart = async (
@@ -57,8 +55,6 @@ export const addItemsToCart = async (
     console.log("Items added to cart successfully.");
   } catch (err) {
     console.error("Error adding items to cart:", err);
-  } finally {
-    await disconnectDatabase();
   }
 };
 
@@ -81,9 +77,7 @@ export const addItemToCart = async (
     console.log("Item added to cart successfully.");
   } catch (err) {
     console.error("Error adding item to cart:", err);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const applyDiscount = async ({
@@ -108,9 +102,7 @@ export const applyDiscount = async ({
     );
   } catch (err) {
     console.error("Error applying discount on order", err);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const updateCartItem = async (
@@ -136,9 +128,7 @@ export const updateCartItem = async (
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const updateCartAddress = async ({
@@ -167,8 +157,6 @@ export const updateCartAddress = async ({
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
-  } finally {
-    await disconnectDatabase();
   }
 };
 
@@ -180,9 +168,7 @@ export const deleteCart = async (email: string): Promise<void> => {
     console.log("Item deleted successfully.");
   } catch (err) {
     console.error("Error deleting item in cart:", err);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
 
 export const updatePaymentMethod = async ({
@@ -208,7 +194,5 @@ export const updatePaymentMethod = async ({
     console.log("Order payment updated successfully.");
   } catch (err) {
     console.error("Error updating order payment method:", err);
-  } finally {
-    await disconnectDatabase();
-  }
+  } 
 };
