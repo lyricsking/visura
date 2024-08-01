@@ -49,6 +49,7 @@ export default function Settings() {
   const params = useParams();
 
   const onSettingChange = (newSetting: string) => {
+    alert(newSetting)
     navigate(`/dashboard/settings/${newSetting}`);
   };
 

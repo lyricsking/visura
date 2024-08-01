@@ -38,7 +38,7 @@ export default defineConfig({
             route("orders/:status?", "Dashboard/routes/orders.tsx", () => {
               route(":id", "Dashboard/routes/order-detail.tsx");
             });
-            route("settings/:screen?", "Dashboard/routes/settings.tsx");
+            route("settings/:setting?", "Dashboard/routes/settings.tsx");
             route("subscriptions", "Dashboard/routes/subscriptions.tsx");
             route("transactions", "Dashboard/routes/transactions.tsx");
           });
