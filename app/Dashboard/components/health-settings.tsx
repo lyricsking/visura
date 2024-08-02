@@ -1,30 +1,34 @@
 export default function HealthSettings() {
+  
+  const fetcher = useFetcher();
+  
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Health Preferences</h2>
-      <form method="post">
+      <fetcher.Form method="post">
+        <input type="hidden" name="_action" value={HEALTH_UPDATE_ACTION} />
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="supplementPreferences"
             className="block text-sm font-medium text-gray-700"
           >
             Supplement Preferences
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             name="supplementPreferences"
             id="supplementPreferences"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="mt-1"
           />
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="healthGoals"
             className="block text-sm font-medium text-gray-700"
           >
             Health Goals
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             name="healthGoals"
             id="healthGoals"
@@ -32,26 +36,26 @@ export default function HealthSettings() {
           />
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="allergies"
             className="block text-sm font-medium text-gray-700"
           >
             Allergies & Sensitivities
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             name="allergies"
             id="allergies"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="mt-1"
           />
         </div>
-        <button
+        <Button
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Save
-        </button>
-      </form>
+        </Button>
+      </fetcher.Form>
     </div>
   );
 }

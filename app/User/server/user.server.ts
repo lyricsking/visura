@@ -20,7 +20,7 @@ export const createUser = async (
   try {
     await connectToDatabase();
     
-    let existingUser = await User.findOne({ email })
+    let existingUser = await User.findOneAndUpdate({ email }, { isActive: true }, { new: true })
       .populate(populate || [])
       .exec();
 
@@ -95,6 +95,24 @@ export const updateUser = async (userId: Types.ObjectId, updateData: Partial<IUs
   return updatedUser;
 };
 
+// Update User Password
+export const updateUserPassword = async (userId: Types.ObjectId, currentPassword: string, newPassword: string) => {
+  const user = await User.findById(userId).exec();
+  
+  if (!user ) {
+    throw new Error('User not found');
+  }
+  
+  const isPasswordValid = await user.isPasswordValid(currentPassword);
+  
+  if(!isPasswordValid){
+    throw new Error("Password is invalid")
+  }
+  
+  user.password = newPassword;
+  return await user.save();
+};
+
 // Delete User
 export const deleteUser = async (userId: Types.ObjectId) => {
   const deletedUser = await User.findByIdAndDelete(userId).exec();
@@ -104,4 +122,15 @@ export const deleteUser = async (userId: Types.ObjectId) => {
   }
 
   return deletedUser;
+};
+
+// Disable User
+export const disableUser = async (userId: Types.ObjectId) => {
+  const disabledUser = await User.findByIdAndUpdate(userId, {isActive: false}).exec();
+
+  if (!disabledUser) {
+    throw new Error("User not found");
+  }
+
+  return disabledUser;
 };

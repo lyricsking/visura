@@ -1,16 +1,18 @@
 export default function OrderSettings() {
+  const fetcher = useFetcher();
+  
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Order Preferences</h2>
-      <form method="post">
+      <fetcher.Form method="post">
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="deliveryInstructions"
             className="block text-sm font-medium text-gray-700"
           >
             Delivery Instructions
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             name="deliveryInstructions"
             id="deliveryInstructions"
@@ -18,20 +20,24 @@ export default function OrderSettings() {
           />
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="packagingPreferences"
             className="block text-sm font-medium text-gray-700"
           >
             Packaging Preferences
-          </label>
-          <select
+          </Label>
+          <Select
             name="packagingPreferences"
-            id="packagingPreferences"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           >
-            <option value="eco-friendly">Eco-friendly</option>
-            <option value="discreet">Discreet</option>
-          </select>
+            <SelectTrigger id="packagingPreferences"
+            >
+              <SelectValue placeholder={} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="eco-friendly">Eco-friendly</SelectItem>
+              <SelectItem value="discreet">Discreet</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <button
           type="submit"
@@ -39,7 +45,7 @@ export default function OrderSettings() {
         >
           Save
         </button>
-      </form>
+      </fetcher.Form>
     </div>
   );
 }

@@ -6,12 +6,17 @@ import { Input } from "~/components/input";
 
 export default function ProfileSettings(props: SettingsType) {
   const { user, profile } = props;
-
+  
+  const accountFetcher = useFetcher();
+  const passwordsFetcher = useFetcher();
+  const accountStatusFetcher = useFetcher();
+  
   const name = profile?.firstName && profile.lastName ?profile.firstName + " " + profile.lastName: "";
   return (
     <>
-      <Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value="updateProfile" />
+      <accountFetcher.Form method="post" className="mt-6 space-y-6">
+        <input type="hidden" name="_action" value={PROFILE_UPDATE_ACTION}
+        />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -25,7 +30,7 @@ export default function ProfileSettings(props: SettingsType) {
                 type="text"
                 name="name"
                 defaultValue={name}
-                placeholder="Your name"
+                placeholder="Your full name"
                 className={cn("mt-1", !name && "italic")}
               />
             </div>
@@ -38,21 +43,23 @@ export default function ProfileSettings(props: SettingsType) {
                 name="email"
                 defaultValue={user?.email}
                 className="mt-1"
+                disabled
               />
             </div>
             <div className="mt-4">
-              <button
+              <Button
                 type="submit"
-                className="bg-indigo-400 text-white py-2 px-4 rounded-md"
+                className="bg-indigo-400 text-white"
+                disabled={accountFetcher.state !== "idle"}
               >
-                Update Profile
-              </button>
+                { accountFetcher.state != "idle" ? "Submitting":"Update Profile"}
+              </Button>
             </div>
           </div>
         </div>
-      </Form>
-      <Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value="changePassword" />
+      </accountFetcher.Form>
+      <passwordsFetcher.Form method="post" className="mt-6 space-y-6">
+        <input type="hidden" name="_action" value={PASSWORD_UPDATE_ACTION} />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -67,22 +74,22 @@ export default function ProfileSettings(props: SettingsType) {
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700">
                 New Password
-              </label>{" "}
+              </label>
               <Input type="password" name="newPassword" className="mt-1" />
             </div>
             <div className="mt-4">
-              <button
+              <Button
                 type="submit"
-                className="bg-indigo-400 text-white py-2 px-4 rounded-md"
+                className="bg-indigo-400 text-white"disabled={passwordsFetcher.state !== "idle"}
               >
-                Change Password
-              </button>
+                { passwordsFetcher.state != "idle" ? "Submitting":"Change Password"}
+              </Button>
             </div>
           </div>
         </div>
-      </Form>
-      <Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value="deleteAccount" />{" "}
+      </passwordsFetcher.Form>
+      <accountStatusFetcher.Form method="post" className="mt-6 space-y-6">
+        <input type="hidden" name="_action" value={ACCOUNT_UPDATE_ACTION} />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -93,16 +100,17 @@ export default function ProfileSettings(props: SettingsType) {
             </p>
             <input type="hidden" name="userId" value={user?._id.toString()} />
             <div className="mt-4">
-              <button
+              <Button
                 type="submit"
-                className="bg-yellow-500 text-white py-2 px-4 rounded-md"
+                className="bg-yellow-500 text-white"
+                disabled={accountFetcher.state !== "idle"}
               >
-                Delete Account
-              </button>
+                {accountStatusFetcher!== "idle"?"Submitting":"Delete Account"}
+              </Button>
             </div>
-          </div>{" "}
-        </div>{" "}
-      </Form>{" "}
+          </div>
+        </div>
+      </accountStatusFetcher.Form>
     </>
   );
 }

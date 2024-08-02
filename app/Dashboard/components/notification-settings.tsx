@@ -5,20 +5,23 @@ import { Label } from "~/components/label";
 import { Form } from "@remix-run/react";
 
 export default function NotificationSettings({ profile }: SettingsType) {
+  
+  const fetcher = useFetcher();
+  
   const notifications = profile?.preferences.notifications;
   
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Notification Settings</h2>
-      <Form method="post">
+      <fetcher.Form method="post">
+        <input type="hidden" name="_action" value={NOTIFICATION_UPDATE_ACTION} />
         <div className="flex flex-col justify-between gap-4 divide-y">
           <div className="py-2">
-            <label
-              htmlFor="order-updates"
+            <h3
               className="block text-sm font-medium text-gray-700"
             >
               Order Updates
-            </label>
+            </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
               <Label htmlFor="order-updates">
                 {notifications?.orderUpdates ? "Enabled" : "Disabled"} 
@@ -27,12 +30,11 @@ export default function NotificationSettings({ profile }: SettingsType) {
             </div>
           </div>
           <div className="py-2">
-            <label
-              htmlFor="subscriptionReminders"
+            <h3
               className="block text-sm font-medium text-gray-700"
             >
               Subscription Reminders
-            </label>
+            </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
               <Label htmlFor="subscriptionReminders">
                 {notifications?.subscriptionReminders ? "Enabled" : "Disabled"}
@@ -41,12 +43,11 @@ export default function NotificationSettings({ profile }: SettingsType) {
             </div>
           </div>
           <div className="py-2">
-            <label
-              htmlFor="promotional"
+            <h3
               className="block text-sm font-medium text-gray-700"
             >
               Promotional Notifications
-            </label>
+            </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
               <Label htmlFor="promotional">
                 {notifications?.promotional ? "Enabled" : "Disabled"}
@@ -55,12 +56,11 @@ export default function NotificationSettings({ profile }: SettingsType) {
             </div>
           </div>
           <div className="py-2">
-            <label
-              htmlFor="supportNotification"
+            <h3
               className="block text-sm font-medium text-gray-700"
             >
               Subscription Reminders
-            </label>
+            </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
               <Label htmlFor="supportNotification">
                 {notifications?.supportNotification ? "Enabled" : "Disabled"}
@@ -68,9 +68,19 @@ export default function NotificationSettings({ profile }: SettingsType) {
               <Switch id="supportNotification" />
             </div>
           </div>
-          <div className="pt-2">
+          <div className="py-2">
+            <h3
+              className="block text-sm font-medium text-gray-700"
+            >
+              Preferred Support Channel
+            </h3>
+            <Label htmlFor="preferredSupportChannel">
+               {notifications?.supportNotification ? "Enabled" : "Disabled"}
+            </Label>
             <Select name="preferredSupportChannel">
-              <SelectTrigger className="flex bg-white">
+              <SelectTrigger 
+                id="preferredSupportChannel"
+                className="flex bg-white">
                 <SelectValue
                   placeholder={notifications?.preferredSupportChannel}
                 />
@@ -89,7 +99,7 @@ export default function NotificationSettings({ profile }: SettingsType) {
             Save
           </button>
         </div>
-      </Form>
+      </fetcher.Form>
     </div>
   );
 }

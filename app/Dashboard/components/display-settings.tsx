@@ -2,71 +2,86 @@ import { SettingsType } from "../type/settings.type";
 
 export default function DisplaySettings
 (props: Partial<SettingsType>) {
+  
+  const fetcher = useFetcher();
+  
+  const display = profile?.preferences.display;
+  
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Display Settings</h2>
-      <form method="post">
+      <fetcher.Form method="post">
+        <input type="hidden" name="_action" value={DISPLAY_UPDATE_ACTION} />
         <div className="mb-4">
-          <label
-            htmlFor="theme"
+          <Label
+            htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
             Theme
-          </label>
-          <select
-            name="theme"
-            id="theme"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="system">System</option>
-          </select>
+          </Label>
+          <Select name="theme">
+            <SelectTrigger id="name" className="flex bg-white">
+              <SelectValue
+                placeholder={display?.theme}
+              />
+            </SelectTrigger>
+            <SelectContent className=" bg-white">
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
+          
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="language"
             className="block text-sm font-medium text-gray-700"
           >
             Language
-          </label>
-          <select
-            name="language"
-            id="language"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
-          </select>
+          </Label>
+          <Select name="language">
+            <SelectTrigger id="language" className="flex bg-white">
+              <SelectValue
+                placeholder={display?.theme}
+              />
+            </SelectTrigger>
+            <SelectContent className=" bg-white">
+          <SelectItem value="en">English</SelectItem>
+            <SelectItem value="es">Spanish</SelectItem>
+            <SelectItem value="fr">French</SelectItem>
+            <SelectItem value="de">German</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="currency"
             className="block text-sm font-medium text-gray-700"
           >
             Currency
-          </label>
-          <select
+          </Label>
+          <Select
             name="currency"
-            id="currency"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           >
-            <option value="usd">USD - United States Dollar</option>
-            <option value="eur">EUR - Euro</option>
-            <option value="gbp">GBP - British Pound</option>
-            <option value="jpy">JPY - Japanese Yen</option>
-            {/* Add more currencies as needed -->*/}
-          </select>
+            <SelectTrigger id="currency" className="flex bg-white">
+              <SelectValue
+                placeholder={display?.theme}
+              />
+            </SelectTrigger>
+            <SelectContent className=" bg-white">
+            <SelectItem value="ngn">NGN - Nigeria Naira</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <button
+        <Button
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Save
-        </button>
-      </form>
+        </Button>
+      </fetcher.Form>
     </div>
   );
 }

@@ -101,16 +101,36 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  // Manually get the session
+  let session = await getSession(request.headers.get("cookie"));
+  
+  const authUser: AuthUser = session.get(authenticator.sessionKey);
+  
   const formData = await request.formData();
-  const actionType = formData.get('_action');
+  const formObject = formDataToObject(formData);
   
-  if (actionType === "") {
-    //await updateUserData(formData);
-  } else if (actionType === 'changePassword') {
-    //await changeUserPassword(formData);
-  } else if (actionType === 'deleteAccount') {
-    //await deleteUserAccount(formData.get('userId'));
+  const { _action, otherData } = formObject;
+  
+  let userId = new Types.ObjectId(authUser.id);
+  
+  if (_action === PROFILE_UPDATE_ACTION) {
+    await updateUserProfile(userId, {name: otherData["name"]});
+  } else if (_action === PASSWORD_UPDATE_ACTION) {
+    await updateUserPassword(userId, otherData["currentPassword"], otherData["newPassword"]);
+  } else if (_action === ACCOUNT_UPDATE_ACTION) {
+    await disableUser(formData.get('userId'));
     return redirect('/logout');
-  }else if(actionType === ""){}
-  
+  } else if(_action === NOTIFICATION_UPDATE_ACTION) {
+    await updateUserProfile(userId, {
+      notifications: {...otherData}
+    });
+  } else if(_action === DISPLAY_UPDATE_ACTION) {
+    await updateUserProfile(userId, {
+      display: {...otherData}
+    });
+  } else if (_action === ORDER_UPDATE_ACTION) {
+    await updateUserProfile(userId, {
+      order: { ...otherData }
+    });
+  }
 };
