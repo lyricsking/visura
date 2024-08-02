@@ -1,4 +1,5 @@
 import { useFetcher } from "@remix-run/react";
+import Button from "~/components/button";
 import { Input } from "~/components/input";
 import { Label } from "~/components/label";
 import {
@@ -8,8 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/select";
+import { Textarea } from "~/components/textarea";
+import { SettingsType } from "~/Dashboard/type/settings.type";
 
-export default function OrderSettings() {
+export default function OrderSettings(props: SettingsType) {
+  const { profile } = props;
+  const order = profile?.preferences.order;
+
   const fetcher = useFetcher();
 
   return (
@@ -18,41 +24,43 @@ export default function OrderSettings() {
       <fetcher.Form method="post">
         <div className="mb-4">
           <Label
-            htmlFor="deliveryInstructions"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Delivery Instructions
-          </Label>
-          <Input
-            type="text"
-            name="deliveryInstructions"
-            id="deliveryInstructions"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div className="mb-4">
-          <Label
             htmlFor="packagingPreferences"
             className="block text-sm font-medium text-gray-700"
           >
             Packaging Preferences
           </Label>
-          <Select name="packagingPreferences">
-            <SelectTrigger id="packagingPreferences">
-              <SelectValue placeholder={""} />
+          <Select name="packagingPreferences" defaultValue={order?.packaging}>
+            <SelectTrigger id="packagingPreferences" className="mt-1 bg-white">
+              <SelectValue placeholder="Select preferred packaging preference" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className=" bg-white">
               <SelectItem value="eco-friendly">Eco-friendly</SelectItem>
               <SelectItem value="discreet">Discreet</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <button
+        <div className="mb-4">
+          <Label
+            htmlFor="deliveryInstructions"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Delivery Instructions
+          </Label>
+          <Textarea
+            id="deliveryInstructions"
+            name="deliveryInstructions"
+            placeholder="Ring the doorbell once and place the package by the door."
+            className="mt-1 block w-full rounded-m focus:ring-offset-2"
+
+          />
+        </div>
+        <Button
           type="submit"
-          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          radius={"md"}
+          className="w-full bg-indigo-500 text-white"
         >
           Save
-        </button>
+        </Button>
       </fetcher.Form>
     </div>
   );

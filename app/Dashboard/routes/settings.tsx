@@ -59,10 +59,10 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
   notifications: NotificationSettings,
   display: DisplaySettings,
-  privacy: PrivacySettings,
+  //privacy: PrivacySettings,
   order: OrderSettings,
-  health: HealthSettings,
-  payment: PaymentSettings,
+  //health: HealthSettings,
+  //payment: PaymentSettings,
 };
 
 export default function Settings() {
@@ -71,7 +71,6 @@ export default function Settings() {
   const params = useParams();
 
   const onSettingChange = (newSetting: string) => {
-    alert(newSetting);
     navigate(`/dashboard/settings/${newSetting}`);
   };
 

@@ -29,9 +29,9 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
           >
             Theme
           </Label>
-          <Select name="theme">
-            <SelectTrigger id="name" className="flex bg-white">
-              <SelectValue placeholder={display?.theme} />
+          <Select name="theme" defaultValue={display?.theme         }>
+            <SelectTrigger id="name" className="mt-1 flex bg-white">
+              <SelectValue placeholder={"Set preferred theme"} />
             </SelectTrigger>
             <SelectContent className=" bg-white">
               <SelectItem value="light">Light</SelectItem>
@@ -47,15 +47,12 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
           >
             Language
           </Label>
-          <Select name="language">
-            <SelectTrigger id="language" className="flex bg-white">
-              <SelectValue placeholder={display?.theme} />
+          <Select name="language" defaultValue={display?.language} >
+            <SelectTrigger id="language" className="mt-1 flex bg-white">
+              <SelectValue placeholder="Set preferred language setting" />
             </SelectTrigger>
             <SelectContent className=" bg-white">
               <SelectItem value="en">English</SelectItem>
-              <SelectItem value="es">Spanish</SelectItem>
-              <SelectItem value="fr">French</SelectItem>
-              <SelectItem value="de">German</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -66,18 +63,19 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
           >
             Currency
           </Label>
-          <Select name="currency">
-            <SelectTrigger id="currency" className="flex bg-white">
-              <SelectValue placeholder={display?.theme} />
+          <Select name="currency" defaultValue={display?.currency} >
+            <SelectTrigger id="currency" className="mt-1 flex bg-white">
+              <SelectValue placeholder="Set preferred currency setting" />
             </SelectTrigger>
             <SelectContent className=" bg-white">
-              <SelectItem value="ngn">NGN - Nigeria Naira</SelectItem>
+              <SelectItem value="NGN">NGN - Nigerian Naira</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <Button
           type="submit"
-          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          radius={"md"}
+          className="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500"
         >
           Save
         </Button>

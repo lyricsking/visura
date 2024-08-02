@@ -70,7 +70,7 @@ export default function NotificationSettings({ profile }: SettingsType) {
               <Switch id="supportNotification" />
             </div>
           </div>
-          <div className="py-2">
+          <div className="py-2" hidden aria-hidden>
             <h3 className="block text-sm font-medium text-gray-700">
               Preferred Support Channel
             </h3>
@@ -87,7 +87,7 @@ export default function NotificationSettings({ profile }: SettingsType) {
                 />
               </SelectTrigger>
               <SelectContent className=" bg-white">
-                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="email">Email</SelectItem>
                 <SelectItem value="dark">Dark</SelectItem>
                 <SelectItem value="system">System</SelectItem>
               </SelectContent>

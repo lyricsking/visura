@@ -57,7 +57,8 @@ export default function ProfileSettings(props: SettingsType) {
             <div className="mt-4">
               <Button
                 type="submit"
-                className="bg-indigo-400 text-white"
+                 radius={"md"}      
+                className="w-full text-white bg-indigo-500 hover:bg-indigo-500 focus:ring-indigo-300"
                 disabled={accountFetcher.state !== "idle"}
               >
                 {accountFetcher.state != "idle"
@@ -89,8 +90,8 @@ export default function ProfileSettings(props: SettingsType) {
             </div>
             <div className="mt-4">
               <Button
-                type="submit"
-                className="bg-indigo-400 text-white"
+                type="submit"radius={"md"}
+                className="w-full text-white bg-indigo-500 hover:bg-indigo-500 focus:ring-indigo-300"
                 disabled={passwordsFetcher.state !== "idle"}
               >
                 {passwordsFetcher.state != "idle"
@@ -114,8 +115,9 @@ export default function ProfileSettings(props: SettingsType) {
             <input type="hidden" name="userId" value={user?._id.toString()} />
             <div className="mt-4">
               <Button
-                type="submit"
-                className="bg-yellow-500 text-white"
+          type="submit"
+          radius={"md"}
+          className="w-full text-white bg-yellow-500 hover:bg-yellow-500 focus:ring-yellow-300"
                 disabled={accountFetcher.state !== "idle"}
               >
                 {accountStatusFetcher.state !== "idle"
