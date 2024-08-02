@@ -1,22 +1,30 @@
 import { LoaderFunction } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, useFetcher } from "@remix-run/react";
 import { SettingsType } from "../type/settings.type";
 import { cn } from "~/utils";
 import { Input } from "~/components/input";
+import {
+  ACCOUNT_UPDATE_ACTION,
+  PASSWORD_UPDATE_ACTION,
+  PROFILE_UPDATE_ACTION,
+} from "../utils/constants";
+import Button from "~/components/button";
 
 export default function ProfileSettings(props: SettingsType) {
   const { user, profile } = props;
-  
+
   const accountFetcher = useFetcher();
   const passwordsFetcher = useFetcher();
   const accountStatusFetcher = useFetcher();
-  
-  const name = profile?.firstName && profile.lastName ?profile.firstName + " " + profile.lastName: "";
+
+  const name =
+    profile?.firstName && profile.lastName
+      ? profile.firstName + " " + profile.lastName
+      : "";
   return (
     <>
       <accountFetcher.Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value={PROFILE_UPDATE_ACTION}
-        />
+        <input type="hidden" name="_action" value={PROFILE_UPDATE_ACTION} />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -52,7 +60,9 @@ export default function ProfileSettings(props: SettingsType) {
                 className="bg-indigo-400 text-white"
                 disabled={accountFetcher.state !== "idle"}
               >
-                { accountFetcher.state != "idle" ? "Submitting":"Update Profile"}
+                {accountFetcher.state != "idle"
+                  ? "Submitting"
+                  : "Update Profile"}
               </Button>
             </div>
           </div>
@@ -80,9 +90,12 @@ export default function ProfileSettings(props: SettingsType) {
             <div className="mt-4">
               <Button
                 type="submit"
-                className="bg-indigo-400 text-white"disabled={passwordsFetcher.state !== "idle"}
+                className="bg-indigo-400 text-white"
+                disabled={passwordsFetcher.state !== "idle"}
               >
-                { passwordsFetcher.state != "idle" ? "Submitting":"Change Password"}
+                {passwordsFetcher.state != "idle"
+                  ? "Submitting"
+                  : "Change Password"}
               </Button>
             </div>
           </div>
@@ -105,7 +118,9 @@ export default function ProfileSettings(props: SettingsType) {
                 className="bg-yellow-500 text-white"
                 disabled={accountFetcher.state !== "idle"}
               >
-                {accountStatusFetcher!== "idle"?"Submitting":"Delete Account"}
+                {accountStatusFetcher.state !== "idle"
+                  ? "Submitting"
+                  : "Delete Account"}
               </Button>
             </div>
           </div>

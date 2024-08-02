@@ -53,7 +53,7 @@ export const handle = {
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
-  
+
   const matches = useMatches();
   const location = useLocation();
   const currentRoute: any = matches.at(-1);
@@ -76,7 +76,7 @@ export default function Layout() {
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
         <PageLayoutHeaderItem className="border">
-          <Link to={"/"} replace className="w-full">
+          <Link to={"/dashboard"} replace className="w-full">
             <h1 className="text-[28px] font-bold text-center tracking-tight">
               {pkg.name}.
             </h1>

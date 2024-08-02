@@ -1,38 +1,44 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/select";
 import { SettingsType } from "../type/settings.type";
 import { Switch } from "~/components/switch";
 import { Label } from "~/components/label";
-import { Form } from "@remix-run/react";
+import { Form, useFetcher } from "@remix-run/react";
+import { NOTIFICATION_UPDATE_ACTION } from "../utils/constants";
 
 export default function NotificationSettings({ profile }: SettingsType) {
-  
   const fetcher = useFetcher();
-  
+
   const notifications = profile?.preferences.notifications;
-  
+
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Notification Settings</h2>
       <fetcher.Form method="post">
-        <input type="hidden" name="_action" value={NOTIFICATION_UPDATE_ACTION} />
+        <input
+          type="hidden"
+          name="_action"
+          value={NOTIFICATION_UPDATE_ACTION}
+        />
         <div className="flex flex-col justify-between gap-4 divide-y">
           <div className="py-2">
-            <h3
-              className="block text-sm font-medium text-gray-700"
-            >
+            <h3 className="block text-sm font-medium text-gray-700">
               Order Updates
             </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
               <Label htmlFor="order-updates">
-                {notifications?.orderUpdates ? "Enabled" : "Disabled"} 
+                {notifications?.orderUpdates ? "Enabled" : "Disabled"}
               </Label>
               <Switch id="order-updates" />
             </div>
           </div>
           <div className="py-2">
-            <h3
-              className="block text-sm font-medium text-gray-700"
-            >
+            <h3 className="block text-sm font-medium text-gray-700">
               Subscription Reminders
             </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
@@ -43,9 +49,7 @@ export default function NotificationSettings({ profile }: SettingsType) {
             </div>
           </div>
           <div className="py-2">
-            <h3
-              className="block text-sm font-medium text-gray-700"
-            >
+            <h3 className="block text-sm font-medium text-gray-700">
               Promotional Notifications
             </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
@@ -56,9 +60,7 @@ export default function NotificationSettings({ profile }: SettingsType) {
             </div>
           </div>
           <div className="py-2">
-            <h3
-              className="block text-sm font-medium text-gray-700"
-            >
+            <h3 className="block text-sm font-medium text-gray-700">
               Subscription Reminders
             </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
@@ -69,18 +71,17 @@ export default function NotificationSettings({ profile }: SettingsType) {
             </div>
           </div>
           <div className="py-2">
-            <h3
-              className="block text-sm font-medium text-gray-700"
-            >
+            <h3 className="block text-sm font-medium text-gray-700">
               Preferred Support Channel
             </h3>
             <Label htmlFor="preferredSupportChannel">
-               {notifications?.supportNotification ? "Enabled" : "Disabled"}
+              {notifications?.supportNotification ? "Enabled" : "Disabled"}
             </Label>
             <Select name="preferredSupportChannel">
-              <SelectTrigger 
+              <SelectTrigger
                 id="preferredSupportChannel"
-                className="flex bg-white">
+                className="flex bg-white"
+              >
                 <SelectValue
                   placeholder={notifications?.preferredSupportChannel}
                 />

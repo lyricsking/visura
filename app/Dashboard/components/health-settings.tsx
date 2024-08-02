@@ -1,7 +1,12 @@
+import { useFetcher } from "@remix-run/react";
+import { HEALTH_UPDATE_ACTION } from "../utils/constants";
+import { Label } from "~/components/label";
+import { Input } from "~/components/input";
+import Button from "~/components/button";
+
 export default function HealthSettings() {
-  
   const fetcher = useFetcher();
-  
+
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Health Preferences</h2>
@@ -42,12 +47,7 @@ export default function HealthSettings() {
           >
             Allergies & Sensitivities
           </Label>
-          <Input
-            type="text"
-            name="allergies"
-            id="allergies"
-            className="mt-1"
-          />
+          <Input type="text" name="allergies" id="allergies" className="mt-1" />
         </div>
         <Button
           type="submit"

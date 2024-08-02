@@ -4,16 +4,20 @@ import { IUserProfile } from "../types/user-profile.type";
 import { HydratedDocument } from "mongoose";
 import connectToDatabase from "~/database/db.server";
 
+type PreferencesKeys = keyof IUserProfile["preferences"];
+
 type CreateUserProfileProps = {
-  userId: Types.ObjectId,
-  firstName: string,
-  lastName: string,
-  phone: string,
-  photo?: string,
-  preferences: IUserProfile['preferences']
-}
+  userId: Types.ObjectId;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  photo?: string;
+  preferences: IUserProfile["preferences"];
+};
 // Create User Profile
-export const createUserProfile = async (props: CreateUserProfileProps): Promise<IUserProfile> => {
+export const createUserProfile = async (
+  props: CreateUserProfileProps
+): Promise<IUserProfile> => {
   const { userId, firstName, lastName, phone, photo, preferences } = props;
 
   const newUserProfile = new UserProfile({
@@ -48,6 +52,21 @@ export const updateUserProfile = async (
   return await UserProfile.findOneAndUpdate({ userId }, updateData, {
     new: true,
   }).exec();
+};
+// Update User preferences
+export const updateUserPreference = async <T extends PreferencesKeys>(
+  userId: Types.ObjectId,
+  preferenceKey: T,
+  updateData: IUserProfile["preferences"][T]
+) => {
+  // Use dynamic path to update the specific field in preferences
+  const update = { [`preferences.${preferenceKey}`]: updateData };
+
+  return UserProfile.findByIdAndUpdate(
+    userId,
+    update,
+    { new: true } // Return the updated document
+  );
 };
 
 // Delete User Profile

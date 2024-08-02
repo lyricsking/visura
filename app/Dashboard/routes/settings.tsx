@@ -1,4 +1,9 @@
-import { ActionFunction, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import {
+  ActionFunction,
+  json,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
 import {
   useLoaderData,
   useNavigate,
@@ -19,10 +24,27 @@ import PaymentSettings from "~/Transaction/components/payment-settings";
 import { getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { authenticator } from "~/Auth/server/auth.server";
-import { getUserById } from "~/User/server/user.server";
+import {
+  disableUser,
+  getUserById,
+  updateUserPassword,
+} from "~/User/server/user.server";
 import { SchemaTypeOptions, Types } from "mongoose";
-import { getProfileByUserId } from "~/User/server/user-profile.server";
+import {
+  getProfileByUserId,
+  updateUserPreference,
+  updateUserProfile,
+} from "~/User/server/user-profile.server";
 import { SettingsType } from "../type/settings.type";
+import formDataToObject from "~/utils/form-data-to-object";
+import {
+  ACCOUNT_UPDATE_ACTION,
+  DISPLAY_UPDATE_ACTION,
+  NOTIFICATION_UPDATE_ACTION,
+  ORDER_UPDATE_ACTION,
+  PASSWORD_UPDATE_ACTION,
+  PROFILE_UPDATE_ACTION,
+} from "../utils/constants";
 
 export const handle = {
   pageName: "Settings",
@@ -49,7 +71,7 @@ export default function Settings() {
   const params = useParams();
 
   const onSettingChange = (newSetting: string) => {
-    alert(newSetting)
+    alert(newSetting);
     navigate(`/dashboard/settings/${newSetting}`);
   };
 
@@ -87,50 +109,49 @@ export default function Settings() {
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
-  
+
   // Manually get the session
   let session = await getSession(request.headers.get("cookie"));
-  
+
   const authUser: AuthUser = session.get(authenticator.sessionKey);
-  
+
   const [user, profile] = await Promise.all([
     await getUserById(new Types.ObjectId(authUser.id)),
     await getProfileByUserId(new Types.ObjectId(authUser.id)),
-  ])
+  ]);
   return json({ profile: profile, setting: settingsType, user: user });
 };
 
 export const action: ActionFunction = async ({ request }) => {
   // Manually get the session
   let session = await getSession(request.headers.get("cookie"));
-  
+
   const authUser: AuthUser = session.get(authenticator.sessionKey);
-  
+
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
-  
+
   const { _action, otherData } = formObject;
-  
+
   let userId = new Types.ObjectId(authUser.id);
-  
+
   if (_action === PROFILE_UPDATE_ACTION) {
-    await updateUserProfile(userId, {name: otherData["name"]});
+    const [firstName, lastName] = otherData["name"].split(" ");
+    await updateUserProfile(userId, { firstName, lastName });
   } else if (_action === PASSWORD_UPDATE_ACTION) {
-    await updateUserPassword(userId, otherData["currentPassword"], otherData["newPassword"]);
+    await updateUserPassword(
+      userId,
+      otherData["currentPassword"],
+      otherData["newPassword"]
+    );
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
-    await disableUser(formData.get('userId'));
-    return redirect('/logout');
-  } else if(_action === NOTIFICATION_UPDATE_ACTION) {
-    await updateUserProfile(userId, {
-      notifications: {...otherData}
-    });
-  } else if(_action === DISPLAY_UPDATE_ACTION) {
-    await updateUserProfile(userId, {
-      display: {...otherData}
-    });
+    await disableUser(userId);
+    return redirect("/logout");
+  } else if (_action === NOTIFICATION_UPDATE_ACTION) {
+    await updateUserPreference(userId, "notifications", otherData);
+  } else if (_action === DISPLAY_UPDATE_ACTION) {
+    await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
-    await updateUserProfile(userId, {
-      order: { ...otherData }
-    });
+    await updateUserPreference(userId, "order", otherData);
   }
 };

@@ -141,4 +141,8 @@ function handleBrowserRequest(
 }
 
 // Init db connection
-await connectToDatabase()
+async function init() {
+  await connectToDatabase();
+}
+
+init();

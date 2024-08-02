@@ -1,6 +1,17 @@
+import { useFetcher } from "@remix-run/react";
+import { Input } from "~/components/input";
+import { Label } from "~/components/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/select";
+
 export default function OrderSettings() {
   const fetcher = useFetcher();
-  
+
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Order Preferences</h2>
@@ -26,12 +37,9 @@ export default function OrderSettings() {
           >
             Packaging Preferences
           </Label>
-          <Select
-            name="packagingPreferences"
-          >
-            <SelectTrigger id="packagingPreferences"
-            >
-              <SelectValue placeholder={} />
+          <Select name="packagingPreferences">
+            <SelectTrigger id="packagingPreferences">
+              <SelectValue placeholder={""} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="eco-friendly">Eco-friendly</SelectItem>

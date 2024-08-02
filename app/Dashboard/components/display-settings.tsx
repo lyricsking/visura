@@ -1,12 +1,22 @@
+import { useFetcher } from "@remix-run/react";
 import { SettingsType } from "../type/settings.type";
+import { DISPLAY_UPDATE_ACTION } from "../utils/constants";
+import { Label } from "~/components/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/select";
+import Button from "~/components/button";
 
-export default function DisplaySettings
-(props: Partial<SettingsType>) {
-  
+export default function DisplaySettings(props: Partial<SettingsType>) {
+  const { profile } = props;
   const fetcher = useFetcher();
-  
+
   const display = profile?.preferences.display;
-  
+
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Display Settings</h2>
@@ -21,9 +31,7 @@ export default function DisplaySettings
           </Label>
           <Select name="theme">
             <SelectTrigger id="name" className="flex bg-white">
-              <SelectValue
-                placeholder={display?.theme}
-              />
+              <SelectValue placeholder={display?.theme} />
             </SelectTrigger>
             <SelectContent className=" bg-white">
               <SelectItem value="light">Light</SelectItem>
@@ -31,7 +39,6 @@ export default function DisplaySettings
               <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
-          
         </div>
         <div className="mb-4">
           <Label
@@ -42,15 +49,13 @@ export default function DisplaySettings
           </Label>
           <Select name="language">
             <SelectTrigger id="language" className="flex bg-white">
-              <SelectValue
-                placeholder={display?.theme}
-              />
+              <SelectValue placeholder={display?.theme} />
             </SelectTrigger>
             <SelectContent className=" bg-white">
-          <SelectItem value="en">English</SelectItem>
-            <SelectItem value="es">Spanish</SelectItem>
-            <SelectItem value="fr">French</SelectItem>
-            <SelectItem value="de">German</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="es">Spanish</SelectItem>
+              <SelectItem value="fr">French</SelectItem>
+              <SelectItem value="de">German</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -61,17 +66,12 @@ export default function DisplaySettings
           >
             Currency
           </Label>
-          <Select
-            name="currency"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          >
+          <Select name="currency">
             <SelectTrigger id="currency" className="flex bg-white">
-              <SelectValue
-                placeholder={display?.theme}
-              />
+              <SelectValue placeholder={display?.theme} />
             </SelectTrigger>
             <SelectContent className=" bg-white">
-            <SelectItem value="ngn">NGN - Nigeria Naira</SelectItem>
+              <SelectItem value="ngn">NGN - Nigeria Naira</SelectItem>
             </SelectContent>
           </Select>
         </div>
