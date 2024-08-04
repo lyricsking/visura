@@ -6,3 +6,4 @@ export const NOTIFICATION_UPDATE_ACTION="notification-update-action";
 export const HEALTH_UPDATE_ACTION="health-update-action";
 export const ORDER_UPDATE_ACTION="order-update-action";
 export const PRIVACY_UPDATE_ACTION="privacy-update-action";
+export const LOGOUT_ACTION = "logout-action";

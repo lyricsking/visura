@@ -12,6 +12,7 @@ const images = [
 
 export default function HomeCarousel() {
   const imagesUrl = "/images/";
+
   return (
     <Carousel
       className="w-full"
@@ -21,7 +22,10 @@ export default function HomeCarousel() {
     >
       <CarouselContent className="-px-8">
         {images.map((image, index) => (
-          <CarouselItem key={index} className="aspect-w-5 aspect-h-3">
+          <CarouselItem
+            key={index}
+            className="aspect-w-5 aspect-h-3 md:aspect-w-7 md:aspect-h-3"
+          >
             <div className="flex-[0_0_100%] border flex items-center justify-center">
               <img
                 className="object-cover"

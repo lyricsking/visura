@@ -117,6 +117,9 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const [user, profile] = await Promise.all([
     await getUserById(new Types.ObjectId(authUser.id)),
     await getProfileByUserId(new Types.ObjectId(authUser.id)),
+
+    // await getUserById(new Types.ObjectId()),
+    // await getProfileByUserId(new Types.ObjectId()),
   ]);
   return json({ profile: profile, setting: settingsType, user: user });
 };
@@ -130,13 +133,17 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
-  const { _action, otherData } = formObject;
+  const { _action, ...otherData } = formObject;
 
   let userId = new Types.ObjectId(authUser.id);
+  // let userId = new Types.ObjectId();
 
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
-    await updateUserProfile(userId, { firstName, lastName });
+    const x = await updateUserProfile(userId, { firstName, lastName });
+    console.log(x);
+
+    return x;
   } else if (_action === PASSWORD_UPDATE_ACTION) {
     await updateUserPassword(
       userId,
@@ -149,8 +156,8 @@ export const action: ActionFunction = async ({ request }) => {
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
     await updateUserPreference(userId, "notifications", otherData);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-    await updateUserPreference(userId, "display", otherData);
+    return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
-    await updateUserPreference(userId, "order", otherData);
+    return await updateUserPreference(userId, "order", otherData);
   }
 };

@@ -16,7 +16,7 @@ type CreateUserProfileProps = {
 };
 // Create User Profile
 export const createUserProfile = async (
-  props: CreateUserProfileProps
+  props: Partial<IUserProfile>
 ): Promise<IUserProfile> => {
   const { userId, firstName, lastName, phone, photo, preferences } = props;
 
@@ -44,7 +44,7 @@ export const getProfileByUserId = async (
   }
 };
 
-// Update User Profile
+// Update User
 export const updateUserProfile = async (
   userId: Types.ObjectId,
   updateData: Partial<IUserProfile>

@@ -1,7 +1,6 @@
 import {
   Link,
   Outlet,
-  UIMatch,
   useLoaderData,
   useLocation,
   useMatches,
@@ -14,34 +13,21 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import pkg from "../../../package.json";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/components/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
-import {
-  MutableRefObject,
-  Ref,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import AccountMenuButton from "../components/account-menu-button";
 import {
   MenuFunctionType,
   SidebarContent,
-  SidebarContentProps,
   SidebarMenuProps,
 } from "../components/sidebar-content";
-import { json, LoaderFunction } from "@remix-run/node";
+import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { authenticator } from "~/Auth/server/auth.server";
+import formDataToObject from "~/utils/form-data-to-object";
+import { LOGOUT_ACTION } from "../utils/constants";
 
 export const handle = {
   breadcrumb: {
@@ -55,7 +41,6 @@ export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
   const matches = useMatches();
-  const location = useLocation();
   const currentRoute: any = matches.at(-1);
 
   const sidebarMenuRef = useRef<MenuFunctionType | null>(null);
@@ -119,6 +104,17 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
 
   return json({ user });
+};
+
+export const action: ActionFunction = async ({request}) => {
+  const formData = await request.formData();
+  const formObject = formDataToObject(formData);
+  
+  const { _action } = formObject;
+  if (_action === LOGOUT_ACTION) {
+    return authenticator.logout(request, { redirectTo: "/auth" });
+  }
+  return null;
 };
 
 type DrawerMenuProps = {

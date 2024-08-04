@@ -52,28 +52,31 @@ const PaymentSchema = new Schema({
 
 export type UserProfileModel = Model<IUserProfile>
 // Define the main user profile schema
-const UserProfileSchema = new Schema<IUserProfile, UserProfileModel>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    unique: true,
-    required: true
+const UserProfileSchema = new Schema<IUserProfile, UserProfileModel>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      unique: true,
+      required: true,
+    },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    phone: { type: String },
+    photo: { type: String },
+    preferences: {
+      notifications: { type: NotificationSchema, required: true },
+      display: { type: DisplaySchema, required: true },
+      //privacy: { type: PrivacySchema, required: true },
+      order: { type: OrderSchema, required: true },
+      health: { type: HealthSchema },
+      //payment: { type: PaymentSchema, required: true },
+    },
   },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  phone: { type: String, required: true },
-  photo: { type: String, required: true },
-  preferences: {
-    notifications: { type: NotificationSchema, required: true },
-    display: { type: DisplaySchema, required: true },
-    privacy: { type: PrivacySchema, required: true },
-    order: { type: OrderSchema, required: true },
-    health: { type: HealthSchema, required: true },
-    payment: { type: PaymentSchema, required: true }
+  {
+    timestamps: true, // Automatically manage createdAt and updatedAt fields
   }
-}, {
-  timestamps: true // Automatically manage createdAt and updatedAt fields
-});
+);
 
 const UserProfile: UserProfileModel = mongoose.models.UserProfile || mongoose.model<IUserProfile, UserProfileModel>('UserProfile', UserProfileSchema);
 

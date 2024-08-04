@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { IUser, UserRoles } from '../types/user.types';
 
 export interface IUserMethods {
-  isValidPassword(): Promise<boolean>;
+  isValidPassword(password: string): Promise<boolean>;
 }
 
 export interface IUserVirtuals {

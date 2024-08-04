@@ -40,6 +40,7 @@ export default function ProfileSettings(props: SettingsType) {
                 defaultValue={name}
                 placeholder="Your full name"
                 className={cn("mt-1", !name && "italic")}
+                required
               />
             </div>
             <div className="mt-4">
@@ -57,18 +58,19 @@ export default function ProfileSettings(props: SettingsType) {
             <div className="mt-4">
               <Button
                 type="submit"
-                 radius={"md"}      
+                radius={"md"}
                 className="w-full text-white bg-indigo-500 hover:bg-indigo-500 focus:ring-indigo-300"
                 disabled={accountFetcher.state !== "idle"}
               >
                 {accountFetcher.state != "idle"
-                  ? "Submitting"
+                  ? "Updating..."
                   : "Update Profile"}
               </Button>
             </div>
           </div>
         </div>
       </accountFetcher.Form>
+
       <passwordsFetcher.Form method="post" className="mt-6 space-y-6">
         <input type="hidden" name="_action" value={PASSWORD_UPDATE_ACTION} />
         <div className="bg-white shadow sm:rounded-lg">
@@ -90,7 +92,8 @@ export default function ProfileSettings(props: SettingsType) {
             </div>
             <div className="mt-4">
               <Button
-                type="submit"radius={"md"}
+                type="submit"
+                radius={"md"}
                 className="w-full text-white bg-indigo-500 hover:bg-indigo-500 focus:ring-indigo-300"
                 disabled={passwordsFetcher.state !== "idle"}
               >
@@ -102,6 +105,7 @@ export default function ProfileSettings(props: SettingsType) {
           </div>
         </div>
       </passwordsFetcher.Form>
+
       <accountStatusFetcher.Form method="post" className="mt-6 space-y-6">
         <input type="hidden" name="_action" value={ACCOUNT_UPDATE_ACTION} />
         <div className="bg-white shadow sm:rounded-lg">
@@ -115,9 +119,9 @@ export default function ProfileSettings(props: SettingsType) {
             <input type="hidden" name="userId" value={user?._id.toString()} />
             <div className="mt-4">
               <Button
-          type="submit"
-          radius={"md"}
-          className="w-full text-white bg-yellow-500 hover:bg-yellow-500 focus:ring-yellow-300"
+                type="submit"
+                radius={"md"}
+                className="w-full text-white bg-yellow-500 hover:bg-yellow-500 focus:ring-yellow-300"
                 disabled={accountFetcher.state !== "idle"}
               >
                 {accountStatusFetcher.state !== "idle"

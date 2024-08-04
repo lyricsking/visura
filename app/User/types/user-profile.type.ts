@@ -36,12 +36,12 @@ export interface IUserProfile {
   userId: Types.ObjectId;  // Reference to the IUser
   firstName: string;
   lastName: string;
-  phone: string;
-  photo: string;
+  phone?: string;
+  photo?: string;
   preferences: {
     notifications: INotification;
     display: IDisplay;
-    privacy: IPrivacy;
+    //privacy: IPrivacy;
     order: IOrder;
     health?: IHealth;
   };
