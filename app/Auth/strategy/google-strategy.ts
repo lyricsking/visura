@@ -32,12 +32,10 @@ export const googleStrategy = new GoogleStrategy(
     });
 
     if (!user) {
-      createUser({
+      user = await createUser({
         email: profile.emails[0].value,
         roles: ["user"],
       }).then(async (user) => {
-        
-        
         const userProfile: Partial<IUserProfile> = {
           userId: user._id,
           firstName: profile.name.givenName,
@@ -69,14 +67,12 @@ export const googleStrategy = new GoogleStrategy(
         };
 
         await createUserProfile(userProfile);
+        return user;
       });
     }
     
-        console.log(await getProfileByUserId(user?.id));
 
     if (user) {
-      console.log(user.toJSON({ virtuals: true }));
-      
       let authUser: AuthUser = {
         id: user._id.toString(),
         email: user.email,

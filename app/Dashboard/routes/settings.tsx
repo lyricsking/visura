@@ -45,6 +45,7 @@ import {
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
+import { IUserProfile } from "~/User/types/user-profile.type";
 
 export const handle = {
   pageName: "Settings",
@@ -151,12 +152,23 @@ export const action: ActionFunction = async ({ request }) => {
     await disableUser(userId);
     return redirect("/logout");
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
-    const profile = await updateUserPreference(userId, "notifications", otherData);
-    console.log(profile);
-    return profile
+    let notification: IUserProfile["preferences"]["notifications"] = {
+      orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
+      subscriptionReminders:
+        otherData["subscriptionReminders"] === "true" ? true : false,
+      promotional: otherData["promotional"] === "true" ? true : false,
+      supportNotification:
+        otherData["supportNotification"] === "true" ? true : false,
+      preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
+    };
+    return await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-    return await updateUserPreference(userId, "display", otherData);
+     return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
+    console.log(otherData);
+
     return await updateUserPreference(userId, "order", otherData);
+  } else {
+    return null;
   }
 };

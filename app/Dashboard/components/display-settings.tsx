@@ -29,7 +29,7 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
           >
             Theme
           </Label>
-          <Select name="theme" defaultValue={display?.theme         }>
+          <Select name="theme" defaultValue={display?.theme}>
             <SelectTrigger id="name" className="mt-1 flex bg-white">
               <SelectValue placeholder={"Set preferred theme"} />
             </SelectTrigger>
@@ -47,7 +47,7 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
           >
             Language
           </Label>
-          <Select name="language" defaultValue={display?.language} >
+          <Select name="language" defaultValue={display?.language}>
             <SelectTrigger id="language" className="mt-1 flex bg-white">
               <SelectValue placeholder="Set preferred language setting" />
             </SelectTrigger>
@@ -63,7 +63,7 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
           >
             Currency
           </Label>
-          <Select name="currency" defaultValue={display?.currency} >
+          <Select name="currency" defaultValue={display?.currency}>
             <SelectTrigger id="currency" className="mt-1 flex bg-white">
               <SelectValue placeholder="Set preferred currency setting" />
             </SelectTrigger>
@@ -75,9 +75,10 @@ export default function DisplaySettings(props: Partial<SettingsType>) {
         <Button
           type="submit"
           radius={"md"}
-          className="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500"
+          className="w-full text-white bg-indigo-600 hover:bg-indigo-700"
+          disabled={fetcher.state !== "idle"}
         >
-          Save
+          {fetcher.state === "idle" ? "Update Display" : "Updating..."}
         </Button>
       </fetcher.Form>
     </div>

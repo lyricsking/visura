@@ -62,11 +62,14 @@ export const updateUserPreference = async <T extends PreferencesKeys>(
   // Use dynamic path to update the specific field in preferences
   const update = { [`preferences.${preferenceKey}`]: updateData };
 
-  return UserProfile.findByIdAndUpdate(
-    userId,
+  const x= await UserProfile.findOneAndUpdate(
+    {userId},
     update,
     { new: true } // Return the updated document
-  );
+  ).exec();
+
+  console.log("x", x);
+  return x;
 };
 
 // Delete User Profile
