@@ -140,10 +140,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
-    const x = await updateUserProfile(userId, { firstName, lastName });
-    console.log(x);
-
-    return x;
+    return await updateUserProfile(userId, { firstName, lastName });
   } else if (_action === PASSWORD_UPDATE_ACTION) {
     await updateUserPassword(
       userId,
@@ -154,7 +151,9 @@ export const action: ActionFunction = async ({ request }) => {
     await disableUser(userId);
     return redirect("/logout");
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
-    await updateUserPreference(userId, "notifications", otherData);
+    const profile = await updateUserPreference(userId, "notifications", otherData);
+    console.log(profile);
+    return profile
   } else if (_action === DISPLAY_UPDATE_ACTION) {
     return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {

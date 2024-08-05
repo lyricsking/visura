@@ -13,9 +13,17 @@ import { NOTIFICATION_UPDATE_ACTION } from "../utils/constants";
 
 export default function NotificationSettings({ profile }: SettingsType) {
   const fetcher = useFetcher();
-
+  
   const notifications = profile?.preferences.notifications;
-
+  
+  const isOrderUpdateChecked = fetcher.formData?.get("orderUpdates")||  notifications.orderUpdates
+  
+  const isSubscriptionRemindersChecked = fetcher.formData?.get("subscriptionReminders")||  notifications.orderUpdates
+  
+  const isPromotionalChecked = fetcher.formData?.get("promotional")||  notifications.orderUpdates
+  
+  const isSupportNotificationChecked = fetcher.formData?.get("supportNotification")||  notifications.orderUpdates
+  
   return (
     <div>
       <h2 className="text-lg font-medium mb-4">Notification Settings</h2>
@@ -31,10 +39,11 @@ export default function NotificationSettings({ profile }: SettingsType) {
               Order Updates
             </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
-              <Label htmlFor="order-updates">
+              <Label htmlFor="orderUpdates">
                 {notifications?.orderUpdates ? "Enabled" : "Disabled"}
               </Label>
-              <Switch id="order-updates" />
+              <Switch id="orderUpdates" name="orderUpdates"
+              />
             </div>
           </div>
           <div className="py-2">
@@ -45,7 +54,8 @@ export default function NotificationSettings({ profile }: SettingsType) {
               <Label htmlFor="subscriptionReminders">
                 {notifications?.subscriptionReminders ? "Enabled" : "Disabled"}
               </Label>
-              <Switch id="subscriptionReminders" />
+              <Switch id="subscriptionReminders"
+              name="subscriptionReminders"/>
             </div>
           </div>
           <div className="py-2">
@@ -56,18 +66,18 @@ export default function NotificationSettings({ profile }: SettingsType) {
               <Label htmlFor="promotional">
                 {notifications?.promotional ? "Enabled" : "Disabled"}
               </Label>
-              <Switch id="promotional" />
+              <Switch id="promotional" name="promotional" />
             </div>
           </div>
           <div className="py-2">
             <h3 className="block text-sm font-medium text-gray-700">
-              Subscription Reminders
+              Supprt Notifications
             </h3>
             <div className="mt-1 flex items-center justify-between space-x-2">
               <Label htmlFor="supportNotification">
                 {notifications?.supportNotification ? "Enabled" : "Disabled"}
               </Label>
-              <Switch id="supportNotification" />
+              <Switch id="supportNotification" name="supportNotification" />
             </div>
           </div>
           <div className="py-2" hidden aria-hidden>
