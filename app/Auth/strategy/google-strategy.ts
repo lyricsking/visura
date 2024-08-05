@@ -1,17 +1,7 @@
 import { GoogleStrategy } from "remix-auth-google";
 import { createUser, getUser } from "~/User/server/user.server";
 import { AuthUser } from "../types/auth-user.type";
-import {
-  IUserMethods,
-  IUserVirtuals,
-  UserModel,
-} from "~/User/models/user.model";
-import { IUser } from "~/User/types/user.types";
-import { HydratedDocument, Types } from "mongoose";
-import {
-  createUserProfile,
-  getProfileByUserId,
-} from "~/User/server/user-profile.server";
+import { createUserProfile } from "~/User/server/user-profile.server";
 import { IUserProfile } from "~/User/types/user-profile.type";
 
 export const googleStrategy = new GoogleStrategy(
@@ -22,16 +12,10 @@ export const googleStrategy = new GoogleStrategy(
     callbackURL: "https://ynm7f3-3000.csb.app/auth/google/callback",
   },
   async ({ accessToken, refreshToken, extraParams, profile }) => {
-    console.log(profile);
     // Create or retrieve user with the primary email
     let user = await getUser({
       fields: { email: profile.emails[0].value },
-      populate: [
-        {
-          path: "profile",
-          select: "firstname lastname",
-        },
-      ],
+      populate: { path: "profile" },
     });
 
     if (!user) {
@@ -39,14 +23,14 @@ export const googleStrategy = new GoogleStrategy(
         email: profile.emails[0].value,
         roles: ["user"],
       }).then(async (user) => {
-        const userProfile: Partial<IUserProfile> = {
+        const profileData: Partial<IUserProfile> = {
           userId: user._id,
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           photo: profile.photos[0].value,
           preferences: {
             notifications: {
-              preferredSupportChannel: "email",
+              preferredSupportChannel: "whatsapp",
               orderUpdates: true,
               promotional: true,
               subscriptionReminders: true,
@@ -64,19 +48,23 @@ export const googleStrategy = new GoogleStrategy(
             //},
             order: {
               deliveryInstructions: "Leave at door",
-              packaging: "eco-friendly",
+              packaging: "standard",
             },
           },
         };
 
-        await createUserProfile(userProfile);
+        const userProfile = await createUserProfile(profileData);
+        console.log("Created %s", userProfile);
+
         return user;
       });
     }
 
     if (user) {
+      console.log("User fetched with id %s", user.id);
+
       let authUser: AuthUser = {
-        id: user._id.toString(),
+        id: user.id,
         email: user.email,
       };
       return authUser;

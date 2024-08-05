@@ -1,7 +1,7 @@
 import { Schema, model, Types, Document } from "mongoose";
 
 interface INotification {
-  preferredSupportChannel: "email" | "chat" | "phone";
+  preferredSupportChannel: "whatsapp";
   orderUpdates: boolean;
   promotional: boolean;
   subscriptionReminders: boolean;
@@ -22,7 +22,7 @@ interface IPrivacy {
 
 interface IOrder {
   deliveryInstructions: string;
-  packaging: "standard" | "eco-friendly" | "discreet";
+  packaging: "standard";
 }
 
 interface IHealth {
@@ -33,7 +33,7 @@ interface IHealth {
 
 export interface IUserProfile {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;  // Reference to the IUser
+  userId: Types.ObjectId; // Reference to the IUser
   firstName: string;
   lastName: string;
   phone?: string;

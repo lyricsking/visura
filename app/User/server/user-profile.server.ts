@@ -6,14 +6,6 @@ import connectToDatabase from "~/database/db.server";
 
 type PreferencesKeys = keyof IUserProfile["preferences"];
 
-type CreateUserProfileProps = {
-  userId: Types.ObjectId;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  photo?: string;
-  preferences: IUserProfile["preferences"];
-};
 // Create User Profile
 export const createUserProfile = async (
   props: Partial<IUserProfile>
@@ -62,8 +54,8 @@ export const updateUserPreference = async <T extends PreferencesKeys>(
   // Use dynamic path to update the specific field in preferences
   const update = { [`preferences.${preferenceKey}`]: updateData };
 
-  const x= await UserProfile.findOneAndUpdate(
-    {userId},
+  const x = await UserProfile.findOneAndUpdate(
+    { userId },
     update,
     { new: true } // Return the updated document
   ).exec();

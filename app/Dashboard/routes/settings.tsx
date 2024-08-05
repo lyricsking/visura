@@ -160,7 +160,7 @@ export const action: ActionFunction = async ({ request }) => {
     };
     return await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-     return await updateUserPreference(userId, "display", otherData);
+    return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
     return await updateUserPreference(userId, "order", otherData);
   } else {
