@@ -1,12 +1,10 @@
-// routes/support.tsx
-
 import { Link, useLoaderData } from "@remix-run/react";
 
 export default function Support() {
   const { articleCategories, faqs } = useLoaderData<typeof loader>();
 
   return (
-    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto py-6 px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-900">Support Center</h1>
       <p className="mt-2 text-lg text-gray-600">How can we assist you today?</p>
 

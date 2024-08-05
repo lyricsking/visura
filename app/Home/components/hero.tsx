@@ -9,8 +9,7 @@ export default function Hero() {
   const font = findFontByName("Playfair Display");
 
   return (
-    <div className="px-6 pt-8 pb-8 lg:px-8">
-      <div className="mx-auto max-w-3xl py-6 sm:py-8 lg:py-10">
+      <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12 lg:px-8 lg:py-16">
         <div className="text-center">
           <h1
             className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
@@ -51,6 +50,5 @@ export default function Hero() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
