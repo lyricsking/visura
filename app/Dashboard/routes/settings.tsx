@@ -118,9 +118,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const [user, profile] = await Promise.all([
     await getUserById(new Types.ObjectId(authUser.id)),
     await getProfileByUserId(new Types.ObjectId(authUser.id)),
-
-    // await getUserById(new Types.ObjectId()),
-    // await getProfileByUserId(new Types.ObjectId()),
   ]);
   return json({ profile: profile, setting: settingsType, user: user });
 };
@@ -165,8 +162,6 @@ export const action: ActionFunction = async ({ request }) => {
   } else if (_action === DISPLAY_UPDATE_ACTION) {
      return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
-    console.log(otherData);
-
     return await updateUserPreference(userId, "order", otherData);
   } else {
     return null;
