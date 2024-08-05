@@ -11,6 +11,7 @@ export const createUserProfile = async (
   props: Partial<IUserProfile>
 ): Promise<IUserProfile> => {
   const { userId, firstName, lastName, phone, photo, preferences } = props;
+  console.log("Creating profile");
 
   const newUserProfile = new UserProfile({
     userId,
