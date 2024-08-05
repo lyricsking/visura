@@ -7,7 +7,7 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import pkg from "../../package.json";
+import pkg from "../../../package.json";
 import { useQuiz } from "~/Quiz/quiz.utils";
 import Button from "~/components/button";
 
