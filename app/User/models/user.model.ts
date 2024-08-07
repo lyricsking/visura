@@ -48,6 +48,10 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods, {}, IUserVirtuals>
     type: Date,
     default: Date.now
   }
+}, 
+{ 
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Middleware to hash password before saving user document
