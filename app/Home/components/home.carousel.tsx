@@ -24,7 +24,7 @@ export default function HomeCarousel() {
         {images.map((image, index) => (
           <CarouselItem
             key={index}
-            className="aspect-w-5 aspect-h-3 md:aspect-w-7 md:aspect-h-3"
+            className="aspect-w-5 aspect-h-3 md:aspect-w-8 md:aspect-h-3"
           >
             <div className="flex-[0_0_100%] border flex items-center justify-center">
               <img
