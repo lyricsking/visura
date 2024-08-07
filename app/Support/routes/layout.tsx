@@ -15,7 +15,7 @@ export default function Layout() {
   const { initQuiz } = useQuiz();
 
   return (
-    <PageLayout>
+    <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"}>
         <PageLayoutHeaderItem className="border bg-white">
           <Link to={"/"} replace>
