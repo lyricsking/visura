@@ -60,14 +60,12 @@ export const googleStrategy = new GoogleStrategy(
       });
     }
 
-    if (user) {
-      console.log("User fetched with id %s", user.id);
+    console.log("User fetched with id %s", user!.id);
 
-      let authUser: AuthUser = {
-        id: user.id,
-        email: user.email,
-      };
-      return authUser;
-    }
+    let authUser: AuthUser = {
+      id: user!.id,
+      email: user!.email,
+    };
+    return authUser;
   }
 );

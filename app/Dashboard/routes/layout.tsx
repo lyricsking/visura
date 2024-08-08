@@ -99,17 +99,19 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const originalUrl = new URL(request.url).pathname;
+
   const user: AuthUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/auth",
+    failureRedirect: `/auth?rdr=${encodeURIComponent(originalUrl)}`,
   });
 
   return json({ user });
 };
 
-export const action: ActionFunction = async ({request}) => {
+export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
-  
+
   const { _action } = formObject;
   if (_action === LOGOUT_ACTION) {
     return authenticator.logout(request, { redirectTo: "/auth" });

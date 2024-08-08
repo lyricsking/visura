@@ -1,17 +1,20 @@
-export type LogModel = Model < ILog >
-  const logSchema = new Schema < ILog,
-    LogModel > ({
-      action: { type: String, required: true },
-      details: { type: String, required: true },
-      timestamp: { type: Date, default: Date.now },
-      order: { type: Schema.Types.ObjectId, ref: 'Order' },
-      staff: { type: Schema.Types.ObjectId, ref: 'Staff' },
-      subscription: { type: Schema.Types.ObjectId, ref: 'Subscription' },
-      ticket: { type: Schema.Types.ObjectId, ref: 'User' },
-      user: { type: Schema.Types.ObjectId, ref: 'User' },
-    });
+import { Model, Schema, model, models } from "mongoose";
+import { IActivityLog } from "../types/activity-log.type";
 
-const Log: LogModel = models.Log || model < ILog,
-  LogModel > ('Log', logSchema);
+export type ActivityLogModel = Model<IActivityLog>;
 
-export default Log;
+const logSchema = new Schema<IActivityLog, ActivityLogModel>({
+  action: { type: String, required: true },
+  details: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+  order: { type: Schema.Types.ObjectId, ref: "Order" },
+  staff: { type: Schema.Types.ObjectId, ref: "Staff" },
+  subscription: { type: Schema.Types.ObjectId, ref: "Subscription" },
+  ticket: { type: Schema.Types.ObjectId, ref: "User" },
+  user: { type: Schema.Types.ObjectId, ref: "User" },
+});
+
+const ActivityLog: ActivityLogModel =
+  models.Log || model<IActivityLog, ActivityLogModel>("Log", logSchema);
+
+export default ActivityLog;

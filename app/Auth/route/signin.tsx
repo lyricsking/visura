@@ -1,9 +1,12 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Link, useOutletContext } from "@remix-run/react";
+import { LoaderFunction, json } from "@remix-run/node";
+import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 
-export default function Signup() {
+export default function Signin() {
+  const data = useLoaderData<typeof loader>();
   const { appname }: { appname: string } = useOutletContext();
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="flex justify-center flex-1 max-w-screen-xl m-0 sm:m-6 bg-white shadow sm:rounded-lg ">
@@ -100,3 +103,10 @@ export default function Signup() {
     </div>
   );
 }
+
+export const loader: LoaderFunction = ({ request }) => {
+  const url = new URL(request.url);
+  const rdrPath = url.searchParams.get("rdr");
+
+  return json({ rdrPath });
+};
