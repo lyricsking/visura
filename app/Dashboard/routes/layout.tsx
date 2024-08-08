@@ -101,9 +101,7 @@ export default function Layout() {
 export const loader: LoaderFunction = async ({ request }) => {
   const originalUrl = new URL(request.url).pathname;
 
-  const user: AuthUser = await authenticator.isAuthenticated(request, {
-    failureRedirect: `/auth?rdr=${encodeURIComponent(originalUrl)}`,
-  });
+  const user: AuthUser = await isAuthenticated(request);
 
   return json({ user });
 };

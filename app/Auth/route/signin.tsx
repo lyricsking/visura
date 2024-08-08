@@ -106,7 +106,6 @@ export default function Signin() {
 
 export const loader: LoaderFunction = ({ request }) => {
   const url = new URL(request.url);
-  const rdrPath = url.searchParams.get("rdr");
-
-  return json({ rdrPath });
+  const rdrPath = url.searchParams.get(REDIRECT_URL);
+  return await isAuthenticated(request, rdrPath);
 };
