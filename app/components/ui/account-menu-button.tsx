@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "~/components/dropdown.menu";
 import { ButtonProps } from "~/components/button";
-import { authenticator } from "~/Auth/server/auth.server";
 import { useFetcher } from "react-router-dom";
 import { LOGOUT_ACTION } from "../utils/constants";
 
@@ -17,7 +16,8 @@ type Props = ButtonProps;
 export default function AccountMenuButton(props: Props) {
   
   const feather = useFetcher();
-
+  const navigate = useNavigate();
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="p-2 bg-gray-200 rounded-full">
@@ -26,11 +26,14 @@ export default function AccountMenuButton(props: Props) {
       <DropdownMenuContent className="bg-white">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => {
+          navigate("/support")
+        }}>
+          Support
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => {
-            feather.submit({ _action: LOGOUT_ACTION }, { method: "POST" });
+            feather.submit(null, { method: "POST", action: "/auth/logout"});
           }}
         >
           Logout

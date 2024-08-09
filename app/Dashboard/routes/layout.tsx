@@ -111,18 +111,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({ ...(user != null && { user }) });
 };
 
-export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const formObject = formDataToObject(formData);
-
-  const { _action } = formObject;
-  if (_action === LOGOUT_ACTION) {
-    return logout(request, { redirectTo: "/" });
-  }
-
-  return null;
-};
-
 type DrawerMenuProps = {
   menusFnRef: MutableRefObject<MenuFunctionType | null>;
 };

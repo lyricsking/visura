@@ -13,6 +13,30 @@ authenticator.use(googleStrategy);
 //export { authenticator };
 
 /**
+ * Wrapper around remix-auth's authenticate method, properly handles result of the authenticator.authenticate method call.
+ * @param request Request
+ */
+export const authenticate = async (request: Request) => {
+  const user = await authenticator.authenticate("google", request, {
+    failureRedirect: "/auth",
+  });
+
+  console.log(user);
+
+  const session = await getSession(request.headers.get("Cookie"));
+  session.set(authenticator.sessionKey, user);
+
+  const successRedirect = (await session.get(REDIRECT_URL)) || "/";
+
+  session.unset(REDIRECT_URL);
+  const headers = {
+    "Set-Cookie": await commitSession(session),
+  };
+
+  return redirect(successRedirect, { headers });
+};
+
+/**
  * An abstraction over Remix Auth authenticator, It checks if user is already authenticated and properly handles redirection, ensuring user can go back to initial page that failed authentication.
  * 
  * @param request Request Request object of the current page
@@ -53,29 +77,11 @@ export const isAuthenticated = async (
   }
 };
 
-/**
- * Wrapper around remix-auth's authenticate method, properly handles result of the authenticator.authenticate method call.
- * @param request Request
- */
-export const authenticate = async (request: Request) => {
-  const user = await authenticator.authenticate("google", request, {
-    failureRedirect: "/auth",
-  });
-
-  console.log(user);
-
+export const getAuthUser = (request: Request) => {
   const session = await getSession(request.headers.get("Cookie"));
-  session.set(authenticator.sessionKey, user);
-
-  const successRedirect = (await session.get(REDIRECT_URL)) || "/";
-
-  session.unset(REDIRECT_URL);
-  const headers = {
-    "Set-Cookie": await commitSession(session),
-  };
-
-  return redirect(successRedirect, { headers });
-};
+  
+  return session.get(authenticator.sessionKey);
+}
 
 export const logout = (
   request: Request,

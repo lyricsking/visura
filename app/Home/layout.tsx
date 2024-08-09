@@ -12,6 +12,8 @@ import { useQuiz } from "~/Quiz/quiz.utils";
 import Button from "~/components/button";
 
 export default function Layout() {
+  const data = useLoaderData<typeof loader>();
+  
   const { initQuiz } = useQuiz();
 
   return (
@@ -31,6 +33,8 @@ export default function Layout() {
           >
             Get started
           </Button>
+          
+          { data.user &&  <AccountMenuButton /> }
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
@@ -43,4 +47,10 @@ export default function Layout() {
       </PageLayoutFooter>
     </PageLayout>
   );
+}
+
+export const loader: LoaderFunction = ({request}) => {
+  const user: AuthUser | null = getAuthUser(request);
+  
+  return json({user:user})
 }
