@@ -23,11 +23,17 @@ import {
   SidebarContent,
   SidebarMenuProps,
 } from "../components/sidebar-content";
-import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from "@remix-run/node";
 import { AuthUser } from "~/Auth/types/auth-user.type";
-import { authenticator } from "~/Auth/server/auth.server";
+import { isAuthenticated, logout } from "~/Auth/server/auth.server";
 import formDataToObject from "~/utils/form-data-to-object";
 import { LOGOUT_ACTION } from "../utils/constants";
+import { isObject } from "lodash";
 
 export const handle = {
   breadcrumb: {
@@ -101,9 +107,8 @@ export default function Layout() {
 export const loader: LoaderFunction = async ({ request }) => {
   const originalUrl = new URL(request.url).pathname;
 
-  const user: AuthUser = await isAuthenticated(request);
-
-  return json({ user });
+  const user = await isAuthenticated(request);
+  return json({ ...(user != null && { user }) });
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -112,8 +117,9 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { _action } = formObject;
   if (_action === LOGOUT_ACTION) {
-    return authenticator.logout(request, { redirectTo: "/auth" });
+    return logout(request, { redirectTo: "/" });
   }
+
   return null;
 };
 

@@ -2,6 +2,11 @@ import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { LoaderFunction, json } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  REDIRECT_SEARCH_PARAM,
+  REDIRECT_URL,
+  isAuthenticated,
+} from "../server/auth.server";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
@@ -104,8 +109,9 @@ export default function Signin() {
   );
 }
 
-export const loader: LoaderFunction = ({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const rdrPath = url.searchParams.get(REDIRECT_URL);
-  return await isAuthenticated(request, rdrPath);
+  const rdrPath = url.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
+
+  return await isAuthenticated(request, { successRedirect: rdrPath });
 };
