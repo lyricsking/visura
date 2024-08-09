@@ -12,6 +12,12 @@ const authenticator = new Authenticator<AuthUser>(sessionStorage);
 authenticator.use(googleStrategy);
 //export { authenticator };
 
+/**
+ * An abstraction over Remix Auth authenticator, It checks if user is already authenticated and properly handles redirection, ensuring user can go back to initial page that failed authentication.
+ * 
+ * @param request Request Request object of the current page
+ * @param options Optional options to pass to authenticator
+ */
 export const isAuthenticated = async (
   request: Request,
   options?: {
@@ -47,6 +53,10 @@ export const isAuthenticated = async (
   }
 };
 
+/**
+ * Wrapper around remix-auth's authenticate method, properly handles result of the authenticator.authenticate method call.
+ * @param request Request
+ */
 export const authenticate = async (request: Request) => {
   const user = await authenticator.authenticate("google", request, {
     failureRedirect: "/auth",
