@@ -1,4 +1,4 @@
-import { Link, Outlet } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import Footer from "~/components/ui/footer";
 import {
   PageLayout,
@@ -7,13 +7,17 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import pkg from "../../package.json";
+import pkg from "../../../package.json";
 import { useQuiz } from "~/Quiz/quiz.utils";
 import Button from "~/components/button";
+import AccountMenuButton from "~/components/ui/account-menu-button";
+import { LoaderFunction, json } from "@remix-run/node";
+import { getAuthUser } from "~/Auth/server/auth.server";
+import { AuthUser } from "~/Auth/types/auth-user.type";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
-  
+
   const { initQuiz } = useQuiz();
 
   return (
@@ -25,16 +29,14 @@ export default function Layout() {
               {pkg.name}.
             </h1>
           </Link>
-          <Button
-            variant="outline"
-            size="sm"
-            className="-my-2"
-            onClick={() => initQuiz()}
-          >
-            Get started
-          </Button>
-          
-          { data.user &&  <AccountMenuButton /> }
+
+          <div className="flex gap-4 -my-2">
+            <Button variant="outline" size="sm" radius="md" onClick={() => initQuiz()}>
+              Get started
+            </Button>
+
+            <AccountMenuButton />
+          </div>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
@@ -49,8 +51,8 @@ export default function Layout() {
   );
 }
 
-export const loader: LoaderFunction = ({request}) => {
-  const user: AuthUser | null = getAuthUser(request);
-  
-  return json({user:user})
-}
+export const loader: LoaderFunction = async ({ request }) => {
+  const user: AuthUser | null = await getAuthUser(request);
+
+  return json({ user: user });
+};

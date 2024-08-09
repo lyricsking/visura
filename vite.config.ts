@@ -16,15 +16,15 @@ export default defineConfig({
       // serverBuildPath: "build/index.js",
       routes(defineRoutes) {
         return defineRoutes((route) => {
-          route("", "Home/layout.tsx", () => {
-            route("", "Home/index.tsx", { index: true });
+          route("", "Home/routes/layout.tsx", () => {
+            route("", "Home/routes/index.tsx", { index: true });
           });
           route("auth", "Auth/routes/layout.tsx", () => {
             route("", "Auth/routes/signin.tsx", { index: true });
             route("signup", "Auth/routes/signup.tsx");
             route("google/callback", "Auth/routes/google-callback.tsx");
-            route("google/login", "Auth/routes/google-login.tsx");
-            route("logout", "Auth/routes/logout.tsx");
+            route("google/signin", "Auth/routes/google-signin.tsx");
+            route("signout", "Auth/routes/signout.tsx");
           });
           route("cart", "Order/routes/layout.tsx", () => {
             route("", "Order/routes/cart.tsx", { index: true });
@@ -45,9 +45,9 @@ export default defineConfig({
           });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/index.tsx", { index: true });
-            route("articles", "Support/routes/article-category.tsx", () => {        
+            route("articles", "Support/routes/article-category.tsx", () => {
               route(":id", "Support/routes/article.tsx");
-            })
+            });
           });
           route("user", "User/routes/user.resource.tsx");
           route("quiz", "Quiz/layout.tsx", () => {

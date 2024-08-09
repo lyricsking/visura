@@ -77,7 +77,7 @@ export const isAuthenticated = async (
   }
 };
 
-export const getAuthUser = (request: Request) => {
+export const getAuthUser = async(request: Request) => {
   const session = await getSession(request.headers.get("Cookie"));
   
   return session.get(authenticator.sessionKey);

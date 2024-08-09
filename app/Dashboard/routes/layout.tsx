@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Breadcrumb from "~/components/breadcrumb";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import AccountMenuButton from "../components/account-menu-button";
+import AccountMenuButton from "~/components/ui/account-menu-button";
 import {
   MenuFunctionType,
   SidebarContent,
