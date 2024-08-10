@@ -5,7 +5,7 @@ import { AuthUser } from "../types/auth-user.type";
 import { json, redirect } from "@remix-run/node";
 
 export const REDIRECT_URL = "redirect-url";
-export const REDIRECT_SEARCH_PARAM = "rdr";
+export const REDIRECT_SEARCH_PARAM = "r_dr";
 
 const authenticator = new Authenticator<AuthUser>(sessionStorage);
 
@@ -21,7 +21,7 @@ export const authenticate = async (request: Request) => {
     failureRedirect: "/auth",
   });
 
-  console.log(user);
+  console.log("User %s", user);
 
   const session = await getSession(request.headers.get("Cookie"));
   session.set(authenticator.sessionKey, user);
@@ -38,7 +38,7 @@ export const authenticate = async (request: Request) => {
 
 /**
  * An abstraction over Remix Auth authenticator, It checks if user is already authenticated and properly handles redirection, ensuring user can go back to initial page that failed authentication.
- * 
+ *
  * @param request Request Request object of the current page
  * @param options Optional options to pass to authenticator
  */
@@ -51,9 +51,11 @@ export const isAuthenticated = async (
   const { successRedirect } = options || {};
   const session = await getSession(request.headers.get("Cookie"));
 
-  console.log(session.get(REDIRECT_URL));
+  console.log("Redirect Url", session.get(REDIRECT_URL));
 
   const isAuthenticated = await authenticator.isAuthenticated(request);
+  console.log("Authentication %s", JSON.stringify(isAuthenticated, null, 2));
+  
   if (!isAuthenticated) {
     if (!successRedirect) {
       // This does not provide successRedirect, since expects a isAuthenticated to be successful,
@@ -61,7 +63,7 @@ export const isAuthenticated = async (
 
       const currentUrl = new URL(request.url);
 
-      throw redirect(`/auth?rdr=${currentUrl.toString()}`);
+      throw redirect(`/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`);
     } else if (successRedirect) {
       session.set(REDIRECT_URL, successRedirect);
       const headers = {
@@ -77,11 +79,17 @@ export const isAuthenticated = async (
   }
 };
 
-export const getAuthUser = async(request: Request) => {
+export const getAuthUser = async (request: Request) => {
   const session = await getSession(request.headers.get("Cookie"));
-  
+
   return session.get(authenticator.sessionKey);
-}
+};
+
+export const setAuthUser = async (request: Request) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  return session.get(authenticator.sessionKey);
+};
 
 export const logout = (
   request: Request,

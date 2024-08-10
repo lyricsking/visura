@@ -31,9 +31,6 @@ import {
 } from "@remix-run/node";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { isAuthenticated, logout } from "~/Auth/server/auth.server";
-import formDataToObject from "~/utils/form-data-to-object";
-import { LOGOUT_ACTION } from "../utils/constants";
-import { isObject } from "lodash";
 
 export const handle = {
   breadcrumb: {
@@ -96,7 +93,9 @@ export default function Layout() {
             {currentRoute.handle.pageName}
           </h1>
           <div className="py-8">
-            <Outlet context={{ appname: pkg.name, sidebarMenuRef }} />
+            <Outlet
+              context={{ appname: pkg.name, user: data.user, sidebarMenuRef }}
+            />
           </div>
         </div>
       </PageLayoutContent>
@@ -105,8 +104,6 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const originalUrl = new URL(request.url).pathname;
-
   const user = await isAuthenticated(request);
   return json({ ...(user != null && { user }) });
 };

@@ -39,10 +39,14 @@ export const createUser = async (props: CreateUserProps) => {
 
 // Read User by Id
 export const getUserById = async (
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
+  populate?: PopulateOptions | PopulateOptions[]
 ): Promise<HydratedDocument<IUser, IUserMethods & IUserVirtuals> | null> => {
   try {
-    return await User.findById(userId).exec();
+    const userQuery = User.findById(userId);
+    if (populate) userQuery.populate(populate);
+
+    return await userQuery.exec();
   } catch (err) {
     throw err;
   }

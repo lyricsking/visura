@@ -49,7 +49,7 @@ export default defineConfig({
               route(":id", "Support/routes/article.tsx");
             });
           });
-          route("user", "User/routes/user.resource.tsx");
+          route("user", "User/routes/user.resource.tsx", { id: "user" });
           route("quiz", "Quiz/layout.tsx", () => {
             route("", "Quiz/index.tsx", { index: true });
           });

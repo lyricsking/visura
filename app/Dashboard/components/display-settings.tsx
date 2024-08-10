@@ -11,8 +11,9 @@ import {
 } from "~/components/select";
 import Button from "~/components/button";
 
-export default function DisplaySettings(props: Partial<SettingsType>) {
-  const { profile } = props;
+export default function DisplaySettings({
+  authUser: { profile },
+}: SettingsType) {
   const fetcher = useFetcher();
 
   const display = profile?.preferences.display;

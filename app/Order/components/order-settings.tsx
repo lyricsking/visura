@@ -13,8 +13,7 @@ import { Textarea } from "~/components/textarea";
 import { SettingsType } from "~/Dashboard/type/settings.type";
 import { ORDER_UPDATE_ACTION } from "~/Dashboard/utils/constants";
 
-export default function OrderSettings(props: SettingsType) {
-  const { profile } = props;
+export default function OrderSettings({ authUser: { profile } }: SettingsType) {
   const order = profile?.preferences.order;
 
   const fetcher = useFetcher();

@@ -14,7 +14,7 @@ export const handle = {
 export default function Overview() {
   const data = useLoaderData<typeof loader>();
 
-  const { sidebarMenuRef }: any = useOutletContext();
+  const { user, sidebarMenuRef }: any = useOutletContext();
   useEffect(() => {
     if (sidebarMenuRef) {
       sidebarMenuRef.current = () => null;

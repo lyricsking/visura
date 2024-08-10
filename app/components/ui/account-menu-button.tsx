@@ -8,23 +8,46 @@ import {
   DropdownMenuTrigger,
 } from "~/components/dropdown.menu";
 import { ButtonProps } from "~/components/button";
-import { useFetcher } from "react-router-dom";
-import { useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
+import { useUser } from "~/hooks/use-user";
 
 type Props = ButtonProps;
 
 export default function AccountMenuButton(props: Props) {
-  const feather = useFetcher();
+  const submit = useSubmit();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  let data: any = useUser();
+  let profilePhoto = data?.profile?.photo;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="p-2 bg-gray-200 rounded-full">
-        <UserCircleIcon className="h-6 w-6" />
+        {data && profilePhoto ? (
+          <img
+            src={profilePhoto}
+            alt="User account menu icon"
+            className="h-5 w-5 rounded-full"
+          />
+        ) : (
+          <UserCircleIcon className="h-5 w-5 " />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {/* Optionally allow to navigate to dashboard in not already in the the dashboard */}
+        {data && !location.pathname.includes("dashboard") && (
+          <DropdownMenuItem
+            onSelect={() => {
+              navigate("/dashboard");
+            }}
+          >
+            Dashboard
+          </DropdownMenuItem>
+        )}
+        {/* Navigate to support page */}
         <DropdownMenuItem
           onSelect={() => {
             navigate("/support");
@@ -32,13 +55,24 @@ export default function AccountMenuButton(props: Props) {
         >
           Support
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={() => {
-            feather.submit(null, { method: "POST", action: "/auth/signout" });
-          }}
-        >
-          Sign Out
-        </DropdownMenuItem>
+        {/* Sign out */}
+        {data ? (
+          <DropdownMenuItem
+            onSelect={() => {
+              submit(null, { method: "POST", action: "/auth/signout" });
+            }}
+          >
+            Sign Out
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onSelect={() => {
+              navigate("/auth");
+            }}
+          >
+            Sign In
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

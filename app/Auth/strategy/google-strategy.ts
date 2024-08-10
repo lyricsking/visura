@@ -56,6 +56,8 @@ export const googleStrategy = new GoogleStrategy(
         const userProfile = await createUserProfile(profileData);
         console.log("Created %s", userProfile);
 
+        user.profile = userProfile;
+
         return user;
       });
     }
@@ -65,7 +67,9 @@ export const googleStrategy = new GoogleStrategy(
     let authUser: AuthUser = {
       id: user!.id,
       email: user!.email,
+      profile: user?.profile,
     };
+
     return authUser;
   }
 );

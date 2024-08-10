@@ -10,8 +10,8 @@ import {
 } from "../utils/constants";
 import Button from "~/components/button";
 
-export default function ProfileSettings(props: SettingsType) {
-  const { user, profile } = props;
+export default function ProfileSettings({ authUser: user }: SettingsType) {
+  const { profile } = user;
 
   const accountFetcher = useFetcher();
   const passwordsFetcher = useFetcher();
@@ -116,7 +116,7 @@ export default function ProfileSettings(props: SettingsType) {
             <p className="mt-1 text-sm text-gray-600">
               Info: Your account can be activated again when you sign in.
             </p>
-            <input type="hidden" name="userId" value={user?._id.toString()} />
+            <input type="hidden" name="userId" value={user.id} />
             <div className="mt-4">
               <Button
                 type="submit"

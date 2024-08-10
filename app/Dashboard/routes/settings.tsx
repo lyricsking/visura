@@ -5,6 +5,7 @@ import {
   redirect,
 } from "@remix-run/node";
 import {
+  useFetcher,
   useLoaderData,
   useNavigate,
   useOutletContext,
@@ -23,7 +24,6 @@ import HealthSettings from "../components/health-settings";
 import PaymentSettings from "~/Transaction/components/payment-settings";
 import { getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
-import { authenticator } from "~/Auth/server/auth.server";
 import {
   disableUser,
   getUserById,
@@ -46,15 +46,9 @@ import {
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-
-export const handle = {
-  pageName: "Settings",
-  breadcrumb: {
-    id: "settings",
-    label: "Settings",
-    //path: "/dashboard/settings",
-  },
-};
+import { getAuthUser } from "~/Auth/server/auth.server";
+import { useUser } from "~/hooks/use-user";
+import { loader as userLoader } from "~/User/routes/user.resource";
 
 const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
@@ -67,18 +61,19 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
 };
 
 export default function Settings() {
-  const { profile, setting, user } = useLoaderData<typeof loader>();
+  const { setting } = useLoaderData<typeof loader>();
+  const { user, sidebarMenuRef }: any = useOutletContext();
+
   const navigate = useNavigate();
   const params = useParams();
+
+  if (sidebarMenuRef) {
+    sidebarMenuRef.current = () => null;
+  }
 
   const onSettingChange = (newSetting: string) => {
     navigate(`/dashboard/settings/${newSetting}`);
   };
-
-  const { sidebarMenuRef }: any = useOutletContext();
-  if (sidebarMenuRef) {
-    sidebarMenuRef.current = () => null;
-  }
 
   return (
     <Tabs defaultValue={setting} onValueChange={onSettingChange}>
@@ -94,12 +89,7 @@ export default function Settings() {
 
         return (
           <TabsContent key={key} value={key} className="h-fit">
-            {
-              <Tag
-                profile={profile as SettingsType["profile"]}
-                user={user as SettingsType["user"]}
-              />
-            }
+            {<Tag authUser={user} />}
           </TabsContent>
         );
       })}
@@ -107,26 +97,8 @@ export default function Settings() {
   );
 }
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const settingsType = params.setting || "account";
-
-  // Manually get the session
-  let session = await getSession(request.headers.get("cookie"));
-
-  const authUser: AuthUser = session.get(authenticator.sessionKey);
-
-  const [user, profile] = await Promise.all([
-    await getUserById(new Types.ObjectId(authUser.id)),
-    await getProfileByUserId(new Types.ObjectId(authUser.id)),
-  ]);
-  return json({ profile: profile, setting: settingsType, user: user });
-};
-
 export const action: ActionFunction = async ({ request }) => {
-  // Manually get the session
-  let session = await getSession(request.headers.get("cookie"));
-
-  const authUser: AuthUser = session.get(authenticator.sessionKey);
+  const authUser: AuthUser = await getAuthUser(request);
 
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
@@ -166,4 +138,19 @@ export const action: ActionFunction = async ({ request }) => {
   } else {
     return null;
   }
+};
+
+export const handle = {
+  pageName: "Settings",
+  breadcrumb: {
+    id: "settings",
+    label: "Settings",
+    //path: "/dashboard/settings",
+  },
+};
+
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const settingsType = params.setting || "account";
+
+  return json({ setting: settingsType });
 };
