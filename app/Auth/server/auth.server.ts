@@ -3,6 +3,10 @@ import { commitSession, getSession, sessionStorage } from "~/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { AuthUser } from "../types/auth-user.type";
 import { json, redirect } from "@remix-run/node";
+import { getUser } from "~/User/server/user.server";
+import { IUser } from "~/User/types/user.types";
+import { HydratedDocument } from "mongoose";
+import { IUserMethods, IUserVirtuals } from "~/User/models/user.model";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "r_dr";
@@ -54,8 +58,7 @@ export const isAuthenticated = async (
   console.log("Redirect Url", session.get(REDIRECT_URL));
 
   const isAuthenticated = await authenticator.isAuthenticated(request);
-  console.log("Authentication %s", JSON.stringify(isAuthenticated, null, 2));
-  
+
   if (!isAuthenticated) {
     if (!successRedirect) {
       // This does not provide successRedirect, since expects a isAuthenticated to be successful,
@@ -85,10 +88,36 @@ export const getAuthUser = async (request: Request) => {
   return session.get(authenticator.sessionKey);
 };
 
-export const setAuthUser = async (request: Request) => {
+export const setAuthUser = async (
+  request: Request,
+  user: HydratedDocument<IUser, IUserMethods & IUserVirtuals> | null
+) => {
   const session = await getSession(request.headers.get("Cookie"));
 
-  return session.get(authenticator.sessionKey);
+  let authUser = {
+    id: user!.id,
+    email: user!.email,
+    profile: user?.profile,
+  };
+
+  session.set(authenticator.sessionKey, user);
+
+  return json(authUser, {
+    headers: { "Set-Cookie": await commitSession(session) },
+  });
+};
+
+export const updateAuthUser = async (request: Request) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  let authUser: AuthUser = session.get(authenticator.sessionKey);
+
+  let user = await getUser({
+    fields: { email: authUser.email },
+    populate: { path: "profile" },
+  });
+
+  return await setAuthUser(request, user);
 };
 
 export const logout = (

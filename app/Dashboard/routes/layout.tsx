@@ -1,6 +1,7 @@
 import {
   Link,
   Outlet,
+  ShouldRevalidateFunction,
   useLoaderData,
   useLocation,
   useMatches,
@@ -107,6 +108,17 @@ export const loader: LoaderFunction = async ({ request }) => {
   const user = await isAuthenticated(request);
   return json({ ...(user != null && { user }) });
 };
+
+// export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
+//   let { actionResult, defaultShouldRevalidate ,...x } = props;
+
+//   if (alert && actionResult) {
+//     alert(JSON.stringify(actionResult, null, 2));
+//     return true;
+//   }
+
+//   return defaultShouldRevalidate;
+// };
 
 type DrawerMenuProps = {
   menusFnRef: MutableRefObject<MenuFunctionType | null>;

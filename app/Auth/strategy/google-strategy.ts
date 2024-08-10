@@ -3,6 +3,7 @@ import { createUser, getUser } from "~/User/server/user.server";
 import { AuthUser } from "../types/auth-user.type";
 import { createUserProfile } from "~/User/server/user-profile.server";
 import { IUserProfile } from "~/User/types/user-profile.type";
+import { setAuthUser } from "../server/auth.server";
 
 export const googleStrategy = new GoogleStrategy(
   {
@@ -11,7 +12,7 @@ export const googleStrategy = new GoogleStrategy(
     //callbackURL: "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu115.gitpod.io/auth/google/callback",
     callbackURL: "https://ynm7f3-3000.csb.app/auth/google/callback",
   },
-  async ({ accessToken, refreshToken, extraParams, profile }) => {
+  async ({ accessToken, refreshToken, extraParams, profile, request }) => {
     // Create or retrieve user with the primary email
     let user = await getUser({
       fields: { email: profile.emails[0].value },
@@ -64,12 +65,6 @@ export const googleStrategy = new GoogleStrategy(
 
     console.log("User fetched with id %s", user!.id);
 
-    let authUser: AuthUser = {
-      id: user!.id,
-      email: user!.email,
-      profile: user?.profile,
-    };
-
-    return authUser;
+    return setAuthUser(request, user).then((res) => res.json());
   }
 );

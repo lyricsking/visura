@@ -46,7 +46,7 @@ import {
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { getAuthUser } from "~/Auth/server/auth.server";
+import { getAuthUser, updateAuthUser } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 
@@ -110,7 +110,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
-    return await updateUserProfile(userId, { firstName, lastName });
+    await updateUserProfile(userId, { firstName, lastName });
   } else if (_action === PASSWORD_UPDATE_ACTION) {
     await updateUserPassword(
       userId,
@@ -130,14 +130,16 @@ export const action: ActionFunction = async ({ request }) => {
         otherData["supportNotification"] === "true" ? true : false,
       preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
     };
-    return await updateUserPreference(userId, "notifications", notification);
+    await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-    return await updateUserPreference(userId, "display", otherData);
+    await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
-    return await updateUserPreference(userId, "order", otherData);
+    await updateUserPreference(userId, "order", otherData);
   } else {
     return null;
   }
+
+  return await updateAuthUser(request);
 };
 
 export const handle = {
