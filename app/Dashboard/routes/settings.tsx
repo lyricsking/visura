@@ -139,6 +139,7 @@ export const action: ActionFunction = async ({ request }) => {
     return null;
   }
 
+  // Revalidate user data here;
   return await updateAuthUser(request);
 };
 
