@@ -23,44 +23,47 @@ export const googleStrategy = new GoogleStrategy(
       user = await createUser({
         email: profile.emails[0].value,
         roles: ["user"],
-      }).then(async (user) => {
-        const profileData: Partial<IUserProfile> = {
-          userId: user._id,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
-          photo: profile.photos[0].value,
-          preferences: {
-            notifications: {
-              preferredSupportChannel: "whatsapp",
-              orderUpdates: true,
-              promotional: true,
-              subscriptionReminders: true,
-              supportNotification: true,
-            },
-            display: {
-              theme: "light",
-              language: "en",
-              currency: "NGN",
-            },
-            //privacy: {
-            //  dataSharing: true,
-            //  activityTracking: true,
-            //  accountVisibility: true,
-            //},
-            order: {
-              deliveryInstructions: "Leave at door",
-              packaging: "standard",
-            },
-          },
-        };
-
-        const userProfile = await createUserProfile(profileData);
-        console.log("Created %s", userProfile);
-
-        user.profile = userProfile;
-
-        return user;
       });
+      console.log("Created user %s", user);
+    }
+    if (user && !user.profile) {
+      const profileData: Partial<IUserProfile> = {
+        userId: user._id,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
+        photo: profile.photos[0].value,
+        preferences: {
+          notifications: {
+            preferredSupportChannel: "whatsapp",
+            orderUpdates: true,
+            promotional: true,
+            subscriptionReminders: true,
+            supportNotification: true,
+          },
+          display: {
+            theme: "light",
+            language: "en",
+            currency: "NGN",
+          },
+          //privacy: {
+          //  dataSharing: true,
+          //  activityTracking: true,
+          //  accountVisibility: true,
+          //},
+          order: {
+            deliveryInstructions: "Leave at door",
+            packaging: "standard",
+          },
+        },
+      };
+
+      const userProfile = await createUserProfile(profileData);
+      console.log(
+        "Created user profile %s for userId %s",
+        userProfile,
+        user.id
+      );
+      user.profile = userProfile;
     }
 
     console.log("User fetched with id %s", user!.id);
