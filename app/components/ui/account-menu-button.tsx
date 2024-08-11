@@ -23,15 +23,15 @@ export default function AccountMenuButton(props: Props) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="p-2 bg-gray-200 rounded-full">
+      <DropdownMenuTrigger className="max-h-12 p-1 bg-gray-200 rounded-full">
         {data && profilePhoto ? (
           <img
             src={profilePhoto}
             alt="User account menu icon"
-            className="h-5 w-5 rounded-full"
+            className="w-8 h-8 rounded-full"
           />
         ) : (
-          <UserCircleIcon className="h-5 w-5 " />
+          <UserCircleIcon className="w-8 h-8" />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">

@@ -30,8 +30,13 @@ export default function Layout() {
             </h1>
           </Link>
 
-          <div className="flex gap-4 -my-2">
-            <Button variant="outline" size="sm" radius="md" onClick={() => initQuiz()}>
+          <div className="flex gap-2 -my-2">
+            <Button
+              variant="outline"
+              size="sm"
+              radius="md"
+              onClick={() => initQuiz()}
+            >
               Get started
             </Button>
 

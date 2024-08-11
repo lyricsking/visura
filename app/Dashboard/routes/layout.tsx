@@ -80,7 +80,9 @@ export default function Layout() {
           <div className="w-full md:hidden">
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
-          <AccountMenuButton />
+          <div className="flex-none flex">
+            <AccountMenuButton />
+          </div>
         </PageLayoutHeaderItem>
 
         <PageLayoutHeaderItem className="hidden sticky md:inline-flex">
