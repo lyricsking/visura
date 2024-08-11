@@ -46,7 +46,7 @@ import {
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { getAuthUser, updateAuthUser } from "~/Auth/server/auth.server";
+import { getAuthUser, logout, updateAuthUser } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 
@@ -118,8 +118,9 @@ export const action: ActionFunction = async ({ request }) => {
       otherData["newPassword"]
     );
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
-    await disableUser(userId);
-    return redirect("/logout");
+    let user = await disableUser(userId);
+    console.log(user);
+    return await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
     let notification: IUserProfile["preferences"]["notifications"] = {
       orderUpdates: otherData["orderUpdates"] === "true" ? true : false,

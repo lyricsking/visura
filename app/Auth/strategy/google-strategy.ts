@@ -66,7 +66,7 @@ export const googleStrategy = new GoogleStrategy(
       user.profile = userProfile;
     }
 
-    console.log("User fetched with id %s", user!.id);
+    console.log("User fetched with id %s", user._id);
 
     return setAuthUser(request, user).then((res) => res.json());
   }

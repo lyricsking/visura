@@ -3,7 +3,7 @@ import { commitSession, getSession, sessionStorage } from "~/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { AuthUser } from "../types/auth-user.type";
 import { json, redirect } from "@remix-run/node";
-import { getUser } from "~/User/server/user.server";
+import { getUser, updateUser } from "~/User/server/user.server";
 import { IUser } from "~/User/types/user.types";
 import { HydratedDocument } from "mongoose";
 import { IUserMethods, IUserVirtuals } from "~/User/models/user.model";
@@ -90,17 +90,21 @@ export const getAuthUser = async (request: Request) => {
 
 export const setAuthUser = async (
   request: Request,
-  user: HydratedDocument<IUser, IUserMethods & IUserVirtuals> | null
+  user: HydratedDocument<IUser, IUserMethods & IUserVirtuals>
 ) => {
   const session = await getSession(request.headers.get("Cookie"));
 
   let authUser = {
-    id: user!.id,
-    email: user!.email,
-    profile: user?.profile,
+    id: user.id,
+    email: user.email,
+    profile: user.profile,
   };
 
   session.set(authenticator.sessionKey, user);
+  // Since the user has signed, we ensure they a marked active
+  if (!user.isActive) {
+    await updateUser(user._id, { isActive: true });
+  }
 
   return json(authUser, {
     headers: { "Set-Cookie": await commitSession(session) },
@@ -117,7 +121,7 @@ export const updateAuthUser = async (request: Request) => {
     populate: { path: "profile" },
   });
 
-  return await setAuthUser(request, user);
+  return user && (await setAuthUser(request, user));
 };
 
 export const logout = (
