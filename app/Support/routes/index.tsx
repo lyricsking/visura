@@ -9,15 +9,16 @@ export { loader };
 export default function Support() {
   const { articleCategories, faqs } = useLoaderData<typeof loader>();
 
+  const childHeaderRef: OutletContextType = useOutletContext();
+  
+  if(childHeaderRef){
+    childHeaderRef.current = {
+      title: "Support Center",
+      description: "How can we assist you today?",
+    }
+  }
+  
   return (
-    <>
-      <div className=" bg-gray-300 py-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900">Support Center</h1>
-        <p className="mt-2 text-lg text-gray-700">
-          How can we assist you today?
-        </p>
-      </div>
-
       <div className="max-w-7xl mx-auto py-6 px-6 lg:px-8">
         {/* Support Articles Section */}
         <section className="mt-8">
@@ -114,6 +115,5 @@ export default function Support() {
           </div>
         </section>
       </div>
-    </>
   );
 }
