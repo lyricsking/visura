@@ -1,8 +1,10 @@
+import { LoaderFunction, json } from "@remix-run/node";
 
-export const loader: LoaderFunction = () => {
-
-}
-
+export const loader: LoaderFunction = async () => {
+  const articleCategories = await getArticleCategories();
+  const faqs = await getFAQs();
+  return json({ articleCategories, faqs });
+};
 
 // Dummy data and utilities for demonstration
 export const getFAQs = async () => {
@@ -37,7 +39,7 @@ export const getArticleCategories = async () => {
   ];
 };
 
-export const getArticlesByCategory = async (categoryId?: number) => {
+export const getArticlesByCategory = async (categoryId: number) => {
   const allArticles = [
     {
       id: 1,
@@ -55,13 +57,8 @@ export const getArticlesByCategory = async (categoryId?: number) => {
   return allArticles.filter((article) => article.categoryId === categoryId);
 };
 
-export const getArticleDetails = async (id: any) => {
-  const allArticles = await getArticlesByCategory();
+export const getArticleDetails = async (categoryId: any, id: any) => {
+  const allArticles = await getArticlesByCategory(parseInt(categoryId));
+  console.log(allArticles);
   return allArticles.find((article) => article.id === parseInt(id));
-};
-
-export const loader = async () => {
-  const articleCategories = await getArticleCategories();
-  const faqs = await getFAQs();
-  return { articleCategories, faqs };
 };

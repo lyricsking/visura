@@ -45,9 +45,14 @@ export default defineConfig({
           });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/index.tsx", { index: true });
-            route("articles", "Support/routes/article-category.tsx", () => {
-              route(":id", "Support/routes/article.tsx");
-            });
+            route(
+              "articles/:categoryId",
+              "Support/routes/article-category.tsx"
+            );
+            route(
+              "articles/:categoryId/article/:id",
+              "Support/routes/article.tsx"
+            );
           });
           route("user", "User/routes/user.resource.tsx", { id: "user" });
           route("quiz", "Quiz/layout.tsx", () => {

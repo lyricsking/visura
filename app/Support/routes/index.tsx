@@ -2,8 +2,9 @@ import { Link, useLoaderData } from "@remix-run/react";
 import Button from "~/components/button";
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
+import { loader } from "../loaders/index.loader";
 
-export { loader } from "../loaders/index.loader";
+export { loader };
 
 export default function Support() {
   const { articleCategories, faqs } = useLoaderData<typeof loader>();
@@ -24,21 +25,22 @@ export default function Support() {
             Support Articles
           </h2>
           <div className="mt-6 bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
               {articleCategories.map((category) => (
-                <div key={category.id} className="mt-4">
+                <li
+                  key={category.id}
+                  className="border p-4 rounded-lg focus-within:ring-2 focus-within:ring-blue-500"
+                >
                   <Link
                     to={`articles/${category.id}`}
-                    className="text-lg font-medium text-green-500"
+                    className="block focus:outline-none"
                   >
-                    {category.name}
+                    <h2 className="text-xl font-semibold">{category.name}</h2>
+                    <p className="text-gray-600">{category.description}</p>
                   </Link>
-                  <p className="mt-1 text-sm text-gray-600">
-                    {category.description}
-                  </p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
