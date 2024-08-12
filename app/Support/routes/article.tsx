@@ -49,6 +49,11 @@ export default function SupportArticlePage() {
   );
 }
 
+
+export const shouldRevalidate: ShouldRevalidateFunction = () => {
+  return true;
+};
+
 export function ArticleDetails() {
   const { article } = useLoaderData<typeof loader>();
 
