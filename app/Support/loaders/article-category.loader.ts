@@ -1,10 +1,8 @@
 import { LoaderFunction, json } from "@remix-run/node";
-import { getArticlesByCategory } from "./index.loader";
+import { getArticlesCategory } from "../data/articles";
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const articles = await getArticlesByCategory(
-    parseInt(params.categoryId || "")
-  );
+  const category = await getArticlesCategory(parseInt(params.categoryId || ""));
 
-  return json({ articles });
+  return json({ category });
 };

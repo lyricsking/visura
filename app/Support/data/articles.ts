@@ -1,4 +1,3 @@
-
 // Dummy data and utilities for demonstration
 export const getFAQs = async () => {
   return [
@@ -24,7 +23,7 @@ const articles = [
     description: "Guides and tips for using our products effectively.",
     articles: [
       {
-        id: articleId,
+        id: 1,
         title: "How to Get Started with Our Platform",
         content: `<p>Welcome to our platform. To get started, you'll need to do the following:</p>
               <ol>
@@ -37,39 +36,36 @@ const articles = [
           { id: 2, title: "Account Setup and Verification" },
           { id: 3, title: "Managing Your Profile" },
         ],
-      }
-    ]
+      },
+    ],
   },
   {
     id: 2,
     name: "Troubleshooting",
     description: "Solutions to common issues you might encounter.",
-    
     articles: [
       {
         id: 2,
         title: "Fixing Connection Issues",
-        content: "Lorem ipsum dolor sit amet..."
-      }
-    ]
-  }
+        content: "Lorem ipsum dolor sit amet...",
+      },
+    ],
+  },
 ];
 
 export const getArticleCategories = async () => {
   return articles;
 };
 
-export const getArticlesByCategory = async (categoryId: number) => {
-  
+export const getArticlesCategory = async (categoryId: number) => {
   return articles.find((article) => article.id === categoryId);
 };
 
 export const getArticleDetails = async (categoryId: any, id: any) => {
-  
-  const category = await getArticlesByCategory(categoryId);
-  
-  if(category){
-    return category.articles.find((article)=> article.id === id)
+  const category = await getArticlesCategory(parseInt(categoryId));
+
+  if (category) {
+    return category.articles.find((article) => article.id === parseInt(id));
   }
   return null;
 };

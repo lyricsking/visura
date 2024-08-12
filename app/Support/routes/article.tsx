@@ -1,16 +1,27 @@
 import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Link, useLoaderData, useParams } from "@remix-run/react";
+import {
+  Link,
+  useLoaderData,
+  useOutletContext,
+  useParams,
+} from "@remix-run/react";
 import { loader } from "../loaders/article.loader";
+import { OutletContextType } from "./layout";
 
 export { loader };
 
-export function SupportArticlePage() {
-  const { articleId } = useParams();
-  const article = {
+export default function SupportArticlePage() {
+  const { article } = useLoaderData<typeof loader>();
+
+  const { childHeaderRef }: OutletContextType = useOutletContext();
+
+  if (childHeaderRef) {
+    childHeaderRef.current = {
+      title: article.title,
     };
+  }
 
   return (
-    
     <article className="container mx-auto p-4 max-w-3xl">
       <section
         className="prose lg:prose-lg max-w-none"
@@ -38,7 +49,7 @@ export function SupportArticlePage() {
   );
 }
 
-export default function ArticleDetails() {
+export function ArticleDetails() {
   const { article } = useLoaderData<typeof loader>();
 
   return (

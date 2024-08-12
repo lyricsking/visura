@@ -1,29 +1,51 @@
 import { LoaderFunction } from "@remix-run/node";
-import { Link, useLoaderData, useParams } from "@remix-run/react";
+import {
+  Link,
+  useLoaderData,
+  useOutletContext,
+  useParams,
+} from "@remix-run/react";
 import { loader } from "../loaders/article-category.loader";
+import { OutletContextType } from "./layout";
 
 export { loader };
 
 export default function ArticlesByCategory() {
-  const { articles } = useLoaderData<typeof loader>();
+  const { category } = useLoaderData<typeof loader>();
+
+  const { childHeaderRef }: OutletContextType = useOutletContext();
+
+  if (childHeaderRef) {
+    childHeaderRef.current = {
+      title: category.name,
+      description: category.description,
+    };
+  }
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-6 lg:px-8">
-        <ul className="list-disc list-inside">
-          {articles.map((article) => (
-            <li key={article.id}>
+      <div className="mt-6 bg-white shadow rounded-lg">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {category.articles.map((article) => (
+            <li
+              key={article.id}
+              className="border p-4 rounded-lg focus-within:ring-2 focus-within:ring-blue-500"
+            >
               <Link
-                to={`/support/article/${article.id}`}
+                to={`article/${article.id}`}
                 className="text-blue-500 underline"
               >
+              
                 {article.title}
-                <p className="mt-1 text-sm text-gray-600">
-                                  {article.content.substring(0, 100)}...
-                                </p>
               </Link>
+              <p
+                className="mt-1 text-sm text-gray-600 line-clamp-2"
+                dangerouslySetInnerHTML={{ __html: article.content }}
+              />
             </li>
           ))}
         </ul>
       </div>
+    </div>
   );
 }
