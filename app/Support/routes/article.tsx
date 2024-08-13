@@ -10,16 +10,16 @@ import { OutletContextDataType } from "./layout";
 
 export { loader };
 
-export default function SupportArticlePage() {
-  const { article } = useLoaderData<typeof loader>();
-
-  const { childMetaObjectFn }: OutletContextDataType = useOutletContext();
-
-  if (typeof childMetaObjectFn === "function") {
-    childMetaObjectFn({
+const handle: HandleObjectType = {
+  getHeaderObject: ({article}: typeof loader) => {
+   return {
       title: article.title,
-    });
+    }
   }
+}
+
+export default function SupportArticle() {
+  const { article } = useLoaderData<typeof loader>();
 
   return (
     <article className="container mx-auto p-4 max-w-3xl">

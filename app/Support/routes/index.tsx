@@ -8,17 +8,17 @@ import { Ref } from "react";
 
 export { loader };
 
-export default function Support() {
-  const { articleCategories, faqs } = useLoaderData<typeof loader>();
-
-  const { childMetaObjectFn }: OutletContextDataType = useOutletContext();
-
-  if (typeof childMetaObjectFn === "function") {
-    childMetaObjectFn({
+const handle: HandleObjectType = {
+  getHeaderObject: (data: typeof loader) => {
+   return {
       title: "Support Center",
       description: "How can we assist you today?",
-    });
+    }
   }
+}
+
+export default function Support() {
+  const { articleCategories, faqs } = useLoaderData<typeof loader>();
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-6 lg:px-8">

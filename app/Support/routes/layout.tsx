@@ -23,25 +23,27 @@ import {
   useState,
 } from "react";
 
-export type ChildMetaObject = {
+export type ChildHeaderObject = {
   title: string;
   description?: string;
   backLinkLabel?: string;
   backLinkPath?: string;
 };
 
-export type OutletContextDataType = {
-  childMetaObjectFn: Dispatch<SetStateAction<ChildMetaObject | undefined>>;
+export type HandleObjectType = {
+  getHeaderObject: (data: any) => ChildHeaderObject
 };
 
 export default function Layout() {
   const { initQuiz } = useQuiz();
 
-  const [childMetaObject, setChildMetaObject] = useState<ChildMetaObject>();
-
-  let outletContext: Partial<OutletContextDataType> = {
-    childMetaObjectFn: setChildMetaObject,
-  };
+  const matches = useMatches();
+  const currentRoute: any = matches.at(-1);
+  
+  let headerObject: ChildHeaderObject;
+  if(currentRoute.handle && currentRoute.getHeaderObject){
+    headerObject = currentRoute.handle.getHeaderObject(currentRoute.data)
+  }
 
   return (
     <PageLayout className="bg-gray-100">
@@ -62,33 +64,33 @@ export default function Layout() {
           </Button>
         </PageLayoutHeaderItem>
 
-        {childMetaObject && (
+        {headerObject && (
           <PageLayoutHeaderItem className="relative justify-center border bg-gray-300">
             <div className="text-center sm:py-2 text-center">
               <h1 className="text-3xl font-bold text-gray-900">
-                {childMetaObject.title}
+                {headerObject.title}
               </h1>
               <p className="mt-2 text-lg text-gray-700">
-                {childMetaObject.description}
+                {headerObject.description}
               </p>
             </div>
           </PageLayoutHeaderItem>
         )}
 
-        {childMetaObject && childMetaObject.backLinkPath && (
+        {headerObject && headerObject.backLinkPath && (
           <PageLayoutHeaderItem className="border bg-white">
             <Link
-              to={childMetaObject.backLinkPath}
+              to={headerObject.backLinkPath}
               className="text-blue-500 underline mt-2 block"
             >
-              {childMetaObject.backLinkLabel || "Go back"}
+              {headerObject.backLinkLabel || "Go back"}
             </Link>
           </PageLayoutHeaderItem>
         )}
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet context={outletContext} />
+        <Outlet />
       </PageLayoutContent>
 
       <PageLayoutFooter columns="1" asChild>

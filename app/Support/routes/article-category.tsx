@@ -10,17 +10,17 @@ import { OutletContextDataType } from "./layout";
 
 export { loader };
 
-export default function ArticlesByCategory() {
-  const { category } = useLoaderData<typeof loader>();
-
-  const { childMetaObjectFn }: OutletContextDataType = useOutletContext();
-
-  if (typeof childMetaObjectFn === "function") {
-    childMetaObjectFn({
+const handle: HandleObjectType = {
+  getHeaderObject: ({category}: typeof loader) => {
+   return {
       title: category.name,
       description: category.description,
-    });
+    }
   }
+}
+
+export default function SupportArticlesCategory() {
+  const { category } = useLoaderData<typeof loader>();
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-6 lg:px-8">
