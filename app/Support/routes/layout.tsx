@@ -35,7 +35,7 @@ export type HandleObjectType = {
 };
 
 export default function Layout() {
-  const { initQuiz } = useQuiz();
+  const { startQuiz } = useQuiz();
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
@@ -62,7 +62,7 @@ export default function Layout() {
             variant="outline"
             size="sm"
             className="-my-2"
-            onClick={() => initQuiz()}
+            onClick={() => startQuiz()}
           >
             Get started
           </Button>

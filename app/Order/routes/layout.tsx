@@ -11,10 +11,10 @@ import mongoose from "mongoose";
 import { CART_FETCHER_KEY } from "./../types/cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Button from "~/components/button";
-import { getSession, USER_SESSION_KEY } from "~/utils/session";
 import { useRef } from "react";
 import { applyDiscount } from "../server/cart.server";
 import type { IOrder } from "../types/order.type";
+import { getSessionUser } from "~/Auth/server/auth.server";
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
@@ -39,10 +39,8 @@ type LoaderDataType = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  const user = session.get(USER_SESSION_KEY);
-  if (!user) return redirect("/");
+  const user = await getSessionUser(request);
+  if (!user) return redirect("/quiz");
 
   const cart: IOrder | null = await getCartByEmailId(user["email"]);
   return json<LoaderDataType>({ cart });

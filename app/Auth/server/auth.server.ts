@@ -2,7 +2,7 @@ import { Authenticator } from "remix-auth";
 import { commitSession, getSession, sessionStorage } from "~/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { AuthUser } from "../types/auth-user.type";
-import { json, redirect } from "@remix-run/node";
+import { Session, json, redirect } from "@remix-run/node";
 import { getUser, updateUser } from "~/User/server/user.server";
 import { IUser } from "~/User/types/user.types";
 import { HydratedDocument } from "mongoose";
@@ -82,7 +82,7 @@ export const isAuthenticated = async (
   }
 };
 
-export const getAuthUser = async (request: Request) => {
+export const getSessionUser = async (request: Request) => {
   const session = await getSession(request.headers.get("Cookie"));
 
   return session.get(authenticator.sessionKey);
@@ -109,6 +109,20 @@ export const setAuthUser = async (
   return json(authUser, {
     headers: { "Set-Cookie": await commitSession(session) },
   });
+};
+
+export const setUnauthUser = async (
+  session: Session,
+  user: { email: string }
+) => {
+  let authUser: AuthUser = {
+    id: user.email,
+    email: user.email,
+  };
+
+  session.set(authenticator.sessionKey, user);
+
+  return authUser;
 };
 
 export const updateAuthUser = async (request: Request) => {

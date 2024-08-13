@@ -12,7 +12,7 @@ import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
-import { getAuthUser } from "~/Auth/server/auth.server";
+import { getSessionUser } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 
 export default function Layout() {
@@ -57,7 +57,7 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user: AuthUser | null = await getAuthUser(request);
+  const user: AuthUser | null = await getSessionUser(request);
 
   return json({ user: user });
 };

@@ -28,6 +28,7 @@ import Loading from "~/components/loading";
 import { ISupplement } from "~/Supplement/supplement.type";
 import { filterQuestions, questions } from "../utils/quiz.utils";
 import { Question } from "../types/quiz.type";
+import { setUnauthUser } from "~/Auth/server/auth.server";
 
 export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";
@@ -62,15 +63,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         console.log("params", params);
 
         await createCart(params);
-        //  Cache user data in session if not logged in
-        session.set(USER_SESSION_KEY, {
-          name: params.name,
-          email: params.email,
-        });
 
         //  Remove quiz session data, as we no longer need it.
         //session.unset(GIDS_MAP_KEY);
         //session.unset(ANSWER_KEY);
+
+        //  Cache user data in session if not logged in
+        await setUnauthUser(session, {
+          // name: params.name,
+          email: params.email,
+        });
 
         const headers = {
           "Set-Cookie": await commitSession(session),
@@ -129,7 +131,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const gIds = Object.keys(gIdsMap);
   if (!currentId || !gIds.includes(currentId)) {
     const gId = gIds[0];
-    return redirect(`/quiz?${GID_KEY}=${gId}`, { headers });
+    return redirect(`/quiz/new?${GID_KEY}=${gId}`, { headers });
   }
 
   //  Get the questionId keyed by currentId
@@ -188,7 +190,7 @@ export default function Quiz() {
       );
       //  Navigate to the next question
       submit(newAnswers, {
-        action: `/quiz/new?index&${GID_KEY}=${nextQuestionGId}`,
+        action: `/quiz/new?${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -196,7 +198,7 @@ export default function Quiz() {
     } else {
       //  We have indeed exhausted the questions available.
       submit(newAnswers, {
-        action: `/quiz/new?index&${ACTION_KEY}=submit`,
+        action: `/quiz/new?${ACTION_KEY}=submit`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -211,13 +213,13 @@ export default function Quiz() {
     if (prevQuestionIndex >= 0) {
       const prevQuestionId = Object.keys(gIdsMap)[prevQuestionIndex];
       //  navigate(-1)
-      navigate(`/quiz?${GID_KEY}=${prevQuestionId}`, {});
+      navigate(`/quiz/new?${GID_KEY}=${prevQuestionId}`, {});
     }
   };
 
   if (
     isSubmitting &&
-    navigation.formAction === `/quiz/new?index&${ACTION_KEY}=submit`
+    navigation.formAction === `/quiz/new?${ACTION_KEY}=submit`
   ) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

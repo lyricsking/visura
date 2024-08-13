@@ -46,7 +46,11 @@ import {
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { getAuthUser, logout, updateAuthUser } from "~/Auth/server/auth.server";
+import {
+  getSessionUser,
+  logout,
+  updateAuthUser,
+} from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 
@@ -98,7 +102,7 @@ export default function Settings() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const authUser: AuthUser = await getAuthUser(request);
+  const authUser: AuthUser = await getSessionUser(request);
 
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
