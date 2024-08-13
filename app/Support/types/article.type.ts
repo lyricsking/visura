@@ -6,7 +6,7 @@ export interface IArticle {
   description: string;
 }
 
-export interface ISupportArticle {
+export interface IArticleCollection {
   _id: Types.ObjectId;
   name: string;
   description: string;

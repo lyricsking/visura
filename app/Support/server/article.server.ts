@@ -1,10 +1,14 @@
-async function addArticle(
-  categoryData: Omit<ISupportArticleCategory, '_id' | 'createdAt' | 'updatedAt'>,
+import { Types } from "mongoose";
+import ArticleCollection from "../models/article.model";
+import { IArticle, IArticleCollection } from "../types/article.type";
+
+export async function addArticle(
+  categoryData: Omit<IArticleCollection, "_id" | "createdAt" | "updatedAt">,
   articlesData: IArticle[]
-): Promise<ISupportArticleCategory | null> {
+): Promise<IArticleCollection | null> {
   try {
     // Update the existing category or create a new one
-    const updatedCategory = await SupportArticleCategory.findOneAndUpdate(
+    const updatedCategory = await ArticleCollection.findOneAndUpdate(
       { name: categoryData.name },
       {
         $setOnInsert: {
@@ -28,18 +32,22 @@ async function addArticle(
 
     return updatedCategory;
   } catch (error) {
-    console.error("Error creating or updating the support article category", error);
+    console.error(
+      "Error creating or updating the support article category",
+      error
+    );
+
     throw error;
   }
 }
 
-async function updateArticleCategory(
+export async function updateArticleCollection(
   categoryId: Types.ObjectId,
-  updateData: Partial<ISupportArticleCategory>
-): Promise<ISupportArticleCategory | null> {
+  updateData: Partial<IArticleCollection>
+): Promise<IArticleCollection | null> {
   try {
     // Update the support article category with the provided update data
-    const updatedCategory = await SupportArticleCategory.findByIdAndUpdate(
+    const updatedCategory = await ArticleCollection.findByIdAndUpdate(
       categoryId,
       {
         $set: {
@@ -64,14 +72,14 @@ async function updateArticleCategory(
   }
 }
 
-async function updateArticle(
+export async function updateArticle(
   categoryId: Types.ObjectId,
   articleId: Types.ObjectId,
   updateData: Partial<IArticle>
 ): Promise<IArticle | null> {
   try {
     // Find the support article category and update the specific article
-    const updatedCategory = await SupportArticleCategory.findOneAndUpdate(
+    const updatedCategory = await ArticleCollection.findOneAndUpdate(
       { _id: categoryId, "articles._id": articleId },
       {
         $set: {
@@ -89,18 +97,21 @@ async function updateArticle(
     }
 
     // Return the updated article
-    return updatedCategory.articles.id(articleId);
+    return (
+      updatedCategory.articles.find((article) => article._id === articleId) ||
+      null
+    );
   } catch (error) {
     console.error("Error updating support article", error);
     throw error;
   }
 }
 
-async function findArticleById(
+export async function findArticleById(
   categoryId: Types.ObjectId,
   articleId: Types.ObjectId
 ): Promise<IArticle | null> {
-  const supportCategory = await SupportArticleCategory.findById(categoryId)
+  const supportCategory = await ArticleCollection.findById(categoryId)
     .select({ articles: { $elemMatch: { _id: articleId } } })
     .exec();
 
@@ -111,11 +122,11 @@ async function findArticleById(
   return supportCategory.articles[0];
 }
 
-async function findOneCategory(
-  searchCriteria: Partial<ISupportArticleCategory>
-): Promise<ISupportArticleCategory | null> {
+export async function findOneCategory(
+  searchCriteria: Partial<IArticleCollection>
+): Promise<IArticleCollection | null> {
   try {
-    const category = await SupportArticleCategory.findOne(searchCriteria).exec();
+    const category = await ArticleCollection.findOne(searchCriteria).exec();
 
     if (!category) {
       throw new Error("Support Article Category not found");
@@ -128,13 +139,13 @@ async function findOneCategory(
   }
 }
 
-async function findOneArticle(
+export async function findOneArticle(
   categoryId: Types.ObjectId,
   searchCriteria: Partial<IArticle>
 ): Promise<IArticle | null> {
   try {
-    const category = await SupportArticleCategory.findOne(
-      { _id: categoryId, "articles": { $elemMatch: searchCriteria } },
+    const category = await ArticleCollection.findOne(
+      { _id: categoryId, articles: { $elemMatch: searchCriteria } },
       { "articles.$": 1 }
     ).exec();
 
@@ -149,11 +160,11 @@ async function findOneArticle(
   }
 }
 
-async function deleteSupportArticle(
+export async function deleteSupportArticle(
   categoryId: Types.ObjectId,
   articleId: Types.ObjectId
 ): Promise<boolean> {
-  const supportCategory = await SupportArticleCategory.findOneAndUpdate(
+  const supportCategory = await ArticleCollection.findOneAndUpdate(
     { _id: categoryId },
     { $pull: { articles: { _id: articleId } } },
     { new: true }

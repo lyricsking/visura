@@ -13,4 +13,5 @@ export interface IStaff {
   email: string;
   role: StaffRole;
   isAvailable: boolean; // Availability status
+  assignedTickets: Types.ObjectId[];
 }

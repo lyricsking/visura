@@ -1,4 +1,4 @@
-import { Schema, Types } from "mongoose";
+import { Types } from "mongoose";
 
 export const TicketPriority = {
   low: "Low",
@@ -19,7 +19,6 @@ export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus];
 
 export interface ITicket {
   _id: Types.ObjectId;
-  assignedStaff: [{ type: Schema.Types.ObjectId; ref: "Staff" }];
   title: string;
   description: string;
   priority: TicketPriority;

@@ -1,4 +1,7 @@
 import { useFetcher } from "@remix-run/react";
+import Button from "~/components/button";
+import { Input } from "~/components/input";
+import { Textarea } from "~/components/textarea";
 
 export function ContactForm() {
   const fetcher = useFetcher();
@@ -14,7 +17,7 @@ export function ContactForm() {
       <div className="mt-6 bg-white shadow rounded-lg p-6 space-y-6">
         <fetcher.Form
           method="post"
-          action="/submit-contact"
+          action="/support"
           className="flex flex-col gap-4 max-w-xl mx-auto"
         >
           <div>
@@ -77,11 +80,7 @@ export function ContactForm() {
               rows={4}
             />
           </div>
-          <Button
-            type="submit"
-            radius="md"
-            className="text-white bg-green-500"
-          >
+          <Button type="submit" radius="md" className="text-white bg-green-500">
             Submit
           </Button>
         </fetcher.Form>

@@ -1,4 +1,4 @@
-import { Model, Schema, model } from "mongoose";
+import mongoose, { Model, Schema, model } from "mongoose";
 import { ITicket, TicketPriority, TicketStatus } from "../types/ticket.type";
 import { models } from "mongoose";
 
@@ -18,6 +18,6 @@ const ticketSchema = new Schema<ITicket, TicketModel>({
 });
 
 const Ticket: TicketModel =
-  models.Ticket || model<ITicket, TicketModel>("Ticket", ticketSchema);
+  mongoose.models.Ticket || model<ITicket, TicketModel>("Ticket", ticketSchema);
 
 export default Ticket;

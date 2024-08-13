@@ -1,41 +1,62 @@
-import Ticket from '~/models/Ticket';
+import { logActivity } from "~/ActivityLog/server/activity-log.server";
+import Staff from "~/User/server/staff.server";
+import Ticket from "../models/ticket.model";
+import { ITicket, TicketStatus } from "../types/ticket.type";
 
 export async function addToQueue(ticketId: string) {
-  return await Ticket.findByIdAndUpdate(ticketId, { $set: { status: 'queue' } });
+  return await Ticket.findByIdAndUpdate(ticketId, {
+    $set: { status: "queue" },
+  });
+}
+
+export async function createTicket(data: ITicket) {
+  try {
+    let ticketInstance = new Ticket(data);
+    let ticket = await ticketInstance.save();
+    return ticket;
+  } catch (error) {
+    console.error("Error updating support article category", error);
+    throw error;
+  }
 }
 
 export async function pickTicket(staffId: string) {
-  const staff = await Staff.countDoc(staffId);
+  const staff = await Staff.findById(staffId);
 
-  if (staff > 0) {
-    throw new Error('Staff member is not available');
+  if (!staff) {
+    throw new Error("Staff member is not available");
   }
 
   // Find a new ticket from the queue
-  const ticket = await Ticket.findOne({ status: 'queue' }).sort({ priority: -1 });
+  const ticket = await Ticket.findOne({ status: "queue" }).sort({
+    priority: -1,
+  });
 
   if (!ticket) {
-    throw new Error('Tickets not available in the queue');
+    throw new Error("Tickets not available in the queue");
   }
 
   // Assign the ticket to the staff
   ticket.status = TicketStatus.awaiting_support;
-  ticket.assignedTickets.push(staff._id);
-  return ticket.save().then(() => {
+  staff.assignedTickets.push(ticket._id);
+  return ticket.save().then(async () => {
     await logActivity({
-      action: 'Ticket Picked',
+      action: "Ticket Picked",
       details: `Ticket ${ticket._id} picked by staff ${staffId}`,
       staff: staffId,
-      ticket: ticket._id
+      ticket: ticket.id,
     });
   });
 }
 
-export async function updateTicketStatus(ticketId: string, status: 'in-progress' | 'resolved' | 'closed') {
+export async function updateTicketStatus(
+  ticketId: string,
+  status: TicketStatus
+) {
   const ticket = await Ticket.findById(ticketId);
 
   if (!ticket) {
-    throw new Error('Ticket not found');
+    throw new Error("Ticket not found");
   }
 
   ticket.status = status;
@@ -48,11 +69,11 @@ export async function updateTicketStatus(ticketId: string, status: 'in-progress'
 export async function handleUserReply(ticketId: string, userReply: string) {
   const ticket = await Ticket.findById(ticketId);
   if (!ticket) {
-    throw new Error('Ticket not found');
+    throw new Error("Ticket not found");
   }
 
   // Update ticket status based on the user reply
-  ticket.status = 'in-progress'; // Or other appropriate status based on business logic
+  ticket.status = "Awaiting Support"; // Or other appropriate status based on business logic
   await ticket.save();
 
   // Optionally notify staff or log the user reply

@@ -44,7 +44,7 @@ export default defineConfig({
             route("transactions", "Dashboard/routes/transactions.tsx");
           });
           route("support", "Support/routes/layout.tsx", () => {
-            route("", "Support/routes/index.tsx", { index: true });
+            route("", "Support/routes/support.tsx", { index: true });
             route(
               "articles/:categoryId",
               "Support/routes/article-category.tsx"

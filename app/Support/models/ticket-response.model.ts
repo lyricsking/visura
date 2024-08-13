@@ -1,4 +1,4 @@
-import { Model, Schema, model, models } from "mongoose";
+import mongoose, { Model, Schema, model } from "mongoose";
 import { ITicketResponse } from "../types/ticket-response.type";
 
 export type TicketResponseModel = Model<ITicketResponse>;
@@ -11,7 +11,7 @@ const responseSchema = new Schema<ITicketResponse, TicketResponseModel>({
 });
 
 const TicketResponse: TicketResponseModel =
-  models.TicketResponse ||
+  mongoose.models.TicketResponse ||
   model<ITicketResponse, TicketResponseModel>("TicketResponse", responseSchema);
 
 export default TicketResponse;

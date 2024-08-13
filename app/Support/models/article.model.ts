@@ -1,19 +1,21 @@
-import { Model, Schema, model } from "mongoose";
-import { IArticle } from "../types/article.type";
-import { models } from "mongoose";
+import mongoose, { Model, Schema, Types, model } from "mongoose";
+import { IArticle, IArticleCollection } from "../types/article.type";
 
 // Article Schema
 const articleSchema = new Schema<IArticle>({
-  _id: { type: Types.ObjectId, required: true, auto: true },
+  _id: { type: Schema.Types.ObjectId, required: true, auto: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
 });
 
-export type SupportArticleModel = Model<ISupportArticle>;
+export type ArticleCollectionModel = Model<IArticleCollection>;
 
 // Support Article Category Schema
-const supportArticleCategorySchema = new Schema<ISupportArticle, SupportArticleModel>({
-  _id: { type: Types.ObjectId, required: true, auto: true },
+const ArticleCollectionSchema = new Schema<
+  IArticleCollection,
+  ArticleCollectionModel
+>({
+  _id: { type: Schema.Types.ObjectId, required: true, auto: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
   articles: { type: [articleSchema], default: [] },
@@ -22,7 +24,10 @@ const supportArticleCategorySchema = new Schema<ISupportArticle, SupportArticleM
 });
 
 // Models
-const SupportArticleCategory = model<ISupportArticleCategory>(
-  "SupportArticleCategory",
-  supportArticleCategorySchema
-);
+const ArticleCollection: ArticleCollectionModel =
+  mongoose.models.ArticleCollection ||
+  model<IArticleCollection, ArticleCollectionModel>(
+    "ArticleCollection",
+    ArticleCollectionSchema
+  );
+export default ArticleCollection;

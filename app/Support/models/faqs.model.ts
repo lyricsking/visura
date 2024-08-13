@@ -1,6 +1,5 @@
-import { Model, Schema, model } from "mongoose";
+import mongoose, { Model, Schema, model } from "mongoose";
 import { IFaqs } from "../types/faqs.type";
-import { models } from "mongoose";
 
 export type FaqsModel = Model<IFaqs>;
 
@@ -12,6 +11,6 @@ const articleSchema = new Schema<IFaqs, FaqsModel>({
 });
 
 const Faqs: FaqsModel =
-  models.Faqs || model<IFaqs, FaqsModel>("Faqs", articleSchema);
+  mongoose.models.Faqs || model<IFaqs, FaqsModel>("Faqs", articleSchema);
 
 export default Faqs;

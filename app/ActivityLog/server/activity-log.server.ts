@@ -3,22 +3,24 @@ import ActivityLog from "../models/activity-log.model";
 export type LogActivityProps = {
   action: string;
   details: string;
-  userId?: string;
-  staffId?: string;
-  orderId?: string;
-  subscriptionId?: string;
+  order?: string;
+  staff?: string;
+  subscription?: string;
+  ticket?: string;
+  user?: string;
 };
 
 export async function logActivity(props: LogActivityProps) {
-  const { action, details, userId, staffId, orderId, subscriptionId } = props;
+  const { action, details, order, staff, subscription, ticket, user } = props;
 
   const log = new ActivityLog({
     action,
     details,
-    userId,
-    staffId,
-    orderId,
-    subscriptionId,
+    order,
+    staff,
+    subscription,
+    ticket,
+    user,
   });
   return await log.save();
 }

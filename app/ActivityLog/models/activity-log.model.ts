@@ -2,7 +2,6 @@ import { Model, Schema, model, models } from "mongoose";
 import { IActivityLog } from "../types/activity-log.type";
 
 export type ActivityLogModel = Model<IActivityLog>;
-
 const logSchema = new Schema<IActivityLog, ActivityLogModel>({
   action: { type: String, required: true },
   details: { type: String, required: true },
@@ -10,11 +9,12 @@ const logSchema = new Schema<IActivityLog, ActivityLogModel>({
   order: { type: Schema.Types.ObjectId, ref: "Order" },
   staff: { type: Schema.Types.ObjectId, ref: "Staff" },
   subscription: { type: Schema.Types.ObjectId, ref: "Subscription" },
-  ticket: { type: Schema.Types.ObjectId, ref: "User" },
+  ticket: { type: Schema.Types.ObjectId, ref: "Ticket" },
   user: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 const ActivityLog: ActivityLogModel =
-  models.Log || model<IActivityLog, ActivityLogModel>("Log", logSchema);
+  models.ActivityLog ||
+  model<IActivityLog, ActivityLogModel>("ActivityLog", logSchema);
 
 export default ActivityLog;

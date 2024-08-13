@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 // Declare mongoose global variable
 declare global {
   // eslint-disable-next-line no-var
-  var mongoose: { conn: any; promise: any };
+  var mongooseClient: { conn: any; promise: any };
 }
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -14,10 +14,10 @@ if (!MONGODB_URI) {
   );
 }
 
-let cached = global.mongoose;
+let cached = global.mongooseClient;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = global.mongooseClient = { conn: null, promise: null };
 }
 
 async function connectToDatabase() {
@@ -28,7 +28,7 @@ async function connectToDatabase() {
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(MONGODB_URI!)
-      .then((mongoose) => mongoose);
+      .then((mongooseClient) => mongooseClient);
   }
 
   cached.conn = await cached.promise;
@@ -36,12 +36,12 @@ async function connectToDatabase() {
 }
 
 process.on("SIGINT", async () => {
-  await mongoose.connection.close();
+  await mongooseClient.conn.connection.close();
   process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
-  await mongoose.connection.close();
+  await mongooseClient.conn.connection.close();
   process.exit(0);
 });
 
