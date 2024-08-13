@@ -1,8 +1,6 @@
 import dotenv from "dotenv";
-import { connectToDatabase, disconnectDatabase } from "../db.server";
 import { seedSupplement } from "./supplement.server";
-
-dotenv.config();
+import connectToDatabase from "../db.server";
 
 const seedDatabase = async () => {
   try {
@@ -10,8 +8,6 @@ const seedDatabase = async () => {
     await seedSupplement();
   } catch (error) {
     console.error("Error seeding database:", error);
-  } finally {
-    await disconnectDatabase();
   }
 };
 

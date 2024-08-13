@@ -1,4 +1,11 @@
-import { Schema, model, Document, Types, Model, models } from "mongoose";
+import mongoose, {
+  Schema,
+  model,
+  Document,
+  Types,
+  Model,
+  models,
+} from "mongoose";
 import { IStaff, StaffRole } from "../types/staff.type";
 
 export type StaffModel = Model<IStaff>;
@@ -15,6 +22,6 @@ const staffSchema = new Schema<IStaff, StaffModel>({
 });
 
 const Staff: StaffModel =
-  models.Staff || model<IStaff, StaffModel>("Staff", staffSchema);
+  mongoose.models.Staff || model<IStaff, StaffModel>("Staff", staffSchema);
 
 export default Staff;

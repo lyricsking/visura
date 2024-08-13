@@ -1,6 +1,6 @@
 // RadioGroup.js
 import React, { useRef } from "react";
-import { RadioGroupFormType } from "../quiz.type";
+import { RadioGroupFormType } from "../types/quiz.type";
 import { cn } from "~/utils";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
@@ -63,7 +63,7 @@ const RadioGroupForm = ({
         </div>
       </fieldset>
 
-      <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
+      <div className="flex fixed z-20 bottom-0 right-0 left-0 p-4 bg-white">
         <Button
           variant={"fill"}
           radius={"md"}

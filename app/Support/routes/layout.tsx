@@ -13,7 +13,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import pkg from "../../../package.json";
-import { useQuiz } from "~/Quiz/quiz.utils";
+import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import {
   Dispatch,

@@ -19,8 +19,8 @@ export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus];
 
 export interface ITicket {
   _id: Types.ObjectId;
-  title: string;
-  description: string;
+  subject: string;
+  message: string;
   priority: TicketPriority;
   status: TicketStatus;
   createdAt: Date;

@@ -9,7 +9,7 @@ import Hero from "../components/hero";
 import HomeCarousel from "../components/home.carousel";
 import Explanation from "../components/explanation";
 import { findFontByName } from "~/Shared/data/fonts";
-import { useQuiz } from "~/Quiz/quiz.utils";
+import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 
 export const links: LinksFunction = () => {
@@ -41,7 +41,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function Home() {
-  const { initQuiz } = useQuiz();
+  const { startQuiz } = useQuiz();
 
   return (
     <div className="w-full">
@@ -54,7 +54,7 @@ export default function Home() {
         variant="outline"
         size="lg"
         className="flex items-center justify-center mx-auto text-xl capitalize border-2 -mt-8 mb-8 max-w-[70%] h-16"
-        onClick={() => initQuiz()}
+        onClick={() => startQuiz()}
       >
         start quiz
       </Button>

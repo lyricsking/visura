@@ -1,7 +1,7 @@
 import { logActivity } from "~/ActivityLog/server/activity-log.server";
-import Staff from "~/User/server/staff.server";
 import Ticket from "../models/ticket.model";
 import { ITicket, TicketStatus } from "../types/ticket.type";
+import Staff from "~/User/models/staff.model";
 
 export async function addToQueue(ticketId: string) {
   return await Ticket.findByIdAndUpdate(ticketId, {

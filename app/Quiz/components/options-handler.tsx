@@ -1,7 +1,7 @@
 import { RadioGroup, RadioGroupItem } from "~/components/radio";
 import { Label } from "~/components/label";
 import { Checkbox } from "~/components/checkbox";
-import { AnswerType } from "../quiz.type";
+import { AnswerType } from "../types/quiz.type";
 import { Input } from "~/components/input";
 import { cn } from "~/utils";
 
@@ -54,28 +54,6 @@ export default function OptionsHandler({
       case "multiple":
         return (
           <Multiple
-            name={name}
-            defaultValue={
-              Array.isArray(defaultValue) ? defaultValue : [defaultValue]
-            }
-            onValueChange={onValueChange}
-            options={options}
-          />
-        );
-      case "single-tag":
-        return (
-          <Single
-            type="flow"
-            name={name}
-            defaultValue={defaultValue}
-            onValueChange={onValueChange}
-            options={options}
-          />
-        );
-      case "multiple-tag":
-        return (
-          <Multiple
-            type="flow"
             name={name}
             defaultValue={
               Array.isArray(defaultValue) ? defaultValue : [defaultValue]

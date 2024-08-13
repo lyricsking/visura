@@ -1,12 +1,11 @@
 import mongoose, { Model, Schema, model } from "mongoose";
 import { ITicket, TicketPriority, TicketStatus } from "../types/ticket.type";
-import { models } from "mongoose";
 
 export type TicketModel = Model<ITicket>;
 
 const ticketSchema = new Schema<ITicket, TicketModel>({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
+  subject: { type: String, required: true },
+  message: { type: String, required: true },
   priority: {
     type: String,
     enum: Object.values(TicketPriority),
@@ -19,5 +18,4 @@ const ticketSchema = new Schema<ITicket, TicketModel>({
 
 const Ticket: TicketModel =
   mongoose.models.Ticket || model<ITicket, TicketModel>("Ticket", ticketSchema);
-
 export default Ticket;

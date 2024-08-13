@@ -17,17 +17,17 @@ import Button from "~/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/components/progress";
 import { commitSession, getSession, USER_SESSION_KEY } from "~/utils/session";
-import { filterQuestions, questions } from "./quiz.utils";
 import { getNanoid } from "~/utils";
-import { Question } from "./quiz.type";
 import * as lo from "lodash";
-import TextInputForm from "./components/InputTextForm";
-import NumberInputForm from "./components/NumberInputForm";
-import CheckboxGroupForm from "./components/CheckboxGroupForm";
-import RadioGroupForm from "./components/RadioGroupForm";
-import { ISupplementModel } from "~/Supplement/supplement.model";
-import { createCart, recommendSupplements } from "./quiz.server";
+import TextInputForm from "../components/InputTextForm";
+import NumberInputForm from "../components/NumberInputForm";
+import CheckboxGroupForm from "../components/CheckboxGroupForm";
+import RadioGroupForm from "../components/RadioGroupForm";
+import { createCart, recommendSupplements } from "../server/quiz.server";
 import Loading from "~/components/loading";
+import { ISupplement } from "~/Supplement/supplement.type";
+import { filterQuestions, questions } from "../utils/quiz.utils";
+import { Question } from "../types/quiz.type";
 
 export const GIDS_MAP_KEY = "gIdsMap";
 export const ANSWER_KEY = "answers";
@@ -50,9 +50,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     url.searchParams.get(ACTION_KEY) === "submit"
   ) {
     try {
-      const supplements: ISupplementModel[] = await recommendSupplements(
-        answers
-      );
+      const supplements: ISupplement[] = await recommendSupplements(answers);
 
       if (Array.isArray(supplements) && supplements.length > 0) {
         const params = {
@@ -190,7 +188,7 @@ export default function Quiz() {
       );
       //  Navigate to the next question
       submit(newAnswers, {
-        action: `/quiz?index&${GID_KEY}=${nextQuestionGId}`,
+        action: `/quiz/new?index&${GID_KEY}=${nextQuestionGId}`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -198,7 +196,7 @@ export default function Quiz() {
     } else {
       //  We have indeed exhausted the questions available.
       submit(newAnswers, {
-        action: `/quiz?index&${ACTION_KEY}=submit`,
+        action: `/quiz/new?index&${ACTION_KEY}=submit`,
         method: "POST",
         replace: true,
         encType: "application/json",
@@ -219,7 +217,7 @@ export default function Quiz() {
 
   if (
     isSubmitting &&
-    navigation.formAction === `/quiz?index&${ACTION_KEY}=submit`
+    navigation.formAction === `/quiz/new?index&${ACTION_KEY}=submit`
   ) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

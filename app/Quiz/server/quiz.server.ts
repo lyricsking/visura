@@ -1,13 +1,10 @@
 import { createCookie } from "@remix-run/node";
 
-import mongoose from "mongoose";
 import { Gender, type ISupplement } from "~/Supplement/supplement.type";
-import { Answers } from "./quiz.type";
+import { Answers } from "../types/quiz.type";
 import { findSupplement } from "~/Supplement/supplement.server";
-import { getNanoid } from "~/utils";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
 import { IItem } from "~/Order/types/order.type";
-import { SupplementModel } from "~/Supplement/supplement.model";
 
 interface SupplementWithScore {
   supplement: ISupplement;

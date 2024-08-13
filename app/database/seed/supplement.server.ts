@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import Supplement from "~/Supplement/supplement.model";
 import { Gender, ISupplement } from "~/Supplement/supplement.type";
 
@@ -9,7 +10,7 @@ export const seedSupplement = async () => {
     await Supplement.insertMany(supplements);
     console.log("Supplements seeded successfully");
   } catch (error) {
-    console.error("Error seeding users:", error);
+    console.error("Error seeding users %s", error);
   }
 };
 
@@ -97,6 +98,7 @@ const generateRandomSupplement = (): ISupplement => {
   const max = min + Math.floor(Math.random() * (61 - min)); // max ranges from min to 60 (inclusive)
 
   return {
+    _id: new Types.ObjectId(),
     name: `Supplement ${Math.floor(Math.random() * 100)}`,
     price: parseFloat((Math.random() * 100).toFixed(2)),
     gender: getRandomElement(genders),

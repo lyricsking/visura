@@ -1,5 +1,5 @@
 import { Gender } from "~/Supplement/supplement.type";
-import { Answers, Question, QuestionCondition } from "./quiz.type";
+import { Answers, Question, QuestionCondition } from "../types/quiz.type";
 import { useNavigate } from "@remix-run/react";
 
 export const questions: Question[] = [
@@ -323,9 +323,9 @@ export function filterQuestions(answers: Answers) {
 export function useQuiz() {
   const navigate = useNavigate();
 
-  const initQuiz = () => {
+  const startQuiz = () => {
     navigate(`/quiz`);
   };
 
-  return { initQuiz };
+  return { startQuiz };
 }

@@ -8,7 +8,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import pkg from "../../../package.json";
-import { useQuiz } from "~/Quiz/quiz.utils";
+import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
@@ -18,7 +18,7 @@ import { AuthUser } from "~/Auth/types/auth-user.type";
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
-  const { initQuiz } = useQuiz();
+  const { startQuiz } = useQuiz();
 
   return (
     <PageLayout>
@@ -35,7 +35,7 @@ export default function Layout() {
               variant="outline"
               size="sm"
               radius="md"
-              onClick={() => initQuiz()}
+              onClick={() => startQuiz()}
             >
               Get started
             </Button>

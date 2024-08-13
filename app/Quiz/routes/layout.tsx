@@ -5,9 +5,7 @@ export default function Layout() {
   return (
     <PageLayout>
       <PageLayoutContent>
-        {/*<QuizProvider quizData={quizData}>*/}
         <Outlet />
-        {/* </QuizProvider> */}
       </PageLayoutContent>
     </PageLayout>
   );

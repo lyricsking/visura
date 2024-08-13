@@ -1,4 +1,4 @@
-import { Model, Schema, model, models } from "mongoose";
+import mongoose, { Model, Schema, model, models } from "mongoose";
 import { IActivityLog } from "../types/activity-log.type";
 
 export type ActivityLogModel = Model<IActivityLog>;
@@ -14,7 +14,7 @@ const logSchema = new Schema<IActivityLog, ActivityLogModel>({
 });
 
 const ActivityLog: ActivityLogModel =
-  models.ActivityLog ||
+  mongoose.models.ActivityLog ||
   model<IActivityLog, ActivityLogModel>("ActivityLog", logSchema);
 
 export default ActivityLog;
