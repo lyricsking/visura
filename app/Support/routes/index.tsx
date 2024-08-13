@@ -3,7 +3,7 @@ import Button from "~/components/button";
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
 import { loader } from "../loaders/index.loader";
-import { OutletContextType } from "./layout";
+import { OutletContextDataType } from "./layout";
 import { Ref } from "react";
 
 export { loader };
@@ -11,13 +11,13 @@ export { loader };
 export default function Support() {
   const { articleCategories, faqs } = useLoaderData<typeof loader>();
 
-  const { childHeaderRef }: OutletContextType = useOutletContext();
+  const { childMetaObjectFn }: OutletContextDataType = useOutletContext();
 
-  if (childHeaderRef) {
-    childHeaderRef.current = {
+  if (typeof childMetaObjectFn === "function") {
+    childMetaObjectFn({
       title: "Support Center",
       description: "How can we assist you today?",
-    };
+    });
   }
 
   return (

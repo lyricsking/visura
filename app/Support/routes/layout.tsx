@@ -1,4 +1,9 @@
-import { Link, Outlet, useMatches } from "@remix-run/react";
+import {
+  Link,
+  Outlet,
+  ShouldRevalidateFunction,
+  useMatches,
+} from "@remix-run/react";
 import Footer from "~/components/ui/footer";
 import {
   PageLayout,
@@ -10,24 +15,32 @@ import {
 import pkg from "../../../package.json";
 import { useQuiz } from "~/Quiz/quiz.utils";
 import Button from "~/components/button";
-import { MutableRefObject, useRef } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useRef,
+  useState,
+} from "react";
 
-export type OutletContextChildRefObject = {
+export type ChildMetaObject = {
   title: string;
   description?: string;
   backLinkLabel?: string;
   backLinkPath?: string;
 };
 
-export type OutletContextType = {
-  childHeaderRef: MutableRefObject<OutletContextChildRefObject | null>;
+export type OutletContextDataType = {
+  childMetaObjectFn: Dispatch<SetStateAction<ChildMetaObject | undefined>>;
 };
 
 export default function Layout() {
   const { initQuiz } = useQuiz();
 
-  let outletContext: Partial<OutletContextType> = {
-    childHeaderRef: useRef<OutletContextChildRefObject | null>(null),
+  const [childMetaObject, setChildMetaObject] = useState<ChildMetaObject>();
+
+  let outletContext: Partial<OutletContextDataType> = {
+    childMetaObjectFn: setChildMetaObject,
   };
 
   return (
@@ -49,31 +62,29 @@ export default function Layout() {
           </Button>
         </PageLayoutHeaderItem>
 
-        {outletContext.childHeaderRef && (
+        {childMetaObject && (
           <PageLayoutHeaderItem className="relative justify-center border bg-gray-300">
             <div className="text-center sm:py-2 text-center">
               <h1 className="text-3xl font-bold text-gray-900">
-                {outletContext.childHeaderRef.current?.title}
+                {childMetaObject.title}
               </h1>
               <p className="mt-2 text-lg text-gray-700">
-                {outletContext.childHeaderRef.current?.description}
+                {childMetaObject.description}
               </p>
             </div>
           </PageLayoutHeaderItem>
         )}
 
-        {outletContext.childHeaderRef?.current &&
-          outletContext.childHeaderRef.current?.backLinkPath && (
-            <PageLayoutHeaderItem className="border bg-white">
-              <Link
-                to={outletContext.childHeaderRef.current?.backLinkPath}
-                className="text-blue-500 underline mt-2 block"
-              >
-                {outletContext.childHeaderRef.current?.backLinkLabel ||
-                  "Go back"}
-              </Link>
-            </PageLayoutHeaderItem>
-          )}
+        {childMetaObject && childMetaObject.backLinkPath && (
+          <PageLayoutHeaderItem className="border bg-white">
+            <Link
+              to={childMetaObject.backLinkPath}
+              className="text-blue-500 underline mt-2 block"
+            >
+              {childMetaObject.backLinkLabel || "Go back"}
+            </Link>
+          </PageLayoutHeaderItem>
+        )}
       </PageLayoutHeader>
 
       <PageLayoutContent>

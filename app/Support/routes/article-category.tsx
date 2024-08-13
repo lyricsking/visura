@@ -6,20 +6,20 @@ import {
   useParams,
 } from "@remix-run/react";
 import { loader } from "../loaders/article-category.loader";
-import { OutletContextType } from "./layout";
+import { OutletContextDataType } from "./layout";
 
 export { loader };
 
 export default function ArticlesByCategory() {
   const { category } = useLoaderData<typeof loader>();
 
-  const { childHeaderRef }: OutletContextType = useOutletContext();
+  const { childMetaObjectFn }: OutletContextDataType = useOutletContext();
 
-  if (childHeaderRef) {
-    childHeaderRef.current = {
+  if (typeof childMetaObjectFn === "function") {
+    childMetaObjectFn({
       title: category.name,
       description: category.description,
-    };
+    });
   }
 
   return (
@@ -35,7 +35,6 @@ export default function ArticlesByCategory() {
                 to={`article/${article.id}`}
                 className="text-blue-500 underline"
               >
-              
                 {article.title}
               </Link>
               <p

@@ -6,19 +6,19 @@ import {
   useParams,
 } from "@remix-run/react";
 import { loader } from "../loaders/article.loader";
-import { OutletContextType } from "./layout";
+import { OutletContextDataType } from "./layout";
 
 export { loader };
 
 export default function SupportArticlePage() {
   const { article } = useLoaderData<typeof loader>();
 
-  const { childHeaderRef }: OutletContextType = useOutletContext();
+  const { childMetaObjectFn }: OutletContextDataType = useOutletContext();
 
-  if (childHeaderRef) {
-    childHeaderRef.current = {
+  if (typeof childMetaObjectFn === "function") {
+    childMetaObjectFn({
       title: article.title,
-    };
+    });
   }
 
   return (
@@ -48,11 +48,6 @@ export default function SupportArticlePage() {
     </article>
   );
 }
-
-
-export const shouldRevalidate: ShouldRevalidateFunction = () => {
-  return true;
-};
 
 export function ArticleDetails() {
   const { article } = useLoaderData<typeof loader>();
