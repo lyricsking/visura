@@ -4,6 +4,13 @@ export interface IArticle {
   _id: Types.ObjectId;
   title: string;
   description: string;
+}
+
+export interface ISupportArticle {
+  _id: Types.ObjectId;
+  name: string;
+  description: string;
+  articles: IArticle[];
   createdAt: Date;
   updatedAt: Date;
 }
