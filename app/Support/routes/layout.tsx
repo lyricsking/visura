@@ -31,7 +31,7 @@ export type ChildHeaderObject = {
 };
 
 export type HandleObjectType = {
-  getHeaderObject: (data: any) => ChildHeaderObject
+  getHeaderObject: (data: any) => ChildHeaderObject;
 };
 
 export default function Layout() {
@@ -39,10 +39,14 @@ export default function Layout() {
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
-  
-  let headerObject: ChildHeaderObject;
-  if(currentRoute.handle && currentRoute.getHeaderObject){
-    headerObject = currentRoute.handle.getHeaderObject(currentRoute.data)
+
+  let headerObject: ChildHeaderObject = {
+    title: "Support Center",
+    description: "How can we assist you today?",
+  };
+
+  if (currentRoute.handle && currentRoute.handle.getHeaderObject) {
+    headerObject = currentRoute.handle.getHeaderObject(currentRoute.data);
   }
 
   return (

@@ -6,17 +6,15 @@ import {
   useParams,
 } from "@remix-run/react";
 import { loader } from "../loaders/article.loader";
-import { OutletContextDataType } from "./layout";
+import { HandleObjectType } from "./layout";
 
 export { loader };
 
-const handle: HandleObjectType = {
-  getHeaderObject: ({article}: typeof loader) => {
-   return {
-      title: article.title,
-    }
-  }
-}
+export const handle: HandleObjectType = {
+  getHeaderObject: ({ article }: any) => ({
+    title: article.title,
+  }),
+};
 
 export default function SupportArticle() {
   const { article } = useLoaderData<typeof loader>();

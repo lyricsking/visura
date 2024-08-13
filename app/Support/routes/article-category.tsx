@@ -6,18 +6,18 @@ import {
   useParams,
 } from "@remix-run/react";
 import { loader } from "../loaders/article-category.loader";
-import { OutletContextDataType } from "./layout";
+import { HandleObjectType } from "./layout";
 
 export { loader };
 
-const handle: HandleObjectType = {
-  getHeaderObject: ({category}: typeof loader) => {
-   return {
+export const handle: HandleObjectType = {
+  getHeaderObject: ({ category }: any) => {
+    return {
       title: category.name,
       description: category.description,
-    }
-  }
-}
+    };
+  },
+};
 
 export default function SupportArticlesCategory() {
   const { category } = useLoaderData<typeof loader>();

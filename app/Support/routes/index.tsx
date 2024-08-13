@@ -3,19 +3,19 @@ import Button from "~/components/button";
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
 import { loader } from "../loaders/index.loader";
-import { OutletContextDataType } from "./layout";
 import { Ref } from "react";
+import { HandleObjectType } from "./layout";
 
 export { loader };
 
-const handle: HandleObjectType = {
+export const handle: HandleObjectType = {
   getHeaderObject: (data: typeof loader) => {
-   return {
+    return {
       title: "Support Center",
       description: "How can we assist you today?",
-    }
-  }
-}
+    };
+  },
+};
 
 export default function Support() {
   const { articleCategories, faqs } = useLoaderData<typeof loader>();
