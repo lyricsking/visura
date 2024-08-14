@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import pkg from "../../../package.json";
 import Hero from "../components/hero";
-import HomeCarousel from "../components/home.carousel";
+import HomeCarousel from "../components/home-carousel";
 import Explanation from "../components/explanation";
 import { findFontByName } from "~/Shared/data/fonts";
 import { useQuiz } from "~/Quiz/utils/quiz.utils";

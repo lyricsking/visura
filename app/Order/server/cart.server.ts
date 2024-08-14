@@ -10,16 +10,16 @@ import { AddressModel } from "../models/address.model";
  * Converts the recommendations to order with status cart
  * and returns order id.
  *
- * @param emailId
+ * @param email
  */
 export const getCartByEmailId = async (
-  emailId: string
+  email: string
 ): Promise<IOrder | null> => {
   try {
     await connectToDatabase();
     const cart = await Order.findOne({
-      //email: emailId,
-      email: "asaajay775@gmail.com",
+      email: email,
+      // email: "asaajay775@gmail.com",
       status: "cart",
     }).exec();
     //const cart = generateDummyOrders(1);
@@ -29,7 +29,7 @@ export const getCartByEmailId = async (
   } catch (err) {
     console.error("Error retrieving cart:", err);
     throw err;
-  } 
+  }
 };
 
 export const addItemsToCart = async (
@@ -77,7 +77,7 @@ export const addItemToCart = async (
     console.log("Item added to cart successfully.");
   } catch (err) {
     console.error("Error adding item to cart:", err);
-  } 
+  }
 };
 
 export const applyDiscount = async ({
@@ -102,7 +102,7 @@ export const applyDiscount = async ({
     );
   } catch (err) {
     console.error("Error applying discount on order", err);
-  } 
+  }
 };
 
 export const updateCartItem = async (
@@ -128,7 +128,7 @@ export const updateCartItem = async (
     console.log("Item updated successfully.");
   } catch (err) {
     console.error("Error updating item in cart:", err);
-  } 
+  }
 };
 
 export const updateCartAddress = async ({
@@ -168,7 +168,7 @@ export const deleteCart = async (email: string): Promise<void> => {
     console.log("Item deleted successfully.");
   } catch (err) {
     console.error("Error deleting item in cart:", err);
-  } 
+  }
 };
 
 export const updatePaymentMethod = async ({
@@ -194,5 +194,5 @@ export const updatePaymentMethod = async ({
     console.log("Order payment updated successfully.");
   } catch (err) {
     console.error("Error updating order payment method:", err);
-  } 
+  }
 };

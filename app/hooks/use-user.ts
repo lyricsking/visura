@@ -13,7 +13,7 @@ export const useUser = ():
 
   const loadCallback = useCallback(() => fetcher.load("/user"), []);
 
-  let data = fetcher.data as
+  let data = (fetcher.data as any)?.user as
     | HydratedDocument<IUser, IUserMethods & IUserVirtuals>
     | undefined;
 

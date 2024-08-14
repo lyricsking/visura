@@ -1,4 +1,4 @@
-import { UserCircleIcon } from "@heroicons/react/20/solid";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,7 @@ import {
 import { ButtonProps } from "~/components/button";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { useUser } from "~/hooks/use-user";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 type Props = ButtonProps;
 
@@ -23,15 +24,15 @@ export default function AccountMenuButton(props: Props) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="max-h-12 p-1 bg-gray-200 rounded-full">
+      <DropdownMenuTrigger className="max-h-12 p-1 border border-gray-500 rounded-full">
         {data && profilePhoto ? (
           <img
             src={profilePhoto}
             alt="User account menu icon"
-            className="w-8 h-8 rounded-full"
+            className="w-6 h-6 rounded-full"
           />
         ) : (
-          <UserCircleIcon className="w-8 h-8" />
+          <UserIcon className="w-6 h-6" />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">

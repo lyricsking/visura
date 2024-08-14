@@ -14,6 +14,7 @@ import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getSessionUser } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
+import { CartIcon } from "../components/cart-icon";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
@@ -36,11 +37,14 @@ export default function Layout() {
               size="sm"
               radius="md"
               onClick={() => startQuiz()}
+              className="hidden"
             >
               Get started
             </Button>
-
-            <AccountMenuButton />
+            <CartIcon />
+            <div className="flex-none mx-auto">
+              <AccountMenuButton />
+            </div>
           </div>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
