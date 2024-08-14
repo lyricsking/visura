@@ -56,8 +56,8 @@ export default defineConfig({
           });
           route("user", "User/routes/user.resource.tsx", { id: "user" });
           route("quiz", "Quiz/routes/layout.tsx", () => {
-            route("", "Quiz/routes/start.tsx", { index: true });
-            route("new", "Quiz/routes/quiz.tsx");
+            route("", "Quiz/routes/quiz.tsx", { index: true });
+            route("finish", "Quiz/routes/signup.tsx");
           });
           route("theme/update", "Theme/theme.action.tsx");
         });
