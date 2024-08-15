@@ -6,20 +6,129 @@ import { findSupplement } from "~/Supplement/supplement.server";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
 import { IItem } from "~/Order/types/order.type";
 
+export const quizPrefs = createCookie("quizPrefs", {
+  maxAge: 1440,
+});
+
+export function initQuiz (session: Session) {
+  let qIdsMap = {};
+  questions.forEach((question) => {
+    const id = getNanoid(32);
+    qIdsMap[id] = question.id;
+  });
+  
+  //  Save generate id map to session
+  await session.set(QIDS_MAP_KEY, qIdsMap)
+  
+  return Object.keys(qIdsMap)[0];
+}
+
+export function saveQuizAnswer(session: Session, uid: string, answer: number | string | string[]): Promise<string|undefined> {
+
+  let qUIdMap = session.get(QIDS_MAP_KEY);
+  
+  const qUIds = Object.keys(qUIdMap);
+  if (!uid || !qUIds.includes(uid)) {
+    return;
+  }
+  
+  let answers = await session.get(ANSWER_KEY);
+    
+  answers = {
+    ...answers,
+    [uid]: answer
+  }
+    
+  await session.set(ANSWER_KEY, answers);
+  
+  //  Let try to find the next question uid
+  let filteredQuestions = filterQuestions(answers);
+  let nextQuestion = filteredQuestions.findIndex((question) => question.id === qUIdMap[uid]);
+  if(!nextQuestion) return true;
+  
+  return Object.values(qUIdMap).find((val) => val === nextQuestion.id)
+}
+
+export async function getQuestion(session: Session, uid: string): Promise<Question | void> {
+  
+  let qUIdMap = await session.get(QIDS_MAP_KEY);
+    
+  let answers = await session.get(ANSWER_KEY);
+    
+  let qUIds = Object.keys(qUIdMap);
+  if(!uid || !qUIds.includes(uid)){
+    return;
+  }
+  
+  //  Find the question by qId
+  let questions = await filterQuestions(answers);
+  let qId = qUIds[uid];
+  //  The id value mapped to the uid
+  let qIndex = 0;
+  let question = questions.find((question, index) => {
+    
+    const isVal = question.id === qId;
+    if(isVal) {
+      qIndex = index;
+    }
+    
+    return isVal;
+  });
+  
+  return {
+    question: question,
+    uid: uid,
+    page: qIndex,
+    pageCount: questions.length
+  }
+}
+
+export async function getNextQuestion(session: Session, uid: string, questionCount: number) {
+  //  Initialize question object cache
+  let question = questions[0]
+  
+  let qUIdMap = session.get(QIDS_MAP_KEY);
+  const qUIds = Object.keys(qUIdMap);
+  
+    //  Prepare next questions
+    const filteredQuestions = filterQuestions(answers);
+    let answersCount = answers.length;
+    if (answersCount < filteredQuestions.length) {
+      //  We still have one or more question left in the quiz. Let find the next question.
+      
+      //  Initialize question object cache
+      const question =  filteredQuestions[answersCount] || question;
+    
+      //  Find next UId
+      nextUId = Object.keys(qUIdMap).find((uid) => qUIdMap[uid] === question.id);
+      
+      await session.set(QUESTION_KEY, {
+        uid: nextUId,
+        question: question,
+        count: answersCount + 1
+      })
+    }  
+  //  Find next UId
+  const nextUId = Object.keys(qUIdMap).find((uid) => qUIdMap[uid] === question.id);
+  
+  return {
+    uid: nextUId, 
+    question: question, 
+    count: questionCount + 1
+  }
+}
+
 interface SupplementWithScore {
   supplement: ISupplement;
   weight: number; //  Calculated weight based on relevance to user's selections
 }
-
-export const quizPrefs = createCookie("quizPrefs", {
-  maxAge: 1440,
-});
 
 type CreateCartType = {
   name: string;
   email: string;
   supplements: ISupplement[];
 };
+
 /**
  * Converts the recommendations to order with status cart
  * and returns order id.
