@@ -1,38 +1,22 @@
 import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  json,
-  redirect,
-} from "@remix-run/node";
-import {
   useNavigate,
   useLoaderData,
   useFetcher,
-  useSubmit,
   useNavigation,
-  Link,
 } from "@remix-run/react";
 
 import Button from "~/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Progress } from "~/components/progress";
-import { commitSession, getSession, USER_SESSION_KEY } from "~/utils/session";
-import { getNanoid } from "~/utils";
-import * as lo from "lodash";
 import TextInputForm from "../components/InputTextForm";
 import NumberInputForm from "../components/NumberInputForm";
 import CheckboxGroupForm from "../components/CheckboxGroupForm";
 import RadioGroupForm from "../components/RadioGroupForm";
-import { createCart, recommendSupplements } from "../server/quiz.server";
 import Loading from "~/components/loading";
-import { ISupplement } from "~/Supplement/supplement.type";
-import { filterQuestions, questions } from "../utils/quiz.utils";
-import { Question } from "../types/quiz.type";
-import { setUnauthUser } from "~/Auth/server/auth.server";
 import { action } from "../actions/question.action";
 import { loader } from "../loader/question.loader";
 import { useEffect } from "react";
-import { GID_KEY, ACTION_KEY } from "../utils/constants";
+import { ACTION_KEY } from "../utils/constants";
 
 export { action };
 export { loader };
@@ -45,7 +29,7 @@ export { loader };
  */
 export default function Question() {
   //  Retrieve the current question id
-  const { answer, page, pageCount, question, uid } =
+  const { answer, page, pageCount, question, uid, user } =
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
@@ -73,7 +57,20 @@ export default function Question() {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
         } else {
-          navigate("/quiz/finish");
+          //  Guard to ensure that user provides relevant(name and email address) information before submitting.
+          //  This is to mao each user to transactions.
+          if (!user) {
+            navigate("/quiz/finish");
+          }
+          //  User already signe in, we simply submit the answers directly.
+          fetcher.submit(
+            {
+              firstname: user?.profile?.firstname,
+              lastname: user?.profile?.lastname,
+              email: user?.email,
+            },
+            { action: "/quiz/finish" }
+          );
         }
       }
     }
@@ -105,76 +102,74 @@ export default function Question() {
     : "Next";
 
   return (
-    <div className="min-h-screen flex w-full py-8 bg-gray-100">
-      <div className="bg-white rounded max-w-md w-full mx-auto shadow-md">
-        <div className="border-b">
-          <Button
-            variant="text"
-            size="sm"
-            className="gap-2 h-12"
-            onClick={() => handlePrevious()}
-            disabled={page === 0}
-          >
-            <ArrowLeftIcon className="h-5 w-5" />
-            Back
-          </Button>
-        </div>
-
-        <Progress
-          value={Math.min((page / pageCount) * 100, 100)}
-          className="h-4 w-full rounded-none bg-indigo-100"
-          indicatorColor="bg-indigo-400"
-        />
-
-        <div
-          key={question.id}
-          className="w-full py-6 px-8 overflow-y-auto no-scrollbar pb-32"
+    <main className="flex flex-col max-h-screen w-full md:max-w-lg bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">
+      <div className="border-b">
+        <Button
+          variant="text"
+          size="sm"
+          className="gap-2 h-12"
+          onClick={() => handlePrevious()}
+          disabled={page === 0}
         >
-          {question.type === "text" ? (
-            <TextInputForm
-              disabled={disabled}
-              id={question.id}
-              label={question.question}
-              name={question.id}
-              onsubmit={handleSubmit}
-              submitLabel={submitLabel}
-              value={answer}
-            />
-          ) : question.type === "number" ? (
-            <NumberInputForm
-              disabled={disabled}
-              id={question.id}
-              label={question.question}
-              name={question.id}
-              onsubmit={handleSubmit}
-              submitLabel={submitLabel}
-              value={answer}
-            />
-          ) : question.type === "multiple" ? (
-            <CheckboxGroupForm
-              disabled={disabled}
-              id={question.id}
-              label={question.question}
-              name={question.id}
-              onsubmit={handleSubmit}
-              submitLabel={submitLabel}
-              options={question.options!}
-              selections={answer}
-            />
-          ) : (
-            <RadioGroupForm
-              disabled={disabled}
-              id={question.id}
-              label={question.question}
-              name={question.id}
-              onsubmit={handleSubmit}
-              submitLabel={submitLabel}
-              options={question.options!}
-              value={answer}
-            />
-          )}
-        </div>
+          <ArrowLeftIcon className="h-5 w-5" />
+          Back
+        </Button>
       </div>
-    </div>
+
+      <Progress
+        value={Math.min((page / pageCount) * 100, 100)}
+        className="h-4 w-full rounded-none bg-indigo-100"
+        indicatorColor="bg-indigo-400"
+      />
+
+      <div
+        key={question.id}
+        className="w-full py-6 px-8 overflow-y-auto no-scrollbar pb-32"
+      >
+        {question.type === "text" ? (
+          <TextInputForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            value={answer}
+          />
+        ) : question.type === "number" ? (
+          <NumberInputForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            value={answer}
+          />
+        ) : question.type === "multiple" ? (
+          <CheckboxGroupForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            options={question.options!}
+            selections={answer}
+          />
+        ) : (
+          <RadioGroupForm
+            disabled={disabled}
+            id={question.id}
+            label={question.question}
+            name={question.id}
+            onsubmit={handleSubmit}
+            submitLabel={submitLabel}
+            options={question.options!}
+            value={answer}
+          />
+        )}
+      </div>
+    </main>
   );
 }

@@ -88,7 +88,7 @@ const PageLayoutHeaderItem = React.forwardRef<
 });
 PageLayoutHeaderItem.displayName = "PageLayoutHeaderItem";
 
-const pageContentVariants = cva("flex-1", {
+const pageContentVariants = cva("flex flex-grow", {
   variants: {},
   defaultVariants: {},
 });

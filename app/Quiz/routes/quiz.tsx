@@ -2,6 +2,7 @@ import { useFetcher, useNavigate, useLocation } from "@remix-run/react";
 import { useEffect } from "react";
 import Button from "~/components/button";
 import { action } from "../actions/quiz.action";
+import { SpaceBetweenVerticallyIcon } from "@radix-ui/react-icons";
 
 export { action };
 
@@ -23,31 +24,34 @@ export default function Quiz() {
   }, [fetcher]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <a href="#main-content" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
-      <header className="text-center mb-8">
-        <h1 className="text-3xl font-bold">Welcome to the Quiz!</h1>
-      </header>
-      <main id="main-content" className="max-w-md text-center">
-        <p className="mb-6">
-          By participating in this quiz, you agree that your responses will be
-          recorded and used to process the quiz results.
-        </p>
-        <div className="mt-auto">
-          <fetcher.Form method="post">
-            <Button
-              variant="text"
-              type="submit"
-              className="bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              disabled={isSubmitting}
-            >
-              Start Quiz
-            </Button>
-          </fetcher.Form>
-        </div>
-      </main>
-    </div>
+    <main className="flex flex-col max-h-screen w-full md:max-w-lg bg-white md:my-6 mx-auto py-8 px-6 md:rounded-md md:shadow-md">
+      <h2 className="text-4xl font-bold text-center mb-6 px-6">
+        Health and Wellness Supplement Quiz
+      </h2>
+      <p className="text-lg text-start mt-8 px-6">
+        Take the health and wellness supplement quiz to you quickly decide on
+        what is best for your health.
+      </p>
+      <p className="text-lg text-start mt-8 px-6">
+        By participating in this quiz, you agree that your responses will be
+        recorded and used to process the quiz results.
+      </p>
+
+      <div className="flex flex-col flex-grow" />
+
+      <fetcher.Form
+        method="post"
+        className="w-full flex flex-col px-6 mt-auto mx-auto"
+      >
+        <Button
+          variant="fill"
+          type="submit"
+          disabled={isSubmitting}
+          className=" bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        >
+          Start Quiz
+        </Button>
+      </fetcher.Form>
+    </main>
   );
 }

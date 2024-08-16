@@ -1,7 +1,8 @@
-import { createCookie, createFileSessionStorage } from "@remix-run/node";
+import { createCookie, createFileSessionStorage, Session } from "@remix-run/node";
 export const prefs = createCookie("prefs");
 import path from "path";
 import { fileURLToPath } from "url";
+import { isRequest } from "./is-request";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

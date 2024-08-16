@@ -32,20 +32,20 @@ const RadioGroupForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit} aria-labelledby={`${name}-"label"`}>
-      <fieldset className="flex flex-col gap-20">
-        <legend id={`${name}-"label"`}>
-          <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
+      <fieldset className="flex flex-col space-y-20">
+        <legend id={`${name}-"label"`} className="w-full">
+          <h3 className="text-3xl font-bold tracking-tight text-center mt-4 mx-auto">
             {label}
           </h3>
         </legend>
 
-        <div>
+        <div className="flex flex-col gap-2">
           {options.map((option) => (
             <label
               key={option}
               className={cn(
-                "flex items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
-                "w-full text-2xl  text-pretty font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                "flex items-center gap-4 p-4 border rounded-md bg-indigo-400 text-white",
+                "w-full text-xl text-pretty font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               )}
             >
               <Input
@@ -63,11 +63,11 @@ const RadioGroupForm = ({
         </div>
       </fieldset>
 
-      <div className="flex fixed z-20 bottom-0 right-0 left-0 p-4 bg-white">
+      <div className="flex fixed z-20 bottom-0 right-0 left-0 p-6 bg-white">
         <Button
           variant={"fill"}
           radius={"md"}
-          className="h-12 w-2/3 max-w-md mx-auto text-xl text-white text-center bg-indigo-400"
+          className="h-12 w-full md:max-w-md mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"
           disabled={disabled}
         >

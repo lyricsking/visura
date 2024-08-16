@@ -7,6 +7,7 @@ import { getUser, updateUser } from "~/User/server/user.server";
 import { IUser } from "~/User/types/user.types";
 import { HydratedDocument } from "mongoose";
 import { IUserMethods, IUserVirtuals } from "~/User/models/user.model";
+import { isRequest } from "~/utils/is-request";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "r_dr";
@@ -82,9 +83,13 @@ export const isAuthenticated = async (
   }
 };
 
-export const getSessionUser = async (request: Request) => {
-  const session = await getSession(request.headers.get("Cookie"));
-
+export const getSessionUser = async (param: Request | Session): Promise<AuthUser> => {
+  let session: Session;
+  if (isRequest(param)) {
+    session = await getSession(param.headers.get("Cookie"));
+  } else {
+    session = param as Session;
+  }
   return session.get(authenticator.sessionKey);
 };
 
@@ -113,11 +118,15 @@ export const setAuthUser = async (
 
 export const setUnauthUser = async (
   session: Session,
-  user: { email: string }
+  user: {firstname : string, lastname:string, email: string }
 ) => {
   let authUser: AuthUser = {
     id: user.email,
     email: user.email,
+    profile: {
+      firstName: user.firstname,
+      lastName: user.lastname,
+    },
   };
 
   session.set(authenticator.sessionKey, user);

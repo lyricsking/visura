@@ -42,8 +42,9 @@ export const action: ActionFunction = async ({ request }) => {
 
       //  Cache user data in session if not logged in
       await setUnauthUser(session, {
-        // name: params.name,
-        email: params.email,
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
       });
 
       const headers = {

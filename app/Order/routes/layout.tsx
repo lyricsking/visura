@@ -16,6 +16,13 @@ import { applyDiscount } from "../server/cart.server";
 import type { IOrder } from "../types/order.type";
 import { getSessionUser } from "~/Auth/server/auth.server";
 import EmptyCart from "../components/empty-cart";
+import Cart from "./cart";
+import {
+  PageLayout,
+  PageLayoutContent,
+  PageLayoutHeader,
+  PageLayoutHeaderItem,
+} from "~/components/ui/page.layout";
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
@@ -42,10 +49,11 @@ type LoaderDataType = {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getSessionUser(request);
 
-  if (!user) return redirect("/quiz");
-
-  const cart: IOrder | null = await getCartByEmailId(user["email"]);
-  return json<LoaderDataType>({ cart });
+  let cart: IOrder | null = null;
+  if (user) {
+    cart = await getCartByEmailId(user["email"]);
+  }
+  return json<LoaderDataType>({ cart: cart });
 };
 
 export default function Layout() {
@@ -83,99 +91,108 @@ export default function Layout() {
   const isSubmitting = fetcher.state !== "idle";
 
   return (
-    <div className="min-h-screen pb-20 md:pb-0 overflow-hidden">
-      <div className="flex items-center py-2 border-b">
-        <Button onClick={() => navigate(-1)} className="text-lg mr-2">
-          <ArrowLeftIcon className="h-5 w-5" />
-        </Button>
-        <h1 className="text-xl font-semibold">{currentRoute.handle.name}</h1>
-      </div>
-      {cart ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto ">
-          <div className="md:col-span-2 px-4 md:max-h-screen md:overflow-y-auto md:no-scrollbar ">
-            <Outlet context={{ cart, childMethodRef }} />
+    <PageLayout className="bg-gray-100">
+      <PageLayoutHeader position={"sticky"}>
+        <PageLayoutHeaderItem className="border bg-white">
+          <div className="flex items-center justify-center">
+            <Button onClick={() => navigate(-1)} className="text-lg mr-2">
+              <ArrowLeftIcon className="h-5 w-5" />
+            </Button>
+            <h1 className="text-xl font-semibold">
+              {currentRoute.handle.name}
+            </h1>
           </div>
+        </PageLayoutHeaderItem>
+      </PageLayoutHeader>
+      <PageLayoutContent>
+        <div className="flex-1">
+          {!cart ? (
+            <EmptyCart />
+          ) : (
+            <div className="flex flex-col h-full max-w-7xl mx-auto">
+              <div className="px-4 md:overflow-y-auto">
+                <Outlet context={{ cart, childMethodRef }} />
+              </div>
 
-          <div className="flex flex-col px-4 md:py-8 mt-4 md:mt-0 bg-orange-300 rounded-0 shadow">
-            <h2 className="text-lg md:text-2xl font-bold mb-4">
-              Order Summary
-            </h2>
-            <fetcher.Form method="post" className="mb-4">
-              <label htmlFor="orderId" className="sr-only">
-                Order Id
-              </label>
-              <input
-                type="hidden"
-                id="orderId"
-                name="orderId"
-                value={cart?._id.toString()}
-              />
+              <div className="h-[40%] px-4 md:py-8 mt-4 md:mt-0 bg-orange-300">
+                <h2 className="text-lg md:text-2xl font-bold mb-4">
+                  Order Summary
+                </h2>
+                <fetcher.Form method="post" className="mb-4">
+                  <label htmlFor="orderId" className="sr-only">
+                    Order Id
+                  </label>
+                  <input
+                    type="hidden"
+                    id="orderId"
+                    name="orderId"
+                    value={cart?._id.toString()}
+                  />
 
-              <label
-                htmlFor="discountCode"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Discount Code
-              </label>
-              <div className="flex mt-1">
-                <input
-                  type="text"
-                  name="discountCode"
-                  id="discountCode"
-                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
-                />
-                <button
-                  type="submit"
-                  className="ml-2 px-4 py-2 bg-black text-white rounded-md"
-                >
-                  Apply
-                </button>
-              </div>
-            </fetcher.Form>
+                  <label
+                    htmlFor="discountCode"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Discount Code
+                  </label>
+                  <div className="flex mt-1">
+                    <input
+                      type="text"
+                      name="discountCode"
+                      id="discountCode"
+                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+                    />
+                    <button
+                      type="submit"
+                      className="ml-2 px-4 py-2 bg-black text-white rounded-md"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </fetcher.Form>
 
-            <div className="flex-1" />
+                <div className="">
+                  <div className="mb-2 flex justify-between">
+                    <span>Subtotal</span>
+                    <span>${itemTotal.toFixed(2)}</span>
+                  </div>
+                  <div className="mb-2 flex justify-between">
+                    <span>Shipping</span>
+                    <span>${shipping.toFixed(2)}</span>
+                  </div>
+                  <div className="mb-2 flex justify-between">
+                    <span>Discount</span>
+                    <span>-${discount.toFixed(2)}</span>
+                  </div>
+                  <div className="mb-2 flex justify-between">
+                    <span>Tax</span>
+                    <span>${tax.toFixed(2)}</span>
+                  </div>
+                  <div className="mt-4 pt-2 border-t flex justify-between font-bold">
+                    <span>Estimated Total</span>
+                    <span>${estimatedTotal.toFixed(2)}</span>
+                  </div>
 
-            <div className="">
-              <div className="mb-2 flex justify-between">
-                <span>Subtotal</span>
-                <span>${itemTotal.toFixed(2)}</span>
-              </div>
-              <div className="mb-2 flex justify-between">
-                <span>Shipping</span>
-                <span>${shipping.toFixed(2)}</span>
-              </div>
-              <div className="mb-2 flex justify-between">
-                <span>Discount</span>
-                <span>-${discount.toFixed(2)}</span>
-              </div>
-              <div className="mb-2 flex justify-between">
-                <span>Tax</span>
-                <span>${tax.toFixed(2)}</span>
-              </div>
-              <div className="mt-4 pt-2 border-t flex justify-between font-bold">
-                <span>Estimated Total</span>
-                <span>${estimatedTotal.toFixed(2)}</span>
-              </div>
-              <div className="fixed bottom-0 left-0 right-0 p-4 bg-white shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center">
-                <div className="flex-1 font-semibold text-lg md:hidden">
-                  Total: ${estimatedTotal.toFixed(2)}
+                  <div className=" bg-white shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center hidden">
+                    <div className="flex-1 font-semibold text-lg md:hidden">
+                      Total: ${estimatedTotal.toFixed(2)}
+                    </div>
+                    <Button
+                      className="flex-1 bg-black text-white px-4 py-2 rounded-md"
+                      onClick={handleClick}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting
+                        ? "Updating cart..."
+                        : currentRoute.handle.buttonLabel || ""}
+                    </Button>
+                  </div>
                 </div>
-                <Button
-                  className="flex-1 bg-black text-white px-4 py-2 rounded-md"
-                  onClick={handleClick}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting
-                    ? "Updating cart..."
-                    : currentRoute.handle.buttonLabel || ""}
-                </Button>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      ) : (
-        <EmptyCart />
-      )}
-    </div>
+      </PageLayoutContent>
+    </PageLayout>
   );
 }
