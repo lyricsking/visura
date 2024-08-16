@@ -1,121 +1,111 @@
-import { createCookie } from "@remix-run/node";
+import { Session, createCookie } from "@remix-run/node";
 
 import { Gender, type ISupplement } from "~/Supplement/supplement.type";
-import { Answers } from "../types/quiz.type";
+import { Answers, Question } from "../types/quiz.type";
 import { findSupplement } from "~/Supplement/supplement.server";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
 import { IItem } from "~/Order/types/order.type";
+import { getNanoid } from "~/utils";
+import { QIDS_MAP_KEY, ANSWER_KEY, QUESTION_KEY } from "../utils/constants";
+import { questions, filterQuestions } from "../utils/quiz.utils";
 
 export const quizPrefs = createCookie("quizPrefs", {
   maxAge: 1440,
 });
 
-export function initQuiz (session: Session) {
-  let qIdsMap = {};
+export function initQuiz(session: Session) {
+  let qIdsMap: Record<string, string> = {};
   questions.forEach((question) => {
     const id = getNanoid(32);
     qIdsMap[id] = question.id;
   });
-  
+
   //  Save generate id map to session
-  await session.set(QIDS_MAP_KEY, qIdsMap)
-  
+  session.set(QIDS_MAP_KEY, qIdsMap);
+  // Reset the answers
+  session.unset(ANSWER_KEY);
+
   return Object.keys(qIdsMap)[0];
 }
 
-export function saveQuizAnswer(session: Session, uid: string, answer: number | string | string[]): Promise<string|undefined> {
+export async function saveQuizAnswer(
+  session: Session,
+  uid: string,
+  answer: number | string | string[]
+): Promise<string | number | undefined> {
+  let qUIdMap: Record<string, string> = session.get(QIDS_MAP_KEY);
 
-  let qUIdMap = session.get(QIDS_MAP_KEY);
-  
   const qUIds = Object.keys(qUIdMap);
   if (!uid || !qUIds.includes(uid)) {
     return;
   }
-  
+
   let answers = await session.get(ANSWER_KEY);
-    
+
   answers = {
     ...answers,
-    [uid]: answer
-  }
-    
-  await session.set(ANSWER_KEY, answers);
-  
+    [qUIdMap[uid]]: answer,
+  };
+
+  session.set(ANSWER_KEY, answers);
+
   //  Let try to find the next question uid
   let filteredQuestions = filterQuestions(answers);
-  let nextQuestion = filteredQuestions.findIndex((question) => question.id === qUIdMap[uid]);
-  if(!nextQuestion) return true;
-  
-  return Object.values(qUIdMap).find((val) => val === nextQuestion.id)
+  const nextQuestionIndex =
+    filteredQuestions.findIndex((question) => question.id === qUIdMap[uid]) + 1;
+  const nextQuestion = filteredQuestions[nextQuestionIndex];
+  if (nextQuestionIndex >= filteredQuestions.length || !nextQuestion) {
+    return -1;
+  }
+
+  return Object.keys(qUIdMap).find((key) => qUIdMap[key] === nextQuestion.id);
 }
 
-export async function getQuestion(session: Session, uid: string): Promise<Question | void> {
-  
+type GetQuestion = {
+  question: Question;
+  uid: string;
+  page: number;
+  pageCount: number;
+  answer?: boolean | number | string | string[];
+};
+export async function getQuestion(
+  session: Session,
+  uid: string
+): Promise<GetQuestion | void> {
   let qUIdMap = await session.get(QIDS_MAP_KEY);
-    
-  let answers = await session.get(ANSWER_KEY);
-    
-  let qUIds = Object.keys(qUIdMap);
-  if(!uid || !qUIds.includes(uid)){
+
+  let answers: Answers = await session.get(ANSWER_KEY);
+
+  let qUIds: string[] = Object.keys(qUIdMap);
+  if (!uid || !qUIds.includes(uid)) {
     return;
   }
-  
+
   //  Find the question by qId
-  let questions = await filterQuestions(answers);
-  let qId = qUIds[uid];
+  let questions = filterQuestions(answers);
+  let qId = qUIdMap[uid];
   //  The id value mapped to the uid
   let qIndex = 0;
   let question = questions.find((question, index) => {
-    
     const isVal = question.id === qId;
-    if(isVal) {
+    if (isVal) {
       qIndex = index;
     }
-    
+
     return isVal;
   });
-  
+
   return {
-    question: question,
+    question: question!,
+    answer: answers?.[question!.id as keyof Answers],
     uid: uid,
     page: qIndex,
-    pageCount: questions.length
-  }
+    pageCount: questions.length,
+  };
 }
 
-export async function getNextQuestion(session: Session, uid: string, questionCount: number) {
-  //  Initialize question object cache
-  let question = questions[0]
-  
-  let qUIdMap = session.get(QIDS_MAP_KEY);
-  const qUIds = Object.keys(qUIdMap);
-  
-    //  Prepare next questions
-    const filteredQuestions = filterQuestions(answers);
-    let answersCount = answers.length;
-    if (answersCount < filteredQuestions.length) {
-      //  We still have one or more question left in the quiz. Let find the next question.
-      
-      //  Initialize question object cache
-      const question =  filteredQuestions[answersCount] || question;
-    
-      //  Find next UId
-      nextUId = Object.keys(qUIdMap).find((uid) => qUIdMap[uid] === question.id);
-      
-      await session.set(QUESTION_KEY, {
-        uid: nextUId,
-        question: question,
-        count: answersCount + 1
-      })
-    }  
-  //  Find next UId
-  const nextUId = Object.keys(qUIdMap).find((uid) => qUIdMap[uid] === question.id);
-  
-  return {
-    uid: nextUId, 
-    question: question, 
-    count: questionCount + 1
-  }
+export function getAnswers(session: Session) {
+  return session.get(ANSWER_KEY);
 }
 
 interface SupplementWithScore {

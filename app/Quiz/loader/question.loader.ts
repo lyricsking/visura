@@ -1,12 +1,20 @@
+import { LoaderFunction, redirect, json } from "@remix-run/node";
+import { getSession } from "~/utils/session";
+import { getQuestion } from "../server/quiz.server";
+
 export const loader: LoaderFunction = async ({ params, request }) => {
   let uid = params["uid"];
+  if (!uid) return redirect("/quiz");
+
   const session = await getSession(request.headers.get("Cookie"));
-  
-  let {page, pageCount, question, uid } = getQuestion(session, uid);
-  
-  if(!question||!uid){
+
+  let rQuestion = await getQuestion(session, uid);
+  if (!rQuestion) return redirect("/quiz");
+
+  const { answer, page, pageCount, question, uid: currentUId } = rQuestion;  
+  if (!question || !currentUId) {
     return redirect("/quiz");
   }
-  
-  return json({page, pageCount, question, uid})
+
+  return json({ answer, page, pageCount, question, uid: currentUId });
 };

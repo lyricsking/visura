@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import Button from "~/components/button";
-import { NumberInputFormType } from "../quiz.type";
+import { NumberInputFormType } from "../types/quiz.type";
 import { Input } from "~/components/input";
 
 const NumberInputForm = ({
@@ -31,25 +31,27 @@ const NumberInputForm = ({
 
   return (
     <form id={id} className="flex flex-col gap-20" onSubmit={handleSubmit}>
-      <label htmlFor={name}>
-        <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
-          {label}
-        </h3>
-      </label>
+      <div className="flex flex-col gap-20">
+        <label htmlFor={name}>
+          <h3 className="text-3xl font-bold tracking-tight text-center my-4 mx-auto">
+            {label}
+          </h3>
+        </label>
 
-      <Input
-        className="h-20 text-2xl border-2"
-        type="number"
-        id={name}
-        name={name}
-        defaultValue={value || ""}
-        placeholder={name}
-      />
-      <div className="flex fixed z-20 bottom-8 right-0 left-0 bg-white">
+        <Input
+          className="h-20 text-2xl border-2"
+          type="number"
+          id={name}
+          name={name}
+          defaultValue={value || ""}
+          placeholder={name}
+        />
+      </div>
+      <div className="flex fixed z-20 bottom-0 right-0 left-0 p-4 bg-white">
         <Button
           variant={"fill"}
           radius={"md"}
-          className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
+          className="h-12 w-2/3  max-w-md mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"
           disabled={disabled}
         >

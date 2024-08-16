@@ -29,13 +29,13 @@ import { ISupplement } from "~/Supplement/supplement.type";
 import { filterQuestions, questions } from "../utils/quiz.utils";
 import { Question } from "../types/quiz.type";
 import { setUnauthUser } from "~/Auth/server/auth.server";
+import { action } from "../actions/question.action";
+import { loader } from "../loader/question.loader";
+import { useEffect } from "react";
+import { GID_KEY, ACTION_KEY } from "../utils/constants";
 
-const GID_KEY = "gId";
-const ACTION_KEY = "_action";
-const START_ACTION_KEY="startQuiz";
-
-export {action}
-export {loader};
+export { action };
+export { loader };
 
 /**
  * The Quiz page component.
@@ -43,9 +43,10 @@ export {loader};
  * Handles the quiz page
  *
  */
-export default function Quiz() {
+export default function Question() {
   //  Retrieve the current question id
-  const { question, uid } = useLoaderData<typeof loader>();
+  const { answer, page, pageCount, question, uid } =
+    useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
   const navigation = useNavigation();
@@ -53,47 +54,41 @@ export default function Quiz() {
   //  Listen for form submission
   const isSubmitting = navigation.state != "idle";
 
-  const answer = answers[questionId];
-
-  //  Total number of questions in the quiz
-  const totalQuestionCount = Object.keys(gIdsMap).length;
-
   //  Form answer submit handler.
   const handleSubmit = (answer: number | string | string[]) => {
     //  Navigate to the next question
-    fetcher.submit({ uid, answer }, {
-      method: "POST",
-      replace: true,
-      encType: "application/json",
-    });
+    fetcher.submit(
+      { uid, answer },
+      {
+        method: "POST",
+        encType: "application/json",
+      }
+    );
   };
-  
+
   useEffect(() => {
-    if(!isSubmitting && fetcher.data && fetcher.data) {
-      let data = fetcher.data;
-      if (data["uid"]) {
-        navigate(`/quiz/question/${data["uid"]}`, {
-          replace: true,
-        })
+    if (!isSubmitting && fetcher.data && fetcher.data) {
+      let data: any = fetcher.data;
+      if (data.success) {
+        if (data["uid"]) {
+          navigate(`/quiz/question/${data["uid"]}`);
+        } else {
+          navigate("/quiz/finish");
+        }
       }
     }
-  },[fetcher])
-  
+  }, [fetcher]);
+
   //  Handles moving back to previous question in quiz
   const handlePrevious = () => {
-    const prevQuestionIndex = questionIndex - 1;
     //  Checks if we can actually move back to the previous question
-    if (prevQuestionIndex >= 0) {
-      const prevQuestionId = Object.keys(gIdsMap)[prevQuestionIndex];
+    if (page > 0) {
       //  navigate(-1)
-      navigate(`/quiz?${GID_KEY}=${prevQuestionId}`, {});
+      navigate(-1);
     }
   };
 
-  if (
-    isSubmitting &&
-    navigation.formAction === `/quiz?${ACTION_KEY}=submit`
-  ) {
+  if (isSubmitting && navigation.formAction === `/quiz?${ACTION_KEY}=submit`) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <Loading />
@@ -101,82 +96,84 @@ export default function Quiz() {
     );
   }
 
-  const disabled = isSubmitting || questionIndex >= totalQuestionCount;
+  const disabled = isSubmitting || page >= pageCount;
 
   const submitLabel = isSubmitting
     ? "Submitting"
-    : questionIndex === totalQuestionCount - 1
+    : page >= pageCount - 1
     ? "Finish"
     : "Next";
 
   return (
-    <div className="flex flex-col max-h-screen">
-      <div className="flex-none border-b">
-        <Button
-          variant="text"
-          size="sm"
-          className="border-e gap-2 h-12"
-          onClick={() => handlePrevious()}
-          disabled={questionIndex === 0}
+    <div className="min-h-screen flex w-full py-8 bg-gray-100">
+      <div className="bg-white rounded max-w-md w-full mx-auto shadow-md">
+        <div className="border-b">
+          <Button
+            variant="text"
+            size="sm"
+            className="gap-2 h-12"
+            onClick={() => handlePrevious()}
+            disabled={page === 0}
+          >
+            <ArrowLeftIcon className="h-5 w-5" />
+            Back
+          </Button>
+        </div>
+
+        <Progress
+          value={Math.min((page / pageCount) * 100, 100)}
+          className="h-4 w-full rounded-none bg-indigo-100"
+          indicatorColor="bg-indigo-400"
+        />
+
+        <div
+          key={question.id}
+          className="w-full py-6 px-8 overflow-y-auto no-scrollbar pb-32"
         >
-          <ArrowLeftIcon className="h-5 w-5" />
-          Back
-        </Button>
-      </div>
-
-      <Progress
-        value={Math.min((questionIndex / totalQuestionCount) * 100, 100)}
-        className="flex-none h-4 w-full rounded-none bg-indigo-100"
-        indicatorColor="bg-indigo-400"
-      />
-
-      <div
-        key={question.id}
-        className="flex-1 py-6 px-4 w-full overflow-y-auto no-scrollbar pb-32"
-      >
-        {question.type === "text" ? (
-          <TextInputForm
-            disabled={disabled}
-            id={question.id}
-            label={question.question}
-            name={question.id}
-            onsubmit={handleSubmit}
-            submitLabel={submitLabel}
-            value={answer}
-          />
-        ) : question.type === "number" ? (
-          <NumberInputForm
-            disabled={disabled}
-            id={question.id}
-            label={question.question}
-            name={question.id}
-            onsubmit={handleSubmit}
-            submitLabel={submitLabel}
-            value={answer}
-          />
-        ) : question.type === "multiple" ? (
-          <CheckboxGroupForm
-            disabled={disabled}
-            id={question.id}
-            label={question.question}
-            name={question.id}
-            onsubmit={handleSubmit}
-            submitLabel={submitLabel}
-            options={question.options!}
-            selections={answer}
-          />
-        ) : (
-          <RadioGroupForm
-            disabled={disabled}
-            id={question.id}
-            label={question.question}
-            name={question.id}
-            onsubmit={handleSubmit}
-            submitLabel={submitLabel}
-            options={question.options!}
-            value={answer}
-          />
-        )}
+          {question.type === "text" ? (
+            <TextInputForm
+              disabled={disabled}
+              id={question.id}
+              label={question.question}
+              name={question.id}
+              onsubmit={handleSubmit}
+              submitLabel={submitLabel}
+              value={answer}
+            />
+          ) : question.type === "number" ? (
+            <NumberInputForm
+              disabled={disabled}
+              id={question.id}
+              label={question.question}
+              name={question.id}
+              onsubmit={handleSubmit}
+              submitLabel={submitLabel}
+              value={answer}
+            />
+          ) : question.type === "multiple" ? (
+            <CheckboxGroupForm
+              disabled={disabled}
+              id={question.id}
+              label={question.question}
+              name={question.id}
+              onsubmit={handleSubmit}
+              submitLabel={submitLabel}
+              options={question.options!}
+              selections={answer}
+            />
+          ) : (
+            <RadioGroupForm
+              disabled={disabled}
+              id={question.id}
+              label={question.question}
+              name={question.id}
+              onsubmit={handleSubmit}
+              submitLabel={submitLabel}
+              options={question.options!}
+              value={answer}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

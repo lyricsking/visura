@@ -1,46 +1,60 @@
-export const action: ActionFunction = async ()=>{
+import { ActionFunction, json } from "@remix-run/node";
+import { setUnauthUser } from "~/Auth/server/auth.server";
+import { ISupplement } from "~/Supplement/supplement.type";
+import { commitSession, getSession } from "~/utils/session";
+import {
+  recommendSupplements,
+  createCart,
+  getAnswers,
+} from "../server/quiz.server";
+import { ANSWER_KEY, QIDS_MAP_KEY } from "../utils/constants";
+import formDataToObject from "~/utils/form-data-to-object";
+
+export const action: ActionFunction = async ({ request }) => {
   //  Converts the request url to instance of URL for easy manipulation
-  const url = new URL(request.url);
-  
-  if (
-    answers &&
-    url.searchParams.has(ACTION_KEY) &&
-    url.searchParams.get(ACTION_KEY) === "submit"
-  ) {
-    try {
-      const supplements: ISupplement[] = await recommendSupplements(answers);
+  let formData = await request.formData();
 
-      if (Array.isArray(supplements) && supplements.length > 0) {
-        const params = {
-          name: answers["name"],
-          email: answers["email"],
-          supplements,
-        };
+  const session = await getSession(request.headers.get("Cookie"));
 
-        console.log("params", params);
+  // const formData = await request.formData();
+  const formObject = formDataToObject(formData);
 
-        await createCart(params);
+  let { firstname, lastname, email, subscribe } = formObject;
+  try {
+    let answers = getAnswers(session);
 
-        //  Remove quiz session data, as we no longer need it.
-        //session.unset(GIDS_MAP_KEY);
-        //session.unset(ANSWER_KEY);
+    const supplements: ISupplement[] = await recommendSupplements(answers);
 
-        //  Cache user data in session if not logged in
-        await setUnauthUser(session, {
-          // name: params.name,
-          email: params.email,
-        });
+    if (Array.isArray(supplements) && supplements.length > 0) {
+      const params = {
+        name: firstname + " " + lastname,
+        email,
+        supplements,
+      };
 
-        const headers = {
-          "Set-Cookie": await commitSession(session),
-        };
+      console.log("params", params);
 
-        return json({ success: true, data: { answers } }, { headers });
-      }
-    } catch (error) {
-      console.log(error);
+      await createCart(params);
 
-      return json({ success: false, data: { answers } });
+      //  Remove quiz session data, as we no longer need it.
+      session.unset(QIDS_MAP_KEY);
+      session.unset(ANSWER_KEY);
+
+      //  Cache user data in session if not logged in
+      await setUnauthUser(session, {
+        // name: params.name,
+        email: params.email,
+      });
+
+      const headers = {
+        "Set-Cookie": await commitSession(session),
+      };
+
+      return json({ success: true, data: { answers } }, { headers });
     }
+  } catch (error) {
+    console.log(error);
+
+    return json({ success: false });
   }
-}
+};

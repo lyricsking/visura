@@ -43,7 +43,7 @@ const CheckboxGroupForm = ({
               key={option}
               className={cn(
                 "flex items-center gap-4 p-6 border rounded-md bg-indigo-400 text-white",
-                "w-full text-2xl font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                "w-full text-2xl text-pretty font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               )}
             >
               <Input
@@ -67,7 +67,7 @@ const CheckboxGroupForm = ({
         <Button
           variant={"fill"}
           radius={"md"}
-          className="h-12 w-2/3 mx-auto text-xl text-white text-center bg-indigo-400"
+          className="h-12 w-2/3 max-w-md mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"
           disabled={disabled}
         >
