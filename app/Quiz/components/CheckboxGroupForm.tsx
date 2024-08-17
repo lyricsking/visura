@@ -47,7 +47,7 @@ const CheckboxGroupForm = ({
               )}
             >
               <Input
-                className="h-5 w-5 rounded-none"
+                className="h-4 w-4 rounded-none"
                 type="checkbox"
                 id={option}
                 name={name}

@@ -4,26 +4,26 @@ import { useNavigate } from "@remix-run/react";
 import { getNanoid } from "~/utils";
 
 export const questions: Question[] = [
-  {
-    id: "name",
-    question: "Tell us your name",
-    type: "text",
-  },
-  {
-    id: "email",
-    question: "What is your email address?",
-    type: "text",
-  },
-  {
-    id: "age",
-    question: "What is your age?",
-    type: "number",
-  },
+  // {
+  //   id: "name",
+  //   question: "Tell us your name",
+  //   type: "text",
+  // },
+  // {
+  //   id: "email",
+  //   question: "What is your email address?",
+  //   type: "text",
+  // },
   {
     id: "gender",
-    question: "What is your gender?",
+    question: "What gender are you?",
     type: "single",
     options: Object.keys(Gender),
+  },
+   {
+    id: "age",
+    question: "How old are you?",
+    type: "number",
   },
   {
     id: "healthGoals",

@@ -49,7 +49,7 @@ const RadioGroupForm = ({
               )}
             >
               <Input
-                className="h-5 w-5 rounded-none"
+                className="h-4 w-4 rounded-none"
                 type="radio"
                 id={option}
                 name={name}

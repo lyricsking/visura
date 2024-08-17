@@ -6,7 +6,7 @@ import { isRequest } from "./is-request";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const storagePath = path.resolve(__dirname, "./");
+const storagePath = path.resolve(__dirname, "../../sessions");
 console.log(storagePath);
 
 export const USER_SESSION_KEY = "_user";
@@ -17,8 +17,8 @@ if (!sessionSecret) {
 }
 
 export const sessionStorage  = createFileSessionStorage({
-  dir: "../sessions",
-  //dir: storagePath,
+  // dir: "../sessions",
+  dir: storagePath,
   cookie: {
     name: "__session",
     httpOnly: true,

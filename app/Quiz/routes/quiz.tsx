@@ -29,7 +29,7 @@ export default function Quiz() {
         Health and Wellness Supplement Quiz
       </h2>
       <p className="text-lg text-start mt-8 px-6">
-        Take the health and wellness supplement quiz to you quickly decide on
+        Take the health and wellness supplement quiz to help you quickly decide on
         what is best for your health.
       </p>
       <p className="text-lg text-start mt-8 px-6">

@@ -4,7 +4,7 @@ import Button from "~/components/button";
 export default function EmptyCart() {
   let navigate = useNavigate();
   return (
-    <main className="max-h-screen w-full md:max-w-lg  bg-white md:my-6 mx-auto py-8 px-6 md:rounded-md md:shadow-md">
+    <main className="max-h-screen w-full md:max-w-md  bg-white md:my-6 mx-auto py-8 px-6 md:rounded-md md:shadow-md">
       <h2 className="text-4xl font-bold text-center mb-6">
         Your cart is empty
       </h2>

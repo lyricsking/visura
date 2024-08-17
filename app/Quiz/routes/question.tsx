@@ -1,9 +1,4 @@
-import {
-  useNavigate,
-  useLoaderData,
-  useFetcher,
-  useNavigation,
-} from "@remix-run/react";
+import { useNavigate, useLoaderData, useFetcher } from "@remix-run/react";
 
 import Button from "~/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
@@ -33,10 +28,9 @@ export default function Question() {
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  const navigation = useNavigation();
   const fetcher = useFetcher();
   //  Listen for form submission
-  const isSubmitting = navigation.state != "idle";
+  const isSubmitting = fetcher.state != "idle";
 
   //  Form answer submit handler.
   const handleSubmit = (answer: number | string | string[]) => {
@@ -85,9 +79,9 @@ export default function Question() {
     }
   };
 
-  if (isSubmitting && navigation.formAction === `/quiz?${ACTION_KEY}=submit`) {
+  if (isSubmitting && fetcher.formAction === `/quiz/finish`) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex flex-col max-h-screen w-full md:max-w-lg bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">
         <Loading />
       </div>
     );
@@ -102,7 +96,7 @@ export default function Question() {
     : "Next";
 
   return (
-    <main className="flex flex-col max-h-screen w-full md:max-w-lg bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">
+    <main className="flex flex-col max-h-screen w-full md:max-w-md bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">
       <div className="border-b">
         <Button
           variant="text"
@@ -118,7 +112,7 @@ export default function Question() {
 
       <Progress
         value={Math.min((page / pageCount) * 100, 100)}
-        className="h-4 w-full rounded-none bg-indigo-100"
+        className="flex-none h-4 w-full rounded-none bg-indigo-100"
         indicatorColor="bg-indigo-400"
       />
 
