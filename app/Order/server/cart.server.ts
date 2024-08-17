@@ -36,7 +36,7 @@ export const addItemsToCart = async (
   name: string,
   email: string,
   newItems: IItem[]
-): Promise<void> => {
+): Promise<Order> => {
   try {
     return await Order.updateOne(
       { name, email, status: "cart" },
