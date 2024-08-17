@@ -96,7 +96,7 @@ export default function Question() {
     : "Next";
 
   return (
-    <main className="flex flex-col max-h-screen w-full md:max-w-md bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">
+    <main className="flex flex-col max-h-[100vh-50px] w-full md:max-w-lg bg-white md:my-6 mx-auto py-8 px-6 md:rounded-md md:shadow-md">
       <div className="border-b">
         <Button
           variant="text"
@@ -118,7 +118,7 @@ export default function Question() {
 
       <div
         key={question.id}
-        className="w-full py-6 px-8 overflow-y-auto no-scrollbar pb-32"
+        className="w-full py-6 px-8 overflow-y-auto no-scrollbar pb-32 md:pb-0"
       >
         {question.type === "text" ? (
           <TextInputForm

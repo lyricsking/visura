@@ -77,6 +77,7 @@ export default function Layout() {
   const discount = Number(fetcher.formData?.get("discount") || 0);
   const tax = (itemTotal || 0) * taxRate;
   const estimatedTotal = (itemTotal || 0) + shipping - discount + tax;
+  const txnFee = estimatedTotal * (1.4 / 100);
 
   const currentRoute: any = matches.at(-1);
 
@@ -104,16 +105,18 @@ export default function Layout() {
           </div>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
-      <PageLayoutContent>
+      <PageLayoutContent className="mb-16 md:mb-0">
         {!cart ? (
           <EmptyCart />
         ) : (
           <div className="flex flex-col md:flex-row w-full">
-            <div className="flex-1 h-full bg-white p-8 md:overflow-y-auto">
-              <Outlet context={{ cart, childMethodRef }} />
+            <div className="flex-1 h-full bg-white p-8">
+              <Outlet
+                context={{ amount: estimatedTotal, cart, childMethodRef }}
+              />
             </div>
 
-            <div className="fixed z-40 bottom-0 right-0 left-0 flex-none md:static h-[45%] md:h-full md:w-2/6 py-4 px-8 md:px-10 bg-orange-300 -mt-1 md:mt-0 rounded-t md:rounded-none shadow-md">
+            <div className="flex flex-col md:w-2/6 py-4 px-8 md:px-10 bg-orange-300 -mt-1 md:mt-0 rounded-t md:rounded-none shadow-md">
               <h2 className="text-lg md:text-2xl font-bold mb-4">
                 Order Summary
               </h2>
@@ -150,6 +153,8 @@ export default function Layout() {
                 </div>
               </fetcher.Form>
 
+              <div className="flex-1" />
+
               <div className="">
                 <div className="mb-2 flex justify-between">
                   <span>Subtotal</span>
@@ -171,21 +176,29 @@ export default function Layout() {
                   <span>Estimated Total</span>
                   <span>${estimatedTotal.toFixed(2)}</span>
                 </div>
+                <div className="mt-6 flex justify-between">
+                  <span>Transaction Fee</span>
+                  <span>${txnFee.toFixed(2)}</span>
+                </div>
 
-                {/* <div className="shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center hidden">
-                    <div className="flex-1 font-semibold text-lg md:hidden">
-                      Total: ${estimatedTotal.toFixed(2)}
-                    </div>
-                    <Button
-                      className="flex-1 bg-black text-white px-4 py-2 rounded-md"
-                      onClick={handleClick}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting
-                        ? "Updating cart..."
-                        : currentRoute.handle.buttonLabel || ""}
-                    </Button>
-                  </div> */}
+                <div className="fixed z-40 bottom-0 right-0 left-0 md:static flex gap-6 py-4 px-8 md:px-0 justify-between items-center bg-white md:bg-transparent">
+                  <div className="flex-1 font-semibold text-lg md:hidden">
+                    Total: ${estimatedTotal.toFixed(2)}
+                  </div>
+                  <Button
+                    radius="md"
+                    className="flex-1 bg-black text-white py-2 px-4"
+                    onClick={handleClick}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? "Updating cart..."
+                      : currentRoute.handle.buttonLabel +
+                          " (" +
+                          estimatedTotal.toFixed(2) +
+                          ")" || ""}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

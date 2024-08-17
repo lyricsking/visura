@@ -1,4 +1,8 @@
-import { createCookie, createFileSessionStorage, Session } from "@remix-run/node";
+import {
+  createCookie,
+  createFileSessionStorage,
+  Session,
+} from "@remix-run/node";
 export const prefs = createCookie("prefs");
 import path from "path";
 import { fileURLToPath } from "url";
@@ -15,14 +19,14 @@ if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
 }
 
-export const sessionStorage  = createFileSessionStorage({
+export const sessionStorage = createFileSessionStorage({
   // dir: "../sessions",
   dir: storagePath,
   cookie: {
     name: "__session",
     httpOnly: true,
     maxAge: 60 * 60 * 24, // 1 day
-    //maxAge: 10 , // 1 minutes
+    // maxAge: 10, // 10 secs
     path: "/",
     sameSite: "lax",
     secrets: [sessionSecret], // Replace with your own secret

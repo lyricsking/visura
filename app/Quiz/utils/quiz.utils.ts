@@ -4,26 +4,21 @@ import { useNavigate } from "@remix-run/react";
 import { getNanoid } from "~/utils";
 
 export const questions: Question[] = [
-  // {
-  //   id: "name",
-  //   question: "Tell us your name",
-  //   type: "text",
-  // },
-  // {
-  //   id: "email",
-  //   question: "What is your email address?",
-  //   type: "text",
-  // },
   {
     id: "gender",
     question: "What gender are you?",
     type: "single",
     options: Object.keys(Gender),
   },
-   {
+  {
     id: "age",
     question: "How old are you?",
     type: "number",
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
   {
     id: "healthGoals",
@@ -327,7 +322,6 @@ export function useQuiz() {
   const startQuiz = () => {
     navigate(`/quiz`);
   };
-  
-  
+
   return { startQuiz };
-  }
+}

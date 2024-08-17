@@ -10,8 +10,8 @@ import {
 
 export default function Layout() {
   return (
-    <PageLayout className="bg-gray-100">
-      <PageLayoutContent>
+    <PageLayout className="bg-gray-100 h-screen overflow-hidden">
+      <PageLayoutContent >
         <Outlet />
       </PageLayoutContent>
     </PageLayout>

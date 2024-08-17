@@ -74,9 +74,9 @@ export async function getQuestion(
 ): Promise<GetQuestion | void> {
   let qUIdMap = await session.get(QIDS_MAP_KEY);
 
-  let answers: Answers = await session.get(ANSWER_KEY);
+  let answers: Answers = (await session.get(ANSWER_KEY)) || {};
 
-  let qUIds: string[] = Object.keys(qUIdMap);
+  let qUIds: string[] = Object.keys(qUIdMap || []);
   if (!uid || !qUIds.includes(uid)) {
     return;
   }

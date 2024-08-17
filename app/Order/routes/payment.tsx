@@ -17,6 +17,7 @@ import { CART_FETCHER_KEY } from "../types/cart.type";
 import {} from "../models/order.model";
 import { updatePaymentMethod } from "../server/cart.server";
 import { ActionFunctionArgs } from "@remix-run/node";
+import { getNanoid } from "~/utils";
 
 const PaymentMethods = {
   Card: "card",
@@ -50,7 +51,7 @@ export const loader = async () => {
 
 export const handle = {
   name: "Payment",
-  buttonLabel: "Pay Now",
+  buttonLabel: "Pay",
   onSubmit: (cart: IOrder, navigate: NavigateFunction) => {
     navigate("shipping");
   },
@@ -58,8 +59,11 @@ export const handle = {
 
 const PaymentPage = () => {
   const { flPublicKey } = useLoaderData<typeof loader>();
-  const { cart, childMethodRef }: { cart: IOrder; childMethodRef: any } =
-    useOutletContext();
+  const {
+    amount,
+    cart,
+    childMethodRef,
+  }: { amount: number; cart: IOrder; childMethodRef: any } = useOutletContext();
 
   const fetcher = useFetcher({ key: CART_FETCHER_KEY });
 
@@ -89,8 +93,8 @@ const PaymentPage = () => {
     if (shouldProceed) {
       const details: FlutterWaveProps = {
         public_key: flPublicKey || "",
-        tx_ref: "dyfhurrghgfe37iojhffhhhhrfh",
-        amount: 5000,
+        tx_ref: getNanoid(32),
+        amount: amount,
         currency: "NGN",
         customer: {
           email: "customer@example.com",
@@ -103,6 +107,9 @@ const PaymentPage = () => {
           logo: "https://yourcompany.com/logo.png",
         },
         payment_options: paymentOption,
+        meta: {
+          orderId: cart._id.toString(),
+        },
         callback: (data: any) => {
           console.log("Payment successful:", data);
         },
@@ -120,7 +127,7 @@ const PaymentPage = () => {
       childMethodRef.current = () =>
         handlePayment(isScriptLoaded, cart.paymentDetails?.method as string);
     }
-  }, [childMethodRef, isScriptLoaded]);
+  }, [childMethodRef, isScriptLoaded, cart]);
 
   return (
     <div className="max-w-md mx-auto p-4">

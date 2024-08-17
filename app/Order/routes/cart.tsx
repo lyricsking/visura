@@ -53,7 +53,7 @@ export const action = async ({ request }: any) => {
 };
 
 export const handle = {
-  buttonLabel: "Checkout",
+  buttonLabel: "Shipping",
   name: "Cart",
   onSubmit: () => {},
 };

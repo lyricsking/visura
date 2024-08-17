@@ -23,6 +23,8 @@ import { updateCartAddress } from "../server/cart.server";
 import { getSession, USER_SESSION_KEY } from "~/utils/session";
 import { Address } from "~/Order/models/address.model";
 import { IAddress, IAddressRegion } from "../types/address.type";
+import { getSessionUser } from "~/Auth/server/auth.server";
+import { AuthUser } from "~/Auth/types/auth-user.type";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";
@@ -107,7 +109,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
 
   //  Todo Fetch address and address regions here
-  const user = session.get(USER_SESSION_KEY);
+  const user = await getSessionUser(session);
 
   const [addresses, regions] = await Promise.all([
     getAddressesByEmail(user["email"]),
@@ -118,7 +120,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const handle = {
-  buttonLabel: "Payment",
+  buttonLabel: "Payment Info",
   name: "Shipping",
   onSubmit: (cart: IOrder, navigate: NavigateFunction) => {
     navigate("payment");
