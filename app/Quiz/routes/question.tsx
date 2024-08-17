@@ -47,16 +47,17 @@ export default function Question() {
   useEffect(() => {
     if (!isSubmitting && fetcher.data && fetcher.data) {
       let data: any = fetcher.data;
-      if (data.success) {
+      if (data.success === true) {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
         } else {
+          alert(JSON.stringify(user, null, 2));
           //  Guard to ensure that user provides relevant(name and email address) information before submitting.
           //  This is to mao each user to transactions.
           if (!user) {
-            navigate("/quiz/finish");
+            return navigate("/quiz/finish");
           }
-          //  User already signe in, we simply submit the answers directly.
+          //  User already signed in, we simply submit the answers directly.
           fetcher.submit(
             {
               firstname: user?.profile?.firstname,
@@ -68,7 +69,7 @@ export default function Question() {
         }
       }
     }
-  }, [fetcher]);
+  }, [fetcher, isSubmitting]);
 
   //  Handles moving back to previous question in quiz
   const handlePrevious = () => {
@@ -96,7 +97,7 @@ export default function Question() {
     : "Next";
 
   return (
-    <main className="flex flex-col max-h-screen md:h-[calc(100vh-48px)] w-full md:max-w-md bg-white md:my-auto mx-auto md:rounded-md md:shadow-md">
+    <main className="flex flex-col w-full md:max-w-md bg-white my-6 mx-auto md:rounded-md md:shadow-md">
       <div className="border-b">
         <Button
           variant="text"

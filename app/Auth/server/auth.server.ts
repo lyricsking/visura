@@ -83,7 +83,9 @@ export const isAuthenticated = async (
   }
 };
 
-export const getSessionUser = async (param: Request | Session): Promise<AuthUser> => {
+export const getSessionUser = async (
+  param: Request | Session
+): Promise<AuthUser> => {
   let session: Session;
   if (isRequest(param)) {
     session = await getSession(param.headers.get("Cookie"));
@@ -118,10 +120,10 @@ export const setAuthUser = async (
 
 export const setUnauthUser = async (
   session: Session,
-  user: {firstname : string, lastname:string, email: string }
+  user: { firstname: string; lastname: string; email: string }
 ) => {
   let authUser: AuthUser = {
-    id: user.email,
+    id: '',
     email: user.email,
     profile: {
       firstName: user.firstname,
@@ -129,7 +131,7 @@ export const setUnauthUser = async (
     },
   };
 
-  session.set(authenticator.sessionKey, user);
+  session.set(authenticator.sessionKey, authUser);
 
   return authUser;
 };

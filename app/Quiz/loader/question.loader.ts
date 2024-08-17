@@ -12,11 +12,18 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   let rQuestion = await getQuestion(session, uid);
   if (!rQuestion) return redirect("/quiz");
 
-  const { answer, page, pageCount, question, uid: currentUId } = rQuestion;  
+  const { answer, page, pageCount, question, uid: currentUId } = rQuestion;
   if (!question || !currentUId) {
     return redirect("/quiz");
   }
   let user = await getSessionUser(request);
-  
-  return json({ answer, page, pageCount, question, uid: currentUId, user:user });
+
+  return json({
+    answer,
+    page,
+    pageCount,
+    question,
+    uid: currentUId,
+    user: user,
+  });
 };

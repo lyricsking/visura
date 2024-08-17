@@ -14,11 +14,6 @@ export const questions: Question[] = [
     id: "age",
     question: "How old are you?",
     type: "number",
-    condition: {
-      questionId: "gender",
-      operator: "equals",
-      value: "bnm",
-    },
   },
   {
     id: "healthGoals",
@@ -59,18 +54,33 @@ export const questions: Question[] = [
     question: "How many meals do you eat per day?",
     type: "single",
     options: ["1", "2", "3", "4", "5+"],
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
   {
     id: "dietType",
     question: "Which of these describes your diet?",
     type: "single",
     options: ["Balanced", "High-Protein", "Low-Carb", "Other"],
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
   {
     id: "hydration",
     question: "How many cups of water do you drink on average per day?",
     type: "single",
     options: ["1", "2", "3", "4+"],
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
   {
     id: "fishConsumptionHabits",
@@ -91,7 +101,7 @@ export const questions: Question[] = [
     options: ["Never", "Occasionally", "Regularly"],
   },
   {
-    id: "currentVitaminSupplements",
+    id: "currentSupplements",
     question: "Are you currently taking any supplements?",
     type: "single",
     options: ["Yes", "No"],
@@ -107,24 +117,44 @@ export const questions: Question[] = [
     question: "How much time do you spend in sunlight each day (in hours)?",
     type: "single",
     options: ["1", "2", "3+"],
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
-  /*{
+  {
     id: "livingEnvironment",
     question: "What type of environment do you live in?",
     type: "single",
     options: ["Urban", "Suburban", "Rural"],
-  },*/
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
+  },
   {
     id: "smokingStatus",
     question: "Do you smoke?",
     type: "single",
     options: ["Yes", "No"],
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
   {
     id: "alcoholConsumption",
     question: "How often do you consume alcohol?",
     type: "single",
     options: ["Never", "Occasionally", "Regularly"],
+    condition: {
+      questionId: "gender",
+      operator: "equals",
+      value: "bnm",
+    },
   },
   {
     id: "sleepHours",
@@ -169,30 +199,6 @@ export const questions: Question[] = [
     options: ["Yes", "No"],
   },
   {
-    id: "chronicDiseases",
-    question: "Do you have any chronic diseases?",
-    type: "multiple",
-    options: ["Diabetes", "Hypertension", "Heart Disease", "None"],
-  },
-  {
-    id: "digestiveIssues",
-    question: "Do you have any digestive issues?",
-    type: "multiple",
-    options: ["Acid Reflux", "IBS", "Constipation", "None"],
-  },
-  {
-    id: "mentalHealthConcerns",
-    question: "Do you have any mental health concerns?",
-    type: "multiple",
-    options: ["Anxiety", "Depression", "None"],
-  },
-  {
-    id: "boneHealthConcerns",
-    question: "Do you have any bone health concerns?",
-    type: "multiple",
-    options: ["Osteoporosis", "Arthritis", "None"],
-  },
-  {
     id: "healthConcerns",
     question: "Do you have any health concerns? (Select all that apply)",
     type: "multiple",
@@ -218,6 +224,30 @@ export const questions: Question[] = [
       "Menopause",
       "Menstrual Issues",
     ],
+  },
+  {
+    id: "chronicDiseases",
+    question: "Do you have any chronic diseases?",
+    type: "multiple",
+    options: ["Diabetes", "Hypertension", "Heart Disease", "None"],
+  },
+  {
+    id: "digestiveIssues",
+    question: "Do you have any digestive issues?",
+    type: "multiple",
+    options: ["Acid Reflux", "IBS", "Constipation", "None"],
+  },
+  {
+    id: "mentalHealthConcerns",
+    question: "Do you have any mental health concerns?",
+    type: "multiple",
+    options: ["Anxiety", "Depression", "None"],
+  },
+  {
+    id: "boneHealthConcerns",
+    question: "Do you have any bone health concerns?",
+    type: "multiple",
+    options: ["Osteoporosis", "Arthritis", "None"],
   },
   {
     id: "preferences",

@@ -37,8 +37,8 @@ export const action: ActionFunction = async ({ request }) => {
       await createCart(params);
 
       //  Remove quiz session data, as we no longer need it.
-      session.unset(QIDS_MAP_KEY);
-      session.unset(ANSWER_KEY);
+      // session.unset(QIDS_MAP_KEY);
+      // session.unset(ANSWER_KEY);
 
       //  Cache user data in session if not logged in
       await setUnauthUser(session, {
@@ -53,6 +53,8 @@ export const action: ActionFunction = async ({ request }) => {
 
       return json({ success: true, data: { answers } }, { headers });
     }
+
+    return json({ success: false });
   } catch (error) {
     console.log(error);
 

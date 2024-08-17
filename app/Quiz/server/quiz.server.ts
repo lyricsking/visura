@@ -201,7 +201,7 @@ export async function recommendSupplements(
         )
       )
         weight += 2;
-      if (supplement.gender === answers.gender || supplement.gender === "both")
+      if (supplement.gender === answers.gender || supplement.gender === Gender.both)
         weight += 2;
       if (
         answers.healthGoals.some((goal: string) =>
@@ -257,35 +257,35 @@ export async function recommendSupplements(
         answers.sleepQuality === "Good"
       )
         weight += 1;
-      if (
-        supplement.benefits.includes("low-stress") &&
-        answers.stressLevel === "Low"
-      )
-        weight += 1;
-      if (
-        supplement.benefits.includes("balanced-diet") &&
-        answers.dietType === "Balanced"
-      )
-        weight += 1;
-      if (
-        supplement.benefits.includes("regular-meals") &&
-        answers.mealFrequency === 3
-      )
-        weight += 1;
-      if (
-        supplement.benefits.includes("improve-hydration") &&
-        answers.hydration <= 5
-      )
-        weight += 1;
+      // if (
+      //   supplement.benefits.includes("low-stress") &&
+      //   answers.stressLevel === "Low"
+      // )
+      //   weight += 1;
+      // if (
+      //   supplement.benefits.includes("balanced-diet") &&
+      //   answers.dietType === "Balanced"
+      // )
+      //   weight += 1;
+      // if (
+      //   supplement.benefits.includes("regular-meals") &&
+      //   answers.mealFrequency === 3
+      // )
+      //   weight += 1;
+      // if (
+      //   supplement.benefits.includes("improve-hydration") &&
+      //   answers.hydration <= 5
+      // )
+      //   weight += 1;
 
-      // Dietary habit factors
-      if (supplement.tags.includes("smoker") && answers.smokingStatus === "No")
-        weight += 2;
-      if (
-        supplement.tags.includes("drinker") &&
-        answers.alcoholConsumption === "Never"
-      )
-        weight += 2;
+      // // Dietary habit factors
+      // if (supplement.tags.includes("smoker") && answers.smokingStatus === "No")
+      //   weight += 2;
+      // if (
+      //   supplement.tags.includes("drinker") &&
+      //   answers.alcoholConsumption === "Never"
+      // )
+      //   weight += 2;
       if (
         supplement.tags.includes("low-veg-consumer") &&
         answers.vegConsumptionHabits != "Regularly"
