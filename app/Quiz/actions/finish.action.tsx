@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({ request }) => {
         "Set-Cookie": await commitSession(session),
       };
 
-      return json({ success: true, data: { answers } }, { headers });
+      return json({ success: true, answers }, { headers });
     }
 
     return json({ success: false });

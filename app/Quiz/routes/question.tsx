@@ -47,16 +47,13 @@ export default function Question() {
   useEffect(() => {
     if (!isSubmitting && fetcher.data && fetcher.data) {
       let data: any = fetcher.data;
+      alert(JSON.stringify(fetcher, null, 2));
       if (data.success === true) {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
+        } else if (!user) {
+          navigate("/quiz/finish");
         } else {
-          alert(JSON.stringify(user, null, 2));
-          //  Guard to ensure that user provides relevant(name and email address) information before submitting.
-          //  This is to mao each user to transactions.
-          if (!user) {
-            return navigate("/quiz/finish");
-          }
           //  User already signed in, we simply submit the answers directly.
           fetcher.submit(
             {
@@ -64,12 +61,12 @@ export default function Question() {
               lastname: user?.profile?.lastname,
               email: user?.email,
             },
-            { action: "/quiz/finish" }
+            { method: "post", action: "/quiz/finish" }
           );
         }
       }
     }
-  }, [fetcher, isSubmitting]);
+  }, [fetcher]);
 
   //  Handles moving back to previous question in quiz
   const handlePrevious = () => {
