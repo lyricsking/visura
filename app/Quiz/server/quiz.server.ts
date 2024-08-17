@@ -129,7 +129,7 @@ export async function createCart({
   name,
   email,
   supplements,
-}: CreateCartType): Promise<void> {
+}: CreateCartType): Promise<Order> {
   const items: IItem[] = supplements.map((supplement) => {
     const quantity = 1;
 

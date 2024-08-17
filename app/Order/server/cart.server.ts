@@ -38,9 +38,7 @@ export const addItemsToCart = async (
   newItems: IItem[]
 ): Promise<void> => {
   try {
-    await connectToDatabase();
-
-    await Order.updateOne(
+    return await Order.updateOne(
       { name, email, status: "cart" },
       {
         $push: { items: { $each: newItems } },
