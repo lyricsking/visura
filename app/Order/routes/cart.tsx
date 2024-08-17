@@ -1,10 +1,5 @@
-import {
-  NavigateFunction,
-  json,
-  useNavigate,
-  useOutletContext,
-} from "@remix-run/react";
-import { getSession, USER_SESSION_KEY } from "~/utils/session";
+import { json, useNavigate, useOutletContext } from "@remix-run/react";
+import { getSession } from "~/utils/session";
 import { deleteCart, updateCartItem } from "../server/cart.server";
 import { IOrder } from "../types/order.type";
 import CartItem from "../components/cart-item";
@@ -82,12 +77,10 @@ export default function Cart() {
   }, [childMethodRef]);
 
   return (
-    <div>
+    <div className="h-full divide-y">
       {/* Cart item details */}
-      <div className="divide-y">
-        {cart.items &&
-          cart.items.map((item, index) => <CartItem key={index} item={item} />)}
-      </div>
+      {cart.items &&
+        cart.items.map((item, index) => <CartItem key={index} item={item} />)}
     </div>
   );
 }

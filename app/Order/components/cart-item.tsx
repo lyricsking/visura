@@ -44,8 +44,8 @@ const CartItem = ({ item }: CartItemProps) => {
   };
 
   return (
-    <div className="flex justify-between gap-4 py-4 px-2 bg-white">
-      <div className="flex-none w-1/4">
+    <div className="flex justify-between md:max-w-lg md:mx-auto gap-4 py-6">
+      <div className="flex-none w-1/5">
         <div className="w-20 h-20 mx-auto bg-gray-200 rounded-lg"></div>
       </div>
 

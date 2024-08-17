@@ -7,7 +7,6 @@ import { isRequest } from "./is-request";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storagePath = path.resolve(__dirname, "../../sessions");
-console.log(storagePath);
 
 export const USER_SESSION_KEY = "_user";
 

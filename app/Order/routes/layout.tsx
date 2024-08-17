@@ -105,75 +105,74 @@ export default function Layout() {
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
       <PageLayoutContent>
-        <div className="flex-1">
-          {!cart ? (
-            <EmptyCart />
-          ) : (
-            <div className="flex flex-col h-full max-w-7xl mx-auto">
-              <div className="px-4 md:overflow-y-auto">
-                <Outlet context={{ cart, childMethodRef }} />
-              </div>
+        {!cart ? (
+          <EmptyCart />
+        ) : (
+          <div className="flex flex-col md:flex-row w-full">
+            <div className="flex-1 h-full bg-white p-8 md:overflow-y-auto">
+              <Outlet context={{ cart, childMethodRef }} />
+            </div>
 
-              <div className="h-[40%] px-4 md:py-8 mt-4 md:mt-0 bg-orange-300">
-                <h2 className="text-lg md:text-2xl font-bold mb-4">
-                  Order Summary
-                </h2>
-                <fetcher.Form method="post" className="mb-4">
-                  <label htmlFor="orderId" className="sr-only">
-                    Order Id
-                  </label>
+            <div className="fixed z-40 bottom-0 right-0 left-0 flex-none md:static h-[45%] md:h-full md:w-2/6 py-4 px-8 md:px-10 bg-orange-300 -mt-1 md:mt-0 rounded-t md:rounded-none shadow-md">
+              <h2 className="text-lg md:text-2xl font-bold mb-4">
+                Order Summary
+              </h2>
+              <fetcher.Form method="post" className="mb-4">
+                <label htmlFor="orderId" className="sr-only">
+                  Order Id
+                </label>
+                <input
+                  type="hidden"
+                  id="orderId"
+                  name="orderId"
+                  value={cart?._id.toString()}
+                />
+
+                <label
+                  htmlFor="discountCode"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Discount Code
+                </label>
+                <div className="flex mt-1">
                   <input
-                    type="hidden"
-                    id="orderId"
-                    name="orderId"
-                    value={cart?._id.toString()}
+                    type="text"
+                    name="discountCode"
+                    id="discountCode"
+                    className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
                   />
-
-                  <label
-                    htmlFor="discountCode"
-                    className="block text-sm font-medium text-gray-700"
+                  <button
+                    type="submit"
+                    className="ml-2 px-4 py-2 bg-black text-white rounded-md"
                   >
-                    Discount Code
-                  </label>
-                  <div className="flex mt-1">
-                    <input
-                      type="text"
-                      name="discountCode"
-                      id="discountCode"
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
-                    />
-                    <button
-                      type="submit"
-                      className="ml-2 px-4 py-2 bg-black text-white rounded-md"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </fetcher.Form>
+                    Apply
+                  </button>
+                </div>
+              </fetcher.Form>
 
-                <div className="">
-                  <div className="mb-2 flex justify-between">
-                    <span>Subtotal</span>
-                    <span>${itemTotal.toFixed(2)}</span>
-                  </div>
-                  <div className="mb-2 flex justify-between">
-                    <span>Shipping</span>
-                    <span>${shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="mb-2 flex justify-between">
-                    <span>Discount</span>
-                    <span>-${discount.toFixed(2)}</span>
-                  </div>
-                  <div className="mb-2 flex justify-between">
-                    <span>Tax</span>
-                    <span>${tax.toFixed(2)}</span>
-                  </div>
-                  <div className="mt-4 pt-2 border-t flex justify-between font-bold">
-                    <span>Estimated Total</span>
-                    <span>${estimatedTotal.toFixed(2)}</span>
-                  </div>
+              <div className="">
+                <div className="mb-2 flex justify-between">
+                  <span>Subtotal</span>
+                  <span>${itemTotal.toFixed(2)}</span>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <span>Shipping</span>
+                  <span>${shipping.toFixed(2)}</span>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <span>Discount</span>
+                  <span>-${discount.toFixed(2)}</span>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <span>Tax</span>
+                  <span>${tax.toFixed(2)}</span>
+                </div>
+                <div className="mt-4 pt-2 border-t flex justify-between font-bold">
+                  <span>Estimated Total</span>
+                  <span>${estimatedTotal.toFixed(2)}</span>
+                </div>
 
-                  <div className=" bg-white shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center hidden">
+                {/* <div className="shadow-md md:static md:bg-transparent md:shadow-none flex gap-6 justify-between items-center hidden">
                     <div className="flex-1 font-semibold text-lg md:hidden">
                       Total: ${estimatedTotal.toFixed(2)}
                     </div>
@@ -186,12 +185,11 @@ export default function Layout() {
                         ? "Updating cart..."
                         : currentRoute.handle.buttonLabel || ""}
                     </Button>
-                  </div>
-                </div>
+                  </div> */}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </PageLayoutContent>
     </PageLayout>
   );
