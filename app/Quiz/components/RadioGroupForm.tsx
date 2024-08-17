@@ -63,7 +63,7 @@ const RadioGroupForm = ({
         </div>
       </fieldset>
 
-      <div className="flex p-8 md:px-0">
+      <div className="flex py-8 md:px-0">
         <Button
           variant={"fill"}
           radius={"md"}
