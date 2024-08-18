@@ -98,7 +98,7 @@ export const getSessionUser = async (
   return session.get(authenticator.sessionKey);
 };
 
- const setAuthUser = async (
+const setAuthUser = async (
   request: Request,
   user: HydratedDocument<IUser, IUserMethods & IUserVirtuals>
 ) => {
@@ -121,7 +121,7 @@ export const getSessionUser = async (
   });
 };
 
- const setAnonUser = async (
+const setAnonUser = async (
   session: Session,
   user: { firstname: string; lastname: string; email: string }
 ) => {
@@ -130,7 +130,7 @@ export const getSessionUser = async (
     email: user.email,
     firstname: user.firstname,
     lastname: user.lastname,
-    type: "customer"
+    type: "customer",
   };
 
   session.set(authenticator.sessionKey, authUser);
@@ -151,19 +151,22 @@ export const updateAuthUser = async (request: Request) => {
   return user && (await setAuthUser(request, user));
 };
 
-export const login = async (requestOrSession: Request | Session,  {firstname, lastname, email, photo, type}: AuthUser) => {
+export const login = async (
+  requestOrSession: Request | Session,
+  { firstname, lastname, email, photo, type }: AuthUser
+) => {
   // Attempt to retrieve user with the email
   let user = await getUser({
-      fields: { email },
-      populate: { path: "profile" },
+    fields: { email },
+    populate: { path: "profile" },
   });
-    
+
   // if there is no user, then it means we do have user with that email, ensure we create one.
   if (!user) {
     user = await createUser({ email, type: type || UserType.customer });
     console.log("Created user %s", user);
   }
-    
+
   // If we have user but no profile, it means there is profile info for the user yet, we create a profile then.
   if (!user.profile) {
     let profileData: Omit<IUserProfile, "_id"> = {
@@ -179,40 +182,40 @@ export const login = async (requestOrSession: Request | Session,  {firstname, la
 
     user.profile = userProfile;
   }
-    // Since the user has sign in, we ensure they a marked active
-    if (!user.isActive) {
-       await updateUser(user._id, { isActive: true });
-    }
-     
-    // if user type is "staff", we find the staff object
+  // Since the user has sign in, we ensure they a marked active
+  if (!user.isActive) {
+    await updateUser(user._id, { isActive: true });
+  }
+
+  // if user type is "staff", we find the staff object
   if (user.type === UserType.staff) {
     let staff = await getStaffByUserId(user.id);
     if (staff) {
       user.staff = staff;
     }
   }
-    
-    let authUser: AuthUser = {
-      id: user.id,
-      firstname: user.profile.firstName,
-      lastname: user.profile.lastName,
-      email: user.email,
-      photo: user.profile.photo,
-      type: user.type,
-      role: user.staff?.role,
-    };
-    
-    let session: Session;
+
+  let authUser: AuthUser = {
+    id: user.id,
+    firstname: user.profile.firstName,
+    lastname: user.profile.lastName,
+    email: user.email,
+    photo: user.profile.photo,
+    type: user.type,
+    role: user.staff?.role,
+  };
+
+  let session: Session;
   if (isRequest(requestOrSession)) {
     session = await getSession(requestOrSession.headers.get("Cookie"));
   } else {
     session = requestOrSession as Session;
   }
-  
+
   session.set(authenticator.sessionKey, authUser);
 
   return authUser;
-}
+};
 
 export const logout = (
   request: Request,
