@@ -32,7 +32,7 @@ const RadioGroupForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit} aria-labelledby={`${name}-"label"`}>
-      <fieldset className="flex flex-col space-y-20">
+      <fieldset className="flex flex-col space-y-16">
         <legend id={`${name}-"label"`} className="w-full">
           <h3 className="text-3xl font-bold tracking-tight text-center mt-4 mx-auto">
             {label}

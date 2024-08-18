@@ -34,11 +34,12 @@ export const action: ActionFunction = async ({ request }) => {
 
       console.log("params", params);
 
-      await createCart(params);
+      let cart = await createCart(params);
+      console.log("cart", cart);
 
       //  Remove quiz session data, as we no longer need it.
-      // session.unset(QIDS_MAP_KEY);
-      // session.unset(ANSWER_KEY);
+      session.unset(QIDS_MAP_KEY);
+      session.unset(ANSWER_KEY);
 
       //  Cache user data in session if not logged in
       await setUnauthUser(session, {
@@ -51,7 +52,7 @@ export const action: ActionFunction = async ({ request }) => {
         "Set-Cookie": await commitSession(session),
       };
 
-      return json({ success: true, answers }, { headers });
+      return json({ success: true, cart }, { headers });
     }
 
     return json({ success: false });

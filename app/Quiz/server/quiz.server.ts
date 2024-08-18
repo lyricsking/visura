@@ -4,7 +4,7 @@ import { Gender, type ISupplement } from "~/Supplement/supplement.type";
 import { Answers, Question } from "../types/quiz.type";
 import { findSupplement } from "~/Supplement/supplement.server";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
-import { IItem } from "~/Order/types/order.type";
+import { IItem, IOrder } from "~/Order/types/order.type";
 import { getNanoid } from "~/utils";
 import { QIDS_MAP_KEY, ANSWER_KEY, QUESTION_KEY } from "../utils/constants";
 import { questions, filterQuestions } from "../utils/quiz.utils";
@@ -129,7 +129,7 @@ export async function createCart({
   name,
   email,
   supplements,
-}: CreateCartType): Promise<Order> {
+}: CreateCartType): Promise<IOrder> {
   const items: IItem[] = supplements.map((supplement) => {
     const quantity = 1;
 

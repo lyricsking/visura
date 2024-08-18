@@ -51,7 +51,10 @@ export default function Question() {
       if (data.success === true) {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
-        } else if (!user) {
+        } else if (data["cart"]) {
+          navigate("/cart")
+        } 
+        else if (!user) {
           navigate("/quiz/finish");
         } else {
           //  User already signed in, we simply submit the answers directly.
@@ -94,7 +97,7 @@ export default function Question() {
     : "Next";
 
   return (
-    <main className="flex flex-col w-full md:max-w-md bg-white my-6 mx-auto md:rounded-md md:shadow-md">
+    <main className="flex flex-col w-full md:max-w-md bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">
       <div className="border-b">
         <Button
           variant="text"

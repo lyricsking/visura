@@ -36,9 +36,9 @@ export const addItemsToCart = async (
   name: string,
   email: string,
   newItems: IItem[]
-): Promise<Order> => {
+): Promise<IOrder> => {
   try {
-    return await Order.updateOne(
+    const order= await Order.findOneAndUpdate(
       { name, email, status: "cart" },
       {
         $push: { items: { $each: newItems } },
@@ -51,8 +51,10 @@ export const addItemsToCart = async (
       { upsert: true, new: true }
     ).exec();
     console.log("Items added to cart successfully.");
+    return order;
   } catch (err) {
     console.error("Error adding items to cart:", err);
+     throw err;
   }
 };
 

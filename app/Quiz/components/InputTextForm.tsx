@@ -29,7 +29,7 @@ const TextInputForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit}>
-      <div className="flex flex-col space-y-20">
+      <div className="flex flex-col space-y-16">
         <label htmlFor={name}>
           <h3 className="text-3xl font-bold tracking-tight text-center mt-4 mx-auto">
             {label}
