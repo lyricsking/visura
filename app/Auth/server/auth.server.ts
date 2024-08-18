@@ -118,7 +118,7 @@ export const setAuthUser = async (
   });
 };
 
-export const setUnauthUser = async (
+export const setAnonUser = async (
   session: Session,
   user: { firstname: string; lastname: string; email: string }
 ) => {
@@ -149,6 +149,71 @@ export const updateAuthUser = async (request: Request) => {
   return user && (await setAuthUser(request, user));
 };
 
+export const login = async (requestOrSession: Request | Session,  {firstname, lastname, email, photo, type}: AuthUser) => {
+  // Attempt to retrieve user with the email
+    let user = await getUser({
+      fields: { email },
+      populate: { path: "profile" },
+    });
+    
+    // if there is no user, then it means we do have user with that email, ensure we create one.
+    if (!user) {
+      user = await createUser({ email, type });
+      console.log("Created user %s", user);
+    }
+    
+    // If we have user but no profile, it means there is profile info for the user yet, we create a profile then.
+    if (!user.profile) {
+      let profileData = {
+        userId: user._id,
+        firstName: firstname,
+        lastName: lastname,
+        photo: photo,
+        preferences: defaultPreferences
+      }
+      
+      const userProfile = await createUserProfile(profileData);
+      console.log("Created user profile", userProfile);
+      
+      user.profile = userProfile;
+    }
+    // Since the user has sign in, we ensure they a marked active
+    if (!user.isActive) {
+       await updateUser(user._id, { isActive: true });
+    }
+     
+    // if user type is "staff", we find the staff object
+    if(user.type === UserType.staff) {
+      let staff = await getStaffByUserId(user.id);
+      user.staff = staff;
+    }
+    
+    let authUser: AuthUser = {
+      id: user.id,
+      firstname: user.profile.firstname,
+      lastname: user.profile.lastname,
+      email: user.email,
+      photo: user.profile.photo,
+      type: user.type,
+      role: user.staff?.role,
+    };
+    
+    let session: Session;
+    if (isRequest(requestOrSession)) {
+      session = await getSession(requestOrSession.headers.get("Cookie"));
+      
+      session.set(authenticator.sessionKey, authUser);
+      
+      requestOrSession.setH
+    } else {
+      session = requestOrSession as Session;
+    session.set(authenticator.sessionKey, authUser);
+    }
+  
+    
+    return authUser;
+}
+
 export const logout = (
   request: Request,
   options: {
@@ -156,3 +221,27 @@ export const logout = (
     headers?: HeadersInit;
   }
 ) => authenticator.logout(request, options);
+
+const defaultPreferences: Partial<IUserProfile['preferences']> = {
+          notifications: {
+            preferredSupportChannel: "whatsapp",
+            orderUpdates: true,
+            promotional: true,
+            subscriptionReminders: true,
+            supportNotification: true,
+          },
+          display: {
+            theme: "light",
+            language: "en",
+            currency: "NGN",
+          },
+          //privacy: {
+          //  dataSharing: true,
+          //  activityTracking: true,
+          //  accountVisibility: true,
+          //},
+          order: {
+            deliveryInstructions: "Leave at door",
+            packaging: "standard",
+          },
+      };

@@ -2,9 +2,7 @@ import { Types } from 'mongoose';
 
 export const UserRoles = {
   user:'user',
-  admin: 'admin',
-  support: 'support',
-  technical: "technical",
+  staff: "staff"
 } as const
 export type UserRoles = typeof UserRoles[keyof typeof UserRoles];
 

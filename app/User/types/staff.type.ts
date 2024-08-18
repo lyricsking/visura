@@ -9,8 +9,7 @@ export type StaffRole = (typeof StaffRole)[keyof typeof StaffRole];
 
 export interface IStaff {
   _id: Types.ObjectId;
-  name: string;
-  email: string;
+  userId: Types.ObjectId;
   role: StaffRole;
   isAvailable: boolean; // Availability status
   assignedTickets: Types.ObjectId[];

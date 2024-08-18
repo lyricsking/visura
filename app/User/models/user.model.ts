@@ -9,6 +9,7 @@ export interface IUserMethods {
 
 export interface IUserVirtuals {
   profile: IUserProfile;
+  staff: IStaff;
 }
 
 export type UserModel = Model<IUser, {}, IUserMethods, IUserVirtuals>;
@@ -89,6 +90,14 @@ UserSchema.method(
 // Virtual for user's profile
 UserSchema.virtual("profile", {
   ref: "UserProfile",
+  localField: "_id",
+  foreignField: "userId",
+  justOne: true,
+});
+
+// Virtual for user's staff
+UserSchema.virtual("staff", {
+  ref: "Staff",
   localField: "_id",
   foreignField: "userId",
   justOne: true,

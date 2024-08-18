@@ -10,8 +10,7 @@ import { IStaff, StaffRole } from "../types/staff.type";
 
 export type StaffModel = Model<IStaff>;
 const staffSchema = new Schema<IStaff, StaffModel>({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   role: {
     type: String,
     enum: Object.values(StaffRole),

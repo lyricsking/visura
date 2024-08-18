@@ -107,8 +107,16 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await isAuthenticated(request);
-  return json({ ...(user != null && { user }) });
+  const authUser = await isAuthenticated(request);
+   
+  let subdomain = getSubdomain(request)
+  if(subdomain){  
+    let user = await getUserById(user.id, {path: "staff"})
+    if(user.roles.includes(subdomain)){
+      
+    }
+  }
+  return json({ ...(authUser && { user: authUser }) });
 };
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {

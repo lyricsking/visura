@@ -1,7 +1,11 @@
 import { IUserProfile } from "~/User/types/user-profile.type";
 
 export interface AuthUser {
-  id: string;
+  id?: string;
+  firstname: string;
+  lastname: string;
   email: string;
-  profile?: Partial<IUserProfile>;
+  photo?: string;
+  type?: string;
+  role?: string;
 }
