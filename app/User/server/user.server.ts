@@ -10,16 +10,16 @@ import User, {
   IUserVirtuals,
   UserModel,
 } from "../models/user.model";
-import { IUser, UserRoles } from "../types/user.types";
+import { IUser, UserType } from "../types/user.types";
 
 export type CreateUserProps = {
   email: string;
   password?: string;
-  roles: UserRoles[];
+  type: UserType;
 };
 // Create User
 export const createUser = async (props: CreateUserProps) => {
-  const { email, password, roles } = props;
+  const { email, password, type } = props;
 
   console.log("Creating user");
 
@@ -27,7 +27,7 @@ export const createUser = async (props: CreateUserProps) => {
     let newUser = new User({
       email,
       ...(password && { password }),
-      roles,
+      type,
     });
 
     return await newUser.save();

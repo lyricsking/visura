@@ -3,11 +3,14 @@ import { commitSession, getSession, sessionStorage } from "~/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { AuthUser } from "../types/auth-user.type";
 import { Session, json, redirect } from "@remix-run/node";
-import { getUser, updateUser } from "~/User/server/user.server";
-import { IUser } from "~/User/types/user.types";
+import { createUser, getUser, updateUser } from "~/User/server/user.server";
+import { IUser, UserType } from "~/User/types/user.types";
 import { HydratedDocument } from "mongoose";
 import { IUserMethods, IUserVirtuals } from "~/User/models/user.model";
 import { isRequest } from "~/utils/is-request";
+import { createUserProfile } from "~/User/server/user-profile.server";
+import { getStaffByUserId } from "~/User/server/staff.server";
+import { IUserProfile } from "~/User/types/user-profile.type";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "r_dr";
@@ -95,7 +98,7 @@ export const getSessionUser = async (
   return session.get(authenticator.sessionKey);
 };
 
-export const setAuthUser = async (
+ const setAuthUser = async (
   request: Request,
   user: HydratedDocument<IUser, IUserMethods & IUserVirtuals>
 ) => {
@@ -118,17 +121,16 @@ export const setAuthUser = async (
   });
 };
 
-export const setAnonUser = async (
+ const setAnonUser = async (
   session: Session,
   user: { firstname: string; lastname: string; email: string }
 ) => {
   let authUser: AuthUser = {
-    id: '',
+    id: "",
     email: user.email,
-    profile: {
-      firstName: user.firstname,
-      lastName: user.lastname,
-    },
+    firstname: user.firstname,
+    lastname: user.lastname,
+    type: "customer"
   };
 
   session.set(authenticator.sessionKey, authUser);
@@ -151,47 +153,49 @@ export const updateAuthUser = async (request: Request) => {
 
 export const login = async (requestOrSession: Request | Session,  {firstname, lastname, email, photo, type}: AuthUser) => {
   // Attempt to retrieve user with the email
-    let user = await getUser({
+  let user = await getUser({
       fields: { email },
       populate: { path: "profile" },
-    });
+  });
     
-    // if there is no user, then it means we do have user with that email, ensure we create one.
-    if (!user) {
-      user = await createUser({ email, type });
-      console.log("Created user %s", user);
-    }
+  // if there is no user, then it means we do have user with that email, ensure we create one.
+  if (!user) {
+    user = await createUser({ email, type: type || UserType.customer });
+    console.log("Created user %s", user);
+  }
     
-    // If we have user but no profile, it means there is profile info for the user yet, we create a profile then.
-    if (!user.profile) {
-      let profileData = {
-        userId: user._id,
-        firstName: firstname,
-        lastName: lastname,
-        photo: photo,
-        preferences: defaultPreferences
-      }
-      
-      const userProfile = await createUserProfile(profileData);
-      console.log("Created user profile", userProfile);
-      
-      user.profile = userProfile;
-    }
+  // If we have user but no profile, it means there is profile info for the user yet, we create a profile then.
+  if (!user.profile) {
+    let profileData: Omit<IUserProfile, "_id"> = {
+      userId: user._id,
+      firstName: firstname,
+      lastName: lastname,
+      photo: photo,
+      preferences: defaultPreferences,
+    };
+
+    const userProfile = await createUserProfile(profileData);
+    console.log("Created user profile", userProfile);
+
+    user.profile = userProfile;
+  }
     // Since the user has sign in, we ensure they a marked active
     if (!user.isActive) {
        await updateUser(user._id, { isActive: true });
     }
      
     // if user type is "staff", we find the staff object
-    if(user.type === UserType.staff) {
-      let staff = await getStaffByUserId(user.id);
+  if (user.type === UserType.staff) {
+    let staff = await getStaffByUserId(user.id);
+    if (staff) {
       user.staff = staff;
     }
+  }
     
     let authUser: AuthUser = {
       id: user.id,
-      firstname: user.profile.firstname,
-      lastname: user.profile.lastname,
+      firstname: user.profile.firstName,
+      lastname: user.profile.lastName,
       email: user.email,
       photo: user.profile.photo,
       type: user.type,
@@ -199,19 +203,15 @@ export const login = async (requestOrSession: Request | Session,  {firstname, la
     };
     
     let session: Session;
-    if (isRequest(requestOrSession)) {
-      session = await getSession(requestOrSession.headers.get("Cookie"));
-      
-      session.set(authenticator.sessionKey, authUser);
-      
-      requestOrSession.setH
-    } else {
-      session = requestOrSession as Session;
-    session.set(authenticator.sessionKey, authUser);
-    }
+  if (isRequest(requestOrSession)) {
+    session = await getSession(requestOrSession.headers.get("Cookie"));
+  } else {
+    session = requestOrSession as Session;
+  }
   
-    
-    return authUser;
+  session.set(authenticator.sessionKey, authUser);
+
+  return authUser;
 }
 
 export const logout = (
@@ -222,26 +222,26 @@ export const logout = (
   }
 ) => authenticator.logout(request, options);
 
-const defaultPreferences: Partial<IUserProfile['preferences']> = {
-          notifications: {
-            preferredSupportChannel: "whatsapp",
-            orderUpdates: true,
-            promotional: true,
-            subscriptionReminders: true,
-            supportNotification: true,
-          },
-          display: {
-            theme: "light",
-            language: "en",
-            currency: "NGN",
-          },
-          //privacy: {
-          //  dataSharing: true,
-          //  activityTracking: true,
-          //  accountVisibility: true,
-          //},
-          order: {
-            deliveryInstructions: "Leave at door",
-            packaging: "standard",
-          },
-      };
+const defaultPreferences: IUserProfile["preferences"] = {
+  notifications: {
+    preferredSupportChannel: "whatsapp",
+    orderUpdates: true,
+    promotional: true,
+    subscriptionReminders: true,
+    supportNotification: true,
+  },
+  display: {
+    theme: "light",
+    language: "en",
+    currency: "NGN",
+  },
+  //privacy: {
+  //  dataSharing: true,
+  //  activityTracking: true,
+  //  accountVisibility: true,
+  //},
+  order: {
+    deliveryInstructions: "Leave at door",
+    packaging: "standard",
+  },
+};

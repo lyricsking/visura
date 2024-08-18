@@ -1,4 +1,5 @@
 import { IUserProfile } from "~/User/types/user-profile.type";
+import { UserType } from "~/User/types/user.types";
 
 export interface AuthUser {
   id?: string;
@@ -6,6 +7,6 @@ export interface AuthUser {
   lastname: string;
   email: string;
   photo?: string;
-  type?: string;
+  type?: UserType;
   role?: string;
 }

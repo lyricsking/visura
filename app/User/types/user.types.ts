@@ -1,17 +1,17 @@
 import { Types } from 'mongoose';
 
-export const UserRoles = {
-  user:'user',
+export const UserType = {
+  customer:'customer',
   staff: "staff"
 } as const
-export type UserRoles = typeof UserRoles[keyof typeof UserRoles];
+export type UserType = (typeof UserType)[keyof typeof UserType];
 
 export interface IUser {
   _id: Types.ObjectId;
   email: string;
   password?: string;
   hasPassword: boolean;
-  roles: UserRoles[];
+  type: UserType;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

@@ -1,7 +1,8 @@
 import mongoose, { Schema, Model, Types, Document } from "mongoose";
 import bcrypt from "bcrypt";
-import { IUser, UserRoles } from "../types/user.types";
+import { IUser, UserType } from "../types/user.types";
 import { IUserProfile } from "../types/user-profile.type";
+import { IStaff } from "../types/staff.type";
 
 export interface IUserMethods {
   isValidPassword(password: string): Promise<boolean>;
@@ -39,10 +40,10 @@ const UserSchema = new Schema<
       type: String,
       minlength: 6,
     },
-    roles: {
-      type: [String],
-      enum: Object.values(UserRoles),
-      default: ["user"],
+    type: {
+      type: String,
+      enum: Object.values(UserType),
+      default: "customer",
       required: true,
     },
     isActive: {

@@ -3,7 +3,7 @@ import { createUser, getUser } from "~/User/server/user.server";
 import { AuthUser } from "../types/auth-user.type";
 import { createUserProfile } from "~/User/server/user-profile.server";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { setAuthUser } from "../server/auth.server";
+import { login, setAuthUser } from "../server/auth.server";
 
 export const googleStrategy = new GoogleStrategy(
   {
@@ -14,7 +14,7 @@ export const googleStrategy = new GoogleStrategy(
   },
   async ({ accessToken, refreshToken, extraParams, profile, request }) => {
     
-    return await login({
+    return await login(request, {
       email: profile.emails[0].value,
       firstname: profile.name.givenName,
       lastname: profile.name.familyName,
