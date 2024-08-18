@@ -11,7 +11,7 @@ import Button from "~/components/button";
 
 export default function Layout() {
   return (
-    <PageLayout>
+    <PageLayout className="bg-gray-100 max-h-screen overflow-y-auto no-scrollbar">
       <PageLayoutHeader>
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace>
