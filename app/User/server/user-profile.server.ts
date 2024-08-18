@@ -2,7 +2,6 @@ import { Types } from "mongoose";
 import UserProfile from "../models/user-profile.model";
 import { IUserProfile } from "../types/user-profile.type";
 import { HydratedDocument } from "mongoose";
-import connectToDatabase from "~/database/db.server";
 
 type PreferencesKeys = keyof IUserProfile["preferences"];
 
@@ -29,7 +28,7 @@ export const getProfileByUserId = async (
   userId: Types.ObjectId
 ): Promise<HydratedDocument<IUserProfile> | null> => {
   try {
-    await connectToDatabase();
+    
 
     return await UserProfile.findOne({ userId }).exec();
   } catch (error) {

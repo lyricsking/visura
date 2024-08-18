@@ -11,7 +11,6 @@ import User, {
   UserModel,
 } from "../models/user.model";
 import { IUser, UserRoles } from "../types/user.types";
-import connectToDatabase from "~/database/db.server";
 
 export type CreateUserProps = {
   email: string;

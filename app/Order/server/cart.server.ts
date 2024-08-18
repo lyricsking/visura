@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import connectToDatabase from "~/database/db.server";
 import { IItem, IOrder } from "../types/order.type";
 import { Order, type OrderModel } from "../models/order.model";
 import { Discount } from "../models/discount.model";
@@ -16,7 +15,6 @@ export const getCartByEmailId = async (
   email: string
 ): Promise<IOrder | null> => {
   try {
-    await connectToDatabase();
     const cart = await Order.findOne({
       email: email,
       // email: "asaajay775@gmail.com",
@@ -38,7 +36,7 @@ export const addItemsToCart = async (
   newItems: IItem[]
 ): Promise<IOrder> => {
   try {
-    const order= await Order.findOneAndUpdate(
+    const order = await Order.findOneAndUpdate(
       { name, email, status: "cart" },
       {
         $push: { items: { $each: newItems } },
@@ -54,7 +52,7 @@ export const addItemsToCart = async (
     return order;
   } catch (err) {
     console.error("Error adding items to cart:", err);
-     throw err;
+    throw err;
   }
 };
 
@@ -63,8 +61,6 @@ export const addItemToCart = async (
   newItem: IItem
 ): Promise<void> => {
   try {
-    await connectToDatabase();
-
     await Order.findOneAndUpdate(
       { userId, status: "cart" },
       {
@@ -88,8 +84,6 @@ export const applyDiscount = async ({
   code: any;
 }): Promise<void> => {
   try {
-    await connectToDatabase();
-
     const discount = await Discount.findOne({ code });
 
     if (!discount) return;
@@ -112,8 +106,6 @@ export const updateCartItem = async (
   purchaseMode?: string
 ): Promise<void> => {
   try {
-    await connectToDatabase();
-
     await Order.findOneAndUpdate(
       { email, status: "cart", "items.productId": productId },
       {
@@ -139,8 +131,6 @@ export const updateCartAddress = async ({
   address: IAddress;
 }): Promise<void> => {
   try {
-    await connectToDatabase();
-
     await Order.findOneAndUpdate(
       {
         id: new mongoose.Types.ObjectId(orderId),
@@ -162,8 +152,6 @@ export const updateCartAddress = async ({
 
 export const deleteCart = async (email: string): Promise<void> => {
   try {
-    await connectToDatabase();
-
     await Order.deleteOne({ email: email, status: "cart" });
     console.log("Item deleted successfully.");
   } catch (err) {
@@ -179,8 +167,6 @@ export const updatePaymentMethod = async ({
   paymentMethod: string;
 }): Promise<void> => {
   try {
-    await connectToDatabase();
-
     await Order.findOneAndUpdate(
       { _id: orderId, status: "cart" },
       {

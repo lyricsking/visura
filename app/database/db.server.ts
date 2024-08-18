@@ -47,4 +47,4 @@ process.on("SIGTERM", async () => {
   process.exit(0);
 });
 
-// export default connectToDatabase;
+export default connectToDatabase;
