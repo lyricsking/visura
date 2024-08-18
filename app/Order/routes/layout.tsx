@@ -110,7 +110,7 @@ export default function Layout() {
           <EmptyCart />
         ) : (
           <div className="flex flex-col md:flex-row w-full">
-            <div className="flex-1 h-full bg-white p-8">
+            <div className="flex-1 h-full bg-white px-8 md:py-8">
               <Outlet
                 context={{ amount: estimatedTotal, cart, childMethodRef }}
               />

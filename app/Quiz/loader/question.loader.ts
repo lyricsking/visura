@@ -16,14 +16,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!question || !currentUId) {
     return redirect("/quiz");
   }
-  let user = await getSessionUser(request);
 
   return json({
     answer,
     page,
     pageCount,
     question,
-    uid: currentUId,
-    user: user,
+    uid: currentUId
   });
 };

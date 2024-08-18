@@ -24,7 +24,7 @@ export { loader };
  */
 export default function Question() {
   //  Retrieve the current question id
-  const { answer, page, pageCount, question, uid, user } =
+  const { answer, page, pageCount, question, uid } =
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
@@ -47,25 +47,12 @@ export default function Question() {
   useEffect(() => {
     if (!isSubmitting && fetcher.data && fetcher.data) {
       let data: any = fetcher.data;
-      alert(JSON.stringify(fetcher, null, 2));
+      // alert(JSON.stringify(fetcher, null, 2));
       if (data.success === true) {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
-        } else if (data["cart"]) {
-          navigate("/cart")
-        } 
-        else if (!user) {
-          navigate("/quiz/finish");
         } else {
-          //  User already signed in, we simply submit the answers directly.
-          fetcher.submit(
-            {
-              firstname: user?.profile?.firstname,
-              lastname: user?.profile?.lastname,
-              email: user?.email,
-            },
-            { method: "post", action: "/quiz/finish" }
-          );
+          navigate("/quiz/finish");
         }
       }
     }

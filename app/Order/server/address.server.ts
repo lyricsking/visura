@@ -1,4 +1,3 @@
-import connectToDatabase from "~/database/db.server";
 import {
   Address,
   AddressRegion,
@@ -16,8 +15,6 @@ export const createOrUpdateAddress = async ({
   address: AddressModel;
 }): Promise<void> => {
   try {
-    await connectToDatabase();
-
     await Address.findOneAndUpdate(
       { _id: id },
       {
@@ -34,7 +31,6 @@ export const createOrUpdateAddress = async ({
 
 export const getAddress = async (id: string) => {
   try {
-    await connectToDatabase();
 
     const address = await Address.findById(id).exec();
     console.log("Fetched address success: ", address);
@@ -49,7 +45,6 @@ export const getAddressesByEmail = async (
   email: string
 ): Promise<IAddress[]> => {
   try {
-    await connectToDatabase();
 
     const addresses = await Address.find({ email: email }).exec();
     console.log("Fetched addresses success: ", addresses);
@@ -65,7 +60,6 @@ export const getAddressRegions = async (): Promise<
   HydratedDocument<IAddressRegion>[]
 > => {
   try {
-    await connectToDatabase();
 
     const regions = await AddressRegion.find({}).exec();
 

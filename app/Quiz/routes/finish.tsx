@@ -2,24 +2,36 @@
 import React, { useEffect, useRef } from "react";
 import Button from "~/components/button";
 import { Input } from "~/components/input";
-import { useFetcher, useNavigate } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import id from "~/Order/routes/id";
 import formDataToObject from "~/utils/form-data-to-object";
 import { action } from "../actions/finish.action";
 import { Checkbox } from "~/components/checkbox";
+import { loader } from "../loader/finish.loader";
+import { AuthUser } from "~/Auth/types/auth-user.type";
 
 export { action };
+export { loader };
 
-export default function GetResultForm() {
+export default function Finish() {
+  let data = useLoaderData<typeof loader>();
+
   let fetcher = useFetcher();
   let isSubmitting = fetcher.state !== "idle";
   let formData = fetcher.formData;
 
-  let firstname = (formData?.get("firstname") as string) || undefined;
-  let lastname: string | undefined =
-    (formData?.get("lastname") as string) || undefined;
-  let email = (formData?.get("email") as string) || undefined;
-  let subscribe = (formData?.get("subscribe") as string) === "true" || false;
+  let user: AuthUser = data.user;
+  // useEffect(() => {
+  //   alert(JSON.stringify(user, null, 2));
+  // }, [user]);
+  let firstname =
+    (formData?.get("firstname") as string) || user.profile?.firstName;
+  let lastname =
+    (formData?.get("lastname") as string) || user.profile?.lastName;
+  let email = (formData?.get("email") as string) || user.email;
+  let subscribe =
+    (formData?.get("subscribe") as string) === "true" ||
+    user.profile?.preferences?.notifications.orderUpdates;
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -28,7 +40,6 @@ export default function GetResultForm() {
       fetcher.data &&
       (fetcher.data as any).success === true
     ) {
-      alert(JSON?.stringify(fetcher.data, null, 2));
       navigate("/cart");
     }
   }, [fetcher]);
