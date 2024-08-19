@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { Types } from "mongoose";
-import { getSessionUser, setAuthUser } from "~/Auth/server/auth.server";
+import { getSessionUser } from "~/Auth/server/auth.server";
 import { getUser } from "../server/user.server";
 import { isAuthUser } from "~/Auth/utils/helper";
 
@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     });
 
     if (user) {
-      await setAuthUser(request, user);
+      //await setAuthUser(request, user);
       return json({ user });
     }
   }

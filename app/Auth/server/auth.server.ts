@@ -64,20 +64,23 @@ export const isAuthenticated = async (
   const isAuthenticated = await authenticator.isAuthenticated(request);
 
   if (!isAuthenticated) {
+    // This does not provide successRedirect, since it expects
+    // isAuthenticated to be successful,
+    // We must redirect back to this url after Authentication
     if (!successRedirect) {
-      // This does not provide successRedirect, since expects a isAuthenticated to be successful,
-      // We must redirect back to this url after Authentication
-
       const currentUrl = new URL(request.url);
 
       throw redirect(`/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`);
     } else if (successRedirect) {
+      // SuccessRedirect was provided we probably already anticipate that
+      // esp in the sign in route, so we simply save the redirection url
+      // to session so we can access later on.
       session.set(REDIRECT_URL, successRedirect);
       const headers = {
         "Set-Cookie": await commitSession(session),
       };
-
-      return json(isAuthenticated, { headers });
+      return isAuthenticated;
+      // return json(isAuthenticated, { headers });
     }
   } else if (isAuthenticated && successRedirect) {
     throw redirect(successRedirect);

@@ -123,7 +123,6 @@ export const action: ActionFunction = async ({ request }) => {
     );
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
     let user = await disableUser(userId);
-    console.log(user);
     return await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
     let notification: IUserProfile["preferences"]["notifications"] = {

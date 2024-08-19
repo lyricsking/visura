@@ -1,4 +1,3 @@
-import { UserCircleIcon } from "@heroicons/react/24/outline";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,25 +6,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/dropdown.menu";
-import { ButtonProps } from "~/components/button";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
-import { useUser } from "~/hooks/use-user";
 import { UserIcon } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
+import { AuthUser } from "~/Auth/types/auth-user.type";
 
-type Props = ButtonProps;
-
-export default function AccountMenuButton(props: Props) {
+//type Props = ButtonProps;
+type Props = {
+  user?: AuthUser
+}
+export default function AccountMenuButton({user}: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
 
-  let data: any = useUser();
-  let profilePhoto = data?.profile?.photo;
+  let profilePhoto = user?.photo;
+  
+  useEffect(() => {
+    alert(JSON.stringify(user, null, 2));
+  }, [user])
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-1 border border-gray-500 rounded-full">
-        {data && profilePhoto ? (
+        {user && profilePhoto ? (
           <img
             src={profilePhoto}
             alt="User account menu icon"
@@ -39,7 +43,7 @@ export default function AccountMenuButton(props: Props) {
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* Optionally allow to navigate to dashboard in not already in the the dashboard */}
-        {data && !location.pathname.includes("dashboard") && (
+        { user && !location.pathname.includes("dashboard") && (
           <DropdownMenuItem
             onSelect={() => {
               navigate("/dashboard");
@@ -57,7 +61,7 @@ export default function AccountMenuButton(props: Props) {
           Support
         </DropdownMenuItem>
         {/* Sign out */}
-        {data ? (
+        {user ? (
           <DropdownMenuItem
             onSelect={() => {
               submit(null, { method: "POST", action: "/auth/signout" });

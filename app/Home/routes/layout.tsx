@@ -43,14 +43,14 @@ export default function Layout() {
             </Button>
             <CartIcon />
             <div className="flex-none mx-auto">
-              <AccountMenuButton />
+              <AccountMenuButton user={data.user} />
             </div>
           </div>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet />
+        <Outlet context={{ user: data.user }} />
       </PageLayoutContent>
 
       <PageLayoutFooter columns="1" asChild>

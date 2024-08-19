@@ -32,6 +32,10 @@ import {
 } from "@remix-run/node";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { isAuthenticated, logout } from "~/Auth/server/auth.server";
+import { getSubdomain } from "~/utils/domain";
+import { getUserById } from "~/User/server/user.server";
+import { getSession } from "~/utils/session";
+import { Types } from "mongoose";
 
 export const handle = {
   breadcrumb: {
@@ -81,7 +85,7 @@ export default function Layout() {
             <Breadcrumb breadcrumbs={breadcrumbs} />
           </div>
           <div className="flex-none flex">
-            <AccountMenuButton />
+            <AccountMenuButton user={data.user} />
           </div>
         </PageLayoutHeaderItem>
 
@@ -108,15 +112,16 @@ export default function Layout() {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authUser = await isAuthenticated(request);
-   
-  let subdomain = getSubdomain(request)
-  if(subdomain){  
-    let user = await getUserById(user.id, {path: "staff"})
-    if(user.roles.includes(subdomain)){
-      
-    }
+  let user;
+  if (authUser && authUser.id) {
+    user = await getUserById(new Types.ObjectId(authUser.id), {
+      path: "staff",
+    });
   }
-  return json({ ...(authUser && { user: authUser }) });
+
+  let subdomain = getSubdomain(request);
+
+  return json({ ...(user && { user }) });
 };
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
