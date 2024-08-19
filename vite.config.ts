@@ -36,6 +36,9 @@ export default defineConfig({
             route("invoices/:status?", "Dashboard/routes/invoices.tsx", () => {
               route(":id", "Dashboard/routes/invoice-id.tsx", { index: true });
             });
+            route("admin", "Dashboard/routes/overview");
+            route("support", "Dashboard/routes/admin");
+            route("technical", "Dashboard/routes/support");
             route("orders/:status?", "Dashboard/routes/orders.tsx", () => {
               route(":id", "Dashboard/routes/order-detail.tsx");
             });

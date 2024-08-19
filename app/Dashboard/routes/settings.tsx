@@ -115,9 +115,9 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
-    await updateUserProfile(userId, { firstName, lastName });
+    return await updateUserProfile(userId, { firstName, lastName });
   } else if (_action === PASSWORD_UPDATE_ACTION) {
-    await updateUserPassword(
+    return await updateUserPassword(
       userId,
       otherData["currentPassword"],
       otherData["newPassword"]
@@ -135,17 +135,14 @@ export const action: ActionFunction = async ({ request }) => {
         otherData["supportNotification"] === "true" ? true : false,
       preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
     };
-    await updateUserPreference(userId, "notifications", notification);
+    return await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-    await updateUserPreference(userId, "display", otherData);
+   return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
-    await updateUserPreference(userId, "order", otherData);
+    return await updateUserPreference(userId, "order", otherData);
   } else {
     return null;
   }
-
-  // Revalidate user data here;
-  return ;
 };
 
 export const handle = {
