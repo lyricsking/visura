@@ -6,7 +6,7 @@ import { Session, json, redirect } from "@remix-run/node";
 import { createUser, getUser, updateUser } from "~/User/server/user.server";
 import { IUser, UserType } from "~/User/types/user.types";
 import { HydratedDocument } from "mongoose";
-import { IUserMethods, IUserVirtuals } from "~/User/models/user.model";
+import { IHydratedUser, IUserMethods, IUserVirtuals } from "~/User/models/user.model";
 import { isRequest } from "~/utils/is-request";
 import { createUserProfile } from "~/User/server/user-profile.server";
 import { getStaffByUserId } from "~/User/server/staff.server";
@@ -101,62 +101,37 @@ export const getSessionUser = async (
   return session.get(authenticator.sessionKey);
 };
 
-const setAuthUser = async (
-  request: Request,
-  user: HydratedDocument<IUser, IUserMethods & IUserVirtuals>
-) => {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  let authUser = {
-    id: user.id,
-    email: user.email,
-    profile: user.profile,
-  };
-
-  session.set(authenticator.sessionKey, user);
-  // Since the user has signed, we ensure they a marked active
-  if (!user.isActive) {
-    await updateUser(user._id, { isActive: true });
+export const setSessionUser = async (
+  requestOrSession: Request | Session,
+  hydratedUser: IHydratedUser
+): Promise<AuthUser> => {
+  let session: Session;
+  if (isRequest(requestOrSession)) {
+    session = await getSession(requestOrSession.headers.get("Cookie"));
+  } else {
+    session = requestOrSession as Session;
   }
 
-  return json(authUser, {
-    headers: { "Set-Cookie": await commitSession(session) },
-  });
-};
-
-const setAnonUser = async (
-  session: Session,
-  user: { firstname: string; lastname: string; email: string }
-) => {
-  let authUser: AuthUser = {
-    id: "",
-    email: user.email,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    type: "customer",
+  let authUser: AuthUser = session.get(authenticator.sessionKey);
+  let newAuthUser: AuthUser = {
+    ...authUser,
+    id: hydratedUser.id,
+    firstName: hydratedUser.profile.firstName,
+    lastName: hydratedUser.profile.lastName,
+    email: hydratedUser.email,
+    photo: hydratedUser.profile.photo,
+    type: hydratedUser.type,
+    role: hydratedUser.staff?.role,
   };
 
-  session.set(authenticator.sessionKey, authUser);
+  session.set(authenticator.sessionKey, newAuthUser);
 
-  return authUser;
-};
-
-export const updateAuthUser = async (request: Request) => {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  let authUser: AuthUser = session.get(authenticator.sessionKey);
-
-  let user = await getUser({
-    fields: { email: authUser.email },
-    populate: { path: "profile" },
-  });
-
-  return user && (await setAuthUser(request, user));
+  return newAuthUser;
 };
 
 export const login = async (
   requestOrSession: Request | Session,
-  { firstname, lastname, email, photo, type }: AuthUser
+  { firstName, lastName, email, photo, type }: AuthUser
 ) => {
   // Attempt to retrieve user with the email
   let user = await getUser({
@@ -174,8 +149,8 @@ export const login = async (
   if (!user.profile) {
     let profileData: Omit<IUserProfile, "_id"> = {
       userId: user._id,
-      firstName: firstname,
-      lastName: lastname,
+      firstName,
+      lastName,
       photo: photo,
       preferences: defaultPreferences,
     };
@@ -198,26 +173,7 @@ export const login = async (
     }
   }
 
-  let authUser: AuthUser = {
-    id: user.id,
-    firstname: user.profile.firstName,
-    lastname: user.profile.lastName,
-    email: user.email,
-    photo: user.profile.photo,
-    type: user.type,
-    role: user.staff?.role,
-  };
-
-  let session: Session;
-  if (isRequest(requestOrSession)) {
-    session = await getSession(requestOrSession.headers.get("Cookie"));
-  } else {
-    session = requestOrSession as Session;
-  }
-
-  session.set(authenticator.sessionKey, authUser);
-
-  return authUser;
+  return setSessionUser(requestOrSession, user);
 };
 
 export const logout = (

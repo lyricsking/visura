@@ -51,7 +51,7 @@ export type FeatureItemType = ComponentProps<"div"> & {
   feature: {
     name: string;
     description: string;
-    icon: any;
+    icon: React.ElementType;
   };
 };
 export function FeatureItem({

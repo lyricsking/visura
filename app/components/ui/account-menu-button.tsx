@@ -7,21 +7,21 @@ import {
   DropdownMenuTrigger,
 } from "~/components/dropdown.menu";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 
 //type Props = ButtonProps;
 type Props = {
-  user?: AuthUser
-}
-export default function AccountMenuButton({user}: Props) {
+  user?: AuthUser;
+};
+export default function AccountMenuButton({ user }: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
 
   let profilePhoto = user?.photo;
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-1 border border-gray-500 rounded-full">
@@ -32,14 +32,15 @@ export default function AccountMenuButton({user}: Props) {
             className="w-6 h-6 rounded-full"
           />
         ) : (
-          <UserIcon className="w-6 h-6" />
+          <UserCircleIcon className="w-8 h-8 text-gray-500" />
+          // <UserIcon className="w-6 h-6" />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* Optionally allow to navigate to dashboard in not already in the the dashboard */}
-        { user && !location.pathname.includes("dashboard") && (
+        {user && !location.pathname.includes("dashboard") && (
           <DropdownMenuItem
             onSelect={() => {
               navigate("/dashboard");

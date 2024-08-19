@@ -22,7 +22,7 @@ import OrderSettings from "~/Order/components/order-settings";
 import HealthPreferences from "../components/health-settings";
 import HealthSettings from "../components/health-settings";
 import PaymentSettings from "~/Transaction/components/payment-settings";
-import { getSession } from "~/utils/session";
+import { commitSession, getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import {
   disableUser,
@@ -48,8 +48,9 @@ import {
 import { IUserProfile } from "~/User/types/user-profile.type";
 import {
   getSessionUser,
+  login,
   logout,
-  updateAuthUser,
+  setSessionUser,
 } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
@@ -67,14 +68,9 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
 
 export default function Settings() {
   const { setting, user } = useLoaderData<typeof loader>();
-  const { sidebarMenuRef }: any = useOutletContext();
 
   const navigate = useNavigate();
   const params = useParams();
-
-  if (sidebarMenuRef) {
-    sidebarMenuRef.current = () => null;
-  }
 
   const onSettingChange = (newSetting: string) => {
     navigate(`/dashboard/settings/${newSetting}`);
@@ -137,7 +133,7 @@ export const action: ActionFunction = async ({ request }) => {
     };
     return await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-   return await updateUserPreference(userId, "display", otherData);
+    return await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
     return await updateUserPreference(userId, "order", otherData);
   } else {
@@ -158,12 +154,16 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
   // Todo use the settingsType to fetch appropriate data to be modified
   const user = await getSessionUser(request).then(({ id }) => {
-      return id
-        ? getUserById(new Types.ObjectId(id), { path: "profile" })
-      : null;
+    return id ? getUserById(new Types.ObjectId(id), { path: "profile" }) : null;
   });
-  if(!user) return redirect("/auth")
+
+  if (!user) return redirect("/auth");
+
+  let session = await getSession(request.headers.get("Cookie"));
+
+  await setSessionUser(session, user);
+
   console.log(user);
-  
-  return json({ setting: settingsType, user });
+
+  return json({ setting: settingsType, user }, { headers: { "Set-Cookie": await commitSession(session) } });
 };

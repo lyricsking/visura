@@ -47,7 +47,6 @@ export default function Question() {
   useEffect(() => {
     if (!isSubmitting && fetcher.data && fetcher.data) {
       let data: any = fetcher.data;
-      // alert(JSON.stringify(fetcher, null, 2));
       if (data.success === true) {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);

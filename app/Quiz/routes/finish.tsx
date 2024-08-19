@@ -21,9 +21,7 @@ export default function Finish() {
   let formData = fetcher.formData;
 
   let user: AuthUser = data.user;
-  // useEffect(() => {
-  //   alert(JSON.stringify(user, null, 2));
-  // }, [user]);
+ 
   let firstname =
     (formData?.get("firstname") as string) || user.profile?.firstName;
   let lastname =

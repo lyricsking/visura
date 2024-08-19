@@ -15,13 +15,6 @@ import {
 import pkg from "../../../package.json";
 import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
-import {
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
-  useRef,
-  useState,
-} from "react";
 
 export type ChildHeaderObject = {
   title: string;
@@ -70,7 +63,7 @@ export default function Layout() {
 
         {headerObject && (
           <PageLayoutHeaderItem className="relative justify-center border bg-gray-300">
-            <div className="text-center sm:py-2 text-center">
+            <div className="text-center sm:py-2">
               <h1 className="text-3xl font-bold text-gray-900">
                 {headerObject.title}
               </h1>

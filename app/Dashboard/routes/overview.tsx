@@ -1,6 +1,8 @@
 import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import { useEffect } from "react";
+import { getSessionUser } from "~/Auth/server/auth.server";
+import { AuthUser } from "~/Auth/types/auth-user.type";
 import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 
 export const handle = {
@@ -9,17 +11,42 @@ export const handle = {
     id: "overview",
     label: "Overview",
   },
+  sidebarMenu: () => [
+    {
+      id: "orders",
+      label: "Orders",
+      url: "/dashboard/orders",
+    },
+    {
+      id: "subscriptions",
+      label: "Subscription",
+      url: "/dashboard/subscriptions",
+    },
+    {
+      id: "invoices",
+      label: "Invoices",
+      url: "/dashboard/invoices",
+    },
+    {
+      id: "transactions",
+      label: "Transactions",
+      url: "/dashboard/transactions",
+    },
+    {
+      id: "settings",
+      label: "Settings",
+      url: "/dashboard/settings",
+    },
+    {
+      id: "support",
+      label: "Support Center",
+      url: "/support",
+    },
+  ],
 };
 
 export default function Overview() {
   const data = useLoaderData<typeof loader>();
-
-  const { user, sidebarMenuRef }: any = useOutletContext();
-  useEffect(() => {
-    if (sidebarMenuRef) {
-      sidebarMenuRef.current = () => null;
-    }
-  }, [sidebarMenuRef]);
 
   return (
     <div className="space-y-8">
@@ -122,8 +149,8 @@ export default function Overview() {
 }
 
 // Mock data for demonstration
-const mockData = {
-  userName: "John Doe",
+const mockData = (firstname: string, lastName: string) => ({
+  userName: firstname + " " + lastName,
   accountSummary: {
     recentActivity: "Ordered Vitamin D Supplement",
     nextDeliveryDate: "2024-07-25",
@@ -184,9 +211,12 @@ const mockData = {
       price: "$25.99",
     },
   ],
-};
+});
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
   // Replace with actual data fetching logic
-  return json(mockData);
+  let user: AuthUser = await getSessionUser(request);
+  console.log("auth user:", user);
+
+  return json(mockData(user.firstName, user.lastName));
 };
