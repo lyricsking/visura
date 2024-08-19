@@ -12,7 +12,7 @@ import {
 import Button from "~/components/button";
 
 export default function DisplaySettings({
-  authUser: { profile },
+  user: { profile },
 }: SettingsType) {
   const fetcher = useFetcher();
 

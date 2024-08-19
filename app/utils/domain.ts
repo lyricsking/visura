@@ -1,8 +1,6 @@
 import { redirect } from "@remix-run/node";
 import { StaffRole } from "~/User/types/staff.type";
 
-const allowedDomains = ["admin", "support", "tec"];
-
 /**
  * Gets the subdomain string of the current url
  *

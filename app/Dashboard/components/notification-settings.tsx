@@ -12,9 +12,9 @@ import { Form, useFetcher } from "@remix-run/react";
 import { NOTIFICATION_UPDATE_ACTION } from "../utils/constants";
 import Button from "~/components/button";
 
-export default function NotificationSettings({
-  authUser: { profile },
-}: SettingsType) {
+export default function NotificationSettings({ user }: SettingsType) {
+    const { profile } = user;
+
   const fetcher = useFetcher();
 
   const notifications = profile?.preferences.notifications;
