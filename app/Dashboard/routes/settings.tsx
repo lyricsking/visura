@@ -93,7 +93,7 @@ export default function Settings() {
 
         return (
           <TabsContent key={key} value={key} className="h-fit">
-            {<Tag authUser={user} />}
+            {<Tag user={user} />}
           </TabsContent>
         );
       })}
@@ -144,7 +144,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   // Revalidate user data here;
-  return await updateAuthUser(request);
+  return ;
 };
 
 export const handle = {
@@ -158,6 +158,11 @@ export const handle = {
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
-
-  return json({ setting: settingsType });
+  // Todo use the settingsType to fetch appropriate data to be modified
+  const user = await getSessionUser(request).then(({ id }) => {
+    return id ? getUserById(new Types.ObjectId(id)) : null;
+  });
+  if(!user) return redirect("/auth")
+  
+  return json({ setting: settingsType, user });
 };

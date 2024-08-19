@@ -112,17 +112,14 @@ export default function Layout() {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authUser = await isAuthenticated(request);
-console.log('Got', authUser);
-  let user;
-  if (authUser && typeof authUser !== "string" && authUser.id) {
-    user = await getUserById(new Types.ObjectId(authUser.id), {
-      path: "staff",
-    });
-  }
 
   let subdomain = getSubdomain(request);
+  // if the user has role access to the subdomain
+  if (authUser && typeof authUser !== "string" && authUser.id) {
+  }
 
-  return json({ ...(user && { user }) });
+
+  return json({ ...(authUser && { user: authUser }) });
 };
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {

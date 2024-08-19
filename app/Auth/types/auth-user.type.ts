@@ -3,8 +3,8 @@ import { UserType } from "~/User/types/user.types";
 
 export interface AuthUser {
   id?: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   photo?: string;
   type?: UserType;

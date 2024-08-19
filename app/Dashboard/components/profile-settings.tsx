@@ -10,16 +10,16 @@ import {
 } from "../utils/constants";
 import Button from "~/components/button";
 
-export default function ProfileSettings({ authUser: user }: SettingsType) {
-  const { profile } = user;
+export default function ProfileSettings({ user }: SettingsType) {
+  const { id, firstName, lastName, email } = user;
 
   const accountFetcher = useFetcher();
   const passwordsFetcher = useFetcher();
   const accountStatusFetcher = useFetcher();
 
   const name =
-    profile?.firstName && profile.lastName
-      ? profile.firstName + " " + profile.lastName
+    firstName && lastName
+      ? firstName + " " + lastName
       : "";
   return (
     <>
@@ -50,7 +50,7 @@ export default function ProfileSettings({ authUser: user }: SettingsType) {
               <Input
                 type="email"
                 name="email"
-                defaultValue={user?.email}
+                defaultValue={user.email}
                 className="mt-1"
                 disabled
               />
