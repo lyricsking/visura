@@ -11,7 +11,11 @@ import {
 import Button from "~/components/button";
 
 export default function ProfileSettings({ user }: SettingsType) {
-  const { id, firstName, lastName, email } = user;
+  const {
+    id,
+    email,
+    profile: { firstName, lastName },
+  } = user;
 
   const accountFetcher = useFetcher();
   const passwordsFetcher = useFetcher();

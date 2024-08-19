@@ -53,6 +53,7 @@ import {
 } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
+import { IHydratedUser } from "~/User/models/user.model";
 
 const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
@@ -65,8 +66,8 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
 };
 
 export default function Settings() {
-  const { setting } = useLoaderData<typeof loader>();
-  const { user, sidebarMenuRef }: any = useOutletContext();
+  const { setting, user } = useLoaderData<typeof loader>();
+  const { sidebarMenuRef }: any = useOutletContext();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -93,7 +94,7 @@ export default function Settings() {
 
         return (
           <TabsContent key={key} value={key} className="h-fit">
-            {<Tag user={user} />}
+            {<Tag user={user as IHydratedUser} />}
           </TabsContent>
         );
       })}
@@ -160,9 +161,12 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
   // Todo use the settingsType to fetch appropriate data to be modified
   const user = await getSessionUser(request).then(({ id }) => {
-    return id ? getUserById(new Types.ObjectId(id)) : null;
+      return id
+        ? getUserById(new Types.ObjectId(id), { path: "profile" })
+      : null;
   });
   if(!user) return redirect("/auth")
+  console.log(user);
   
   return json({ setting: settingsType, user });
 };
