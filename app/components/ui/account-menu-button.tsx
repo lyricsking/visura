@@ -22,10 +22,6 @@ export default function AccountMenuButton({user}: Props) {
 
   let profilePhoto = user?.photo;
   
-  useEffect(() => {
-    alert(JSON.stringify(user, null, 2));
-  }, [user])
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-1 border border-gray-500 rounded-full">

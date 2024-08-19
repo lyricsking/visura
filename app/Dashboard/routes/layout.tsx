@@ -112,8 +112,9 @@ export default function Layout() {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const authUser = await isAuthenticated(request);
+console.log('Got', authUser);
   let user;
-  if (authUser && authUser.id) {
+  if (authUser && typeof authUser !== "string" && authUser.id) {
     user = await getUserById(new Types.ObjectId(authUser.id), {
       path: "staff",
     });

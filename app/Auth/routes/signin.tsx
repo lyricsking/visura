@@ -7,6 +7,7 @@ import {
   REDIRECT_URL,
   isAuthenticated,
 } from "../server/auth.server";
+import { i } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
@@ -111,5 +112,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const rdrPath = url.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
 
-  return await isAuthenticated(request, { successRedirect: rdrPath });
+  const isAuth = await isAuthenticated(request, { successRedirect: rdrPath });
+
+  let headers: HeadersInit = {};
+  if (typeof isAuth === "string") {
+    headers = {
+      "Set-Cookie": isAuth,
+    };
+  }
+  return json(null, {headers});
 };
