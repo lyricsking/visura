@@ -1,5 +1,5 @@
 import { ActionFunction, json } from "@remix-run/node";
-import { getSessionUser, setUnauthUser } from "~/Auth/server/auth.server";
+import { getCacheUser, setUnauthUser } from "~/Auth/server/auth.server";
 import { ISupplement } from "~/Supplement/supplement.type";
 import { commitSession, getSession } from "~/utils/session";
 import {
@@ -39,7 +39,7 @@ export const action: ActionFunction = async ({ request }) => {
       // session.unset(ANSWER_KEY);
 
       //  Cache user data in session if not logged in
-      let user = await getSessionUser(request);
+      let user = await getCacheUser(request);
       if (!user) {
         user = await setUnauthUser(session, {
           firstname: firstname,

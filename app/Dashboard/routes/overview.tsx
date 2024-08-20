@@ -1,7 +1,7 @@
 import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import { useEffect } from "react";
-import { getSessionUser } from "~/Auth/server/auth.server";
+import { getCacheUser } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 import { IHydratedUser } from "~/User/models/user.model";
@@ -216,7 +216,7 @@ const mockData = (firstname: string, lastName: string) => ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Replace with actual data fetching logic
-  let user: IHydratedUser = await getSessionUser(request);
+  let user: IHydratedUser = await getCacheUser(request);
   console.log("auth user:", user);
 
   return json(mockData(user.profile.firstName, user.profile.lastName));

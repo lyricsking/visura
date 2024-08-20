@@ -46,11 +46,7 @@ import {
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import {
-  getSessionUser,
-  logout,
-  setSessionUser,
-} from "~/Auth/server/auth.server";
+import { getCacheUser, logout, setCacheUser } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 import { IHydratedUser } from "~/User/models/user.model";
@@ -108,7 +104,7 @@ export default function Settings() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const user = await getSessionUser(request);
+  const user = await getCacheUser(request);
 
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
@@ -154,11 +150,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // Todo use the settingsType to fetch appropriate data to be modified
   let session = await getSession(request.headers.get("Cookie"));
 
-  const user = await getSessionUser(session);
+  const user = await getCacheUser(session);
 
   if (!user) return redirect("/auth");
 
-  await setSessionUser(session, user);
+  await setCacheUser(session, user);
 
   console.log(user);
 

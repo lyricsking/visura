@@ -1,7 +1,7 @@
 import { LoaderFunction, redirect, json } from "@remix-run/node";
 import { getSession } from "~/utils/session";
 import { getQuestion } from "../server/quiz.server";
-import { getSessionUser } from "~/Auth/server/auth.server";
+import { getCacheUser } from "~/Auth/server/auth.server";
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   let uid = params["uid"];
@@ -22,6 +22,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     page,
     pageCount,
     question,
-    uid: currentUId
+    uid: currentUId,
   });
 };

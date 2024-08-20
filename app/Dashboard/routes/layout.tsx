@@ -9,9 +9,9 @@ import pkg from "../../../package.json";
 import Breadcrumb from "~/components/breadcrumb";
 import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
-  getSessionUser,
+  getCacheUser,
   isAuthenticated,
-  setSessionUser,
+  setCacheUser,
 } from "~/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
 import { DrawerMenu } from "~/Dashboard/components/sidebar";
@@ -102,7 +102,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   let subdomain = getSubdomain(request);
   // if the user has role access to the subdomain
   // Get the cache user object from session, could be undefined or IHydrated user.
-  let user = await getSessionUser(request);
+  let user = await getCacheUser(request);
   // Initialize the headers object to cache the session if the user is undefined
   let headers: HeadersInit = {};
   // If the authUser object returned from authentication is of type AuthUser
@@ -114,7 +114,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     user = await findOrCreateUserProfiles({ email: authUser.email });
     // Cahe the new user object
     headers["Set-Cookie"] = await commitSession(
-      await setSessionUser(request, user)
+      await setCacheUser(request, user)
     );
   }
 

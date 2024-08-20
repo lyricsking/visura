@@ -1,6 +1,6 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { LoaderFunction, json } from "@remix-run/node";
+import { LoaderFunction, isSession, json } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import {
   REDIRECT_SEARCH_PARAM,
@@ -9,6 +9,7 @@ import {
 } from "../server/auth.server";
 import { i } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 import { commitSession } from "~/utils/session";
+import { isSessionInstance } from "../utils/helper";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
@@ -114,9 +115,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const rdrPath = url.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
 
   const isAuth = await isAuthenticated(request, { successRedirect: rdrPath });
-
+console.log(isAuth)
   let headers: HeadersInit = {};
-  if (typeof isAuth === "string") {
+  if (isSessionInstance(isAuth)) {
     headers = {
       "Set-Cookie": await commitSession(isAuth),
     };

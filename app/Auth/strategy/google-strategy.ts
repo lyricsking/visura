@@ -1,7 +1,7 @@
 import { GoogleStrategy } from "remix-auth-google";
 import { findOrCreateUserProfiles } from "~/User/server/user.server";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { setSessionUser } from "../server/auth.server";
+import { setCacheUser } from "../server/auth.server";
 import { AuthUser } from "../types/auth-user.type";
 
 export const googleStrategy = new GoogleStrategy(

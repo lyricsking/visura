@@ -76,6 +76,8 @@ export const isAuthenticated = async (
       // and save the session so we can cache it later.
       session.set(REDIRECT_URL, successRedirect);
       if (currentUrl.pathname.includes("auth")) {
+        console.log("sesss");
+
         return session;
       }
     }
@@ -86,7 +88,7 @@ export const isAuthenticated = async (
   }
 };
 
-export const getSessionUser = async (
+export const getCacheUser = async (
   param: Request | Session
 ): Promise<IHydratedUser | undefined> => {
   let session: Session;
@@ -98,7 +100,7 @@ export const getSessionUser = async (
   return session.get(USER_SESSION_KEY);
 };
 
-export const setSessionUser = async (
+export const setCacheUser = async (
   requestOrSession: Request | Session,
   newAuthUser: AuthUser
 ): Promise<Session> => {
