@@ -1,6 +1,4 @@
-import { AuthUser } from "~/Auth/types/auth-user.type";
-import { IHydratedUser, UserModel } from "~/User/models/user.model";
-import { IUser } from "~/User/types/user.types";
+import { IHydratedUser } from "~/User/models/user.model";
 
 export type SettingsType = {
   user: IHydratedUser;

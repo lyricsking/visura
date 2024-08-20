@@ -15,7 +15,7 @@ import pkg from "../../../package.json";
 import Breadcrumb from "~/components/breadcrumb";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { json, LoaderFunction } from "@remix-run/node";
-import { isAuthenticated, login } from "~/Auth/server/auth.server";
+import { isAuthenticated, loginOrCreate } from "~/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
 import { DrawerMenu } from "~/Dashboard/components/sidebar";
 import { useEffect } from "react";

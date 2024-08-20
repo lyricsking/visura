@@ -8,24 +8,23 @@ import {
 } from "~/components/dropdown.menu";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
-import { AuthUser } from "~/Auth/types/auth-user.type";
+import { IUserProfile } from "~/User/types/user-profile.type";
 
 //type Props = ButtonProps;
 type Props = {
-  user?: AuthUser;
+  profile?: IUserProfile;
 };
-export default function AccountMenuButton({ user }: Props) {
+export default function AccountMenuButton({ profile }: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
 
-  let profilePhoto = user?.photo;
+  let profilePhoto = profile?.photo;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-1 border border-gray-500 rounded-full">
-        {user && profilePhoto ? (
+        {profile && profilePhoto ? (
           <img
             src={profilePhoto}
             alt="User account menu icon"
@@ -40,7 +39,7 @@ export default function AccountMenuButton({ user }: Props) {
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* Optionally allow to navigate to dashboard in not already in the the dashboard */}
-        {user && !location.pathname.includes("dashboard") && (
+        {profile && !location.pathname.includes("dashboard") && (
           <DropdownMenuItem
             onSelect={() => {
               navigate("/dashboard");
@@ -58,7 +57,7 @@ export default function AccountMenuButton({ user }: Props) {
           Support
         </DropdownMenuItem>
         {/* Sign out */}
-        {user ? (
+        {profile ? (
           <DropdownMenuItem
             onSelect={() => {
               submit(null, { method: "POST", action: "/auth/signout" });

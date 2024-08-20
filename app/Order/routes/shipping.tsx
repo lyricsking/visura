@@ -20,11 +20,9 @@ import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
 import { useEffect } from "react";
 import { updateCartAddress } from "../server/cart.server";
-import { getSession, USER_SESSION_KEY } from "~/utils/session";
-import { Address } from "~/Order/models/address.model";
+import { getSession } from "~/utils/session";
 import { IAddress, IAddressRegion } from "../types/address.type";
 import { getSessionUser } from "~/Auth/server/auth.server";
-import { AuthUser } from "~/Auth/types/auth-user.type";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";

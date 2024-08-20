@@ -9,6 +9,7 @@ import { action } from "../actions/finish.action";
 import { Checkbox } from "~/components/checkbox";
 import { loader } from "../loader/finish.loader";
 import { AuthUser } from "~/Auth/types/auth-user.type";
+import { IHydratedUser } from "~/User/models/user.model";
 
 export { action };
 export { loader };
@@ -20,16 +21,16 @@ export default function Finish() {
   let isSubmitting = fetcher.state !== "idle";
   let formData = fetcher.formData;
 
-  let user: AuthUser = data.user;
- 
+  let user: IHydratedUser | undefined = data.user;
+
   let firstname =
-    (formData?.get("firstname") as string) || user.profile?.firstName;
+    (formData?.get("firstname") as string) || user?.profile?.firstName;
   let lastname =
-    (formData?.get("lastname") as string) || user.profile?.lastName;
-  let email = (formData?.get("email") as string) || user.email;
+    (formData?.get("lastname") as string) || user?.profile?.lastName;
+  let email = (formData?.get("email") as string) || user?.email;
   let subscribe =
     (formData?.get("subscribe") as string) === "true" ||
-    user.profile?.preferences?.notifications.orderUpdates;
+    user?.profile?.preferences?.notifications.orderUpdates;
 
   let navigate = useNavigate();
   useEffect(() => {

@@ -1,16 +1,15 @@
 import { Authenticator } from "remix-auth";
-import { commitSession, getSession, sessionStorage } from "~/utils/session";
+import {
+  commitSession,
+  getSession,
+  sessionStorage,
+  USER_SESSION_KEY,
+} from "~/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { AuthUser } from "../types/auth-user.type";
-import { Session, json, redirect } from "@remix-run/node";
-import { createUser, getUser, updateUser } from "~/User/server/user.server";
-import { IUser, UserType } from "~/User/types/user.types";
-import { HydratedDocument } from "mongoose";
-import { IHydratedUser, IUserMethods, IUserVirtuals } from "~/User/models/user.model";
+import { Session, redirect } from "@remix-run/node";
 import { isRequest } from "~/utils/is-request";
-import { createUserProfile } from "~/User/server/user-profile.server";
-import { getStaffByUserId } from "~/User/server/staff.server";
-import { IUserProfile } from "~/User/types/user-profile.type";
+import { IHydratedUser } from "~/User/models/user.model";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
@@ -91,20 +90,20 @@ export const isAuthenticated = async (
 
 export const getSessionUser = async (
   param: Request | Session
-): Promise<AuthUser> => {
+): Promise<IHydratedUser | undefined> => {
   let session: Session;
   if (isRequest(param)) {
     session = await getSession(param.headers.get("Cookie"));
   } else {
     session = param as Session;
   }
-  return session.get(authenticator.sessionKey);
+  return session.get(USER_SESSION_KEY);
 };
 
 export const setSessionUser = async (
   requestOrSession: Request | Session,
-  hydratedUser: IHydratedUser
-): Promise<AuthUser> => {
+  newAuthUser: AuthUser
+): Promise<void> => {
   let session: Session;
   if (isRequest(requestOrSession)) {
     session = await getSession(requestOrSession.headers.get("Cookie"));
@@ -112,68 +111,7 @@ export const setSessionUser = async (
     session = requestOrSession as Session;
   }
 
-  let authUser: AuthUser = session.get(authenticator.sessionKey);
-  let newAuthUser: AuthUser = {
-    ...authUser,
-    id: hydratedUser.id,
-    firstName: hydratedUser.profile.firstName,
-    lastName: hydratedUser.profile.lastName,
-    email: hydratedUser.email,
-    photo: hydratedUser.profile.photo,
-    type: hydratedUser.type,
-    role: hydratedUser.staff?.role,
-  };
-
-  session.set(authenticator.sessionKey, newAuthUser);
-
-  return newAuthUser;
-};
-
-export const login = async (
-  requestOrSession: Request | Session,
-  { firstName, lastName, email, photo, type }: AuthUser
-) => {
-  // Attempt to retrieve user with the email
-  let user = await getUser({
-    fields: { email },
-    populate: { path: "profile" },
-  });
-
-  // if there is no user, then it means we do have user with that email, ensure we create one.
-  if (!user) {
-    user = await createUser({ email, type: type || UserType.customer });
-    console.log("Created user %s", user);
-  }
-
-  // If we have user but no profile, it means there is profile info for the user yet, we create a profile then.
-  if (!user.profile) {
-    let profileData: Omit<IUserProfile, "_id"> = {
-      userId: user._id,
-      firstName,
-      lastName,
-      photo: photo,
-      preferences: defaultPreferences,
-    };
-
-    const userProfile = await createUserProfile(profileData);
-    console.log("Created user profile", userProfile);
-
-    user.profile = userProfile;
-  }
-  // Since the user has sign in, we ensure they a marked active
-  if (!user.isActive) {
-    await updateUser(user._id, { isActive: true });
-  }
-
-  // if user type is "staff", we find the staff object
-  if (user.type === UserType.staff) {
-    let staff = await getStaffByUserId(user.id);
-    if (staff) {
-      user.staff = staff;
-    }
-  }
-
-  return setSessionUser(requestOrSession, user);
+  session.set(USER_SESSION_KEY, newAuthUser);
 };
 
 export const logout = (
@@ -183,27 +121,3 @@ export const logout = (
     headers?: HeadersInit;
   }
 ) => authenticator.logout(request, options);
-
-const defaultPreferences: IUserProfile["preferences"] = {
-  notifications: {
-    preferredSupportChannel: "whatsapp",
-    orderUpdates: true,
-    promotional: true,
-    subscriptionReminders: true,
-    supportNotification: true,
-  },
-  display: {
-    theme: "light",
-    language: "en",
-    currency: "NGN",
-  },
-  //privacy: {
-  //  dataSharing: true,
-  //  activityTracking: true,
-  //  accountVisibility: true,
-  //},
-  order: {
-    deliveryInstructions: "Leave at door",
-    packaging: "standard",
-  },
-};

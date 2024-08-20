@@ -26,10 +26,10 @@ import { commitSession, getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import {
   disableUser,
-  getUserById,
+  findUserById,
   updateUserPassword,
 } from "~/User/server/user.server";
-import { SchemaTypeOptions, Types } from "mongoose";
+import mongoose, { SchemaTypeOptions, Types } from "mongoose";
 import {
   getProfileByUserId,
   updateUserPreference,
@@ -48,13 +48,13 @@ import {
 import { IUserProfile } from "~/User/types/user-profile.type";
 import {
   getSessionUser,
-  login,
   logout,
   setSessionUser,
 } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 import { IHydratedUser } from "~/User/models/user.model";
+import { fi } from "@faker-js/faker";
 
 const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
@@ -99,14 +99,14 @@ export default function Settings() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const authUser: AuthUser = await getSessionUser(request);
+  const user = await getSessionUser(request);
 
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
   const { _action, ...otherData } = formObject;
 
-  let userId = new Types.ObjectId(authUser.id);
+  let userId = new Types.ObjectId(user.id);
   // let userId = new Types.ObjectId();
 
   if (_action === PROFILE_UPDATE_ACTION) {
@@ -153,9 +153,7 @@ export const handle = {
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
   // Todo use the settingsType to fetch appropriate data to be modified
-  const user = await getSessionUser(request).then(({ id }) => {
-    return id ? getUserById(new Types.ObjectId(id), { path: "profile" }) : null;
-  });
+  const user = await getSessionUser(request);
 
   if (!user) return redirect("/auth");
 
@@ -165,5 +163,8 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   console.log(user);
 
-  return json({ setting: settingsType, user }, { headers: { "Set-Cookie": await commitSession(session) } });
+  return json(
+    { setting: settingsType, user },
+    { headers: { "Set-Cookie": await commitSession(session) } }
+  );
 };

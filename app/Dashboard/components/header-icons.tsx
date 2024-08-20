@@ -2,9 +2,10 @@ import { UserCircleIcon } from "@heroicons/react/16/solid";
 import { BellIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import AccountMenuButton from "~/components/ui/account-menu-button";
+import { IHydratedUser } from "~/User/models/user.model";
 
 type HeaderSearchProps = {
-  user: AuthUser;
+  user: IHydratedUser["profile"];
 };
 export default function HeaderIcons(props: HeaderSearchProps) {
   return (
@@ -20,7 +21,7 @@ export default function HeaderIcons(props: HeaderSearchProps) {
 
       <div className="flex-none flex items-center space-x-4 ms-auto">
         <BellIcon className="w-6 h-6 text-gray-500" />
-        <AccountMenuButton user={props.user} />
+        <AccountMenuButton profile={props.user} />
       </div>
     </div>
   );

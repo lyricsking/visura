@@ -15,6 +15,7 @@ import { LoaderFunction, json } from "@remix-run/node";
 import { getSessionUser } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { CartIcon } from "../components/cart-icon";
+import { IHydratedUser } from "~/User/models/user.model";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
@@ -43,7 +44,7 @@ export default function Layout() {
             </Button>
             <CartIcon />
             <div className="flex-none mx-auto">
-              <AccountMenuButton user={data.user} />
+              <AccountMenuButton profile={data.user} />
             </div>
           </div>
         </PageLayoutHeaderItem>
@@ -61,7 +62,7 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user: AuthUser | null = await getSessionUser(request);
+  const user: IHydratedUser = await getSessionUser(request);
 
   return json({ user: user });
 };

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { getSessionUser } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
+import { IHydratedUser } from "~/User/models/user.model";
 
 export const handle = {
   pageName: "Overview",
@@ -215,8 +216,8 @@ const mockData = (firstname: string, lastName: string) => ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Replace with actual data fetching logic
-  let user: AuthUser = await getSessionUser(request);
+  let user: IHydratedUser = await getSessionUser(request);
   console.log("auth user:", user);
 
-  return json(mockData(user.firstName, user.lastName));
+  return json(mockData(user.profile.firstName, user.profile.lastName));
 };
