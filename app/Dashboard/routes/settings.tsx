@@ -56,6 +56,15 @@ import { loader as userLoader } from "~/User/routes/user.resource";
 import { IHydratedUser } from "~/User/models/user.model";
 import { fi } from "@faker-js/faker";
 
+export const handle = {
+  pageName: "Settings",
+  breadcrumb: {
+    id: "settings",
+    label: "Settings",
+    //path: "/dashboard/settings",
+  },
+};
+
 const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
   notifications: NotificationSettings,
@@ -106,8 +115,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const { _action, ...otherData } = formObject;
 
-  let userId = new Types.ObjectId(user.id);
-  // let userId = new Types.ObjectId();
+  let userId = user?.id;
 
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
@@ -141,23 +149,14 @@ export const action: ActionFunction = async ({ request }) => {
   }
 };
 
-export const handle = {
-  pageName: "Settings",
-  breadcrumb: {
-    id: "settings",
-    label: "Settings",
-    //path: "/dashboard/settings",
-  },
-};
-
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
   // Todo use the settingsType to fetch appropriate data to be modified
-  const user = await getSessionUser(request);
+  let session = await getSession(request.headers.get("Cookie"));
+
+  const user = await getSessionUser(session);
 
   if (!user) return redirect("/auth");
-
-  let session = await getSession(request.headers.get("Cookie"));
 
   await setSessionUser(session, user);
 

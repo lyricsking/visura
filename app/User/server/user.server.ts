@@ -1,8 +1,4 @@
-import {
-  HydratedDocument,
-  PopulateOptions,
-  Types,
-} from "mongoose";
+import { HydratedDocument, PopulateOptions, Types } from "mongoose";
 import User, {
   IHydratedUser,
   IUserMethods,
@@ -40,7 +36,6 @@ export const createUser = async (props: CreateUserProps) => {
 };
 
 export const findOrCreateUserProfiles = async (
-  requestOrSession: Request | Session,
   {
     firstName,
     lastName,
@@ -49,7 +44,7 @@ export const findOrCreateUserProfiles = async (
     type = "customer",
   }: Pick<IUser, "email"> &
     Partial<Pick<IUser, "type">> &
-    Pick<IUserProfile, "firstName" | "lastName" | "photo">
+    Partial<Pick<IUserProfile, "firstName" | "lastName" | "photo">>
 ): Promise<IHydratedUser> => {
   // Attempt to retrieve user with the email and updatuing the user as active.
   let user = await updateUser(email, { isActive: true }, { path: "profile" });
@@ -62,7 +57,7 @@ export const findOrCreateUserProfiles = async (
 
   // If we have user but no profile, it means there is no profile info for the user yet,
   // we create a profile using the default preferences then.
-  if (!user.profile) {
+  if (!user.profile && firstName && lastName) {
     let profileData: Omit<IUserProfile, "_id"> = {
       userId: user._id,
       firstName,

@@ -1,10 +1,4 @@
-import {
-  Link,
-  Outlet,
-  ShouldRevalidateFunction,
-  useLoaderData,
-  useMatches,
-} from "@remix-run/react";
+import { Link, Outlet, useLoaderData, useMatches } from "@remix-run/react";
 import {
   PageLayout,
   PageLayoutContent,
@@ -13,14 +7,18 @@ import {
 } from "~/components/ui/page.layout";
 import pkg from "../../../package.json";
 import Breadcrumb from "~/components/breadcrumb";
-import AccountMenuButton from "~/components/ui/account-menu-button";
-import { json, LoaderFunction } from "@remix-run/node";
-import { isAuthenticated, loginOrCreate } from "~/Auth/server/auth.server";
+import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  getSessionUser,
+  isAuthenticated,
+  setSessionUser,
+} from "~/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
 import { DrawerMenu } from "~/Dashboard/components/sidebar";
-import { useEffect } from "react";
 import HeaderIcons from "../components/header-icons";
-import User from "~/User/models/user.model";
+import { isAuthUser } from "~/Auth/utils/helper";
+import { findOrCreateUserProfiles } from "~/User/server/user.server";
+import { commitSession } from "~/utils/session";
 
 export const handle = {
   breadcrumb: {
@@ -98,14 +96,30 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+  // Get the authenticated user or redirects to auth page
   const authUser = await isAuthenticated(request);
-
+  // check the subdomain we are accessing the page from, useed to manage staff users access.
   let subdomain = getSubdomain(request);
   // if the user has role access to the subdomain
-  if (authUser && typeof authUser !== "string" && authUser.id) {
+  // Get the cache user object from session, could be undefined or IHydrated user.
+  let user = await getSessionUser(request);
+  // Initialize the headers object to cache the session if the user is undefined
+  let headers: HeadersInit = {};
+  // If the authUser object returned from authentication is of type AuthUser
+  // (i.e user is authenticated) but the the cache user is null or undefined,
+  // it means the cached user is invalidated, so we fetch a new object
+  // from server and cache.
+  if (isAuthUser(authUser) && !user) {
+    // Cache invalidated, we fetch a new user object
+    user = await findOrCreateUserProfiles({ email: authUser.email });
+    // Cahe the new user object
+    headers["Set-Cookie"] = await commitSession(
+      await setSessionUser(request, user)
+    );
   }
 
-  return json({ ...(authUser && { user: authUser }) });
+  // Return user object if provided.
+  return json({ ...(user && { user }) }, { headers });
 };
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {

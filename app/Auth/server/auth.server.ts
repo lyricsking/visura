@@ -73,13 +73,11 @@ export const isAuthenticated = async (
     } else if (successRedirect) {
       // SuccessRedirect was provided we probably already anticipate that
       // esp in the sign in route, so we simply save the redirection url
-      // to session so we can access later on.
+      // and save the session so we can cache it later.
       session.set(REDIRECT_URL, successRedirect);
       if (currentUrl.pathname.includes("auth")) {
-        return await commitSession(session);
+        return session;
       }
-
-      // throw redirect(`/auth?${REDIRECT_SEARCH_PARAM}=${successRedirect}`);
     }
   } else if (isAuthenticated && successRedirect) {
     throw redirect(successRedirect);
@@ -103,7 +101,7 @@ export const getSessionUser = async (
 export const setSessionUser = async (
   requestOrSession: Request | Session,
   newAuthUser: AuthUser
-): Promise<void> => {
+): Promise<Session> => {
   let session: Session;
   if (isRequest(requestOrSession)) {
     session = await getSession(requestOrSession.headers.get("Cookie"));
@@ -112,6 +110,7 @@ export const setSessionUser = async (
   }
 
   session.set(USER_SESSION_KEY, newAuthUser);
+  return session;
 };
 
 export const logout = (

@@ -8,6 +8,7 @@ import {
   isAuthenticated,
 } from "../server/auth.server";
 import { i } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
+import { commitSession } from "~/utils/session";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
@@ -117,8 +118,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   let headers: HeadersInit = {};
   if (typeof isAuth === "string") {
     headers = {
-      "Set-Cookie": isAuth,
+      "Set-Cookie": await commitSession(isAuth),
     };
   }
-  return json(null, {headers});
+  return json(null, { headers });
 };

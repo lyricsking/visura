@@ -13,7 +13,7 @@ export const googleStrategy = new GoogleStrategy(
     //callbackURL: "https://ynm7f3-3000.csb.app/auth/google/callback",
   },
   async ({ accessToken, refreshToken, extraParams, profile, request }) => {
-    let hydratedUser = await findOrCreateUserProfiles(request, {
+    let hydratedUser = await findOrCreateUserProfiles({
       email: profile.emails[0].value,
       firstName: profile.name.givenName,
       lastName: profile.name.familyName,
