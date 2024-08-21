@@ -7,8 +7,10 @@ import {
   DropdownMenuTrigger,
 } from "~/components/dropdown.menu";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import { IUserProfile } from "~/User/types/user-profile.type";
+import { useEffect } from "react";
+// import { UserIcon } from "@heroicons/react/20/solid";
 
 //type Props = ButtonProps;
 type Props = {
@@ -21,9 +23,13 @@ export default function AccountMenuButton({ profile }: Props) {
 
   let profilePhoto = profile?.photo;
 
+  // useEffect(() => {
+  //   alert(profilePhoto);
+  // }, []);
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="max-h-12 p-1 border border-gray-500 rounded-full">
+      <DropdownMenuTrigger className="max-h-12 p-2">
         {profile && profilePhoto ? (
           <img
             src={profilePhoto}
@@ -31,8 +37,8 @@ export default function AccountMenuButton({ profile }: Props) {
             className="w-6 h-6 rounded-full"
           />
         ) : (
-          <UserCircleIcon className="w-8 h-8 text-gray-500" />
-          // <UserIcon className="w-6 h-6" />
+          <UserCircleIcon className="w-6 h-6 text-gray-500" />
+          // <UserIcon className="w-6 h-6 text-gray-500" />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">

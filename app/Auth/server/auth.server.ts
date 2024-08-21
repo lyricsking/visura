@@ -64,27 +64,23 @@ export const isAuthenticated = async (
 
   const currentUrl = new URL(request.url);
 
-  if (!isAuthenticated) {
+  if (isAuthenticated && successRedirect) {
+    throw redirect(successRedirect);
+  } else if (isAuthenticated) {
+    return isAuthenticated;
+  } else if (!successRedirect) {
     // This does not provide successRedirect, since it expects
     // isAuthenticated to be successful,
-    // We must redirect back to this url after Authentication
-    if (!successRedirect) {
-      throw redirect(`/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`);
-    } else if (successRedirect) {
-      // SuccessRedirect was provided we probably already anticipate that
-      // esp in the sign in route, so we simply save the redirection url
-      // and save the session so we can cache it later.
-      session.set(REDIRECT_URL, successRedirect);
-      if (currentUrl.pathname.includes("auth")) {
-        console.log("sesss");
-
-        return session;
-      }
+    // We will redirect to authenticate and the redirect back to this current url after Authentication
+    throw redirect(`/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`);
+  } else if (successRedirect) {
+    // SuccessRedirect was provided we probably already anticipate that
+    // esp in the sign in route, so we simply save the redirection url
+    // to session and return.
+    session.set(REDIRECT_URL, successRedirect);
+    if (currentUrl.pathname.includes("auth")) {
+      return session;
     }
-  } else if (isAuthenticated && successRedirect) {
-    throw redirect(successRedirect);
-  } else {
-    return isAuthenticated;
   }
 };
 
@@ -115,6 +111,18 @@ export const setCacheUser = async (
   return session;
 };
 
+export const invalidateCacheUser = async (
+  param: Request | Session
+) => {
+  let session: Session;
+  if (isRequest(param)) {
+    session = await getSession(param.headers.get("Cookie"));
+  } else {
+    session = param as Session;
+  }
+
+  return session.unset(USER_SESSION_KEY)
+};
 export const logout = (
   request: Request,
   options: {

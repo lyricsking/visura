@@ -17,7 +17,7 @@ export default function Signin() {
 
   return (
     <div className="flex flex-col w-full bg-white py-8 px-6 ">
-      <div className="max-w-xs md:max-w-sm mx-auto p-6 sm:p-12 md:border md:shadow-md">
+      <div className="max-w-xs md:max-w-md mx-auto p-6 sm:p-12 md:border md:shadow-md">
         <div className="mt-0 flex flex-col items-center">
           <img
             className="h-12 w-12"
@@ -115,7 +115,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const rdrPath = url.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
 
   const isAuth = await isAuthenticated(request, { successRedirect: rdrPath });
-console.log(isAuth)
+
   let headers: HeadersInit = {};
   if (isSessionInstance(isAuth)) {
     headers = {

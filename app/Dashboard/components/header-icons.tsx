@@ -5,12 +5,12 @@ import AccountMenuButton from "~/components/ui/account-menu-button";
 import { IHydratedUser } from "~/User/models/user.model";
 
 type HeaderSearchProps = {
-  user: IHydratedUser["profile"];
+  profile: IHydratedUser["profile"];
 };
 export default function HeaderIcons(props: HeaderSearchProps) {
   return (
-    <div className="flex items-center justify-between w-full max-w-screen-lg gap-2 px-1">
-      <div className="flex items-center w-full max-w-screen-md space-x-4 p-1 border rounded-md shadow-sm">
+    <div className="flex items-center justify-between w-full gap-2 px-1">
+      <div className="flex items-center w-full md:max-w-[60%] space-x-4 p-1 border rounded-md shadow-sm">
         <MagnifyingGlassIcon className="w-6 h-6 text-gray-500" />
         <input
           type="text"
@@ -21,7 +21,7 @@ export default function HeaderIcons(props: HeaderSearchProps) {
 
       <div className="flex-none flex items-center space-x-4 ms-auto">
         <BellIcon className="w-6 h-6 text-gray-500" />
-        <AccountMenuButton profile={props.user} />
+        <AccountMenuButton profile={props.profile} />
       </div>
     </div>
   );

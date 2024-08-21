@@ -54,29 +54,28 @@ export default function Layout() {
   return (
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
-        <PageLayoutHeaderItem
-          spacing={"compact"}
-          className="border-b border-s border-e"
-        >
-          <div className="p-4 flex items-center justify-between gap-2">
-            {sidebarMenu && (
-              <DrawerMenu
-                menus={sidebarMenu}
-                side={data.user.type === "customer" ? "right" : "left"}
-              />
-            )}
-
-            <Link to={"/dashboard"} replace className="w-full">
-              <h1 className="text-[28px] font-bold text-center tracking-tight">
-                {pkg.name}.
-              </h1>
-            </Link>
+        <PageLayoutHeaderItem spacing={"compact"} className="p-4">
+          <Link to={"/dashboard"} replace className="flex-1 md:flex-none">
+            <h1 className="text-[28px] font-bold text-center tracking-tight">
+              {pkg.name}.
+            </h1>
+          </Link>
+          <div className="hidden flex-1 sm:flex max-w-screen-lg ">
+            <HeaderIcons profile={data.user.profile} />
           </div>
-
-          <HeaderIcons user={data.user} />
         </PageLayoutHeaderItem>
 
-        <PageLayoutHeaderItem className="sticky inline-flex">
+        <PageLayoutHeaderItem className="sm:hidden border-t">
+          {sidebarMenu && (
+            <DrawerMenu
+              menus={sidebarMenu}
+              side={data.user.type === "customer" ? "right" : "left"}
+            />
+          )}
+          <HeaderIcons profile={data.user.profile} />
+        </PageLayoutHeaderItem>
+
+        <PageLayoutHeaderItem className="border-t">
           <Breadcrumb breadcrumbs={breadcrumbs} />
         </PageLayoutHeaderItem>
       </PageLayoutHeader>

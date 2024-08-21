@@ -9,11 +9,11 @@ export function CartIcon() {
   };
   return (
     <Button
-      variant={"outline"}
+      variant={"text"}
       size={"icon"}
-      radius={"full"}
+      radius={"none"}
       onClick={goTocart}
-      className="max-h-12 p-1 border-gray-500"
+      className="max-h-12 p-2"
     >
       <ShoppingCartIcon className="h-6 w-6" />
     </Button>

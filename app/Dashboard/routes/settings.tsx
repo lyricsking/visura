@@ -46,7 +46,7 @@ import {
   PROFILE_UPDATE_ACTION,
 } from "../utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { getCacheUser, logout, setCacheUser } from "~/Auth/server/auth.server";
+import { getCacheUser, invalidateCacheUser, logout, setCacheUser } from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 import { IHydratedUser } from "~/User/models/user.model";
@@ -72,7 +72,8 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
 };
 
 export default function Settings() {
-  const { setting, user } = useLoaderData<typeof loader>();
+  const { setting } = useLoaderData<typeof loader>();
+  const { user }: { user: IHydratedUser } = useOutletContext();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -112,19 +113,19 @@ export const action: ActionFunction = async ({ request }) => {
   const { _action, ...otherData } = formObject;
 
   let userId = user?.id;
-
+if(!userId)throw Error("ggg")
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
-    return await updateUserProfile(userId, { firstName, lastName });
+    await updateUserProfile(userId, { firstName, lastName });
   } else if (_action === PASSWORD_UPDATE_ACTION) {
-    return await updateUserPassword(
+  await updateUserPassword(
       userId,
       otherData["currentPassword"],
       otherData["newPassword"]
     );
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
     let user = await disableUser(userId);
-    return await logout(request, { redirectTo: "/" });
+    await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
     let notification: IUserProfile["preferences"]["notifications"] = {
       orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
@@ -135,14 +136,19 @@ export const action: ActionFunction = async ({ request }) => {
         otherData["supportNotification"] === "true" ? true : false,
       preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
     };
-    return await updateUserPreference(userId, "notifications", notification);
+  await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
-    return await updateUserPreference(userId, "display", otherData);
+    await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
-    return await updateUserPreference(userId, "order", otherData);
+    await updateUserPreference(userId, "order", otherData);
   } else {
     return null;
   }
+
+  const session = await getSession(request.headers.get("Cookie"));
+  await invalidateCacheUser(session)
+  
+  return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -150,16 +156,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // Todo use the settingsType to fetch appropriate data to be modified
   let session = await getSession(request.headers.get("Cookie"));
 
-  const user = await getCacheUser(session);
-
-  if (!user) return redirect("/auth");
-
-  await setCacheUser(session, user);
-
-  console.log(user);
-
   return json(
-    { setting: settingsType, user },
-    { headers: { "Set-Cookie": await commitSession(session) } }
+    { setting: settingsType},
   );
 };

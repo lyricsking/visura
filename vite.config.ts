@@ -45,7 +45,6 @@ export default defineConfig({
             // route("support", "Dashboard/routes/admin/overview.tsx");
             route("transactions", "Dashboard/routes/transactions.tsx");
           });
-
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });
             route(

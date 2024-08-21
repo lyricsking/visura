@@ -216,8 +216,9 @@ const mockData = (firstname: string, lastName: string) => ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Replace with actual data fetching logic
-  let user: IHydratedUser = await getCacheUser(request);
-  console.log("auth user:", user);
+  let user: IHydratedUser | undefined = await getCacheUser(request);
 
-  return json(mockData(user.profile.firstName, user.profile.lastName));
+  return json(
+    mockData(user?.profile.firstName || "", user?.profile?.lastName || "")
+  );
 };

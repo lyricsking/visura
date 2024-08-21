@@ -25,14 +25,14 @@ export default function Layout() {
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
-        <PageLayoutHeaderItem className="border bg-white">
+        <PageLayoutHeaderItem className="max-h-12 border p-0 rounded-b-sm shadow-md">
           <Link to={"/"} replace>
-            <h1 className="text-[28px] font-bold tracking-tight">
+            <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
               {pkg.name}.
             </h1>
           </Link>
 
-          <div className="flex gap-2 -my-2">
+          <div className="flex h-full divide-x">
             <Button
               variant="outline"
               size="sm"
@@ -44,7 +44,7 @@ export default function Layout() {
             </Button>
             <CartIcon />
             <div className="flex-none mx-auto">
-              <AccountMenuButton profile={data.user} />
+              <AccountMenuButton profile={data?.user?.profile} />
             </div>
           </div>
         </PageLayoutHeaderItem>
@@ -62,7 +62,8 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user: IHydratedUser = await getCacheUser(request);
+  const user = await getCacheUser(request);
+  console.log("auth user:", user);
 
   return json({ user: user });
 };

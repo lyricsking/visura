@@ -45,6 +45,7 @@ export const updateUserProfile = async (
     new: true,
   }).exec();
 };
+
 // Update User preferences
 export const updateUserPreference = async <T extends PreferencesKeys>(
   userId: Types.ObjectId,
