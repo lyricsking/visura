@@ -19,6 +19,7 @@ import HeaderIcons from "../components/header-icons";
 import { isAuthUser } from "~/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/User/server/user.server";
 import { commitSession } from "~/utils/session";
+import { Package2 } from "lucide-react";
 
 export const handle = {
   breadcrumb: {
@@ -55,17 +56,53 @@ export default function Layout() {
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
         <PageLayoutHeaderItem spacing={"compact"} className="p-4">
-          <Link to={"/dashboard"} replace className="flex-1 md:flex-none">
+          <Link to={"/dashboard"} replace className="flex-1 sm:flex-none">
             <h1 className="text-[28px] font-bold text-center tracking-tight">
               {pkg.name}.
             </h1>
           </Link>
-          <div className="hidden flex-1 sm:flex max-w-screen-lg ">
-            <HeaderIcons profile={data.user.profile} />
-          </div>
+          <nav className="hidden flex-col gap-6 text-lg font-medium sm:flex sm:flex-row sm:items-center sm:gap-5 sm:text-sm lg:gap-6">
+            <Link
+              href="#"
+              className="flex items-center gap-2 text-lg font-semibold md:text-base"
+            >
+              <Package2 className="h-6 w-6" />
+              <span className="sr-only">Acme Inc</span>
+            </Link>
+            <Link
+              href="#"
+              className="text-foreground transition-colors hover:text-foreground"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="#"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Orders
+            </Link>
+            <Link
+              href="#"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Products
+            </Link>
+            <Link
+              href="#"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Customers
+            </Link>
+            <Link
+              href="#"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Analytics
+            </Link>
+          </nav>
         </PageLayoutHeaderItem>
 
-        <PageLayoutHeaderItem className="sm:hidden border-t">
+        <PageLayoutHeaderItem className="border-t">
           {sidebarMenu && (
             <DrawerMenu
               menus={sidebarMenu}
@@ -80,14 +117,12 @@ export default function Layout() {
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
-      <PageLayoutContent>
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            {currentRoute.handle.pageName}
-          </h1>
-          <div className="py-8">
-            <Outlet context={{ appname: pkg.name, user: data.user }} />
-          </div>
+      <PageLayoutContent className="gap-0">
+        <h1 className="text-3xl font-bold text-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+          {currentRoute.handle.pageName}
+        </h1>
+        <div className="bg-white">
+          <Outlet context={{ appname: pkg.name, user: data.user }} />
         </div>
       </PageLayoutContent>
     </PageLayout>

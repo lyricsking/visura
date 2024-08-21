@@ -14,7 +14,7 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
     return (
       <Comp
         ref={ref}
-        className={twMerge("flex flex-col min-h-screen", className)}
+        className={twMerge("flex flex-col min-h-screen w-full", className)}
         {...props}
       >
         {children}
@@ -88,11 +88,14 @@ const PageLayoutHeaderItem = React.forwardRef<
 });
 PageLayoutHeaderItem.displayName = "PageLayoutHeaderItem";
 
-const pageContentVariants = cva("flex grow ", {
-  variants: {},
-  defaultVariants: {},
-});
-type PageLayoutContentProps = React.ComponentPropsWithRef<"div"> &
+const pageContentVariants = cva(
+  "flex-1 flex flex-col gap-4",
+  {
+    variants: {},
+    defaultVariants: {},
+  }
+);
+type PageLayoutContentProps = React.ComponentPropsWithRef<"main"> &
   VariantProps<typeof pageContentVariants> & {
     asChild?: boolean;
   };
@@ -100,13 +103,13 @@ const PageLayoutContent = React.forwardRef<
   HTMLDivElement,
   PageLayoutContentProps
 >(({ className, asChild, ...props }, ref) => {
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot : "main";
   return (
-    <Comp
-      ref={ref}
-      className={twMerge(pageContentVariants({}), className)}
-      {...props}
-    />
+      <Comp
+        ref={ref}
+        className={twMerge(pageContentVariants({}), className)}
+        {...props}
+      />
   );
 });
 PageLayoutContent.displayName = "PageLayoutContent";

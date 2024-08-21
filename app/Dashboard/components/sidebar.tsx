@@ -11,6 +11,8 @@ import { useLocation, useSearchParams } from "@remix-run/react";
 import pkg from "../../../package.json";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
+import { Menu } from "lucide-react";
+import Button from "~/components/button";
 
 export type SidebarMenu = {
   id: number | string;
@@ -28,7 +30,10 @@ export function DrawerMenu({ menus, side = "left" }: SidebarContentProps) {
   return (
     <Sheet>
       <SheetTrigger>
-        <Bars3Icon className="h-5 w-5" />
+        <Button size="icon" className="shrink-0 sm:hidden">
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Toggle navigation menu</span>
+        </Button>
       </SheetTrigger>
       <SheetContent className="w-5/6" side={side}>
         <div className="flex flex-col" aria-label="Sidebar">
@@ -38,7 +43,7 @@ export function DrawerMenu({ menus, side = "left" }: SidebarContentProps) {
             </h1>
           </div>
 
-          <nav className="flex-1 overflow-y-auto">
+          <nav className="grid gap-6 text-lg font-medium">
             <ul>
               {menus.map((menu) => {
                 const Icon = menu.icon;
