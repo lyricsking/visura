@@ -36,18 +36,26 @@ export default defineConfig({
               index: true,
             });
             route(
+              "account/invoices/:status?",
+              "Invoice/routes/invoices.tsx",
+              () => {
+                route(":id", "Invoice/routes/invoice-id.tsx", { index: true });
+              }
+            );
+            route("account/orders/:status?", "Order/routes/orders.tsx", () => {
+              route(":id", "Order/routes/order-detail.tsx");
+            });
+            route("account/settings/:setting?", "Setting/routes/setting.tsx");
+            route(
+              "account/subscriptions",
+              "Subscription/routes/subscription.tsx"
+            );
+            route("account/transactions", "Transaction/routes/transaction.tsx");
+            route(
               "administration/overview",
               "Dashboard/routes/admin-overview.tsx"
             );
-            route("invoices/:status?", "Invoice/routes/invoices.tsx", () => {
-              route(":id", "Invoice/routes/invoice-id.tsx", { index: true });
-            });
-            route("orders/:status?", "Order/routes/orders.tsx", () => {
-              route(":id", "Order/routes/order-detail.tsx");
-            });
-            route("settings/:setting?", "Setting/routes/setting.tsx");
-            route("subscriptions", "Subscription/routes/subscription.tsx");
-            route("transactions", "Transaction/routes/transaction.tsx");
+            route("administration/products", "Supplements/routes/products.tsx");
           });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });

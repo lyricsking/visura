@@ -41,8 +41,8 @@ export const handle = {
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
-  let menu = dashboardMenuFor(data.user.type);
-  // menu = lo.omit(menu, "home");
+  let [dashboardMenu, ...menu] = dashboardMenuFor(data.user.type);
+
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
 
@@ -68,7 +68,7 @@ export default function Layout() {
                 menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
-              <Link to={"/dashboard"}>
+              <Link to={dashboardMenu.url}>
                 <h1 className="text-[24px] font-bold tracking-tight">
                   {pkg.name}.
                 </h1>
