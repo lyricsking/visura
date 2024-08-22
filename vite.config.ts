@@ -32,7 +32,7 @@ export default defineConfig({
             route("payment", "Order/routes/payment.tsx");
           });
           route("", "Dashboard/routes/layout.tsx", () => {
-            route("account", "Dashboard/routes/user-overview.tsx", {
+            route("account/overview", "Dashboard/routes/user-overview.tsx", {
               index: true,
             });
             route(
@@ -55,7 +55,7 @@ export default defineConfig({
               "administration/overview",
               "Dashboard/routes/admin-overview.tsx"
             );
-            route("administration/products", "Supplements/routes/products.tsx");
+            route("administration/products", "Supplement/routes/products.tsx");
           });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });
