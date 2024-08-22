@@ -1,21 +1,9 @@
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
-import { json, Link } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import {
   Activity,
   ArrowUpRight,
-  CircleUser,
   CreditCard,
   DollarSign,
-  Menu,
-  Package2,
-  Search,
   Users,
 } from "lucide-react";
 import Avatar from "~/components/avatar";
@@ -28,8 +16,6 @@ import {
   CardContent,
   CardDescription,
 } from "~/components/card";
-import { Input } from "~/components/input";
-import { Sheet, SheetTrigger, SheetContent } from "~/components/sheet";
 import {
   Table,
   TableHeader,

@@ -1,5 +1,5 @@
 import { ComponentProps, ComponentPropsWithRef } from "react";
-import { CommonProps } from "~/Shared/types/common.props";
+import { CommonProps } from "~/shared/types/common.props";
 
 type Props = ComponentProps<"div"> & {
   sizeClass: string;

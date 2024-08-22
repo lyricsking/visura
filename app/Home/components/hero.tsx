@@ -1,6 +1,6 @@
 import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button, { buttonVariants } from "~/components/button";
-import { findFontByName } from "~/Shared/data/fonts";
+import { findFontByName } from "~/shared/data/fonts";
 import { cn } from "~/utils";
 
 export default function Hero() {

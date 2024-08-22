@@ -88,13 +88,10 @@ const PageLayoutHeaderItem = React.forwardRef<
 });
 PageLayoutHeaderItem.displayName = "PageLayoutHeaderItem";
 
-const pageContentVariants = cva(
-  "flex-1 flex flex-col gap-4",
-  {
-    variants: {},
-    defaultVariants: {},
-  }
-);
+const pageContentVariants = cva("flex-1 flex flex-col gap-4", {
+  variants: {},
+  defaultVariants: {},
+});
 type PageLayoutContentProps = React.ComponentPropsWithRef<"main"> &
   VariantProps<typeof pageContentVariants> & {
     asChild?: boolean;
@@ -105,11 +102,11 @@ const PageLayoutContent = React.forwardRef<
 >(({ className, asChild, ...props }, ref) => {
   const Comp = asChild ? Slot : "main";
   return (
-      <Comp
-        ref={ref}
-        className={twMerge(pageContentVariants({}), className)}
-        {...props}
-      />
+    <Comp
+      ref={ref}
+      className={twMerge(pageContentVariants({}), className)}
+      {...props}
+    />
   );
 });
 PageLayoutContent.displayName = "PageLayoutContent";

@@ -1,4 +1,10 @@
-import { Link, Outlet, useLoaderData, useMatches } from "@remix-run/react";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useMatches,
+} from "@remix-run/react";
 import {
   PageLayout,
   PageLayoutContent,
@@ -20,6 +26,7 @@ import { isAuthUser } from "~/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/User/server/user.server";
 import { commitSession } from "~/utils/session";
 import { Package2 } from "lucide-react";
+import { Navbar } from "../components/navbar";
 
 export const handle = {
   breadcrumb: {
@@ -28,6 +35,40 @@ export const handle = {
     path: "/dashboard",
   },
 };
+
+const menuItems = [
+  {
+    id: "orders",
+    label: "Orders",
+    url: "/dashboard/orders",
+    icon: Package2,
+  },
+  {
+    id: "subscriptions",
+    label: "Subscription",
+    url: "/dashboard/subscriptions",
+  },
+  {
+    id: "invoices",
+    label: "Invoices",
+    url: "/dashboard/invoices",
+  },
+  {
+    id: "transactions",
+    label: "Transactions",
+    url: "/dashboard/transactions",
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    url: "/dashboard/settings",
+  },
+  {
+    id: "support",
+    label: "Support Center",
+    url: "/support",
+  },
+];
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
@@ -47,68 +88,23 @@ export default function Layout() {
     }
   });
 
-  let sidebarMenu;
-  if (currentRoute.handle && currentRoute.handle.sidebarMenu) {
-    sidebarMenu = currentRoute.handle.sidebarMenu(currentRoute.data);
-  }
-
   return (
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
-        <PageLayoutHeaderItem spacing={"compact"} className="p-4">
-          <Link to={"/dashboard"} replace className="flex-1 sm:flex-none">
-            <h1 className="text-[28px] font-bold text-center tracking-tight">
-              {pkg.name}.
-            </h1>
-          </Link>
-          <nav className="hidden flex-col gap-6 text-lg font-medium sm:flex sm:flex-row sm:items-center sm:gap-5 sm:text-sm lg:gap-6">
-            <Link
-              href="#"
-              className="flex items-center gap-2 text-lg font-semibold md:text-base"
-            >
-              <Package2 className="h-6 w-6" />
-              <span className="sr-only">Acme Inc</span>
-            </Link>
-            <Link
-              href="#"
-              className="text-foreground transition-colors hover:text-foreground"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Orders
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Customers
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Analytics
-            </Link>
-          </nav>
-        </PageLayoutHeaderItem>
-
-        <PageLayoutHeaderItem className="border-t">
-          {sidebarMenu && (
+        <PageLayoutHeaderItem spacing={"compact"} className="">
+          <div className="flex flex-row items-center gap-2 text-lg font-medium sm:text-sm sm:gap-6">
             <DrawerMenu
-              menus={sidebarMenu}
+              menus={menuItems}
               side={data.user.type === "customer" ? "right" : "left"}
             />
-          )}
+            <Link to={"/dashboard"}>
+              <h1 className="text-[24px] font-bold tracking-tight">
+                {pkg.name}.
+              </h1>
+            </Link>
+            <Navbar menus={menuItems} />
+          </div>
+
           <HeaderIcons profile={data.user.profile} />
         </PageLayoutHeaderItem>
 
@@ -117,7 +113,7 @@ export default function Layout() {
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
-      <PageLayoutContent className="gap-0">
+      <PageLayoutContent className="">
         <h1 className="text-3xl font-bold text-gray-900 py-6 px-4 sm:px-6 lg:px-8">
           {currentRoute.handle.pageName}
         </h1>

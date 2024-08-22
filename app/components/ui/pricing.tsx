@@ -1,5 +1,5 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
-import { CommonProps } from "~/Shared/types/common.props";
+import { CommonProps } from "~/shared/types/common.props";
 
 const defaultPages: string[] = [
   "Landing/Homepage",

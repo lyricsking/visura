@@ -9,17 +9,17 @@ type HeaderSearchProps = {
 };
 export default function HeaderIcons(props: HeaderSearchProps) {
   return (
-    <div className="flex items-center justify-between w-full gap-2 px-1">
-      <div className="flex items-center w-full md:max-w-[60%] space-x-4 p-1 border rounded-md shadow-sm">
+    <div className="flex items-center justify-between gap-x-2 px-1">
+      <div className="flex items-center space-x-4 px-1 border rounded-md shadow-sm">
         <MagnifyingGlassIcon className="w-6 h-6 text-gray-500" />
         <input
           type="text"
           placeholder="Search tickets, users, FAQs, Knowledgebase, Reports, etc...."
-          className="flex-1 px-3 py-2 rounded-md focus:outline-none"
+          className="px-3 py-2 rounded-md focus:outline-none"
         />
       </div>
 
-      <div className="flex-none flex items-center space-x-4 ms-auto">
+      <div className="flex-none flex items-center">
         <BellIcon className="w-6 h-6 text-gray-500" />
         <AccountMenuButton profile={props.profile} />
       </div>
