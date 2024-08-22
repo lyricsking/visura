@@ -36,40 +36,6 @@ export const handle = {
   },
 };
 
-const menuItems = [
-  {
-    id: "orders",
-    label: "Orders",
-    url: "/dashboard/orders",
-    icon: Package2,
-  },
-  {
-    id: "subscriptions",
-    label: "Subscription",
-    url: "/dashboard/subscriptions",
-  },
-  {
-    id: "invoices",
-    label: "Invoices",
-    url: "/dashboard/invoices",
-  },
-  {
-    id: "transactions",
-    label: "Transactions",
-    url: "/dashboard/transactions",
-  },
-  {
-    id: "settings",
-    label: "Settings",
-    url: "/dashboard/settings",
-  },
-  {
-    id: "support",
-    label: "Support Center",
-    url: "/support",
-  },
-];
-
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
@@ -103,7 +69,7 @@ export default function Layout() {
                   {pkg.name}.
                 </h1>
               </Link>
-              <Navbar menus={menuItems} />
+              <Navbar menus={data.menu} />
             </div>
       
             <HeaderIcons user={data.user} />
@@ -150,8 +116,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     );
   }
 
+
+  let menu = dashboardMenuFor(user.type);
   // Return user object if provided.
-  return json({ ...(user && { user }) }, { headers });
+  return json({ ...(user && { user }), menu }, { headers });
 };
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {

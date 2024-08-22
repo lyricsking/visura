@@ -31,12 +31,9 @@ export default defineConfig({
             route("shipping", "Order/routes/shipping.tsx");
             route("payment", "Order/routes/payment.tsx");
           });
-          route("dashboard/admin", "Dashboard/routes/admin-layout.tsx", () => {
-            route("", "Dashboard/routes/admin-overview.tsx", { index: true });
-            // route("admin/products", "Dashboard/routes/products.tsx");
-          });
           route("dashboard", "Dashboard/routes/layout.tsx", () => {
-            route("", "Dashboard/routes/overview.tsx", { index: true });
+            route("", "Dashboard/routes/user-overview.tsx", { index: true });
+            route("app", "Dashboard/routes/admin-overview.tsx");
             route("invoices/:status?", "Invoice/routes/invoices.tsx", () => {
               route(":id", "Invoice/routes/invoice-id.tsx", { index: true });
             });
@@ -46,6 +43,8 @@ export default defineConfig({
             route("settings/:setting?", "Dashboard/routes/settings.tsx");
             route("subscriptions", "Dashboard/routes/subscriptions.tsx");
             route("transactions", "Dashboard/routes/transactions.tsx");
+            
+            // route("admin/products", "Dashboard/routes/products.tsx");
           });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });

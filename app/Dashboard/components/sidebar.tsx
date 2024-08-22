@@ -22,11 +22,11 @@ export type SidebarMenu = {
 };
 
 export type SidebarContentProps = {
-  menus: SidebarMenu[];
+  menu: SidebarMenu[];
   side?: "top" | "bottom" | "left" | "right";
 };
 
-export function DrawerMenu({ menus, side = "left" }: SidebarContentProps) {
+export function DrawerMenu({ menu, side = "left" }: SidebarContentProps) {
   return (
     <Sheet>
       <SheetTrigger className="md:hidden p-0 ">
@@ -45,7 +45,7 @@ export function DrawerMenu({ menus, side = "left" }: SidebarContentProps) {
 
           <nav className="grid gap-6 text-lg font-medium">
             <ul>
-              {menus.map((menu) => {
+              {menu.map((menu) => {
                 const Icon = menu.icon;
 
                 return (
