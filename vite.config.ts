@@ -32,8 +32,8 @@ export default defineConfig({
             route("payment", "Order/routes/payment.tsx");
           });
           route("dashboard/admin", "Dashboard/routes/admin-layout.tsx", () => {
-            route("", "Dashboard/routes/admin-overview.tsx");
-            route("admin/products", "Dashboard/routes/admin-products.tsx");
+            route("", "Dashboard/routes/admin-overview.tsx", {index:true});
+            route("admin/products", "Dashboard/routes/products.tsx");
           });
           route("dashboard", "Dashboard/routes/layout.tsx", () => {
             route("", "Dashboard/routes/overview.tsx", { index: true });

@@ -1,9 +1,6 @@
-import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
-import { useEffect } from "react";
+import { json, LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { getCacheUser } from "~/Auth/server/auth.server";
-import { AuthUser } from "~/Auth/types/auth-user.type";
-import { SheetDescription, SheetHeader, SheetTitle } from "~/components/sheet";
 import { IHydratedUser } from "~/User/models/user.model";
 
 export const handle = {

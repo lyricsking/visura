@@ -29,7 +29,7 @@ export type SidebarContentProps = {
 export function DrawerMenu({ menus, side = "left" }: SidebarContentProps) {
   return (
     <Sheet>
-      <SheetTrigger className="sm:hidden p-0 ">
+      <SheetTrigger className="md:hidden p-0 ">
         <Button size="icon" className="shrink-0">
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle navigation menu</span>

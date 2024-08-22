@@ -25,7 +25,7 @@ export default function Layout() {
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
-        <PageLayoutHeaderItem className="max-h-12 border p-0 rounded-b-sm shadow-md">
+        <PageLayoutHeaderItem spacing="compact" className="max-h-12 border bg-white rounded-b-sm shadow-md">
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
               {pkg.name}.
@@ -44,7 +44,7 @@ export default function Layout() {
             </Button>
             <CartIcon />
             <div className="flex-none mx-auto">
-              <AccountMenuButton profile={data?.user?.profile} />
+              <AccountMenuButton user={data?.user} />
             </div>
           </div>
         </PageLayoutHeaderItem>
@@ -63,7 +63,6 @@ export default function Layout() {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getCacheUser(request);
-  console.log("auth user:", user);
 
   return json({ user: user });
 };

@@ -1,6 +1,6 @@
 import { useFetcher } from "@remix-run/react";
-import { SettingsType } from "../type/settings.type";
-import { DISPLAY_UPDATE_ACTION } from "../utils/constants";
+import { SettingsType } from "../../Dashboard/type/settings.type";
+import { DISPLAY_UPDATE_ACTION } from "../../Dashboard/utils/constants";
 import { Label } from "~/components/label";
 import {
   Select,
@@ -11,9 +11,7 @@ import {
 } from "~/components/select";
 import Button from "~/components/button";
 
-export default function DisplaySettings({
-  user: { profile },
-}: SettingsType) {
+export default function DisplaySettings({ user: { profile } }: SettingsType) {
   const fetcher = useFetcher();
 
   const display = profile?.preferences.display;

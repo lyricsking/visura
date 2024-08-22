@@ -10,17 +10,20 @@ import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import { IUserProfile } from "~/User/types/user-profile.type";
 import { useEffect } from "react";
+import { IHydratedUser } from "~/User/models/user.model";
+import { UserType } from "~/User/types/user.types";
 // import { UserIcon } from "@heroicons/react/20/solid";
 
 //type Props = ButtonProps;
 type Props = {
-  profile?: IUserProfile;
+  user?: IHydratedUser;
 };
-export default function AccountMenuButton({ profile }: Props) {
+export default function AccountMenuButton({ user }: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
-
+  
+  let profile = user?.profile;
   let profilePhoto = profile?.photo;
 
   // useEffect(() => {
@@ -45,6 +48,17 @@ export default function AccountMenuButton({ profile }: Props) {
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* Optionally allow to navigate to dashboard in not already in the the dashboard */}
+        {user &&
+          user?.type === UserType.customer &&
+          !location.pathname.includes("admin") && (
+            <DropdownMenuItem
+              onSelect={() => {
+                navigate("/dashboard/admin");
+              }}
+            >
+              Backend
+            </DropdownMenuItem>
+          )}
         {profile && !location.pathname.includes("dashboard") && (
           <DropdownMenuItem
             onSelect={() => {

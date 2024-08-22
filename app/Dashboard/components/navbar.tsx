@@ -8,7 +8,7 @@ export type NavbarProps = {
 
 export function Navbar({ menus }: NavbarProps) {
   return (
-    <nav className="hidden sm:flex sm:flex-row gap-1 text-lg font-medium sm:items-center sm:text-xs">
+    <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
       {menus.map((menu) => {
         return (
           <NavLink

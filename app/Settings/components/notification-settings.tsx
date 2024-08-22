@@ -5,15 +5,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/select";
-import { SettingsType } from "../type/settings.type";
+import { SettingsType } from "../../Dashboard/type/settings.type";
 import { Switch } from "~/components/switch";
 import { Label } from "~/components/label";
 import { Form, useFetcher } from "@remix-run/react";
-import { NOTIFICATION_UPDATE_ACTION } from "../utils/constants";
+import { NOTIFICATION_UPDATE_ACTION } from "../../Dashboard/utils/constants";
 import Button from "~/components/button";
 
 export default function NotificationSettings({ user }: SettingsType) {
-    const { profile } = user;
+  const { profile } = user;
 
   const fetcher = useFetcher();
 

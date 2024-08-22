@@ -1,13 +1,13 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Form, useFetcher } from "@remix-run/react";
-import { SettingsType } from "../type/settings.type";
+import { SettingsType } from "../../Dashboard/type/settings.type";
 import { cn } from "~/utils";
 import { Input } from "~/components/input";
 import {
   ACCOUNT_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
-} from "../utils/constants";
+} from "../../Dashboard/utils/constants";
 import Button from "~/components/button";
 
 export default function ProfileSettings({ user }: SettingsType) {
@@ -21,10 +21,7 @@ export default function ProfileSettings({ user }: SettingsType) {
   const passwordsFetcher = useFetcher();
   const accountStatusFetcher = useFetcher();
 
-  const name =
-    firstName && lastName
-      ? firstName + " " + lastName
-      : "";
+  const name = firstName && lastName ? firstName + " " + lastName : "";
   return (
     <>
       <accountFetcher.Form method="post" className="mt-6 space-y-6">

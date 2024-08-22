@@ -1,4 +1,4 @@
-import { SettingsType } from "../type/settings.type";
+import { SettingsType } from "~/Dashboard/type/settings.type";
 
 export default function AccountSettings(props: Partial<SettingsType>) {
   return (

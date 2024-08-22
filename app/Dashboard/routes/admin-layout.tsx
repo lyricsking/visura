@@ -25,7 +25,7 @@ import HeaderIcons from "../components/header-icons";
 import { isAuthUser } from "~/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/User/server/user.server";
 import { commitSession } from "~/utils/session";
-import { Package2 } from "lucide-react";
+import {  Package2, Settings, Users, CreditCard, Box, Receipt, Subscript, Subtitles, Boxes, HandHelping, BadgeHelp, HelpCircle, Contact, LucideFireExtinguisher, LifeBuoy } from "lucide-react";
 import { Navbar } from "../components/navbar";
 
 export const handle = {
@@ -47,26 +47,44 @@ const menuItems = [
     id: "subscriptions",
     label: "Subscription",
     url: "/dashboard/subscriptions",
+    icon: Boxes
   },
   {
-    id: "invoices",
-    label: "Invoices",
-    url: "/dashboard/invoices",
+    id: "products",
+    label: "Products",
+    url: "/dashboard/products",
+    icon: Box
+  },
+  {
+    id: "invoice",
+    label: "Invoice",
+    url: "/dashboard/invoice",
+    icon: Receipt
   },
   {
     id: "transactions",
     label: "Transactions",
     url: "/dashboard/transactions",
+    icon: CreditCard
   },
+  {
+    id: "users",
+    label: "Users",
+    url: "/dashboard/transactions",
+    icon: Users
+  },
+
   {
     id: "settings",
     label: "Settings",
     url: "/dashboard/settings",
+    icon: Settings
   },
   {
     id: "support",
     label: "Support Center",
     url: "/support",
+    icon: LifeBuoy
   },
 ];
 
@@ -105,7 +123,7 @@ export default function Layout() {
               </Link>
               <Navbar menus={menuItems} />
             </div>
-      
+
             <HeaderIcons user={data.user} />
           </div>
         </PageLayoutHeaderItem>

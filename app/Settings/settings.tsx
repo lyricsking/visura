@@ -14,13 +14,13 @@ import {
 import { ReactElement, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
-import ProfileSettings from "../components/profile-settings";
-import NotificationSettings from "../components/notification-settings";
-import DisplaySettings from "../components/display-settings";
-import PrivacySettings from "../components/privacy-settings";
+import ProfileSettings from "./components/profile-settings";
+import NotificationSettings from "./components/notification-settings";
+import DisplaySettings from "./components/display-settings";
+import PrivacySettings from "./components/privacy-settings";
 import OrderSettings from "~/Order/components/order-settings";
-import HealthPreferences from "../components/health-settings";
-import HealthSettings from "../components/health-settings";
+import HealthPreferences from "./components/health-settings";
+import HealthSettings from "./components/health-settings";
 import PaymentSettings from "~/Transaction/components/payment-settings";
 import { commitSession, getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
@@ -35,7 +35,7 @@ import {
   updateUserPreference,
   updateUserProfile,
 } from "~/User/server/user-profile.server";
-import { SettingsType } from "../type/settings.type";
+import { SettingsType } from "../Dashboard/type/settings.type";
 import formDataToObject from "~/utils/form-data-to-object";
 import {
   ACCOUNT_UPDATE_ACTION,
@@ -44,9 +44,14 @@ import {
   ORDER_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
-} from "../utils/constants";
+} from "../Dashboard/utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
-import { getCacheUser, invalidateCacheUser, logout, setCacheUser } from "~/Auth/server/auth.server";
+import {
+  getCacheUser,
+  invalidateCacheUser,
+  logout,
+  setCacheUser,
+} from "~/Auth/server/auth.server";
 import { useUser } from "~/hooks/use-user";
 import { loader as userLoader } from "~/User/routes/user.resource";
 import { IHydratedUser } from "~/User/models/user.model";
@@ -82,6 +87,8 @@ export default function Settings() {
     navigate(`/dashboard/settings/${newSetting}`);
   };
 
+  const Tag = settingsKeys[setting as keyof typeof settingsKeys];
+
   return (
     <Tabs defaultValue={setting} onValueChange={onSettingChange}>
       <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
@@ -91,15 +98,9 @@ export default function Settings() {
           </TabsTrigger>
         ))}
       </TabsList>
-      {Object.keys(settingsKeys).map((key, index) => {
-        const Tag = settingsKeys[key as keyof typeof settingsKeys];
-
-        return (
-          <TabsContent key={key} value={key} className="h-fit">
-            {<Tag user={user as IHydratedUser} />}
-          </TabsContent>
-        );
-      })}
+      <TabsContent value={setting} className="h-fit">
+        {<Tag user={user as IHydratedUser} />}
+      </TabsContent>
     </Tabs>
   );
 }
@@ -113,12 +114,12 @@ export const action: ActionFunction = async ({ request }) => {
   const { _action, ...otherData } = formObject;
 
   let userId = user?.id;
-if(!userId)throw Error("ggg")
+  if (!userId) throw Error("ggg");
   if (_action === PROFILE_UPDATE_ACTION) {
     const [firstName, lastName] = otherData["name"].split(" ");
     await updateUserProfile(userId, { firstName, lastName });
   } else if (_action === PASSWORD_UPDATE_ACTION) {
-  await updateUserPassword(
+    await updateUserPassword(
       userId,
       otherData["currentPassword"],
       otherData["newPassword"]
@@ -136,7 +137,7 @@ if(!userId)throw Error("ggg")
         otherData["supportNotification"] === "true" ? true : false,
       preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
     };
-  await updateUserPreference(userId, "notifications", notification);
+    await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
     await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
@@ -146,8 +147,8 @@ if(!userId)throw Error("ggg")
   }
 
   const session = await getSession(request.headers.get("Cookie"));
-  await invalidateCacheUser(session)
-  
+  await invalidateCacheUser(session);
+
   return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
 };
 
@@ -156,7 +157,5 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // Todo use the settingsType to fetch appropriate data to be modified
   let session = await getSession(request.headers.get("Cookie"));
 
-  return json(
-    { setting: settingsType},
-  );
+  return json({ setting: settingsType });
 };

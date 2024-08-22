@@ -1,5 +1,5 @@
 import { useFetcher } from "@remix-run/react";
-import { HEALTH_UPDATE_ACTION } from "../utils/constants";
+import { HEALTH_UPDATE_ACTION } from "../../Dashboard/utils/constants";
 import { Label } from "~/components/label";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
