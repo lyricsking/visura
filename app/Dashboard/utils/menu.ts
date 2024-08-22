@@ -1,4 +1,22 @@
+import {
+  Package2,
+  Boxes,
+  Box,
+  Receipt,
+  CreditCard,
+  Users,
+  Settings,
+  LifeBuoy,
+} from "lucide-react";
+import { UserType } from "~/User/types/user.types";
+
 const userDashboardMenuItems = [
+  {
+    id: "home",
+    label: "Dashboard",
+    url: "/account/overview",
+    icon: Package2,
+  },
   {
     id: "orders",
     label: "Orders",
@@ -31,7 +49,14 @@ const userDashboardMenuItems = [
     url: "/support",
   },
 ];
+
 const adminDashboardMenuItems = [
+  {
+    id: "default",
+    label: "Dashboard",
+    url: "/administration/overview",
+    icon: Package2,
+  },
   {
     id: "orders",
     label: "Orders",
@@ -42,52 +67,53 @@ const adminDashboardMenuItems = [
     id: "subscriptions",
     label: "Subscription",
     url: "/dashboard/subscriptions",
-    icon: Boxes
+    icon: Boxes,
   },
   {
     id: "products",
     label: "Products",
     url: "/dashboard/products",
-    icon: Box
+    icon: Box,
   },
   {
     id: "invoice",
     label: "Invoice",
     url: "/dashboard/invoice",
-    icon: Receipt
+    icon: Receipt,
   },
   {
     id: "transactions",
     label: "Transactions",
     url: "/dashboard/transactions",
-    icon: CreditCard
+    icon: CreditCard,
   },
   {
     id: "users",
     label: "Users",
     url: "/dashboard/transactions",
-    icon: Users
+    icon: Users,
   },
 
   {
     id: "settings",
     label: "Settings",
     url: "/dashboard/settings",
-    icon: Settings
+    icon: Settings,
   },
   {
     id: "support",
     label: "Support Center",
     url: "/support",
-    icon: LifeBuoy
+    icon: LifeBuoy,
   },
 ];
 
-export const dashboardMenuFor = (userType: UserType)=>{
-  if(userType === UserType.staff){
+export const dashboardMenuFor = (userType: UserType) => {
+  if (userType === UserType.staff) {
     return adminDashboardMenuItems;
-  }else if(userType === UserType.customer){
-    return adminDashboardMenuItems;
-    
+  } else if (userType === UserType.customer) {
+    return userDashboardMenuItems;
+  } else {
+    return [];
   }
-}
+};

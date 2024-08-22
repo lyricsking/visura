@@ -14,7 +14,7 @@ import { Bars3Icon } from "@heroicons/react/16/solid";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
 
-export type SidebarMenu = {
+export type Menu = {
   id: number | string;
   label: string;
   url: string;
@@ -22,11 +22,11 @@ export type SidebarMenu = {
 };
 
 export type SidebarContentProps = {
-  menu: SidebarMenu[];
+  menu: Menu[];
   side?: "top" | "bottom" | "left" | "right";
 };
 
-export function DrawerMenu({ menu, side = "left" }: SidebarContentProps) {
+export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
   return (
     <Sheet>
       <SheetTrigger className="md:hidden p-0 ">

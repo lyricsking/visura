@@ -23,10 +23,6 @@ export default function Layout() {
 
   const { startQuiz } = useQuiz();
 
-  useEffect(() => {
-    alert(JSON.stringify(data, null, 2));
-  }, []);
-
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>

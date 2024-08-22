@@ -28,8 +28,6 @@ export const authenticate = async (request: Request) => {
     failureRedirect: "/auth",
   });
 
-  console.log("User %s", user);
-
   const session = await getSession(request.headers.get("Cookie"));
   session.set(authenticator.sessionKey, user);
 
@@ -99,7 +97,7 @@ export const getCacheUser = async (
 export const setCacheUser = async (
   requestOrSession: Request | Session,
   newAuthUser: AuthUser
-): Promise<Session> => {
+): Promise<void> => {
   let session: Session;
   if (isRequest(requestOrSession)) {
     session = await getSession(requestOrSession.headers.get("Cookie"));
@@ -108,12 +106,10 @@ export const setCacheUser = async (
   }
 
   session.set(USER_SESSION_KEY, newAuthUser);
-  return session;
+  await commitSession(session);
 };
 
-export const invalidateCacheUser = async (
-  param: Request | Session
-) => {
+export const invalidateCacheUser = async (param: Request | Session) => {
   let session: Session;
   if (isRequest(param)) {
     session = await getSession(param.headers.get("Cookie"));
@@ -121,7 +117,7 @@ export const invalidateCacheUser = async (
     session = param as Session;
   }
 
-  return session.unset(USER_SESSION_KEY)
+  return session.unset(USER_SESSION_KEY);
 };
 export const logout = (
   request: Request,

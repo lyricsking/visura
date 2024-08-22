@@ -2,36 +2,27 @@ import {
   ActionFunction,
   json,
   LoaderFunctionArgs,
-  redirect,
 } from "@remix-run/node";
 import {
-  useFetcher,
   useLoaderData,
   useNavigate,
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 import ProfileSettings from "../components/profile-settings";
 import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
-import PrivacySettings from "../components/privacy-settings";
 import OrderSettings from "~/Order/components/order-settings";
-import HealthPreferences from "../components/health-settings";
-import HealthSettings from "../components/health-settings";
-import PaymentSettings from "~/Transaction/components/payment-settings";
 import { commitSession, getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import {
   disableUser,
-  findUserById,
   updateUserPassword,
 } from "~/User/server/user.server";
-import mongoose, { SchemaTypeOptions, Types } from "mongoose";
 import {
-  getProfileByUserId,
   updateUserPreference,
   updateUserProfile,
 } from "~/User/server/user-profile.server";
@@ -50,12 +41,8 @@ import {
   getCacheUser,
   invalidateCacheUser,
   logout,
-  setCacheUser,
 } from "~/Auth/server/auth.server";
-import { useUser } from "~/hooks/use-user";
-import { loader as userLoader } from "~/User/routes/user.resource";
 import { IHydratedUser } from "~/User/models/user.model";
-import { fi } from "@faker-js/faker";
 
 export const handle = {
   pageName: "Settings",

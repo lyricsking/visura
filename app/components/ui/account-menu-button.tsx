@@ -22,7 +22,7 @@ export default function AccountMenuButton({ user }: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   let profile = user?.profile;
   let profilePhoto = profile?.photo;
 
@@ -53,7 +53,7 @@ export default function AccountMenuButton({ user }: Props) {
           !location.pathname.includes("admin") && (
             <DropdownMenuItem
               onSelect={() => {
-                navigate("/dashboard/admin");
+                navigate("/administration/overview");
               }}
             >
               Backend
@@ -62,7 +62,7 @@ export default function AccountMenuButton({ user }: Props) {
         {profile && !location.pathname.includes("dashboard") && (
           <DropdownMenuItem
             onSelect={() => {
-              navigate("/dashboard");
+              navigate("/account");
             }}
           >
             Dashboard
@@ -83,7 +83,7 @@ export default function AccountMenuButton({ user }: Props) {
               submit(null, { method: "POST", action: "/auth/signout" });
             }}
           >
-            Sign Out
+            Sign out
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
@@ -91,7 +91,7 @@ export default function AccountMenuButton({ user }: Props) {
               navigate("/auth");
             }}
           >
-            Sign In
+            Sign in
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

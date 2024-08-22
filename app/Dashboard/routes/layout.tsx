@@ -20,13 +20,15 @@ import {
   setCacheUser,
 } from "~/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
-import { DrawerMenu } from "~/Dashboard/components/sidebar";
+import { Sidebar } from "~/Dashboard/components/sidebar";
 import HeaderIcons from "../components/header-icons";
 import { isAuthUser } from "~/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/User/server/user.server";
 import { commitSession } from "~/utils/session";
 import { Package2 } from "lucide-react";
 import { Navbar } from "../components/navbar";
+import { dashboardMenuFor } from "../utils/menu";
+import * as lo from "lodash";
 
 export const handle = {
   breadcrumb: {
@@ -39,6 +41,8 @@ export const handle = {
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
+  let menu = dashboardMenuFor(data.user.type);
+  // menu = lo.omit(menu, "home");
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
 
@@ -60,8 +64,8 @@ export default function Layout() {
         <PageLayoutHeaderItem spacing={"compact"} className="">
           <div className="flex w-full justify-between space-x-2">
             <div className="flex flex-row items-center gap-2 text-lg font-medium sm:text-sm md:gap-6">
-              <DrawerMenu
-                menus={menuItems}
+              <Sidebar
+                menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
               <Link to={"/dashboard"}>
@@ -69,9 +73,9 @@ export default function Layout() {
                   {pkg.name}.
                 </h1>
               </Link>
-              <Navbar menus={data.menu} />
+              <Navbar menu={menu} />
             </div>
-      
+
             <HeaderIcons user={data.user} />
           </div>
         </PageLayoutHeaderItem>
@@ -101,8 +105,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   // if the user has role access to the subdomain
   // Get the cache user object from session, could be undefined or IHydrated user.
   let user = await getCacheUser(request);
-  // Initialize the headers object to cache the session if the user is undefined
-  let headers: HeadersInit = {};
   // If the authUser object returned from authentication is of type AuthUser
   // (i.e user is authenticated) but the the cache user is null or undefined,
   // it means the cached user is invalidated, so we fetch a new object
@@ -110,16 +112,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (isAuthUser(authUser) && !user) {
     // Cache invalidated, we fetch a new user object
     user = await findOrCreateUserProfiles({ email: authUser.email });
-    // Cahe the new user object
-    headers["Set-Cookie"] = await commitSession(
-      await setCacheUser(request, user)
-    );
+
+    await setCacheUser(request, user);
   }
 
-
-  let menu = dashboardMenuFor(user.type);
   // Return user object if provided.
-  return json({ ...(user && { user }), menu }, { headers });
+  return json({ ...(user && { user }) });
 };
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {

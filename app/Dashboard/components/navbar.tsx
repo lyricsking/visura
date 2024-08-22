@@ -1,9 +1,9 @@
 import { NavLink } from "@remix-run/react";
 import { Link } from "lucide-react";
-import { SidebarMenu } from "./sidebar";
+import { Menu } from "./sidebar";
 
 export type NavbarProps = {
-  menu: SidebarMenu[];
+  menu: Menu[];
 };
 
 export function Navbar({ menu }: NavbarProps) {

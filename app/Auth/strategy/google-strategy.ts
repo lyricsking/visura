@@ -21,10 +21,13 @@ export const googleStrategy = new GoogleStrategy(
       // type: 'customer'
     });
 
+    await setCacheUser(request, hydratedUser);
+
     let authUser: AuthUser = {
       id: hydratedUser._id.toString(),
       email: hydratedUser.email,
     };
+
     return authUser;
   }
 );
