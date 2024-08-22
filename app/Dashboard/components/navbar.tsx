@@ -3,13 +3,13 @@ import { Link } from "lucide-react";
 import { SidebarMenu } from "./sidebar";
 
 export type NavbarProps = {
-  menus: SidebarMenu[];
+  menu: SidebarMenu[];
 };
 
-export function Navbar({ menus }: NavbarProps) {
+export function Navbar({ menu }: NavbarProps) {
   return (
     <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
-      {menus.map((menu) => {
+      {menu.map((menu) => {
         return (
           <NavLink
             key={menu.id}
