@@ -16,16 +16,24 @@ import { getCacheUser } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { CartIcon } from "../components/cart-icon";
 import { IHydratedUser } from "~/User/models/user.model";
+import { useEffect } from "react";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
   const { startQuiz } = useQuiz();
 
+  useEffect(() => {
+    alert(JSON.stringify(data, null, 2));
+  }, []);
+
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
-        <PageLayoutHeaderItem spacing="compact" className="max-h-12 border bg-white rounded-b-sm shadow-md">
+        <PageLayoutHeaderItem
+          spacing="compact"
+          className="max-h-12 border bg-white rounded-b-sm shadow-md"
+        >
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
               {pkg.name}.

@@ -14,13 +14,13 @@ import {
 import { ReactElement, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
-import ProfileSettings from "./components/profile-settings";
-import NotificationSettings from "./components/notification-settings";
-import DisplaySettings from "./components/display-settings";
-import PrivacySettings from "./components/privacy-settings";
+import ProfileSettings from "../components/profile-settings";
+import NotificationSettings from "../components/notification-settings";
+import DisplaySettings from "../components/display-settings";
+import PrivacySettings from "../components/privacy-settings";
 import OrderSettings from "~/Order/components/order-settings";
-import HealthPreferences from "./components/health-settings";
-import HealthSettings from "./components/health-settings";
+import HealthPreferences from "../components/health-settings";
+import HealthSettings from "../components/health-settings";
 import PaymentSettings from "~/Transaction/components/payment-settings";
 import { commitSession, getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
@@ -35,7 +35,7 @@ import {
   updateUserPreference,
   updateUserProfile,
 } from "~/User/server/user-profile.server";
-import { SettingsType } from "../Dashboard/type/settings.type";
+import { SettingsType } from "../../Dashboard/type/settings.type";
 import formDataToObject from "~/utils/form-data-to-object";
 import {
   ACCOUNT_UPDATE_ACTION,
@@ -44,7 +44,7 @@ import {
   ORDER_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
-} from "../Dashboard/utils/constants";
+} from "../../Dashboard/utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
 import {
   getCacheUser,

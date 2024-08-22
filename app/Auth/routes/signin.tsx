@@ -115,6 +115,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const rdrPath = url.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
 
   const isAuth = await isAuthenticated(request, { successRedirect: rdrPath });
+  console.log(isAuth);
 
   let headers: HeadersInit = {};
   if (isSessionInstance(isAuth)) {
@@ -124,3 +125,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   return json(null, { headers });
 };
+function useEffect(arg0: () => void, arg1: never[]) {
+  throw new Error("Function not implemented.");
+}
