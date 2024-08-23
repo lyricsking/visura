@@ -12,7 +12,7 @@ import { UserType } from "~/User/types/user.types";
 
 const userDashboardMenuItems = [
   {
-    id: "home",
+    id: "default",
     label: "Dashboard",
     url: "/account/overview",
     icon: Package2,
@@ -45,7 +45,7 @@ const userDashboardMenuItems = [
   },
   {
     id: "support",
-    label: "Support Center",
+    label: "Support",
     url: "/support",
   },
 ];
@@ -102,7 +102,7 @@ const adminDashboardMenuItems = [
   },
   {
     id: "support",
-    label: "Support Center",
+    label: "Support",
     url: "/support",
     icon: LifeBuoy,
   },

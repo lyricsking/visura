@@ -90,13 +90,11 @@ export default function Layout() {
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
-      <PageLayoutContent className="">
+      <PageLayoutContent>
         <h1 className="text-3xl font-bold text-gray-900 py-6 px-4 sm:px-6 lg:px-8">
           {currentRoute?.handle?.pageName || "Dashboard"}
         </h1>
-        <div className="bg-white">
-          <Outlet context={{ appname: pkg.name, user: data.user }} />
-        </div>
+        <Outlet context={{ appname: pkg.name, user: data.user }} />
       </PageLayoutContent>
     </PageLayout>
   );

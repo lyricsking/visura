@@ -13,7 +13,6 @@ import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
 import OrderSettings from "~/Order/components/order-settings";
 import { commitSession, getSession } from "~/utils/session";
-import { AuthUser } from "~/Auth/types/auth-user.type";
 import { disableUser, updateUserPassword } from "~/User/server/user.server";
 import {
   updateUserPreference,

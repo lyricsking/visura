@@ -17,7 +17,7 @@ export default function Signin() {
 
   return (
     <div className="flex flex-col w-full bg-white py-8 px-6 ">
-      <div className="max-w-sm md:max-w-md mx-auto p-6 sm:p-12 md:border md:shadow-md">
+      <div className="max-w-sm md:max-w-lg mx-auto p-6 sm:p-12 md:border md:shadow-md">
         <div className="mt-0 flex flex-col items-center">
           <img
             className="h-12 w-12"
