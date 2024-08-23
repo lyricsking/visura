@@ -1,8 +1,4 @@
-import {
-  ActionFunction,
-  json,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import { ActionFunction, json, LoaderFunctionArgs } from "@remix-run/node";
 import {
   useLoaderData,
   useNavigate,
@@ -18,10 +14,7 @@ import DisplaySettings from "../components/display-settings";
 import OrderSettings from "~/Order/components/order-settings";
 import { commitSession, getSession } from "~/utils/session";
 import { AuthUser } from "~/Auth/types/auth-user.type";
-import {
-  disableUser,
-  updateUserPassword,
-} from "~/User/server/user.server";
+import { disableUser, updateUserPassword } from "~/User/server/user.server";
 import {
   updateUserPreference,
   updateUserProfile,
@@ -38,7 +31,7 @@ import {
 } from "../../Dashboard/utils/constants";
 import { IUserProfile } from "~/User/types/user-profile.type";
 import {
-  getCacheUser,
+  getUserFromSession,
   invalidateCacheUser,
   logout,
 } from "~/Auth/server/auth.server";
@@ -93,7 +86,7 @@ export default function Settings() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const user = await getCacheUser(request);
+  const user = await getUserFromSession(request);
 
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
@@ -133,7 +126,7 @@ export const action: ActionFunction = async ({ request }) => {
     return null;
   }
 
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request);
   await invalidateCacheUser(session);
 
   return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
@@ -142,7 +135,7 @@ export const action: ActionFunction = async ({ request }) => {
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
   // Todo use the settingsType to fetch appropriate data to be modified
-  let session = await getSession(request.headers.get("Cookie"));
+  let session = await getSession(request);
 
   return json({ setting: settingsType });
 };

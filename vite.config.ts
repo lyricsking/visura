@@ -59,6 +59,7 @@ export default defineConfig({
                 index: true,
               });
               route("products", "Supplement/routes/products.tsx");
+              route("settings", "Setting/routes/admin-settings.tsx");
             }
           );
           route("support", "Support/routes/layout.tsx", () => {
