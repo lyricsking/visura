@@ -76,12 +76,12 @@ export const isAuthenticated = async (requestOrSession: Request | Session) => {
   }
 };
 
-export const getUserFromSession = async (
+export const getAuthUser = async (
   requestOrSession: Request | Session
-): Promise<IHydratedUser | undefined> => {
+): Promise<AuthUser | undefined> => {
   const session: Session = await getSession(requestOrSession);
 
-  return session.get(USER_SESSION_KEY);
+  return session.get(authenticator.sessionKey);
 };
 
 export const setAuthUser = async (
@@ -94,7 +94,7 @@ export const setAuthUser = async (
   await commitSession(session);
 };
 
-export const getAuthUser = async (
+export const getUserFromSession = async (
   requestOrSession: Request | Session
 ): Promise<IHydratedUser | undefined> => {
   const session: Session = await getSession(requestOrSession);
@@ -104,15 +104,15 @@ export const getAuthUser = async (
 
 export const setUserToSession = async (
   requestOrSession: Request | Session,
-  newAuthUser: AuthUser
+  newUser: IHydratedUser
 ): Promise<void> => {
   const session = await getSession(requestOrSession);
 
-  session.set(USER_SESSION_KEY, newAuthUser);
+  session.set(USER_SESSION_KEY, newUser);
   await commitSession(session);
 };
 
-export const invalidateCacheUser = async (
+export const invalidateCacheUser = async ( 
   requestOrSession: Request | Session
 ) => {
   const session = await getSession(requestOrSession);

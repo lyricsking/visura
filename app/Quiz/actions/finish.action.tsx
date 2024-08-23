@@ -37,7 +37,8 @@ export const action: ActionFunction = async ({ request }) => {
       //  Remove quiz session data, as we no longer need it.
       // session.unset(QIDS_MAP_KEY);
       // session.unset(ANSWER_KEY);
-
+      await setAuthUser(session, {email: email});
+      
       return json({ success: true, cart });
     }
 
