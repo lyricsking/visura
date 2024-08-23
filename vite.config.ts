@@ -53,7 +53,7 @@ export default defineConfig({
             route("transactions", "Transaction/routes/transaction.tsx");
           });
           route("administration", "Dashboard/routes/layout.tsx", { id: "administration" }, () => {
-            route("overview", "Dashboard/routes/admin-overview.tsx"
+            route("overview", "Dashboard/routes/admin-overview.tsx", {index: true}
             );
             route("products", "Supplement/routes/products.tsx");
           });
