@@ -49,7 +49,7 @@ export default function Products() {
               Archived
             </TabsTrigger>
           </TabsList>
-          <div className="ml-auto flex items-center gap-2 p-4 bg-white">
+          <div className="ml-auto flex items-center gap-2 p-2 rounded-t-md bg-white">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 gap-1">
@@ -75,7 +75,7 @@ export default function Products() {
                 Export
               </span>
             </Button>
-            <Button size="sm" className="h-8 gap-1">
+            <Button size="sm" className="h-8 gap-1 bg-indigo-400 text-white">
               <PlusCircle className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 Add Product
