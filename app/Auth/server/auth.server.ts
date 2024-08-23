@@ -20,16 +20,15 @@ authenticator.use(googleStrategy);
 //export { authenticator };
 
 /**
- * Wrapper around remix-auth's authenticate method, properly handles result of the authenticator.authenticate method call.
+ * Wrapper around remix-auth's authenticate method, properly handles result
+ * of the authenticator.authenticate method call.
+ *
  * @param request Request
  */
 export const authenticate = async (request: Request) => {
   const user = await authenticator.authenticate("google", request, {
     failureRedirect: "/auth",
   });
-
-  const session = await getSession(request.headers.get("Cookie"));
-  session.set(authenticator.sessionKey, user);
 
   const successRedirect = (await session.get(REDIRECT_URL)) || "/";
 
@@ -42,83 +41,85 @@ export const authenticate = async (request: Request) => {
 };
 
 /**
- * An abstraction over Remix Auth authenticator, It checks if user is already authenticated and properly handles redirection, ensuring user can go back to initial page that failed authentication.
+ * An abstraction over Remix Auth authenticator, It checks if user is already
+ * authenticated and properly handles redirection, ensuring user can go back
+ * to initial page that failed authentication.
  *
- * @param request Request Request object of the current page
+ * @param requestOrSession Request Request object of the current page
  * @param options Optional options to pass to authenticator
  */
-export const isAuthenticated = async (
-  request: Request,
-  options?: {
-    successRedirect?: string;
-  }
-) => {
-  const isAuthenticated = await authenticator.isAuthenticated(request);
+export const isAuthenticated = async (requestOrSession: Request | Session) => {
+  const isAuthenticated = await authenticator.isAuthenticated(requestOrSession);
 
-  const { successRedirect } = options || {};
-
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(requestOrSession);
   console.log("Redirect Url", session.get(REDIRECT_URL));
 
-  const currentUrl = new URL(request.url);
+  const currentUrl = new URL(
+    isRequest(requestOrSession) ? requestOrSession.url : "/"
+  );
 
-  if (isAuthenticated && successRedirect) {
-    throw redirect(successRedirect);
-  } else if (isAuthenticated) {
+  if (isAuthenticated) {
     return isAuthenticated;
-  } else if (!successRedirect) {
+  }
+
+  if (currentUrl.pathname.includes("auth")) {
+    const rdrPath = currentUrl.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
+
+    session.set(REDIRECT_URL, rdrPath);
+    await commitSession(session);
+    return;
+  } else {
     // This does not provide successRedirect, since it expects
     // isAuthenticated to be successful,
     // We will redirect to authenticate and the redirect back to this current url after Authentication
-    throw redirect(`/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`);
-  } else if (successRedirect) {
-    // SuccessRedirect was provided we probably already anticipate that
-    // esp in the sign in route, so we simply save the redirection url
-    // to session and return.
-    session.set(REDIRECT_URL, successRedirect);
-    if (currentUrl.pathname.includes("auth")) {
-      return session;
-    }
+    return `/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`;
   }
 };
 
-export const getCacheUser = async (
-  param: Request | Session
+export const getUserFromSession = async (
+  requestOrSession: Request | Session
 ): Promise<IHydratedUser | undefined> => {
-  let session: Session;
-  if (isRequest(param)) {
-    session = await getSession(param.headers.get("Cookie"));
-  } else {
-    session = param as Session;
-  }
+  const session: Session = await getSession(requestOrSession);
+
   return session.get(USER_SESSION_KEY);
 };
 
-export const setCacheUser = async (
+export const setAuthUser = async (
   requestOrSession: Request | Session,
   newAuthUser: AuthUser
 ): Promise<void> => {
-  let session: Session;
-  if (isRequest(requestOrSession)) {
-    session = await getSession(requestOrSession.headers.get("Cookie"));
-  } else {
-    session = requestOrSession as Session;
-  }
+  const session = await getSession(requestOrSession);
+  session.set(authenticator.sessionKey, newAuthUser);
+
+  await commitSession(session);
+};
+
+export const getAuthUser = async (
+  requestOrSession: Request | Session
+): Promise<IHydratedUser | undefined> => {
+  const session: Session = await getSession(requestOrSession);
+
+  return session.get(USER_SESSION_KEY);
+};
+
+export const setUserToSession = async (
+  requestOrSession: Request | Session,
+  newAuthUser: AuthUser
+): Promise<void> => {
+  const session = await getSession(requestOrSession);
 
   session.set(USER_SESSION_KEY, newAuthUser);
   await commitSession(session);
 };
 
-export const invalidateCacheUser = async (param: Request | Session) => {
-  let session: Session;
-  if (isRequest(param)) {
-    session = await getSession(param.headers.get("Cookie"));
-  } else {
-    session = param as Session;
-  }
+export const invalidateCacheUser = async (
+  requestOrSession: Request | Session
+) => {
+  const session = await getSession(requestOrSession);
 
   return session.unset(USER_SESSION_KEY);
 };
+
 export const logout = (
   request: Request,
   options: {

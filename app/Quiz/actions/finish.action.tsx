@@ -1,5 +1,4 @@
 import { ActionFunction, json } from "@remix-run/node";
-import { getCacheUser, setUnauthUser } from "~/Auth/server/auth.server";
 import { ISupplement } from "~/Supplement/supplement.type";
 import { commitSession, getSession } from "~/utils/session";
 import {
@@ -9,17 +8,18 @@ import {
 } from "../server/quiz.server";
 import { ANSWER_KEY, QIDS_MAP_KEY } from "../utils/constants";
 import formDataToObject from "~/utils/form-data-to-object";
+import { getUserFromSession } from "~/Auth/server/auth.server";
 
 export const action: ActionFunction = async ({ request }) => {
   //  Converts the request url to instance of URL for easy manipulation
   let formData = await request.formData();
-
-  const session = await getSession(request.headers.get("Cookie"));
-
-  // const formData = await request.formData();
+  //  Get the session
+  const session = await getSession(request);
+  //  Get form data formObject
   const formObject = formDataToObject(formData);
 
   let { firstname, lastname, email, subscribe } = formObject;
+
   try {
     let answers = getAnswers(session);
 
@@ -38,21 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
       // session.unset(QIDS_MAP_KEY);
       // session.unset(ANSWER_KEY);
 
-      //  Cache user data in session if not logged in
-      let user = await getCacheUser(request);
-      if (!user) {
-        user = await setUnauthUser(session, {
-          firstname: firstname,
-          lastname: lastname,
-          email: email,
-        });
-      }
-
-      const headers = {
-        "Set-Cookie": await commitSession(session),
-      };
-
-      return json({ success: true, cart }, { headers });
+      return json({ success: true, cart });
     }
 
     return json({ success: false });

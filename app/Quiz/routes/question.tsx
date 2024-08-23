@@ -26,6 +26,9 @@ export default function Question() {
   //  Retrieve the current question id
   const { answer, page, pageCount, question, uid } =
     useLoaderData<typeof loader>();
+
+  const { user } = useContextData();
+
   const navigate = useNavigate();
 
   const fetcher = useFetcher();
@@ -45,13 +48,32 @@ export default function Question() {
   };
 
   useEffect(() => {
-    if (!isSubmitting && fetcher.data && fetcher.data) {
+    // Form is currently idle and has data, i.e a form has been submitted
+    // and value returned
+    if (!isSubmitting && fetcher.data) {
+      // Retrieve the data
       let data: any = fetcher.data;
+      // Check if the data is a success
       if (data.success === true) {
+        // If it is, navigate to the next question
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
+        } else if (data["cart"]) {
+          // If it is, and it is a cart, navigate to the cart
+          navigate("/cart");
+        } else if (user) {
+          // If it is, and it is a user, submit form
+          fetcher.submit(
+            {
+              firstname: user.profile.firstName,
+              lastname: user.profile.lastName,
+              email: user.email,
+              subscribe: user.profile.preferences.notifications.orderUpdates,
+            },
+            { method: "POST" }
+          );
         } else {
-          
+          // Otherwise, navigate to the finish page
           navigate("/quiz/finish");
         }
       }
@@ -154,4 +176,7 @@ export default function Question() {
       </div>
     </main>
   );
+}
+function useContextData(): { user: any } {
+  throw new Error("Function not implemented.");
 }

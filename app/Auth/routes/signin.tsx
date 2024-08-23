@@ -1,6 +1,6 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { LoaderFunction, isSession, json } from "@remix-run/node";
+import { LoaderFunction, isSession, json, redirect } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 import {
   REDIRECT_SEARCH_PARAM,
@@ -8,8 +8,8 @@ import {
   isAuthenticated,
 } from "../server/auth.server";
 import { i } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
-import { commitSession } from "~/utils/session";
-import { isSessionInstance } from "../utils/helper";
+import { commitSession, getSession } from "~/utils/session";
+import { isAuthUser, isSessionInstance } from "../utils/helper";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
@@ -111,10 +111,12 @@ export default function Signin() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const rdrPath = url.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
+  const session = await getSession(request);
 
-  const isAuth = await isAuthenticated(request, { successRedirect: rdrPath });
+  const isAuth = await isAuthenticated(request);
+  if (isAuth && typeof isAuth !== "string" && isAuthUser(isAuth)) {
+    return redirect(session.get(REDIRECT_URL) || "/");
+  }
 
   return json(null);
 };

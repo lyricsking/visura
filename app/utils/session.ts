@@ -34,4 +34,17 @@ export const sessionStorage = createFileSessionStorage({
   },
 });
 
-export const { getSession, commitSession, destroySession } = sessionStorage;
+const getSession = async (requestOrSession: Request | Session) => {
+  let session: Session;
+  if (isRequest(requestOrSession)) {
+    session = await sessionStorage.getSession(
+      requestOrSession.headers.get("Cookie")
+    );
+  } else {
+    session = requestOrSession as Session;
+  }
+  return session;
+};
+
+export const { commitSession, destroySession } = sessionStorage;
+export { getSession };
