@@ -1,5 +1,6 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
+import { config } from "config";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -15,6 +16,8 @@ export default defineConfig({
       // publicPath: "/build/",
       // serverBuildPath: "build/index.js",
       routes(defineRoutes) {
+        const { userDashboardPath, adminDashboardPath } = config;
+
         return defineRoutes((route) => {
           route("", "Home/routes/layout.tsx", () => {
             route("", "Home/routes/index.tsx", { index: true });
@@ -32,7 +35,7 @@ export default defineConfig({
             route("payment", "Order/routes/payment.tsx");
           });
           route(
-            "account",
+            userDashboardPath,
             "Dashboard/routes/layout.tsx",
             { id: "account" },
             () => {
@@ -51,7 +54,7 @@ export default defineConfig({
             }
           );
           route(
-            "administration",
+            adminDashboardPath,
             "Dashboard/routes/layout.tsx",
             { id: "administration" },
             () => {
