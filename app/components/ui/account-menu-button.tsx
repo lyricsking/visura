@@ -49,7 +49,7 @@ export default function AccountMenuButton({ user }: Props) {
           !location.pathname.includes("admin") && (
             <DropdownMenuItem
               onSelect={() => {
-                navigate("/administration/overview");
+                navigate("/administration");
               }}
             >
               Backend
