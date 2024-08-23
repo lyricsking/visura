@@ -51,6 +51,7 @@ export default function Question() {
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
         } else {
+          
           navigate("/quiz/finish");
         }
       }
