@@ -12,7 +12,7 @@ import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
-import { getCacheUser } from "~/Auth/server/auth.server";
+import { getUserFromSession } from "~/Auth/server/auth.server";
 import { AuthUser } from "~/Auth/types/auth-user.type";
 import { CartIcon } from "../components/cart-icon";
 import { IHydratedUser } from "~/User/models/user.model";
@@ -66,7 +66,7 @@ export default function Layout() {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getCacheUser(request);
+  const user = await getUserFromSession(request);
 
   return json({ user: user });
 };

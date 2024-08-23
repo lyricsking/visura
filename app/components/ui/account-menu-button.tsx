@@ -26,10 +26,6 @@ export default function AccountMenuButton({ user }: Props) {
   let profile = user?.profile;
   let profilePhoto = profile?.photo;
 
-  // useEffect(() => {
-  //   alert(profilePhoto);
-  // }, []);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-2">

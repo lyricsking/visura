@@ -1,6 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getCacheUser } from "~/Auth/server/auth.server";
+import { getUserFromSession } from "~/Auth/server/auth.server";
 import { IHydratedUser } from "~/User/models/user.model";
 
 export const handle = {
@@ -213,7 +213,7 @@ const mockData = (firstname: string, lastName: string) => ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Replace with actual data fetching logic
-  let user: IHydratedUser | undefined = await getCacheUser(request);
+  let user: IHydratedUser | undefined = await getUserFromSession(request);
 
   return json(
     mockData(user?.profile.firstName || "", user?.profile?.lastName || "")

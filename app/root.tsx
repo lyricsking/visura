@@ -35,11 +35,11 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { theme } = useRouteLoaderData("root") as LoaderData;
+  const data = useRouteLoaderData("root") as LoaderData;
 
   return (
-    <ThemeProvider theme={theme}>
-      <html lang="en" className={clsx(theme)}>
+    <ThemeProvider theme={data?.theme}>
+      <html lang="en" className={clsx(data?.theme)}>
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -30,9 +30,13 @@ export const authenticate = async (request: Request) => {
     failureRedirect: "/auth",
   });
 
-  const successRedirect = (await session.get(REDIRECT_URL)) || "/";
+  const session = await getSession(request);
 
+  await setAuthUser(session, user);
+
+  const successRedirect = (await session.get(REDIRECT_URL)) || "/";
   session.unset(REDIRECT_URL);
+
   const headers = {
     "Set-Cookie": await commitSession(session),
   };
@@ -112,7 +116,7 @@ export const setUserToSession = async (
   await commitSession(session);
 };
 
-export const invalidateCacheUser = async ( 
+export const invalidateCacheUser = async (
   requestOrSession: Request | Session
 ) => {
   const session = await getSession(requestOrSession);

@@ -31,32 +31,36 @@ export default defineConfig({
             route("shipping", "Order/routes/shipping.tsx");
             route("payment", "Order/routes/payment.tsx");
           });
-          route("account", "Dashboard/routes/layout.tsx", {id: "account"}, () => {
-            route("overview", "Dashboard/routes/user-overview.tsx", {
-              index: true,
-            });
-            route(
-              "invoices/:status?",
-              "Invoice/routes/invoices.tsx",
-              () => {
+          route(
+            "account",
+            "Dashboard/routes/layout.tsx",
+            { id: "account" },
+            () => {
+              route("", "Dashboard/routes/user-overview.tsx", {
+                index: true,
+              });
+              route("invoices/:status?", "Invoice/routes/invoices.tsx", () => {
                 route(":id", "Invoice/routes/invoice-id.tsx", { index: true });
-              }
-            );
-            route("orders/:status?", "Order/routes/orders.tsx", () => {
-              route(":id", "Order/routes/order-detail.tsx");
-            });
-            route("settings/:setting?", "Setting/routes/setting.tsx");
-            route(
-              "subscriptions",
-              "Subscription/routes/subscription.tsx"
-            );
-            route("transactions", "Transaction/routes/transaction.tsx");
-          });
-          route("administration", "Dashboard/routes/layout.tsx", { id: "administration" }, () => {
-            route("overview", "Dashboard/routes/admin-overview.tsx", {index: true}
-            );
-            route("products", "Supplement/routes/products.tsx");
-          });
+              });
+              route("orders/:status?", "Order/routes/orders.tsx", () => {
+                route(":id", "Order/routes/order-detail.tsx");
+              });
+              route("settings/:setting?", "Setting/routes/setting.tsx");
+              route("subscriptions", "Subscription/routes/subscription.tsx");
+              route("transactions", "Transaction/routes/transaction.tsx");
+            }
+          );
+          route(
+            "administration",
+            "Dashboard/routes/layout.tsx",
+            { id: "administration" },
+            () => {
+              route("", "Dashboard/routes/admin-overview.tsx", {
+                index: true,
+              });
+              route("products", "Supplement/routes/products.tsx");
+            }
+          );
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });
             route(

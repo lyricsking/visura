@@ -13,11 +13,16 @@ import {
 } from "~/components/ui/page.layout";
 import pkg from "../../../package.json";
 import Breadcrumb from "~/components/breadcrumb";
-import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
-  getCacheUser,
+  json,
+  LoaderFunction,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
+import {
+  getUserFromSession,
   isAuthenticated,
-  setCacheUser,
+  setUserToSession,
 } from "~/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
 import { Sidebar } from "~/Dashboard/components/sidebar";
@@ -41,7 +46,7 @@ export const handle = {
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
-  let [dashboardMenu, ...menu] = dashboardMenuFor(data.user.type);
+  let [dashboardMenu, ...menu] = dashboardMenuFor(data?.user?.type);
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
@@ -99,21 +104,24 @@ export default function Layout() {
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Get the authenticated user or redirects to auth page
-  const authUser = await isAuthenticated(request);
+  const auth = await isAuthenticated(request);
+  if (auth && typeof auth === "string") {
+    return redirect(auth);
+  }
   // check the subdomain we are accessing the page from, useed to manage staff users access.
   let subdomain = getSubdomain(request);
   // if the user has role access to the subdomain
   // Get the cache user object from session, could be undefined or IHydrated user.
-  let user = await getCacheUser(request);
+  let user = await getUserFromSession(request);
   // If the authUser object returned from authentication is of type AuthUser
   // (i.e user is authenticated) but the the cache user is null or undefined,
   // it means the cached user is invalidated, so we fetch a new object
   // from server and cache.
-  if (isAuthUser(authUser) && !user) {
+  if (isAuthUser(auth) && !user) {
     // Cache invalidated, we fetch a new user object
-    user = await findOrCreateUserProfiles({ email: authUser.email });
+    user = await findOrCreateUserProfiles({ email: auth.email });
 
-    await setCacheUser(request, user);
+    await setUserToSession(request, user);
   }
 
   // Return user object if provided.
