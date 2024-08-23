@@ -8,7 +8,7 @@ import {
 } from "../server/quiz.server";
 import { ANSWER_KEY, QIDS_MAP_KEY } from "../utils/constants";
 import formDataToObject from "~/utils/form-data-to-object";
-import { getUserFromSession } from "~/Auth/server/auth.server";
+import { getAuthUser, getUserFromSession } from "~/Auth/server/auth.server";
 
 export const action: ActionFunction = async ({ request }) => {
   //  Converts the request url to instance of URL for easy manipulation
