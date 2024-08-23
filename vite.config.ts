@@ -31,31 +31,31 @@ export default defineConfig({
             route("shipping", "Order/routes/shipping.tsx");
             route("payment", "Order/routes/payment.tsx");
           });
-          route("", "Dashboard/routes/layout.tsx", () => {
-            route("account/overview", "Dashboard/routes/user-overview.tsx", {
+          route("account", "Dashboard/routes/layout.tsx", {id: "account"}, () => {
+            route("overview", "Dashboard/routes/user-overview.tsx", {
               index: true,
             });
             route(
-              "account/invoices/:status?",
+              "invoices/:status?",
               "Invoice/routes/invoices.tsx",
               () => {
                 route(":id", "Invoice/routes/invoice-id.tsx", { index: true });
               }
             );
-            route("account/orders/:status?", "Order/routes/orders.tsx", () => {
+            route("orders/:status?", "Order/routes/orders.tsx", () => {
               route(":id", "Order/routes/order-detail.tsx");
             });
-            route("account/settings/:setting?", "Setting/routes/setting.tsx");
+            route("settings/:setting?", "Setting/routes/setting.tsx");
             route(
-              "account/subscriptions",
+              "subscriptions",
               "Subscription/routes/subscription.tsx"
             );
-            route("account/transactions", "Transaction/routes/transaction.tsx");
-            route(
-              "administration/overview",
-              "Dashboard/routes/admin-overview.tsx"
+            route("transactions", "Transaction/routes/transaction.tsx");
+          });
+          route("administration", "Dashboard/routes/layout.tsx", { id: "administration" }, () => {
+            route("overview", "Dashboard/routes/admin-overview.tsx"
             );
-            route("administration/products", "Supplement/routes/products.tsx");
+            route("products", "Supplement/routes/products.tsx");
           });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });
