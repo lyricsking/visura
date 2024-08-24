@@ -1,5 +1,9 @@
 import stylesheet from "tailwind.css?url";
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import {
   Links,
   Meta,
@@ -14,6 +18,7 @@ import {
 import clsx from "clsx";
 import { getThemeSession } from "./Theme/theme.server";
 import { Theme, ThemeProvider } from "./Theme/theme.provider";
+import { config } from "@/config";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -34,6 +39,12 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: config.appName },
+    { name: "description", content: config.description },
+  ];
+};
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData("root") as LoaderData;
 
@@ -46,7 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Meta />
           <Links />
         </head>
-        <body className="bg-base-100 text-neutral">
+        <body className="bg-base-100 text-neutral overflow-x-hidden">
           {children}
           <ScrollRestoration
             getKey={(location) => {

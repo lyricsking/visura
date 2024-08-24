@@ -15,6 +15,7 @@ import {
 import pkg from "../../../package.json";
 import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
+import { config } from "@/config";
 
 export type ChildHeaderObject = {
   title: string;
@@ -48,7 +49,7 @@ export default function Layout() {
         <PageLayoutHeaderItem className="border bg-white">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">
-              {pkg.name}.
+              {config.appName}
             </h1>
           </Link>
           <Button

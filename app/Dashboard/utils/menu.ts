@@ -1,3 +1,4 @@
+import { config } from "@/config";
 import {
   Package2,
   Boxes,
@@ -10,100 +11,98 @@ import {
 } from "lucide-react";
 import { UserType } from "~/User/types/user.types";
 
+const userDashboardMenuItem = config.userDashboardPath;
+const adminDashboardMenuItem = config.adminDashboardPath;
+
 const userDashboardMenuItems = [
   {
     id: "default",
     label: "Dashboard",
-    url: "/account/overview",
+    url: `overview`,
     icon: Package2,
   },
   {
     id: "orders",
     label: "Orders",
-    url: "/dashboard/orders",
+    url: "orders",
     icon: Package2,
   },
   {
     id: "subscriptions",
     label: "Subscription",
-    url: "/dashboard/subscriptions",
+    url: "subscriptions",
   },
   {
     id: "invoices",
     label: "Invoices",
-    url: "/dashboard/invoices",
+    url: "invoices",
   },
   {
     id: "transactions",
     label: "Transactions",
-    url: "/dashboard/transactions",
+    url: "transactions",
   },
   {
     id: "settings",
     label: "Settings",
-    url: "/dashboard/settings",
-  },
-  {
-    id: "support",
-    label: "Support",
-    url: "/support",
-  },
+    url: "settings",
+  }
 ];
 
 const adminDashboardMenuItems = [
   {
     id: "default",
     label: "Dashboard",
-    url: "/administration/overview",
+    url: "overview",
     icon: Package2,
   },
   {
     id: "orders",
     label: "Orders",
-    url: "/dashboard/orders",
+    url: "orders",
     icon: Package2,
   },
   {
     id: "subscriptions",
     label: "Subscription",
-    url: "/dashboard/subscriptions",
+    url: "subscriptions",
     icon: Boxes,
   },
   {
     id: "products",
     label: "Products",
-    url: "/dashboard/products",
+    url: "products",
     icon: Box,
   },
   {
     id: "invoice",
     label: "Invoice",
-    url: "/dashboard/invoice",
+    url: "invoice",
     icon: Receipt,
   },
   {
     id: "transactions",
     label: "Transactions",
-    url: "/dashboard/transactions",
+    url: "transactions",
     icon: CreditCard,
   },
   {
     id: "users",
     label: "Users",
-    url: "/dashboard/transactions",
+    url: "transactions",
     icon: Users,
   },
 
   {
     id: "settings",
     label: "Settings",
-    url: "/dashboard/settings",
+    url: "settings",
     icon: Settings,
   },
   {
     id: "support",
     label: "Support",
-    url: "/support",
+    url: "support",
     icon: LifeBuoy,
   },
 ];

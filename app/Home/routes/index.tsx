@@ -11,6 +11,7 @@ import Explanation from "../components/explanation";
 import { findFontByName } from "~/shared/data/fonts";
 import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
+import { config } from "@/config";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -27,8 +28,8 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: pkg.name },
-    { name: "description", content: pkg.description },
+    { title: config.appName },
+    { name: "description", content: config.description },
   ];
 };
 //style={{ fontFamily: font.value }}

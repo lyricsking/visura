@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
+import { config } from "@/config";
 
 export type Menu = {
   id: number | string;
@@ -22,11 +23,16 @@ export type Menu = {
 };
 
 export type SidebarContentProps = {
+  basePath: string;
   menu: Menu[];
   side?: "top" | "bottom" | "left" | "right";
 };
 
-export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
+export function Sidebar({
+  basePath,
+  menu,
+  side = "left",
+}: SidebarContentProps) {
   return (
     <Sheet>
       <SheetTrigger className="md:hidden p-0 ">
@@ -39,7 +45,7 @@ export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
         <div className="flex flex-col" aria-label="Sidebar">
           <div className="flex items-center justify-center h-20 border-b border-gray-300 dark:border-gray-700">
             <h1 className="text-2xl font-semibold" aria-label="Logo">
-              {pkg.name}
+              {config.appName}
             </h1>
           </div>
 
@@ -51,7 +57,7 @@ export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
                 return (
                   <li key={menu.id}>
                     <NavLink
-                      to={menu.url}
+                      to={"/" + basePath + "/" + menu.url}
                       className={({ isActive, isPending }) =>
                         `flex items-center px-4 py-2 mt-5 text-gray-800 capitalize transition-colors duration-300 transform ${
                           isActive

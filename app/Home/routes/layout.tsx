@@ -7,16 +7,13 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import pkg from "../../../package.json";
 import { useQuiz } from "~/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getUserFromSession } from "~/Auth/server/auth.server";
-import { AuthUser } from "~/Auth/types/auth-user.type";
 import { CartIcon } from "../components/cart-icon";
-import { IHydratedUser } from "~/User/models/user.model";
-import { useEffect } from "react";
+import { config } from "@/config";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
@@ -32,7 +29,7 @@ export default function Layout() {
         >
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
-              {pkg.name}.
+              {config.appName}
             </h1>
           </Link>
 

@@ -46,10 +46,10 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
 
 export default function AdminSettings() {
   return (
-    <div className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col bg-muted/40">
-      <div className="mx-auto grid w-full max-w-6xl items-start bg-white rounded-md p-4 md:p-10 gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
+    <div className="flex flex-col flex-1 items-start gap-4 md:gap-8">
+      <div className="mx-auto grid w-full max-w-7xl items-start bg-white rounded-md p-4 md:p-8 gap-4 md:grid-cols-[120px_1fr] lg:grid-cols-[200px_1fr] overflow-x-auto">
         <nav
-          className="flex w-full overflow-x-auto  md:grid gap-4 text-sm text-muted-foreground"
+          className="flex w-full overflow-x-auto md:grid gap-4 text-sm text-muted-foreground"
           x-chunk="dashboard-04-chunk-0"
         >
           <Link to="#" className="font-semibold text-primary">
@@ -61,6 +61,7 @@ export default function AdminSettings() {
           <Link to="#">Organizations</Link>
           <Link to="#">Advanced</Link>
         </nav>
+
         <div className="grid gap-6">
           <Card x-chunk="dashboard-04-chunk-1">
             <CardHeader>

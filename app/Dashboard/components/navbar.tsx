@@ -3,17 +3,18 @@ import { Link } from "lucide-react";
 import { Menu } from "./sidebar";
 
 export type NavbarProps = {
+  basePath: string;
   menu: Menu[];
 };
 
-export function Navbar({ menu }: NavbarProps) {
+export function Navbar({ basePath, menu }: NavbarProps) {
   return (
     <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
       {menu.map((menu) => {
         return (
           <NavLink
             key={menu.id}
-            to={menu.url}
+            to={"/"+basePath + "/" + menu.url}
             className={({ isActive, isPending }) =>
               `py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform ${
                 isActive

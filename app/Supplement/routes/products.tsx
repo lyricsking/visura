@@ -27,21 +27,65 @@ import {
 } from "~/components/table";
 import { File, ListFilter, PlusCircle, MoreHorizontal } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
+import { Progress } from "~/components/progress";
 
 export const handle = {
   pageName: "Product",
   breadcrumb: {
-    id: "overview",
+    id: "products-list",
     label: "Products",
   },
 };
 
 export default function Products() {
   return (
-    <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-      <Tabs defaultValue="all">
-        <div className="flex items-center">
-          <TabsList>
+    <div className="mx-auto grid flex-1 auto-rows-max gap-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+        <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
+          <CardHeader className="pb-3">
+            <CardTitle>Your Orders</CardTitle>
+            <CardDescription className="max-w-lg text-balance leading-relaxed">
+              Introducing Our Dynamic Orders Dashboard for Seamless Management
+              and Insightful Analysis.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button>Create New Order</Button>
+          </CardFooter>
+        </Card>
+        <Card x-chunk="dashboard-05-chunk-1">
+          <CardHeader className="pb-2">
+            <CardDescription>This Week</CardDescription>
+            <CardTitle className="text-4xl">$1,329</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xs text-muted-foreground">
+              +25% from last week
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Progress value={25} aria-label="25% increase" />
+          </CardFooter>
+        </Card>
+        <Card x-chunk="dashboard-05-chunk-2">
+          <CardHeader className="pb-2">
+            <CardDescription>This Month</CardDescription>
+            <CardTitle className="text-4xl">$5,329</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xs text-muted-foreground">
+              +10% from last month
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Progress value={12} aria-label="12% increase" />
+          </CardFooter>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="all" className="flex flex-col w-full">
+        <div className="flex w-full items-center justify-between gap-x-4">
+          <TabsList className="">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="active">Active</TabsTrigger>
             <TabsTrigger value="draft">Draft</TabsTrigger>
@@ -49,12 +93,13 @@ export default function Products() {
               Archived
             </TabsTrigger>
           </TabsList>
-          <div className="ml-auto flex items-center gap-2 p-2 rounded-t-md bg-white">
+
+          <div className="ml-auto flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 gap-1">
                   <ListFilter className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  <span className="sr-only md:not-sr-only md:whitespace-nowrap">
                     Filter
                   </span>
                 </Button>
@@ -71,20 +116,20 @@ export default function Products() {
             </DropdownMenu>
             <Button size="sm" variant="outline" className="h-8 gap-1">
               <File className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              <span className="sr-only md:not-sr-only md:whitespace-nowrap">
                 Export
               </span>
             </Button>
             <Button size="sm" className="h-8 gap-1 bg-indigo-400 text-white">
               <PlusCircle className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              <span className="sr-only md:not-sr-only md:whitespace-nowrap">
                 Add Product
               </span>
             </Button>
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-06-chunk-0">
+          <Card x-chunk="dashboard-06-chunk-0 w-full">
             <CardHeader>
               <CardTitle>Products</CardTitle>
               <CardDescription>

@@ -3,7 +3,10 @@ import {
   NavLink,
   Outlet,
   useLoaderData,
+  useLocation,
   useMatches,
+  useParams,
+  useResolvedPath,
 } from "@remix-run/react";
 import {
   PageLayout,
@@ -11,7 +14,6 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import pkg from "../../../package.json";
 import Breadcrumb from "~/components/breadcrumb";
 import {
   json,
@@ -34,6 +36,8 @@ import { Package2 } from "lucide-react";
 import { Navbar } from "../components/navbar";
 import { dashboardMenuFor } from "../utils/menu";
 import * as lo from "lodash";
+import { config } from "@/config";
+import { useEffect } from "react";
 
 export const handle = {
   breadcrumb: {
@@ -45,8 +49,14 @@ export const handle = {
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
+  let location = useLocation();
 
-  let [dashboardMenu, ...menu] = dashboardMenuFor(data?.user?.type);
+  let basePath = location.pathname.includes(config.userDashboardPath)
+    ? config.userDashboardPath
+    : config.adminDashboardPath;
+  let [dashboardMenu, ...menu] = dashboardMenuFor(
+    basePath === config.userDashboardPath ? "customer" : "staff"
+  );
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
@@ -70,15 +80,16 @@ export default function Layout() {
           <div className="flex w-full justify-between space-x-2">
             <div className="flex flex-row items-center gap-2 text-lg font-medium sm:text-sm md:gap-6">
               <Sidebar
+                basePath={basePath}
                 menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
               <Link to={dashboardMenu.url}>
                 <h1 className="text-[24px] font-bold tracking-tight">
-                  {pkg.name}.
+                  {config.appName}
                 </h1>
               </Link>
-              <Navbar menu={menu} />
+              <Navbar basePath={basePath} menu={menu} />
             </div>
 
             <HeaderIcons user={data.user} />
@@ -94,7 +105,7 @@ export default function Layout() {
         <h1 className="text-3xl font-bold text-gray-900 py-6 px-4 sm:px-6 lg:px-8">
           {currentRoute?.handle?.pageName || "Dashboard"}
         </h1>
-        <Outlet context={{ appname: pkg.name, user: data.user }} />
+        <Outlet context={{ user: data.user }} />
       </PageLayoutContent>
     </PageLayout>
   );

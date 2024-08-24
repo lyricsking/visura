@@ -1,7 +1,8 @@
 import { Config } from "./config.type";
 
 export const config: Config = {
-  appName: "MyApp Name",
+  appName: "VitaHealth.",
+  description: "Subscription  based health store.",
   userDashboardPath: "account",
   adminDashboardPath: "administration",
 };

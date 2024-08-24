@@ -1,8 +1,8 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
-import { config } from "config";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { config } from "./config";
 
 installGlobals();
 
@@ -61,7 +61,15 @@ export default defineConfig({
               route("", "Dashboard/routes/admin-overview.tsx", {
                 index: true,
               });
-              route("products", "Supplement/routes/products.tsx");
+              route(
+                "products",
+                "Supplement/routes/product-layout.tsx",
+                { id: "admin-products" },
+                () => {
+                  route("", "Supplement/routes/products.tsx", { index: true });
+                  route("edit", "Supplement/routes/product-edit.tsx");
+                }
+              );
               route("settings", "Setting/routes/admin-settings.tsx");
             }
           );

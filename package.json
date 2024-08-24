@@ -1,6 +1,5 @@
 {
-  "name": "VitaWell",
-  "description": "Subscription  based health store.",
+  "name": "subscription-store",
   "private": true,
   "sideEffects": false,
   "type": "module",

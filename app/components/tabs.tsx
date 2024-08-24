@@ -26,7 +26,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "bg-white px-5 h-[45px] flex-1 flex items-center justify-center outline-none cursor-default",
+      "bg-white px-3 h-[45px] flex items-center justify-center outline-none cursor-default",
       "first:rounded-tl-md last:rounded-tr-md data-[state=active]:border-b-4 data-[state=active]:border-inherit",
       className
     )}
@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "grow p-5 bg-white rounded-b-md outline-none",
+      "grow py-5  bg-white rounded-b-md outline-none",
       "ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}
