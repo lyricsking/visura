@@ -16,7 +16,7 @@ export default defineConfig({
       // publicPath: "/build/",
       // serverBuildPath: "build/index.js",
       routes(defineRoutes) {
-        const { userDashboardPath, adminDashboardPath } = config;
+        const { userDashboardPath, adminDashboardPath, blogPath } = config;
 
         return defineRoutes((route) => {
           route("", "Home/routes/layout.tsx", () => {
@@ -90,6 +90,14 @@ export default defineConfig({
             route("question/:uid", "Quiz/routes/question.tsx");
             route("finish", "Quiz/routes/finish.tsx");
           });
+          route(
+            blogPath,
+            "Blog/routes/layout.tsx",
+            { id: "blog-layout" },
+            () => {
+              route("", "Blog/routes/index.tsx", { index: true });
+            }
+          );
           route("theme/update", "Theme/theme.action.tsx");
         });
       },

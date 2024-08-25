@@ -3,4 +3,5 @@ export interface Config {
   description: string;
   userDashboardPath: string;
   adminDashboardPath: string;
+  blogPath: string
 }

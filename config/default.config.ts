@@ -5,4 +5,5 @@ export const config: Config = {
   description: "Subscription  based health store.",
   userDashboardPath: "account",
   adminDashboardPath: "administration",
+  blogPath: "blog",
 };
