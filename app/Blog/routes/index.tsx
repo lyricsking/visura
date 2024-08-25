@@ -59,8 +59,8 @@ export default function Index() {
     <div className="flex flex-col items-start gap-4 md:gap-8">
       <BlogHero />
 
-      <div className="mx-auto grid w-full max-w-3xl items-start rounded-md p-4 md:p-8 gap-4 overflow-x-auto">
-        <Card className="overflow-x-auto">
+      <div className="mx-auto grid w-full max-w-3xl items-start rounded-md p-4 md:p-8 gap-4">
+        <Card className="w-full divide-y overflow-x-auto">
           <CardHeader className="flex-row items-start w-full gap-6">
             <div className="">
               <CardTitle>Upcoming</CardTitle>
@@ -76,6 +76,7 @@ export default function Index() {
               <ListFilter className="h-5 w-5" />
             </Button>
           </CardHeader>
+
           <CardContent>
             <Table>
               <TableHeader>
@@ -177,50 +178,48 @@ export default function Index() {
         </Card>
       </div>
 
-      <div className="mx-auto grid w-full max-w-3xl items-start rounded-md p-4 md:p-8 gap-4 overflow-x-auto">
-        <Card className="overflow-x-auto">
+      <div className="mx-auto grid w-full max-w-3xl items-start p-4 md:p-8 gap-4 overflow-x-hidden">
+        <Card className="w-full divide-y overflow-x-auto">
           <CardHeader>
             <CardTitle>Tips</CardTitle>
             <CardDescription>
               Lipsum dolor sit amet, consectetur adipiscing elit
             </CardDescription>
           </CardHeader>
+
           <CardContent>
-            <div className="flex max-w-full mx-auto items-center justify-center border divide-x px-1">
+            <div className="flex flex-wrap items-center justify-between mt-6 bg-gray-100 border rounded-t-md divide-x">
               <Select>
-                <div>
-                  <SelectTrigger className="border-none rounded-none">
-                    <SelectValue placeholder="Select sport" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={"S"}>S</SelectItem>
-                  </SelectContent>
-                </div>
+                <SelectTrigger className="flex-1 border-none rounded-none">
+                  <SelectValue placeholder="Select sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
+                </SelectContent>
               </Select>
 
               <Select>
-                <div>
-                  <SelectTrigger className="border-none rounded-none">
-                    <SelectValue placeholder="Select sport" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={"S"}>S</SelectItem>
-                  </SelectContent>
-                </div>
+                <SelectTrigger className="flex-1 border-none rounded-none">
+                  <SelectValue placeholder="Select sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={"S"}>S</SelectItem>
+                </SelectContent>
               </Select>
 
               <Select>
-                <div>
-                  <SelectTrigger className="border-none rounded-none">
-                    <SelectValue placeholder="Select sport" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={"S"}>S</SelectItem>
-                  </SelectContent>
-                </div>
+                <SelectTrigger className="flex-1 border-none rounded-none">
+                  <SelectValue placeholder="Select sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={"S"}>S</SelectItem>
+                </SelectContent>
               </Select>
             </div>
-            <Table>
+
+            <Table className="border-s border-e border-b rounded-b-md">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">SKU</TableHead>
@@ -311,6 +310,7 @@ export default function Index() {
               </TableBody>
             </Table>
           </CardContent>
+
           <CardFooter className="justify-center border-t p-4">
             <Button size="sm" variant="text" className="gap-1">
               <PlusCircle className="h-3.5 w-3.5" />
