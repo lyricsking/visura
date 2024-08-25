@@ -319,6 +319,97 @@ export default function Index() {
           </CardFooter>
         </Card>
       </div>
+
+      <div className="mx-auto grid sm:grid-cols-2 w-full max-w-3xl items-start p-4 md:p-8 gap-4">
+        <h3 className="col-span-full mt-2 text-3xl text-center sm:text-4xl font-bold tracking-tight mb-10">
+          Team News
+        </h3>
+
+        <article className="group relative flex flex-col space-y-2">
+          <img
+            alt="Preview Mode for Headless CMS"
+            width="804"
+            height="452"
+            className="rounded-md border bg-muted transition-colors"
+            src="/illustrations/blog-post-1.webp"
+          />
+          <h2 className="text-2xl font-extrabold">
+            Preview Mode for Headless CMS
+          </h2>
+          <p className="text-muted-foreground">
+            How to implement preview mode in your headless CMS.
+          </p>
+          <p className="text-sm text-muted-foreground">April 9, 2023</p>
+          <a
+            className="absolute inset-0"
+            href="/blog/preview-mode-headless-cms"
+          >
+            <span className="sr-only">View Article</span>
+          </a>
+        </article>
+
+        <article className="group relative flex flex-col space-y-2">
+          <img
+            alt="Dynamic Routing and Static Regeneration"
+            width="804"
+            height="452"
+            className="rounded-md border bg-muted transition-colors"
+            src="/illustrations/blog-post-2.webp"
+          />
+          <h2 className="text-2xl font-extrabold">
+            Dynamic Routing and Static Regeneration
+          </h2>
+          <p className="text-muted-foreground">
+            How to use incremental static regeneration using dynamic routes.
+          </p>
+          <p className="text-sm text-muted-foreground">March 4, 2023</p>
+          <a
+            className="absolute inset-0"
+            href="/blog/dynamic-routing-static-regeneration"
+          >
+            <span className="sr-only">View Article</span>
+          </a>
+        </article>
+
+        <article className="group relative flex flex-col space-y-2">
+          <img
+            alt="Server and Client Components"
+            width="804"
+            height="452"
+            className="rounded-md border bg-muted transition-colors"
+            src="/illustrations/blog-post-3.webp"
+          />
+          <h2 className="text-2xl font-extrabold">
+            Server and Client Components
+          </h2>
+          <p className="text-muted-foreground">
+            React Server Components allow developers to build applications that
+            span the server and client.
+          </p>
+          <p className="text-sm text-muted-foreground">January 8, 2023</p>
+          <a className="absolute inset-0" href="/blog/server-client-components">
+            <span className="sr-only">View Article</span>
+          </a>
+        </article>
+
+        <article className="group relative flex flex-col space-y-2">
+          <img
+            alt="Deploying Next.js Apps"
+            width="804"
+            height="452"
+            className="rounded-md border bg-muted transition-colors"
+            src="/illustrations/blog-post-4.webp"
+          />
+          <h2 className="text-2xl font-extrabold">Deploying Next.js Apps</h2>
+          <p className="text-muted-foreground">
+            How to deploy your Next.js apps on Vercel.
+          </p>
+          <p className="text-sm text-muted-foreground">January 2, 2023</p>
+          <a className="absolute inset-0" href="/blog/deploying-next-apps">
+            <span className="sr-only">View Article</span>
+          </a>
+        </article>
+      </div>
     </div>
   );
 }

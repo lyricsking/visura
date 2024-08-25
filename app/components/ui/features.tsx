@@ -30,7 +30,7 @@ export function Features({
           )}
           {subheading && (
             <p className="mt-2 text-3xl font-bold tracking-tight text-secondary sm:text-4xl">
-              {subheading}{" "}
+              {subheading}
             </p>
           )}
           {description && (
