@@ -23,14 +23,3 @@ export interface Tips {
   tags: string[];
   publishedOn: Date;
 }
-
-export interface News {
-  _id: Types.ObjectId;
-  title: string;
-  author: Types.ObjectId;
-  content: string;
-  exercpt: string;
-  featuredImage: string;
-  tags: string[];
-  publishedOn: Date;
-}

@@ -60,13 +60,13 @@ export default function Index() {
   return (
     <div className="flex flex-col items-start ">
       <div
-        className="w-full bg-cover "
+        className="w-full bg-cover bg-center"
         style={{ backgroundImage: `url('/images/soccer-pitch.jpg')` }}
       >
-        <div className=" bg-gray-300/40">
+        <div className=" bg-gray-700/20">
           <div className="mx-auto max-w-3xl text-center px-6 py-16 sm:py-20 lg:px-8 lg:py-24">
             <h1
-              className="text-3xl font-bold tracking-tight text-red-200 sm:text-4xl"
+              className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
               style={{
                 fontFamily: font!.value,
               }}
