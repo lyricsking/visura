@@ -17,8 +17,6 @@ import { config } from "@/config";
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
-  const { startQuiz } = useQuiz();
-
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
@@ -33,15 +31,6 @@ export default function Layout() {
           </Link>
 
           <div className="flex h-full divide-x">
-            <Button
-              variant="outline"
-              size="sm"
-              radius="md"
-              onClick={() => startQuiz()}
-              className="hidden"
-            >
-              Get started
-            </Button>
             <div className="flex-none mx-auto">
               <AccountMenuButton user={data?.user} />
             </div>

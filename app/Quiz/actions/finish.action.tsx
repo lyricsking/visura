@@ -8,7 +8,11 @@ import {
 } from "../server/quiz.server";
 import { ANSWER_KEY, QIDS_MAP_KEY } from "../utils/constants";
 import formDataToObject from "~/utils/form-data-to-object";
-import { getAuthUser, getUserFromSession } from "~/Auth/server/auth.server";
+import {
+  getAuthUser,
+  getUserFromSession,
+  setAuthUser,
+} from "~/Auth/server/auth.server";
 
 export const action: ActionFunction = async ({ request }) => {
   //  Converts the request url to instance of URL for easy manipulation
@@ -35,10 +39,11 @@ export const action: ActionFunction = async ({ request }) => {
       let cart = await createCart(params);
 
       //  Remove quiz session data, as we no longer need it.
-      // session.unset(QIDS_MAP_KEY);
-      // session.unset(ANSWER_KEY);
-      await setAuthUser(session, {email: email});
-      
+      session.unset(QIDS_MAP_KEY);
+      session.unset(ANSWER_KEY);
+
+      await setAuthUser(session, { email: email });
+
       return json({ success: true, cart });
     }
 

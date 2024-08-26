@@ -1,4 +1,9 @@
-import { useNavigate, useLoaderData, useFetcher } from "@remix-run/react";
+import {
+  useNavigate,
+  useLoaderData,
+  useFetcher,
+  useOutletContext,
+} from "@remix-run/react";
 
 import Button from "~/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
@@ -12,6 +17,7 @@ import { action } from "../actions/question.action";
 import { loader } from "../loader/question.loader";
 import { useEffect } from "react";
 import { ACTION_KEY } from "../utils/constants";
+import { IHydratedUser } from "~/User/models/user.model";
 
 export { action };
 export { loader };
@@ -27,7 +33,7 @@ export default function Question() {
   const { answer, page, pageCount, question, uid } =
     useLoaderData<typeof loader>();
 
-  const { user } = useContextData();
+  const { user }: { user: IHydratedUser } = useOutletContext();
 
   const navigate = useNavigate();
 
@@ -48,6 +54,7 @@ export default function Question() {
   };
 
   useEffect(() => {
+    alert(JSON.stringify(fetcher.data, null, 2));
     // Form is currently idle and has data, i.e a form has been submitted
     // and value returned
     if (!isSubmitting && fetcher.data) {
@@ -58,20 +65,6 @@ export default function Question() {
         // If it is, navigate to the next question
         if (data["uid"]) {
           navigate(`/quiz/question/${data["uid"]}`);
-        } else if (data["cart"]) {
-          // If it is, and it is a cart, navigate to the cart
-          navigate("/cart");
-        } else if (user) {
-          // If it is, and it is a user, submit form
-          fetcher.submit(
-            {
-              firstname: user.profile.firstName,
-              lastname: user.profile.lastName,
-              email: user.email,
-              subscribe: user.profile.preferences.notifications.orderUpdates,
-            },
-            { method: "POST" }
-          );
         } else {
           // Otherwise, navigate to the finish page
           navigate("/quiz/finish");
@@ -176,7 +169,4 @@ export default function Question() {
       </div>
     </main>
   );
-}
-function useContextData(): { user: any } {
-  throw new Error("Function not implemented.");
 }

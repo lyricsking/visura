@@ -2,7 +2,12 @@
 import React, { useEffect, useRef } from "react";
 import Button from "~/components/button";
 import { Input } from "~/components/input";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+} from "@remix-run/react";
 import id from "~/Order/routes/id";
 import formDataToObject from "~/utils/form-data-to-object";
 import { action } from "../actions/finish.action";
@@ -21,7 +26,7 @@ export default function Finish() {
   let isSubmitting = fetcher.state !== "idle";
   let formData = fetcher.formData;
 
-  let user: IHydratedUser | undefined = data.user;
+  const { user }: { user: IHydratedUser | undefined } = useOutletContext();
 
   let firstname =
     (formData?.get("firstname") as string) || user?.profile?.firstName;
@@ -42,6 +47,24 @@ export default function Finish() {
       navigate("/cart");
     }
   }, [fetcher]);
+
+  useEffect(() => {
+    if (user) {
+      // If it is, and it is a user, submit form
+      fetcher.submit(
+        {
+          firstname: user.profile.firstName,
+          lastname: user.profile.lastName,
+          email: user.email,
+          subscribe: user.profile.preferences.notifications.orderUpdates,
+        },
+        {
+          method: "POST",
+          action: "/quiz/finish",
+        }
+      );
+    }
+  }, [user]);
 
   return (
     <main className="flex flex-col max-h-screen w-full md:max-w-md bg-white md:my-6 mx-auto md:rounded-md md:shadow-md">

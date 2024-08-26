@@ -19,6 +19,7 @@ import clsx from "clsx";
 import { getThemeSession } from "./Theme/theme.server";
 import { Theme, ThemeProvider } from "./Theme/theme.provider";
 import { config } from "@/config";
+import { useEffect } from "react";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -47,6 +48,10 @@ export const meta: MetaFunction = () => {
 };
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData("root") as LoaderData;
+
+  useEffect(() => {
+    JSON.stringify(data, null, 2);
+  }, [data]);
 
   return (
     <ThemeProvider theme={data?.theme}>

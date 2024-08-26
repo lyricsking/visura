@@ -14,7 +14,7 @@ import Button from "~/components/button";
 import { useRef } from "react";
 import { applyDiscount } from "../server/cart.server";
 import type { IOrder } from "../types/order.type";
-import { getCacheUser } from "~/Auth/server/auth.server";
+import { getAuthUser } from "~/Auth/server/auth.server";
 import EmptyCart from "../components/empty-cart";
 import Cart from "./cart";
 import {
@@ -47,7 +47,7 @@ type LoaderDataType = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getCacheUser(request);
+  const user = await getAuthUser(request);
 
   let cart: IOrder | null = null;
   if (user) {

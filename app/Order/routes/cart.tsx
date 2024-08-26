@@ -5,7 +5,7 @@ import { IOrder } from "../types/order.type";
 import CartItem from "../components/cart-item";
 import { useEffect } from "react";
 import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../utils/constants";
-import { getCacheUser } from "~/Auth/server/auth.server";
+import { getAuthUser, getUserFromSession } from "~/Auth/server/auth.server";
 
 export const action = async ({ request }: any) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -16,7 +16,7 @@ export const action = async ({ request }: any) => {
   const quantity = formData.get("quantity");
   const purchaseMode = formData.get("purchaseMode");
 
-  const user = await getCacheUser(request);
+  const user = await getAuthUser(request);
 
   if (!user || !user["email"]) {
     console.log("Cannot process, No user info available.");

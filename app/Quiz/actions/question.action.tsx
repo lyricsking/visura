@@ -4,11 +4,11 @@ import { saveQuizAnswer } from "../server/quiz.server";
 
 export const action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request);
 
   //  Retrieve the submitted form quiz answers as json object
   const { uid, answer } = await request.json();
-  
+
   let nextUId = await saveQuizAnswer(session, uid, answer);
 
   let headers = {
@@ -16,10 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
   };
   if (nextUId) {
     if (typeof nextUId === "number") {
-      return json(
-        { success: true, uid: null },
-        { headers }
-      );
+      return json({ success: true, uid: null }, { headers });
     }
     return json({ success: true, uid: nextUId }, { headers });
   }
