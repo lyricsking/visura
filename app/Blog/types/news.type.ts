@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface News {
+export interface INews {
   _id: Types.ObjectId;
   title: string;
   author: Types.ObjectId;
