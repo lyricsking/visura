@@ -42,6 +42,7 @@ import { cn } from "~/utils";
 import { generateDummyTips } from "../server/tips.server";
 import { generateDummyPosts } from "../server/post.server";
 import { useLoaderData } from "@remix-run/react";
+import { TipCard } from "../components/tip-card";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -224,7 +225,7 @@ export default function Index() {
           </div>
 
           <div className="mx-auto grid w-full max-w-3xl items-start p-4 md:p-8 gap-4 overflow-x-hidden">
-            <Card className="w-full divide-y overflow-x-auto">
+            <Card className="w-full bg-white/95 divide-y overflow-x-auto">
               <CardHeader className="p-0">
                 <div className="flex flex-row flex-wrap items-center justify-center gap-4 px-6 bg-red-500 text-lg text-white font-semibold ">
                   <h3 className="text-lg font-bold tracking-tight pe-4 border-e">
@@ -251,7 +252,9 @@ export default function Index() {
               </CardHeader>
 
               <CardContent>
-                <TipsSummary />
+                {tips.map((tip, index) => (
+                  <TipCard key={index} tip={tip} />
+                ))}
               </CardContent>
 
               <CardFooter className="justify-center border-t p-4">

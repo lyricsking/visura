@@ -6,6 +6,12 @@ export const Country = {
 } as const;
 export type Country = keyof typeof Country;
 
+export type IPrediction = {
+  type: ["outcome", "scoreline"];
+  value: string;
+  reason: string;
+};
+
 export interface ITips {
   _id: Types.ObjectId;
   teamA: string;
@@ -16,8 +22,8 @@ export interface ITips {
   teamARank: number;
   teamBRank: number;
   author: Types.ObjectId;
+  prediction: IPrediction[];
   introduction: string;
-  prediction: string;
   excerpt: string;
   featuredImage: string;
   tags: string[];
