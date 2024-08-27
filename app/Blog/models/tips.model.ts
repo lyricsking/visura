@@ -4,6 +4,7 @@ import {
   Country,
   IPrediction,
   PredictionType,
+  League,
 } from "../types/tips.type";
 
 export type TipsModelType = Model<ITips>;
@@ -31,7 +32,7 @@ const tipsSchema = new Schema<ITips, TipsModelType>(
     },
     league: {
       type: String,
-      enum: Object.values(Country).flat(),
+      enum: Object.values(League),
       required: true,
     },
     teamARank: { type: Number, required: true },

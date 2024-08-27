@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import TipsModel from "../models/tips.model";
-import { ITips } from "../types/tips.type";
+import { Country, ITips } from "../types/tips.type";
 import { faker } from "@faker-js/faker";
 
 export const createTips = async (data: ITips) => {
@@ -34,21 +34,25 @@ function generateDummyTips(): ITips {
     prediction: [
       {
         type: ["outcome"],
-        value: faker.helpers.arrayElement(['Win', 'Lose', 'Draw']),
+        value: faker.helpers.arrayElement(["Win", "Lose", "Draw"]),
         reason: faker.lorem.sentence(),
       },
       {
         type: ["scoreline"],
-        value: `${faker.datatype.number({ min: 0, max: 5 })}-${faker.datatype.number({ min: 0, max: 5 })}`,
+        value: `${faker.datatype.number({
+          min: 0,
+          max: 5,
+        })}-${faker.datatype.number({ min: 0, max: 5 })}`,
         reason: faker.lorem.sentence(),
       },
     ],
     introduction: faker.lorem.paragraph(),
     excerpt: faker.lorem.sentence(),
     featuredImage: faker.image.sports(),
-    tags: faker.helpers.arrayElements([
-      'football', 'premier league', 'match', 'sports', 'prediction'
-    ], 3),
+    tags: faker.helpers.arrayElements(
+      ["football", "premier league", "match", "sports", "prediction"],
+      3
+    ),
     publishedOn: faker.date.past(),
   };
 }

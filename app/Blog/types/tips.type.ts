@@ -18,13 +18,16 @@ export type IPrediction = {
   reason: string;
 };
 
+export const League = Object.values(Country).flat();
+export type League = typeof League[number];
+
 export interface ITips {
   _id: Types.ObjectId;
   teamA: string;
   teamB: string;
   matchDate: Date;
   country: Country;
-  league: (typeof Country)[keyof typeof Country];
+  league: League;
   teamARank: number;
   teamBRank: number;
   author: Types.ObjectId;

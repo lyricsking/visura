@@ -1,8 +1,9 @@
 import React from "react";
 
 type TipCardProps = {
-tips: ITips[]  
+tips: ITips[]
 }
+
 export const TipCard = (props: TipCardProps) => {
   const { tip } = props;
   
