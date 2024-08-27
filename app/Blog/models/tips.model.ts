@@ -1,4 +1,10 @@
-import mongoose, { Schema, model, Types, Model } from "mongoose";
+import mongoose, {
+  Schema,
+  model,
+  Types,
+  Model,
+  HydratedDocument,
+} from "mongoose";
 import {
   ITips,
   Country,
@@ -11,7 +17,7 @@ export type TipsModelType = Model<ITips>;
 
 const predictionSchema = new Schema<IPrediction>({
   type: {
-    type: [String],
+    type: String,
     enum: Object.keys(PredictionType),
     required: true,
   },
@@ -50,6 +56,7 @@ const tipsSchema = new Schema<ITips, TipsModelType>(
   }
 );
 
+export type HydratedTips = HydratedDocument<ITips>;
 // Create the Tips model
 const TipsModel: TipsModelType =
   mongoose.models.Tips || model("Tips", tipsSchema);

@@ -1,4 +1,4 @@
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet } from "@remix-run/react";
 import Footer from "~/components/ui/footer";
 import {
   PageLayout,
@@ -7,11 +7,7 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import { useQuiz } from "~/Quiz/utils/quiz.utils";
-import Button from "~/components/button";
 import AccountMenuButton from "~/components/ui/account-menu-button";
-import { LoaderFunction, json } from "@remix-run/node";
-import { getUserFromSession } from "~/Auth/server/auth.server";
 import { config } from "@/config";
 
 export default function Layout() {

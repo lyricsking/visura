@@ -12,14 +12,16 @@ export const PredictionType = {
 } as const;
 export type PredictionType = keyof typeof PredictionType;
 
-export type IPrediction = {
-  type: ["outcome", "scoreline"];
-  value: string;
-  reason: string;
-};
+export type IPrediction = Record<
+  PredictionType,
+  {
+    value: string;
+    reason: string;
+  }
+>;
 
 export const League = Object.values(Country).flat();
-export type League = typeof League[number];
+export type League = (typeof League)[number];
 
 export interface ITips {
   _id: Types.ObjectId;

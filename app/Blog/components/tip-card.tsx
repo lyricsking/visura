@@ -1,12 +1,12 @@
-import React from "react";
+import { ITips } from "../types/tips.type";
 
 type TipCardProps = {
-tips: ITips[]
-}
+  tip: ITips;
+};
 
 export const TipCard = (props: TipCardProps) => {
   const { tip } = props;
-  
+
   return (
     <div className="p-4 border-b border-gray-200">
       <div className="flex items-center justify-between">
@@ -17,9 +17,7 @@ export const TipCard = (props: TipCardProps) => {
             className="w-6 h-6 mr-2"
           />
           <div>
-            <h3 className="text-lg font-semibold">
-              {tip.teamA} v {tip.teamB}
-            </h3>
+            <h3 className="text-lg font-semibold">{tip.prediction[0].value}</h3>
             <p className="text-sm text-gray-500">
               {tip.country} {tip.league}
             </p>
@@ -27,19 +25,19 @@ export const TipCard = (props: TipCardProps) => {
               <span className="mr-2">
                 <i className="calendar-icon" />
               </span>
-              {tip.matchDate}
+              {/* {tip.matchDate)} */}
             </p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-xl font-bold">{tip.odds}</p>
+          <p className="text-xl font-bold">{"hfhfhf"}</p>
           <button className="bg-green-500 text-white px-3 py-1 rounded">
             Add +
           </button>
         </div>
       </div>
       <div className="mt-2 flex items-center justify-between">
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <span className="mr-1">🏅</span>
           <p className="text-sm text-gray-600">{tip.experts} experts</p>
         </div>
@@ -48,10 +46,10 @@ export const TipCard = (props: TipCardProps) => {
             {tip.winTips} / {tip.totalTips} Win Tips
           </p>
           <p className="text-sm text-gray-600">{tip.winPercentage}%</p>
-        </div>
+        </div> */}
       </div>
       <div className="mt-2">
-        <p className="text-sm text-gray-500">{tip.comments} comments</p>
+        {/* <p className="text-sm text-gray-500">{tip.comments} comments</p> */}
       </div>
     </div>
   );

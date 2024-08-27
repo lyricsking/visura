@@ -1,4 +1,10 @@
-import mongoose, { Schema, Model, Types, Document, HydratedDocument } from "mongoose";
+import mongoose, {
+  Schema,
+  Model,
+  Types,
+  Document,
+  HydratedDocument,
+} from "mongoose";
 import bcrypt from "bcrypt";
 import { IUser, UserType } from "../types/user.types";
 import { IUserProfile } from "../types/user-profile.type";
@@ -104,7 +110,10 @@ UserSchema.virtual("staff", {
   justOne: true,
 });
 
-export type IHydratedUser = HydratedDocument<IUser, IUserMethods&IUserVirtuals> 
+export type IHydratedUser = HydratedDocument<
+  IUser,
+  IUserMethods & IUserVirtuals
+>;
 // Create and export the User model
 const User: UserModel =
   mongoose.models.User || mongoose.model<IUser, UserModel>("User", UserSchema);

@@ -43,6 +43,7 @@ import { generateDummyTips } from "../server/tips.server";
 import { generateDummyPosts } from "../server/post.server";
 import { useLoaderData } from "@remix-run/react";
 import { TipCard } from "../components/tip-card";
+import { ITips } from "../types/tips.type";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -253,7 +254,7 @@ export default function Index() {
 
               <CardContent>
                 {tips.map((tip, index) => (
-                  <TipCard key={index} tip={tip} />
+                  <TipCard key={index} tip={tip as unknown as ITips} />
                 ))}
               </CardContent>
 
@@ -367,10 +368,10 @@ export default function Index() {
   );
 }
 
-export const loader: LoaderFunction = async () => {
-  const [posts, tips] = await Promise.all([
-    generateDummyTips(5),
-    generateDummyPosts(5),
+export const loader = async () => {
+  const [tips, posts] = await Promise.all([
+    generateDummyTips(1),
+    generateDummyPosts(1),
   ]);
 
   return json({ tips, posts });

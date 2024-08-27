@@ -1,12 +1,9 @@
 import {
   Link,
-  NavLink,
   Outlet,
   useLoaderData,
   useLocation,
   useMatches,
-  useParams,
-  useResolvedPath,
 } from "@remix-run/react";
 import {
   PageLayout,
@@ -18,7 +15,6 @@ import Breadcrumb from "~/components/breadcrumb";
 import {
   json,
   LoaderFunction,
-  LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
 import {
@@ -31,13 +27,9 @@ import { Sidebar } from "~/Dashboard/components/sidebar";
 import HeaderIcons from "../components/header-icons";
 import { isAuthUser } from "~/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/User/server/user.server";
-import { commitSession } from "~/utils/session";
-import { Package2 } from "lucide-react";
 import { Navbar } from "../components/navbar";
 import { dashboardMenuFor } from "../utils/menu";
-import * as lo from "lodash";
 import { config } from "@/config";
-import { useEffect } from "react";
 
 export const handle = {
   breadcrumb: {
