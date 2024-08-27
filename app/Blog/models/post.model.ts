@@ -11,6 +11,9 @@ const postSchema = new Schema<IPost, PostModelType>({
   featuredImage: { type: String, required: true },
   tags: { type: [String], required: true },
   publishedOn: { type: Date, required: true },
+},
+{
+  timestamps: true, // Automatically manage createdAt and updatedAt fields
 });
 
 // Create the Post model
