@@ -1,12 +1,17 @@
 import mongoose, { Schema, model, Types, Model } from "mongoose";
-import { ITips, Country } from "../types/tips.type";
+import {
+  ITips,
+  Country,
+  IPrediction,
+  PredictionType,
+} from "../types/tips.type";
 
 export type TipsModelType = Model<ITips>;
 
 const predictionSchema = new Schema<IPrediction>({
   type: {
     type: [String],
-    enum: ["outcome", "scoreline"],
+    enum: Object.keys(PredictionType),
     required: true,
   },
   value: { type: String, required: true },
@@ -19,10 +24,10 @@ const tipsSchema = new Schema<ITips, TipsModelType>(
     teamA: { type: String, required: true },
     teamB: { type: String, required: true },
     matchDate: { type: Date, required: true },
-    country: { 
-      type: String, 
-      enum: Object.keys(Country), 
-      required: true 
+    country: {
+      type: String,
+      enum: Object.keys(Country),
+      required: true,
     },
     league: {
       type: String,

@@ -92,7 +92,7 @@ export default function Index() {
       </div>
 
       <div
-        className="flex-1 w-full bg-repeat md:bg-no-repeat md:bg-cover"
+        className="flex-1 w-full bg-repeat md:bg-no-repeat md:bg-cover md:bg-center"
         style={{
           backgroundImage: `url('/illustrations/bg-man-soccer.svg')`,
         }}
@@ -225,7 +225,7 @@ export default function Index() {
           </div>
 
           <div className="mx-auto grid w-full max-w-3xl items-start p-4 md:p-8 gap-4 overflow-x-hidden">
-            <Card className="w-full bg-white/95 divide-y overflow-x-auto">
+            <Card className="w-full bg-white/90 divide-y overflow-x-auto">
               <CardHeader className="p-0">
                 <div className="flex flex-row flex-wrap items-center justify-center gap-4 px-6 bg-red-500 text-lg text-white font-semibold ">
                   <h3 className="text-lg font-bold tracking-tight pe-4 border-e">
