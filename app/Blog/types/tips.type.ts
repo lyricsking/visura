@@ -6,7 +6,7 @@ export const Country = {
 } as const;
 export type Country = keyof typeof Country;
 
-export interface Tips {
+export interface ITips {
   _id: Types.ObjectId;
   teamA: string;
   teamB: string;
@@ -18,7 +18,7 @@ export interface Tips {
   author: Types.ObjectId;
   introduction: string;
   prediction: string;
-  exercpt: string;
+  excerpt: string;
   featuredImage: string;
   tags: string[];
   publishedOn: Date;

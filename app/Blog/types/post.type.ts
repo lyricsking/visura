@@ -1,11 +1,11 @@
 import { Types } from "mongoose";
 
-export interface INews {
+export interface IPost {
   _id: Types.ObjectId;
   title: string;
   author: Types.ObjectId;
   content: string;
-  exercpt: string;
+  excerpt: string;
   featuredImage: string;
   tags: string[];
   publishedOn: Date;
