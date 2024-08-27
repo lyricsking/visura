@@ -1,4 +1,10 @@
-import { LinksFunction, type MetaFunction } from "@remix-run/node";
+import {
+  LinksFunction,
+  LoaderFunction,
+  LoaderFunctionArgs,
+  json,
+  type MetaFunction,
+} from "@remix-run/node";
 import { findFontByName } from "~/shared/data/fonts";
 import { config } from "@/config";
 import { ListFilter, PlusCircle } from "lucide-react";
@@ -33,6 +39,9 @@ import { SelectItem } from "@radix-ui/react-select";
 import { TipsSummary } from "../components/tips-summary";
 import SoccerSVGComponent from "../components/soccer-background";
 import { cn } from "~/utils";
+import { generateDummyTips } from "../server/tips.server";
+import { generateDummyPosts } from "../server/post.server";
+import { useLoaderData } from "@remix-run/react";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -55,10 +64,14 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const { tips, posts } = useLoaderData<typeof loader>();
+
+  console.log(tips, posts);
+
   const font = findFontByName("Courier Prime");
 
   return (
-    <div className="flex flex-col items-start ">
+    <div className="flex flex-col items-start">
       <div
         className="w-full bg-cover bg-center"
         style={{ backgroundImage: `url('/images/soccer-pitch.jpg')` }}
@@ -350,3 +363,12 @@ export default function Index() {
     </div>
   );
 }
+
+export const loader: LoaderFunction = async () => {
+  const [posts, tips] = await Promise.all([
+    generateDummyTips(5),
+    generateDummyPosts(5),
+  ]);
+
+  return json({ tips, posts });
+};

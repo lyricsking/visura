@@ -15,8 +15,6 @@ import { getUserFromSession } from "~/Auth/server/auth.server";
 import { config } from "@/config";
 
 export default function Layout() {
-  const data = useLoaderData<typeof loader>();
-
   return (
     <PageLayout>
       <PageLayoutHeader position={"sticky"}>
@@ -32,14 +30,14 @@ export default function Layout() {
 
           <div className="flex h-full divide-x">
             <div className="flex-none mx-auto">
-              <AccountMenuButton user={data?.user} />
+              <AccountMenuButton />
             </div>
           </div>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet context={{ user: data.user }} />
+        <Outlet />
       </PageLayoutContent>
 
       <PageLayoutFooter columns="1" asChild>
@@ -48,9 +46,3 @@ export default function Layout() {
     </PageLayout>
   );
 }
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUserFromSession(request);
-
-  return json({ user: user });
-};
