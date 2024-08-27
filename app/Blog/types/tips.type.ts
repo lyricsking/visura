@@ -33,7 +33,7 @@ export interface ITips {
   teamARank: number;
   teamBRank: number;
   author: Types.ObjectId;
-  prediction: IPrediction[];
+  prediction: IPrediction;
   introduction: string;
   excerpt: string;
   featuredImage: string;

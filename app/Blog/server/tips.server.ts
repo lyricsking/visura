@@ -16,49 +16,48 @@ export const createTip = async (data: ITips): Promise<HydratedTips> => {
   }
 };
 
+import { faker } from '@faker-js/faker';
+import { Types } from 'mongoose';
+import { Country, ITips, PredictionType, League } from '../types/tips.type';
+
 export async function generateDummyTips(
   count: number = 5
 ): Promise<HydratedTips[]> {
   const countries = Object.keys(Country) as (keyof typeof Country)[];
   const selectedCountry = faker.helpers.arrayElement(countries);
-  const selectedLeague = faker.helpers.arrayElement(Country[selectedCountry]);
+  const selectedLeague = faker.helpers.arrayElement(Country[selectedCountry]) as League;
 
   let tips = [];
   for (let index = 0; index < count; index++) {
     let tip: ITips = {
       _id: new Types.ObjectId(),
-      teamA: faker.location.city(),
-      teamB: faker.location.city(),
+      teamA: faker.company.name(),
+      teamB: faker.company.name(),
       matchDate: faker.date.future(),
       country: selectedCountry,
       league: selectedLeague,
       teamARank: faker.number.int({ min: 1, max: 20 }),
       teamBRank: faker.number.int({ min: 1, max: 20 }),
       author: new Types.ObjectId(),
-      prediction: [
+      prediction: 
         {
-          type: "outcome",
-          value: faker.helpers.arrayElement(["Win", "Lose", "Draw"]),
-          reason: faker.lorem.sentence(),
-        },
-        {
-          type: "scoreline",
-          value: `${faker.number.int({
-            min: 0,
-            max: 5,
-          })}-${faker.number.int({ min: 0, max: 5 })}`,
-          reason: faker.lorem.sentence(),
-        },
-      ],
+            [PredictionType.outcome]: {
+            value: faker.helpers.arrayElement(['Win', 'Lose', 'Draw']),
+            reason: faker.lorem.sentence(),
+          },
+            [PredictionType.scoreline]: {
+            value: `${faker.number.int({ min: 0, max: 5 })}-${faker.number.int({ min: 0, max: 5 })}`,
+            reason: faker.lorem.sentence(),
+          },
+          },
       introduction: faker.lorem.paragraph(),
       excerpt: faker.lorem.sentence(),
-      featuredImage: faker.image.urlLoremFlickr({ category: "sport" }),
-      tags: faker.helpers.arrayElements(
-        ["football", "premier league", "match", "sports", "prediction"],
-        3
-      ),
+      featuredImage: faker.image.url(),
+      tags: faker.helpers.arrayElements([
+          'football', 'premier league', 'match', 'sports', 'prediction'
+        ], 3),
       publishedOn: faker.date.past(),
-    };
+    }
 
     tips.push(await createTip(tip));
   }
