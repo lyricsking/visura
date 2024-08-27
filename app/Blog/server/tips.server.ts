@@ -16,44 +16,39 @@ export const createTips = async (data: ITips) => {
   }
 };
 
-export const generateDummyTips = (count: number = 5) => {
-  const countries = {
-    England: ["Premier League", "Championship"],
-    Spain: ["La Liga", "Segunda Division"],
-    Italy: ["Serie A", "Serie B"],
-    Germany: ["Bundesliga", "2. Bundesliga"],
-    France: ["Ligue 1", "Ligue 2"],
+function generateDummyTips(): ITips {
+  const countries = Object.keys(Country) as (keyof typeof Country)[];
+  const selectedCountry = faker.helpers.arrayElement(countries);
+  const selectedLeague = faker.helpers.arrayElement(Country[selectedCountry]);
+
+  return {
+    _id: new Types.ObjectId(),
+    teamA: faker.company.name(),
+    teamB: faker.company.name(),
+    matchDate: faker.date.future(),
+    country: selectedCountry,
+    league: selectedLeague,
+    teamARank: faker.datatype.number({ min: 1, max: 20 }),
+    teamBRank: faker.datatype.number({ min: 1, max: 20 }),
+    author: new Types.ObjectId(),
+    prediction: [
+      {
+        type: ["outcome"],
+        value: faker.helpers.arrayElement(['Win', 'Lose', 'Draw']),
+        reason: faker.lorem.sentence(),
+      },
+      {
+        type: ["scoreline"],
+        value: `${faker.datatype.number({ min: 0, max: 5 })}-${faker.datatype.number({ min: 0, max: 5 })}`,
+        reason: faker.lorem.sentence(),
+      },
+    ],
+    introduction: faker.lorem.paragraph(),
+    excerpt: faker.lorem.sentence(),
+    featuredImage: faker.image.sports(),
+    tags: faker.helpers.arrayElements([
+      'football', 'premier league', 'match', 'sports', 'prediction'
+    ], 3),
+    publishedOn: faker.date.past(),
   };
-
-  const posts = [];
-
-  for (let i = 0; i < count; i++) {
-    const country = faker.helpers.objectKey(countries);
-    const league = faker.helpers.arrayElement(countries[country]);
-
-    posts.push({
-      teamA: faker.location.city(),
-      teamB: faker.location.city(),
-      matchDate: faker.date.future(),
-      country,
-      league,
-      teamARank: faker.number.int({ min: 1, max: 20 }),
-      teamBRank: faker.number.int({ min: 1, max: 20 }),
-      author: new mongoose.Types.ObjectId(), // Dummy ObjectId for the author
-      introduction: faker.lorem.sentences(2),
-      prediction: faker.lorem.sentences(1),
-      excerpt: faker.lorem.sentences(2),
-      featuredImage: faker.image.urlLoremFlickr({ category: "sports" }),
-      tags: faker.helpers.arrayElements(
-        ["football", "prediction", "sports", "betting"],
-        3
-      ),
-      publishedOn: faker.date.past(),
-    });
-  }
-
-  return posts;
-};
-
-const dummyTips = generateDummyTips();
-console.log(dummyTips);
+}
