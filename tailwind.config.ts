@@ -6,7 +6,8 @@ export default {
     aspectRatio: false,
   },
   plugins: [
+    require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
-    require("tailwindcss-animate")
+    require("tailwindcss-animate"),
   ],
 } satisfies Config;

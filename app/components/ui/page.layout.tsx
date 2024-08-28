@@ -60,8 +60,8 @@ PageLayoutHeader.displayName = "PageLayoutHeader";
 const headerItemVariants = cva("flex flex-row items-center justify-between", {
   variants: {
     spacing: {
-      normal: "gap-x-4 py-4 px-4",
-      compact: "gap-x-2 py-2 px-2",
+      normal: "gap-x-4 py-8 px-8 md:py-4 md:px-4",
+      compact: "gap-x-2 py-4 px-4 md:py-2 md:px-2",
     },
   },
   defaultVariants: {

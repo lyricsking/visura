@@ -1,41 +1,22 @@
 import {
   LinksFunction,
-  LoaderFunction,
-  LoaderFunctionArgs,
   json,
   type MetaFunction,
 } from "@remix-run/node";
 import { findFontByName } from "~/shared/data/fonts";
 import { config } from "@/config";
 import {
-  ArrowBigDown,
   ArrowBigDownDash,
   ListFilter,
-  LoaderPinwheel,
-  MoreVertical,
-  PlusCircle,
 } from "lucide-react";
 
-import Button, { buttonVariants } from "~/components/button";
+import Button from "~/components/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "~/components/card";
-import { Input } from "~/components/input";
-import { Label } from "~/components/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/table";
-import { ToggleGroup, ToggleGroupItem } from "~/components/toggle.group";
 import {
   Select,
   SelectContent,
@@ -43,10 +24,7 @@ import {
   SelectValue,
 } from "~/components/select";
 import { SelectItem } from "@radix-ui/react-select";
-import { TipsSummary } from "../components/tips-summary";
-import SoccerSVGComponent from "../components/soccer-background";
-import { cn } from "~/utils";
-import { generateDummyTips, getTips } from "../server/tips.server";
+import { getTips } from "../server/tips.server";
 import { generateDummyPosts } from "../server/post.server";
 import { useLoaderData } from "@remix-run/react";
 import { TipCard } from "../components/tip-card";

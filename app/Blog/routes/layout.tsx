@@ -9,26 +9,22 @@ import {
 } from "~/components/ui/page.layout";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { config } from "@/config";
+import Button from "~/components/button";
 
 export default function Layout() {
   return (
     <PageLayout>
-      <PageLayoutHeader position={"sticky"}>
-        <PageLayoutHeaderItem
-          spacing="compact"
-          className="max-h-12 border bg-white rounded-b-sm shadow-md"
-        >
+      <PageLayoutHeader>
+        <PageLayoutHeaderItem spacing={"compact"} className="bg-white">
           <Link to={"/"} replace>
-            <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
+            <h1 className="text-2xl font-bold tracking-tight">
               {config.appName}
             </h1>
           </Link>
 
-          <div className="flex h-full divide-x">
-            <div className="flex-none mx-auto">
-              <AccountMenuButton />
-            </div>
-          </div>
+          <Button variant="outline" className="bg-gray-100" radius="md">
+            Login
+          </Button>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
