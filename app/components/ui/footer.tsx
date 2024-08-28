@@ -1,9 +1,12 @@
+import { config } from "@/config";
+
 export default function Footer() {
   const year = new Date().getFullYear();
+  let copyrightText = config.copyrightText;
 
   return (
     <div className="border-t-2 border-neutral py-6 px-4">
-      <span>&copy; {year}</span> Jamiu Adeniyi
+      <span>&copy; {year}</span> {copyrightText}
     </div>
   );
 }

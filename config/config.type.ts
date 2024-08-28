@@ -1,7 +1,8 @@
 export interface Config {
   appName: string;
+  blogPath: string;
+  copyrightText: string;
   description: string;
-  userDashboardPath: string;
   adminDashboardPath: string;
-  blogPath: string
+  userDashboardPath: string;
 }

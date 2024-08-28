@@ -7,7 +7,7 @@ export const Country = {
 export type Country = keyof typeof Country;
 
 export const PredictionType = {
-  outcome: "Outcome",
+  outcome: "outcome",
   scoreline: "scoreline",
 } as const;
 export type PredictionType = keyof typeof PredictionType;

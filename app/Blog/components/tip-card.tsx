@@ -1,3 +1,4 @@
+import { Calendar, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
 
 type TipCardProps = {
@@ -8,48 +9,42 @@ export const TipCard = (props: TipCardProps) => {
   const { tip } = props;
 
   return (
-    <div className="p-4 border-b border-gray-200">
-      <div className="flex items-center justify-between">
+    <div className="p-4 border-gray-200">
+      <div className="flex flex-col items-start justify-between">
         <div className="flex items-center">
           <img
             src="/path/to/football-icon.png"
             alt="Football"
             className="w-6 h-6 mr-2"
           />
-          <div>
-            <h3 className="text-lg font-semibold">{tip.prediction[0].value}</h3>
-            <p className="text-sm text-gray-500">
-              {tip.country} {tip.league}
-            </p>
-            <p className="text-sm text-gray-500 flex items-center">
-              <span className="mr-2">
-                <i className="calendar-icon" />
-              </span>
-              {/* {tip.matchDate)} */}
-            </p>
-          </div>
+          <h3 className="mb-3 text-xl font-bold">
+            {tip.prediction.outcome.value}
+          </h3>
         </div>
-        <div className="text-right">
-          <p className="text-xl font-bold">{"hfhfhf"}</p>
-          <button className="bg-green-500 text-white px-3 py-1 rounded">
-            Add +
-          </button>
-        </div>
-      </div>
-      <div className="mt-2 flex items-center justify-between">
-        {/* <div className="flex items-center">
-          <span className="mr-1">🏅</span>
-          <p className="text-sm text-gray-600">{tip.experts} experts</p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-600">
-            {tip.winTips} / {tip.totalTips} Win Tips
+        <div>
+          <h4 className="text-md font-semibold">
+            {tip.teamA} vs {tip.teamB}
+          </h4>
+          <p className="text-sm text-gray-500">
+            {tip.country} {tip.league}
           </p>
-          <p className="text-sm text-gray-600">{tip.winPercentage}%</p>
-        </div> */}
+          <p className="text-sm text-gray-500 flex items-center">
+            <span className="mr-2">
+              <Calendar className="h-5 w-5" />
+            </span>
+            {tip.matchDate + ""}
+          </p>
+        </div>
       </div>
-      <div className="mt-2">
-        {/* <p className="text-sm text-gray-500">{tip.comments} comments</p> */}
+      <div className="flex flex-wrap items-center gap-4 mt-2">
+        <div className="inline-flex">
+          <MessageCircleIcon className="h-5 w-5 mr-2" />
+          <p className=" text-sm text-gray-500">9 comments</p>
+        </div>
+        <div className="inline-flex">
+          <span className="h-5 w-5 mr-1">🏅</span>
+          <p className="text-sm text-gray-500">2 experts</p>
+        </div>
       </div>
     </div>
   );
