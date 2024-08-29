@@ -22,7 +22,7 @@ export default function Layout() {
             </h1>
           </Link>
 
-          <Button variant="outline" className="bg-gray-100" radius="md">
+          <Button variant="outline" className=" hidden bg-gray-100" radius="md">
             Login
           </Button>
         </PageLayoutHeaderItem>

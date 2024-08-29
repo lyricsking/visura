@@ -48,7 +48,9 @@ export default function Post() {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   let slug = params["slug"];
   if (!slug) throw Error("Post slug id must be provided.");
+
   let post = await findPostBySlug({ slug });
+  if (!post) throw Error("No post was found with such id.");
 
   return json({ post });
 };
