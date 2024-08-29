@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Types } from "mongoose";
 import Button from "~/components/button";
 import { IPost } from "../types/post.type";
+import { findPostBySlug, findPosts } from "../server/post.server";
 
 export default function Post() {
   const { post } = useLoaderData<typeof loader>();
@@ -46,16 +47,8 @@ export default function Post() {
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   let slug = params["slug"];
-  let post: IPost = {
-    _id: new Types.ObjectId(),
-    title: "Preview Mode for Headless CMS",
-    slug: "preview-mode-headless-cms",
-    author: new Types.ObjectId(),
-    content: "",
-    excerpt: "How to implement preview mode in your headless CMS.",
-    featuredImage: "/illustrations/blog-post-1.webp",
-    tags: [],
-    publishedOn: new Date(),
-  };
+  if (!slug) throw Error("Post slug id must be provided.");
+  let post = await findPostBySlug({ slug });
+
   return json({ post });
 };

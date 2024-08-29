@@ -2,14 +2,17 @@ import { config } from "@/config";
 import { IPost } from "../types/post.type";
 
 type PostSummaryProps = {
-  post: IPost;
+  post: any;
 };
 
 export function PostSummary(props: PostSummaryProps) {
   let { post } = props;
 
   let blogPath = config.blogPath;
-  let dateFormat = post.publishedOn.toDateString();
+  let dateFormat =
+    typeof post.publishedOn === "string"
+      ? post.publishedOn
+      : post.publishedOn.toDateString();
 
   return (
     <article className="group relative flex flex-col space-y-2">

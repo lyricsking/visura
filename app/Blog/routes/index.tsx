@@ -1,22 +1,10 @@
-import {
-  LinksFunction,
-  json,
-  type MetaFunction,
-} from "@remix-run/node";
+import { LinksFunction, json, type MetaFunction } from "@remix-run/node";
 import { findFontByName } from "~/shared/data/fonts";
 import { config } from "@/config";
-import {
-  ArrowBigDownDash,
-  ListFilter,
-} from "lucide-react";
+import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import Button from "~/components/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "~/components/card";
+import { Card, CardContent, CardFooter, CardHeader } from "~/components/card";
 import {
   Select,
   SelectContent,
@@ -24,8 +12,8 @@ import {
   SelectValue,
 } from "~/components/select";
 import { SelectItem } from "@radix-ui/react-select";
-import { getTips } from "../server/tips.server";
-import { generateDummyPosts } from "../server/post.server";
+import { findTips } from "../server/tips.server";
+import { findPosts, generateDummyPosts } from "../server/post.server";
 import { useLoaderData } from "@remix-run/react";
 import { TipCard } from "../components/tip-card";
 import { ITips } from "../types/tips.type";
@@ -154,13 +142,12 @@ export default function Index() {
               </CardHeader>
 
               <CardContent>
-                <ScrollArea className="h-96 w-full" type="auto">
+                <ScrollArea className="h-96 w-full">
                   <div className="grid sm:grid-cols-2 gap-6 p-4 divide-y">
                     {tips.map((tip, index) => (
                       <TipCard key={index} tip={tip as unknown as ITips} />
                     ))}
                   </div>
-                  <ScrollBar orientation="vertical" />
                 </ScrollArea>
               </CardContent>
 
@@ -178,12 +165,17 @@ export default function Index() {
           </div>
 
           <div className="mx-auto w-full max-w-3xl p-4 md:p-8">
-            <div className="mx-auto grid sm:grid-cols-2 w-full bg-white/90 items-start border rounded-md shadow-sm p-4 md:p-8 gap-4">
-              <h3 className="col-span-full mt-2 text-3xl text-center sm:text-4xl font-bold tracking-tight mb-10">
+            <div className="mx-auto w-full bg-white/90 border rounded-md shadow-sm">
+              <h3 className="col-span-full mt-8 text-3xl text-center sm:text-4xl font-bold tracking-tight mb-10">
                 Team News
               </h3>
-
-              <PostSummary post={post} />
+              <ScrollArea className="h-96 w-full">
+                <div className="grid sm:grid-cols-2 w-full items-start p-6 md:p-8 gap-6">
+                  {posts.map((post) => (
+                    <PostSummary key={post._id} post={post} />
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
           </div>
         </div>
@@ -191,23 +183,12 @@ export default function Index() {
     </div>
   );
 }
-const post: IPost = {
-  _id: new Types.ObjectId(),
-  title: "Preview Mode for Headless CMS",
-  slug: "preview-mode-headless-cms",
-  author: new Types.ObjectId(),
-  content: "",
-  excerpt: "How to implement preview mode in your headless CMS.",
-  featuredImage: "/illustrations/blog-post-1.webp",
-  tags: [],
-  publishedOn: new Date(),
-};
+
 export const loader = async () => {
-  const [tips, posts] = await Promise.all([
-    getTips(),
-    //generateDummyTips(20),
-    generateDummyPosts(1),
-  ]);
+  // await generateDummyPosts(10);
+  // await generateDummyTips(20),
+
+  const [tips, posts] = await Promise.all([findTips(), findPosts({})]);
 
   return json({ tips, posts });
 };
