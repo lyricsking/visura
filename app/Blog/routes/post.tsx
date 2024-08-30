@@ -1,9 +1,7 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { Types } from "mongoose";
-import Button from "~/components/button";
-import { IPost } from "../types/post.type";
-import { findPostBySlug, findPosts } from "../server/post.server";
+import { findPostBySlug } from "../server/post.server";
+import ReactMarkdown from "react-markdown";
 
 export default function Post() {
   const { post } = useLoaderData<typeof loader>();
@@ -36,10 +34,9 @@ export default function Post() {
           className="w-full h-auto border rounded-lg mb-6"
         />
         {/* Formatted content here */}
-        <div
-          className="prose md:prose-lg lg:prose-xl"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <div className="prose md:prose-lg lg:prose-xl">
+          <ReactMarkdown>{post.content}</ReactMarkdown>
+        </div>
       </div>
     </article>
   );
