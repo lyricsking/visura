@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { IPost } from "../types/post.type";
-import MDEditor from "~/components/MarkdownEditor";
+import { ClientOnly } from "remix-utils";
+import { MDXEditor } from "~/components/editor.client";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
 import { Textarea } from "~/components/textarea";
-import MarkdownEditor from "~/components/MarkdownEditor";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
@@ -78,13 +77,10 @@ export default function PostForm() {
 
       <div>
         <label htmlFor="content">Content</label>
-        <MarkdownEditor
-          id="content"
-          editorRef={editorRef}
-          name="content"
-          className="rounded-none"
-          defaultValue={content || ""}
-        />
+
+        <ClientOnly fallback={<p>Loading...</p>}>
+          {() => <MDXEditor markdown="Hello world" />}
+        </ClientOnly>
       </div>
 
       <div>
