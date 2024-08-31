@@ -26,7 +26,6 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         <div
           ref={editorRef}
           contentEditable={true}
-          tabIndex={0}
           className="min-h-[200px] border-t-2 bg-white mb-1 mx-1 p-1 outline-none"
           defaultValue={content}
         />
@@ -44,6 +43,7 @@ export function Toolbar({
     let suffix = "";
     if (wrap) suffix = prefix;
     if (!editorRef.current) return;
+    editorRef.current.focus();
 
     const selection = window.getSelection();
     if (!selection?.rangeCount) return;
@@ -52,7 +52,7 @@ export function Toolbar({
     const selectedText = range.toString();
 
     // Remove the selected content
-    range.deleteContents();
+    // range.deleteContents();
 
     // Insert the markdown syntax with the selected text wrapped
     const markdownText = document.createTextNode(
@@ -60,10 +60,9 @@ export function Toolbar({
     );
     range.insertNode(markdownText);
 
-    // Create a new range after the inserted text to move the cursor
+    // set range after the inserted text to move the cursor
     range.setStartAfter(markdownText);
-    range.setEndAfter(markdownText);
-    // range.collapse(false);
+    range.collapse(true);
 
     // Clear current selection and set the new range
     selection.removeAllRanges();
