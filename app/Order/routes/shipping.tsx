@@ -22,7 +22,7 @@ import { useEffect } from "react";
 import { updateCartAddress } from "../server/cart.server";
 import { getSession } from "~/utils/session";
 import { IAddress, IAddressRegion } from "../types/address.type";
-import { getCacheUser } from "~/Auth/server/auth.server";
+import { getAuthUser, getUserFromSession } from "~/Auth/server/auth.server";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";
@@ -104,13 +104,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 // Fetch initial data in the loader
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request);
 
   //  Todo Fetch address and address regions here
-  const user = await getCacheUser(session);
+  const user = await getAuthUser(session);
 
   const [addresses, regions] = await Promise.all([
-    getAddressesByEmail(user["email"]),
+    getAddressesByEmail(user!["email"]),
     getAddressRegions(),
   ]);
 

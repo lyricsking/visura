@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { ClientOnly } from "remix-utils";
-import { MDXEditor } from "~/components/editor.client";
+import { ClientOnly } from "remix-utils/client-only";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
 import { Textarea } from "~/components/textarea";
+import { MarkdownEditor } from "~/components/editor";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
@@ -24,7 +24,7 @@ export default function PostForm() {
       ? new Date(navigation.formData.get("publishedOn")!.toString())
       : new Date();
 
-  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,10 +77,7 @@ export default function PostForm() {
 
       <div>
         <label htmlFor="content">Content</label>
-
-        <ClientOnly fallback={<p>Loading...</p>}>
-          {() => <MDXEditor markdown="Hello world" />}
-        </ClientOnly>
+        <MarkdownEditor content="" editorRef={editorRef} />
       </div>
 
       <div>

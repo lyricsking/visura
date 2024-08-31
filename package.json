@@ -56,8 +56,6 @@
     "react-colorful": "^5.6.1",
     "react-dom": "^18.2.0",
     "react-markdown": "^9.0.1",
-    "remark": "^15.0.1",
-    "remark-html": "^16.0.1",
     "remix-auth": "^3.7.0",
     "remix-auth-google": "^2.0.0",
     "remix-utils": "^7.6.0",

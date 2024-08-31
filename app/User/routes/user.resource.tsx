@@ -1,14 +1,14 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { Types } from "mongoose";
-import { getCacheUser } from "~/Auth/server/auth.server";
-import { getUser } from "../server/user.server";
+import { getAuthUser } from "~/Auth/server/auth.server";
 import { isAuthUser } from "~/Auth/utils/helper";
+import { findUser } from "../server/user.server";
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const authUser = await getCacheUser(request);
+  const authUser = await getAuthUser(request);
   if (authUser && isAuthUser(authUser) && authUser.id != null) {
     let id = params["id"];
-    const user = await getUser({
+    const user = await findUser({
       fields: { email: authUser.email },
       populate: { path: "profile" },
     });
