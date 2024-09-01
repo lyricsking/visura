@@ -12,6 +12,20 @@ import { Textarea, TextareaProps } from "./textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./select";
 import { SelectValue } from "@radix-ui/react-select";
 import { wrap } from "lodash";
+import {
+  BoldIcon,
+  Heading1,
+  Heading1Icon,
+  Heading2,
+  Heading2Icon,
+  Heading3Icon,
+  ImageIcon,
+  ItalicIcon,
+  LinkIcon,
+  QuoteIcon,
+  Strikethrough,
+  StrikethroughIcon,
+} from "lucide-react";
 
 export interface MarkdownEditorProps extends TextareaProps {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -82,18 +96,18 @@ export function Toolbar({
           return insertMarkdown("**", true);
         }}
       >
-        B
+        <BoldIcon className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
         size="icon"
-        className=""
+        className="italic"
         onMouseDown={(e) => {
           e.preventDefault(); // Prevent the form losing focus
           return insertMarkdown("__", true);
         }}
       >
-        I
+        <ItalicIcon className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
@@ -104,7 +118,7 @@ export function Toolbar({
           return insertMarkdown("~~", true);
         }}
       >
-        S
+        <StrikethroughIcon className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
@@ -115,7 +129,7 @@ export function Toolbar({
           return insertMarkdown("# ");
         }}
       >
-        H1
+        <Heading1Icon className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
@@ -126,7 +140,7 @@ export function Toolbar({
           return insertMarkdown("## ");
         }}
       >
-        H2
+        <Heading2Icon className="w-5 h-5" />
       </Button>
       <Button
         variant="ghost"
@@ -137,7 +151,40 @@ export function Toolbar({
           return insertMarkdown("### ");
         }}
       >
-        H3
+        <Heading3Icon className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        <ImageIcon className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        <QuoteIcon className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        <LinkIcon className="w-5 h-5" />
       </Button>
 
       <div className="ml-auto ">
