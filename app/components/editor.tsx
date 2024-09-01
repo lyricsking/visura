@@ -8,68 +8,70 @@ import {
 import "@mdxeditor/editor/style.css";
 import { MutableRefObject, useRef } from "react";
 import Button from "./button";
+import { Textarea, TextareaProps } from "./textarea";
 
-export type MarkdownEditorProps = {
-  content: string;
-  editorRef: MutableRefObject<HTMLDivElement | null>;
-};
+export interface MarkdownEditorProps extends TextareaProps {
+  editorRef: MutableRefObject<HTMLTextAreaElement | null>;
+}
 
 export function MarkdownEditor(props: MarkdownEditorProps) {
-  const { editorRef, content } = props;
+  const { editorRef, ...attrs } = props;
 
   return (
     <div className="flex rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
       <div className="w-full">
         {/* Toolbar */}
-        <Toolbar editorRef={editorRef} />
+        <Toolbar textareaRef={editorRef} />
         {/* EditableContent Div */}
-        <div
-          ref={editorRef}
-          contentEditable={true}
-          className="min-h-[200px] border-t-2 bg-white mb-1 mx-1 p-1 outline-none"
-          defaultValue={content}
-        />
+        <div className="mx-1 mb-1">
+          <Textarea
+            ref={editorRef}
+            className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
+            {...attrs}
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 export function Toolbar({
-  editorRef,
+  textareaRef,
 }: {
-  editorRef: MutableRefObject<HTMLDivElement | null>;
+  textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
 }) {
-  const insertMarkdown = (prefix: string, wrap: boolean = false) => {
+  const insertMarkdown = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    prefix: string,
+    shouldWrap: boolean = false
+  ) => {
+    e.preventDefault(); // Prevent the form losing focus
+
     let suffix = "";
-    if (wrap) suffix = prefix;
-    if (!editorRef.current) return;
-    editorRef.current.focus();
+    if (shouldWrap) suffix = prefix;
 
-    const selection = window.getSelection();
-    if (!selection?.rangeCount) return;
+    if (!textareaRef.current) return;
 
-    const range = selection.getRangeAt(0);
-    const selectedText = range.toString();
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
 
-    // Remove the selected content
-    // range.deleteContents();
+    const markdownText = `${prefix}${selectedText}${suffix}`;
+    const newText =
+      textarea.value.substring(0, start) +
+      markdownText +
+      textarea.value.substring(end);
 
-    // Insert the markdown syntax with the selected text wrapped
-    const markdownText = document.createTextNode(
-      `${prefix}${selectedText}${suffix}`
+    textarea.value = newText;
+
+    // Move the cursor to after the inserted text
+    textarea.setSelectionRange(
+      start + prefix.length,
+      start + suffix.length + selectedText.length
     );
-    range.insertNode(markdownText);
-
-    // set range after the inserted text to move the cursor
-    range.setStartAfter(markdownText);
-    range.collapse(true);
-
-    // Clear current selection and set the new range
-    selection.removeAllRanges();
-    selection.addRange(range);
-    selection.collapseToEnd(); // Explicitly collapse to the end of the inserted text
-    // Focus back on the editable div to ensure the cursor is visible
-    editorRef.current.focus();
+    // Focus back on the editable textarea to ensure the cursor is visible
+    textarea.focus();
   };
 
   return (
@@ -77,24 +79,39 @@ export function Toolbar({
       <Button
         variant="outline"
         className="font-bold bg-white"
-        onClick={() => insertMarkdown("**", true)}
+        onMouseDown={(e) => insertMarkdown(e, "**", true)}
       >
         B
       </Button>
       <Button
         variant="outline"
         className="italics bg-white"
-        onClick={() => insertMarkdown("__", true)}
+        onMouseDown={(e) => insertMarkdown(e, "__", true)}
       >
         I
       </Button>
       <Button
         variant="outline"
         className="line bg-white"
-        onClick={() => insertMarkdown("~~", true)}
+        onMouseDown={(e) => insertMarkdown(e, "~~", true)}
       >
         S
       </Button>
+      <select
+        className="border p-1"
+        onChange={(e) => applyFormatting("formatBlock", e.target.value)}
+      >
+        <option value="h1">Heading 1</option>
+        <option value="h2">Heading 2</option>
+        <option value="h3">Heading 3</option>
+        <option value="p">Paragraph</option>
+      </select>
+      <button
+        className="border p-1"
+        onClick={() => alert("Preview not implemented yet")}
+      >
+        Preview
+      </button>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function PostForm() {
       ? new Date(navigation.formData.get("publishedOn")!.toString())
       : new Date();
 
-  const editorRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +58,6 @@ export default function PostForm() {
           type="text"
           name="slug"
           defaultValue={slug || ""}
-          required
           className="input"
         />
       </div>
@@ -77,7 +76,11 @@ export default function PostForm() {
 
       <div>
         <label htmlFor="content">Content</label>
-        <MarkdownEditor content="" editorRef={editorRef} />
+        <MarkdownEditor
+          name="content"
+          defaultValue={content || ""}
+          editorRef={editorRef}
+        />
       </div>
 
       <div>
@@ -121,9 +124,7 @@ export default function PostForm() {
         />
       </div>
 
-      <div>
-        <Button type="submit">Save Post</Button>
-      </div>
+      <div>{/* <Button type="submit">Save Post</Button>*/}</div>
     </Form>
   );
 }
