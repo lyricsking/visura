@@ -74,7 +74,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         </div>
         {/* EditableContent Div and Preview */}
         <div className="mx-1 mb-1">
-          {/***/}
+          {/* The editor textarea */}
           <Textarea
             ref={editorRef}
             className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
