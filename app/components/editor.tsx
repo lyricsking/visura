@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "./select";
 import { SelectValue } from "@radix-ui/react-select";
 import { wrap } from "lodash";
 import {
+  AlignJustifyIcon,
   BoldIcon,
   Heading1,
   Heading1Icon,
@@ -22,6 +23,10 @@ import {
   ImageIcon,
   ItalicIcon,
   LinkIcon,
+  ListEndIcon,
+  ListIcon,
+  ListOrderedIcon,
+  ListXIcon,
   QuoteIcon,
   Strikethrough,
   StrikethroughIcon,
@@ -185,6 +190,39 @@ export function Toolbar({
         }}
       >
         <LinkIcon className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        <ListIcon className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        <ListOrderedIcon className="w-5 h-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        <AlignJustifyIcon className="w-5 h-5" />
       </Button>
 
       <div className="ml-auto ">
