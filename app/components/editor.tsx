@@ -9,6 +9,9 @@ import "@mdxeditor/editor/style.css";
 import { MutableRefObject, useRef } from "react";
 import Button from "./button";
 import { Textarea, TextareaProps } from "./textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./select";
+import { SelectValue } from "@radix-ui/react-select";
+import { wrap } from "lodash";
 
 export interface MarkdownEditorProps extends TextareaProps {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -40,13 +43,7 @@ export function Toolbar({
 }: {
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
 }) {
-  const insertMarkdown = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    prefix: string,
-    shouldWrap: boolean = false
-  ) => {
-    e.preventDefault(); // Prevent the form losing focus
-
+  const insertMarkdown = (prefix: string, shouldWrap: boolean = false) => {
     let suffix = "";
     if (shouldWrap) suffix = prefix;
 
@@ -68,50 +65,58 @@ export function Toolbar({
     // Move the cursor to after the inserted text
     textarea.setSelectionRange(
       start + prefix.length,
-      start + suffix.length + selectedText.length
+      start + prefix.length + selectedText.length
     );
     // Focus back on the editable textarea to ensure the cursor is visible
     textarea.focus();
   };
 
   return (
-    <div className="flex space-x-1 p-1">
-      <Button
-        variant="outline"
-        className="font-bold bg-white"
-        onMouseDown={(e) => insertMarkdown(e, "**", true)}
-      >
-        B
-      </Button>
-      <Button
-        variant="outline"
-        className="italics bg-white"
-        onMouseDown={(e) => insertMarkdown(e, "__", true)}
-      >
-        I
-      </Button>
-      <Button
-        variant="outline"
-        className="line bg-white"
-        onMouseDown={(e) => insertMarkdown(e, "~~", true)}
-      >
-        S
-      </Button>
-      <select
-        className="border p-1"
-        onChange={(e) => applyFormatting("formatBlock", e.target.value)}
-      >
-        <option value="h1">Heading 1</option>
-        <option value="h2">Heading 2</option>
-        <option value="h3">Heading 3</option>
-        <option value="p">Paragraph</option>
-      </select>
-      <button
-        className="border p-1"
-        onClick={() => alert("Preview not implemented yet")}
-      >
-        Preview
-      </button>
-    </div>
+      <div className="grid grid-flow-col auto-cols-auto gap-1 overflow-x-auto">
+        <Button
+          variant="text"
+          size="xs"
+          className="font-bold bg-white"
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("**", true);
+          }}
+        >
+          B
+        </Button>
+        <Button
+          variant="text"
+          size="xs"
+          className="italics bg-white"
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("__", true);
+          }}
+        >
+          I
+        </Button>
+        <Button
+          variant="text"
+          size="xs"
+          className="line bg-white"
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("~~", true);
+          }}
+        >
+          S
+        </Button>
+
+        <div className="ml-auto border-s">
+          <Button
+            variant="text"
+            size="xs"
+            className="italics bg-white "
+            onClick={() => alert("Preview not implemented yet")}
+          >
+            Preview
+          </Button>
+        </div>
+      </div>
   );
 }
