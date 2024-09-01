@@ -13,7 +13,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "./select";
 import { SelectValue } from "@radix-ui/react-select";
 import { wrap } from "lodash";
 import {
+  AlignHorizontalDistributeCenter,
   AlignJustifyIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
   BoldIcon,
   Heading1,
   Heading1Icon,
@@ -91,140 +94,163 @@ export function Toolbar({
   };
 
   return (
-    <div className="flex items-center gap-2 px-2 divide-x border-black overflow-x-auto">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="shrink-0 grow-0 font-bold"
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("**", true);
-        }}
-      >
-        <BoldIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="italic"
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("__", true);
-        }}
-      >
-        <ItalicIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("~~", true);
-        }}
-      >
-        <StrikethroughIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("# ");
-        }}
-      >
-        <Heading1Icon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("## ");
-        }}
-      >
-        <Heading2Icon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <Heading3Icon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <ImageIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <QuoteIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <LinkIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <ListIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <ListOrderedIcon className="w-5 h-5" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="line "
-        onMouseDown={(e) => {
-          e.preventDefault(); // Prevent the form losing focus
-          return insertMarkdown("### ");
-        }}
-      >
-        <AlignJustifyIcon className="w-5 h-5" />
-      </Button>
-
+    <div className="flex items-center gap-2 px-2 divide-x border-black overflow-hidden">
+      <div className="flex items-center gap-2 divide-x border-black overflow-x-auto">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="shrink-0 grow-0 font-bold"
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("**", true);
+          }}
+        >
+          <BoldIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="italic"
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("__", true);
+          }}
+        >
+          <ItalicIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("~~", true);
+          }}
+        >
+          <StrikethroughIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("# ");
+          }}
+        >
+          <Heading1Icon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("## ");
+          }}
+        >
+          <Heading2Icon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <Heading3Icon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <ImageIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <QuoteIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <LinkIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <ListIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <ListOrderedIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <AlignLeftIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <AlignJustifyIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="line "
+          onMouseDown={(e) => {
+            e.preventDefault(); // Prevent the form losing focus
+            return insertMarkdown("### ");
+          }}
+        >
+          <AlignRightIcon className="w-5 h-5" />
+        </Button>
+      </div>
       <div className="ml-auto ">
         <Button
           variant="ghost"
