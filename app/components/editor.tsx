@@ -68,55 +68,88 @@ export function Toolbar({
       start + prefix.length + selectedText.length
     );
     // Focus back on the editable textarea to ensure the cursor is visible
-    textarea.focus();
+    //textarea.focus();
   };
 
   return (
-      <div className="grid grid-flow-col auto-cols-auto gap-1 overflow-x-auto">
-        <Button
-          variant="text"
-          size="xs"
-          className="font-bold bg-white"
-          onMouseDown={(e) => {
-            e.preventDefault(); // Prevent the form losing focus
-            return insertMarkdown("**", true);
-          }}
-        >
-          B
-        </Button>
-        <Button
-          variant="text"
-          size="xs"
-          className="italics bg-white"
-          onMouseDown={(e) => {
-            e.preventDefault(); // Prevent the form losing focus
-            return insertMarkdown("__", true);
-          }}
-        >
-          I
-        </Button>
-        <Button
-          variant="text"
-          size="xs"
-          className="line bg-white"
-          onMouseDown={(e) => {
-            e.preventDefault(); // Prevent the form losing focus
-            return insertMarkdown("~~", true);
-          }}
-        >
-          S
-        </Button>
+    <div className="flex items-center gap-2 px-2 divide-x border-black overflow-x-auto">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="shrink-0 grow-0 font-bold"
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("**", true);
+        }}
+      >
+        B
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="italics"
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("__", true);
+        }}
+      >
+        I
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("~~", true);
+        }}
+      >
+        S
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("# ");
+        }}
+      >
+        H1
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("## ");
+        }}
+      >
+        H2
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="line "
+        onMouseDown={(e) => {
+          e.preventDefault(); // Prevent the form losing focus
+          return insertMarkdown("### ");
+        }}
+      >
+        H3
+      </Button>
 
-        <div className="ml-auto border-s">
-          <Button
-            variant="text"
-            size="xs"
-            className="italics bg-white "
-            onClick={() => alert("Preview not implemented yet")}
-          >
-            Preview
-          </Button>
-        </div>
+      <div className="ml-auto ">
+        <Button
+          variant="ghost"
+          size="default"
+          className="italics"
+          onClick={() => alert("Preview not implemented yet")}
+        >
+          Preview
+        </Button>
       </div>
+    </div>
   );
 }
