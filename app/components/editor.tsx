@@ -87,7 +87,7 @@ export function Toolbar({
       <Button
         variant="ghost"
         size="icon"
-        className="italics"
+        className=""
         onMouseDown={(e) => {
           e.preventDefault(); // Prevent the form losing focus
           return insertMarkdown("__", true);
@@ -144,7 +144,6 @@ export function Toolbar({
         <Button
           variant="ghost"
           size="default"
-          className="italics"
           onClick={() => alert("Preview not implemented yet")}
         >
           Preview
