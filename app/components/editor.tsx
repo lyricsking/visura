@@ -68,18 +68,18 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   }, 500);
 
   // Debounce function to reduce frequency of state-saving
-  function debounce(func: Function, wait: number) {
+  function debounce(saveFunc: Function, wait: number) {
     let timeout: NodeJS.Timeout;
     return function (...args: any[]) {
       const later = () => {
         clearTimeout(timeout);
-        func(...args);
+        saveFunc(...args);
       };
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
   }
-  
+
   const handleUndo = () => {
     const history = historyRef.current;
     if (history.length > 0) {
@@ -103,7 +103,6 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     }
   };
 
-  
   return (
     <div className="flex rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
       <div className="w-full">
