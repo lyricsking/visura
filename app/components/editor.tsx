@@ -243,33 +243,25 @@ export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
   };
 
   return (
-    <div className="w-full">
-      <ScrollArea
-        className="w-64 whitespace-nowrap rounded-md border"
-        type="always"
-      >
-        <div className="flex w-max space-x-4 p-4">
-          {itemsKey.map((itemKey) => {
-            let item = toolbarItems[itemKey];
-            const IconTag = item.icon;
+    <div className="grid grid-flow-col auto-cols-min space-x-4 p-4 divide-x overflow-x-auto">
+      {itemsKey.map((itemKey) => {
+        let item = toolbarItems[itemKey];
+        const IconTag = item.icon;
 
-            return (
-              <div
-                key={item.prefix}
-                // variant="ghost"
-                // size="icon"
-                onMouseDown={(e) => {
-                  e.preventDefault(); // Prevent the form from losing focus
-                  return insertMarkdown(item.prefix, item.suffix);
-                }}
-              >
-                <IconTag className="w-5 h-5" />
-              </div>
-            );
-          })}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+        return (
+          <div
+            key={item.prefix}
+            // variant="ghost"
+            // size="icon"
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent the form from losing focus
+              return insertMarkdown(item.prefix, item.suffix);
+            }}
+          >
+            <IconTag className="w-5 h-5" />
+          </div>
+        );
+      })}
     </div>
   );
 }
