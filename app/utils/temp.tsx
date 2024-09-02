@@ -1,51 +1,52 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useRef } from 'react';
 
 const MarkdownTextarea: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [history, setHistory] = useState<string[]>([]);
-  const [redoStack, setRedoStack] = useState<string[]>([]);
-  const [currentText, setCurrentText] = useState<string>('');
-  
-  const MAX_HISTORY_SIZE = 50; // Limit the history size
-  
+  const historyRef = useRef<string[]>([]);
+  const redoStackRef = useRef<string[]>([]);
+  const MAX_HISTORY_SIZE = 50;
+
   const saveToHistory = (text: string) => {
-    setHistory(prevHistory => {
-      const newHistory = [...prevHistory, text];
-      if (newHistory.length > MAX_HISTORY_SIZE) {
-        newHistory.shift(); // Remove the oldest state if limit exceeded
-      }
-      return newHistory;
-    });
-    setRedoStack([]); // Clear redo stack on new changes
+    const history = historyRef.current;
+    history.push(text);
+    if (history.length > MAX_HISTORY_SIZE) {
+      history.shift(); // Remove the oldest state if limit exceeded
+    }
+    redoStackRef.current = []; // Clear redo stack on new changes
   };
 
-  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
-    setCurrentText(newText);
+    if (textareaRef.current) {
+      textareaRef.current.value = newText;
+    }
     debouncedSaveToHistory(newText);
-  }, []);
+  };
 
-  const debouncedSaveToHistory = useCallback(
-    debounce((text: string) => saveToHistory(text), 500), // Debounce state saving by 500ms
-    []
-  );
+  const debouncedSaveToHistory = debounce((text: string) => {
+    saveToHistory(text);
+  }, 500);
 
   const handleUndo = () => {
+    const history = historyRef.current;
     if (history.length > 0) {
-      const newRedoStack = [...redoStack, currentText];
-      const lastState = history[history.length - 1];
-      setRedoStack(newRedoStack);
-      setHistory(history.slice(0, history.length - 1));
-      setCurrentText(lastState);
+      const currentText = textareaRef.current?.value || '';
+      redoStackRef.current.push(currentText);
+      const lastState = history.pop();
+      if (textareaRef.current && lastState !== undefined) {
+        textareaRef.current.value = lastState;
+      }
     }
   };
 
   const handleRedo = () => {
+    const redoStack = redoStackRef.current;
     if (redoStack.length > 0) {
-      const nextState = redoStack[redoStack.length - 1];
-      setRedoStack(redoStack.slice(0, redoStack.length - 1));
-      saveToHistory(currentText);
-      setCurrentText(nextState);
+      const nextState = redoStack.pop();
+      if (textareaRef.current && nextState !== undefined) {
+        saveToHistory(textareaRef.current.value);
+        textareaRef.current.value = nextState;
+      }
     }
   };
 
@@ -66,10 +67,10 @@ const MarkdownTextarea: React.FC = () => {
     <div className="border rounded-md p-2 w-full max-w-lg">
       {/* Toolbar */}
       <div className="flex space-x-2 mb-2">
-        <button type="button" className="border p-1" onClick={handleUndo} disabled={history.length === 0}>
+        <button type="button" className="border p-1" onClick={handleUndo}>
           Undo
         </button>
-        <button type="button" className="border p-1" onClick={handleRedo} disabled={redoStack.length === 0}>
+        <button type="button" className="border p-1" onClick={handleRedo}>
           Redo
         </button>
         {/* Other toolbar buttons like Bold, Italic, etc. */}
@@ -80,7 +81,6 @@ const MarkdownTextarea: React.FC = () => {
         ref={textareaRef}
         className="border p-2 min-h-[200px] w-full outline-none"
         placeholder="Start typing..."
-        value={currentText}
         onChange={handleInputChange}
       ></textarea>
     </div>
