@@ -14,7 +14,7 @@ export default function PostForm() {
   let title = navigation.formData?.get("title")?.toString() || "";
   let slug = navigation.formData?.get("slug")?.toString() || "";
   let author = navigation.formData?.get("author")?.toString() || "";
-  let content = navigation.formData?.get("content")?.toString() || "";
+  let content = navigation.formData?.get("content")?.toString() || "> Block";
   let excerpt = navigation.formData?.get("excerpt")?.toString() || "";
   let tags = navigation.formData?.get("tags")?.toString().split(", ") || [];
   let publishedOn =
