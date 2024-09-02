@@ -15,7 +15,9 @@ import {
   ListIcon,
   ListOrderedIcon,
   QuoteIcon,
+  Redo2Icon,
   StrikethroughIcon,
+  Undo2Icon,
 } from "lucide-react";
 import { useSearchParams } from "@remix-run/react";
 import { customMarkdownParser } from "~/utils/md-helper";
@@ -110,12 +112,12 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     <div className="flex rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
       <div className="w-full">
         <div className="flex items-center h-16 gap-2 px-2 divide-x border-black overflow-hidden">
-          <button type="button" className="border p-1" onClick={handleUndo}>
-            Undo
-          </button>
-          <button type="button" className="border p-1" onClick={handleRedo}>
-            Redo
-          </button>
+          <Button  className="border p-1" onClick={handleUndo}>
+            <Undo2Icon className="h-5 w-5" />
+          </Button>
+          <Button className="border p-1" onClick={handleRedo}>
+            <Redo2Icon className="h-5 w-5" />
+          </Button>
           {/* Toolbar */}
           <Toolbar editorRef={editorRef} itemsKey={["bold", "italic"]} />
           {/* Preview toggle */}
