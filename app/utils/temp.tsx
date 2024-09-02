@@ -6,6 +6,7 @@ const MarkdownTextarea: React.FC = () => {
   const redoStackRef = useRef<string[]>([]);
   const MAX_HISTORY_SIZE = 50;
 
+
   const saveToHistory = (text: string) => {
     const history = historyRef.current;
     history.push(text);
@@ -30,7 +31,7 @@ const MarkdownTextarea: React.FC = () => {
   const handleUndo = () => {
     const history = historyRef.current;
     if (history.length > 0) {
-      const currentText = textareaRef.current?.value || '';
+      const currentText = textareaRef.current?.value || "";
       redoStackRef.current.push(currentText);
       const lastState = history.pop();
       if (textareaRef.current && lastState !== undefined) {
@@ -62,7 +63,7 @@ const MarkdownTextarea: React.FC = () => {
       timeout = setTimeout(later, wait);
     };
   }
-
+  
   return (
     <div className="border rounded-md p-2 w-full max-w-lg">
       {/* Toolbar */}
