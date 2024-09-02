@@ -34,9 +34,11 @@ export interface MarkdownEditorProps extends TextareaProps {
 }
 
 export function MarkdownEditor(props: MarkdownEditorProps) {
-  const { editorRef, ...attrs } = props;
+  const { editorRef, defaultValue, ...attrs } = props;
   const historyStackRef = useRef<string[]>([]);
   const redoStackRef = useRef<string[]>([]);
+  const contentRef = useRef<string>(defaultValue||"");
+  
   const MAX_HISTORY_SIZE = 50;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -71,41 +73,27 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
-    if (editorRef.current) {
-      editorRef.current.value = newText;
-    }
+  
+    contentRef.current = newText;
 
-    // saveToHistoryWithDebounce(newText);
+    saveToHistoryWithDebounce(newText);
   };
 
   const saveToHistoryWithDebounce = debounce((text: string) => {
     saveToHistory(text);
   }, 500);
 
-  // Debounce function to reduce frequency of state-saving
-  function debounce(saveFunc: Function, wait: number) {
-    let timeout: NodeJS.Timeout;
-    return function (...args: any[]) {
-      // callback funcion passed to setTimeout
-      const later = () => {
-        // Clear this active timeout from memory, sice we are handling it.
-        clearTimeout(timeout);
-        saveFunc(...args);
-      };
-      // Clear existing timeout, before setting a new one, this ensures that only the saveFunc is called once within 500ms.
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  }
-
   const handleUndo = () => {
     const history = historyStackRef.current;
     if (history.length > 0) {
-      const currentText = editorRef.current?.value || "";
+      const currentText = contentRef.current;
       redoStackRef.current.push(currentText);
       const lastState = history.pop();
-      if (editorRef.current && lastState !== undefined) {
+      if (lastState !== undefined) {
+        contentRef.current = lastState;
+        if(editorRef.current){
         editorRef.current.value = lastState;
+        }
       }
     }
   };
@@ -114,13 +102,16 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     const redoStack = redoStackRef.current;
     if (redoStack.length > 0) {
       const nextState = redoStack.pop();
-      if (editorRef.current && nextState !== undefined) {
-        saveToHistory(editorRef.current.value);
-        editorRef.current.value = nextState;
+      if (nextState !== undefined) {
+        saveToHistory(contentRef.current);
+        contentRef.current = nextState;
+        if (editorRef.current) {
+          editorRef.current.value = nextState;
+        }
       }
     }
   };
-
+  
   const tools = [
     "bold",
     "italic",
@@ -183,6 +174,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
             <Textarea
               ref={editorRef}
               onInput={handleInputChange}
+              defaultValue={contentRef.current}
               className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
               {...attrs}
             />
@@ -191,10 +183,8 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
           <>
             {/* Preview */}
             <div className="min-h-44 w-full border-t-2 bg-white p-2">
-              <ReactMarkdown allowedElements={["div"]}>
-                {customMarkdownParser(
-                  editorRef.current ? editorRef.current.value : ""
-                )}
+              <ReactMarkdown>
+                {customMarkdownParser(contentRef.current)}
               </ReactMarkdown>
             </div>
           </>
@@ -203,6 +193,22 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     </div>
   );
 }
+
+  // Debounce function to reduce frequency of state-saving
+  function debounce(saveFunc: Function, wait: number) {
+    let timeout: NodeJS.Timeout;
+    return function (...args: any[]) {
+      // callback funcion passed to setTimeout
+      const later = () => {
+        // Clear this active timeout from memory, sice we are handling it.
+        clearTimeout(timeout);
+        saveFunc(...args);
+      };
+      // Clear existing timeout, before setting a new one, this ensures that only the saveFunc is called once within 500ms.
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
 
 type ToolbarItem = {
   prefix: string;
