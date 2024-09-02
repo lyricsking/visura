@@ -19,9 +19,10 @@ import {
   StrikethroughIcon,
   Undo2Icon,
 } from "lucide-react";
-import { useSearchParams } from "@remix-run/react";
+import { NavLink, useSearchParams } from "@remix-run/react";
 import { customMarkdownParser } from "~/utils/md-helper";
 import ReactMarkdown from "react-markdown";
+import { cn } from "~/utils";
 
 export interface MarkdownEditorProps extends TextareaProps {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -34,6 +35,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   const MAX_HISTORY_SIZE = 50;
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const isPreviewMode = searchParams.has("preview");
 
   const togglePreview = () => {
     setSearchParams((prev) => {
@@ -112,38 +114,50 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     <div className="flex rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
       <div className="w-full">
         <div className="flex items-center h-16 gap-2 px-2 divide-x border-black overflow-hidden">
-          <Button  className="border p-1" onClick={handleUndo}>
+          <Button variant="ghost" size="icon" onClick={handleUndo}>
             <Undo2Icon className="h-5 w-5" />
           </Button>
-          <Button className="border p-1" onClick={handleRedo}>
+          <Button variant="ghost" size="icon" onClick={handleRedo}>
             <Redo2Icon className="h-5 w-5" />
           </Button>
           {/* Toolbar */}
           <Toolbar editorRef={editorRef} itemsKey={["bold", "italic"]} />
           {/* Preview toggle */}
-          <div className="ml-auto ">
-            <Button variant="ghost" size="default" onClick={togglePreview}>
+          <div className="ml-auto">
+            <Button
+              variant="ghost"
+              size="default"
+              onClick={togglePreview}
+              className={cn(isPreviewMode && "bg-green-500 text-white")}
+            >
               Preview
             </Button>
           </div>
         </div>
         {/* EditableContent Div and Preview */}
         <div className="mx-1 mb-1">
-          {/* The editor textarea */}
-          <Textarea
-            ref={editorRef}
-            onInput={handleInputChange}
-            className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
-            {...attrs}
-          />
-          {/* Preview */}
-          <div className="min-h-44 w-full border-t-2 bg-white p-2">
-            <ReactMarkdown>
-              {customMarkdownParser(
-                editorRef.current ? editorRef.current.value : ""
-              )}
-            </ReactMarkdown>
-          </div>
+          {!isPreviewMode ? (
+            <>
+              {/* The editor textarea */}
+              <Textarea
+                ref={editorRef}
+                onInput={handleInputChange}
+                className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
+                {...attrs}
+              />
+            </>
+          ) : (
+            <>
+              {/* Preview */}
+              <div className="min-h-44 w-full border-t-2 bg-white p-2">
+                <ReactMarkdown>
+                  {customMarkdownParser(
+                    editorRef.current ? editorRef.current.value : ""
+                  )}
+                </ReactMarkdown>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
