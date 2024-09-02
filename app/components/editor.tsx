@@ -1,4 +1,3 @@
-import "@mdxeditor/editor/style.css";
 import { MutableRefObject, useRef } from "react";
 import Button from "./button";
 import { Textarea, TextareaProps } from "./textarea";
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "@remix-run/react";
 import { customMarkdownParser } from "~/utils/md-helper";
+import ReactMarkdown from "react-markdown";
 
 export interface MarkdownEditorProps extends TextareaProps {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -71,10 +71,13 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   function debounce(saveFunc: Function, wait: number) {
     let timeout: NodeJS.Timeout;
     return function (...args: any[]) {
+      // callback funcion passed to setTimeout
       const later = () => {
+        // Clear this active timeout from memory, sice we are handling it.
         clearTimeout(timeout);
         saveFunc(...args);
       };
+      // Clear existing timeout, before setting a new one, this ensures that only the saveFunc is called once within 500ms.
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
@@ -114,7 +117,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
             Redo
           </button>
           {/* Toolbar */}
-          <Toolbar editorRef={editorRef} itemsKey={["bold"]} />
+          <Toolbar editorRef={editorRef} itemsKey={["bold", "italic"]} />
           {/* Preview toggle */}
           <div className="ml-auto ">
             <Button variant="ghost" size="default" onClick={togglePreview}>
@@ -134,7 +137,9 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
           {/* Preview */}
           <div className="min-h-44 w-full border-t-2 bg-white p-2">
             <ReactMarkdown>
-              {customMarkdownParser(editorRef.current.value)}
+              {customMarkdownParser(
+                editorRef.current ? editorRef.current.value : ""
+              )}
             </ReactMarkdown>
           </div>
         </div>
@@ -148,6 +153,61 @@ type ToolbarItem = {
   suffix?: string;
   icon: React.ElementType;
 };
+
+type ToolbarProps = {
+  editorRef: MutableRefObject<HTMLTextAreaElement | null>;
+  itemsKey: (keyof typeof toolbarItems)[];
+};
+
+export function Toolbar({ editorRef, itemsKey }: ToolbarProps) {
+  //  Todo Memoize to avoid re-initializing for each re-render.
+  const insertMarkdown = (prefix: string, suffix: string = "") => {
+    if (!editorRef.current) return;
+
+    const textarea = editorRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    const markdownText = `${prefix}${selectedText}${suffix}`;
+    const newText =
+      textarea.value.substring(0, start) +
+      markdownText +
+      textarea.value.substring(end);
+
+    textarea.value = newText;
+
+    // Move the cursor to after the inserted text
+    textarea.setSelectionRange(
+      start + prefix.length,
+      start + prefix.length + selectedText.length
+    );
+    // Focus back on the editable textarea to ensure the cursor is visible
+    //textarea.focus();
+  };
+
+  return (
+    <div className="flex items-center gap-2 divide-x border-black overflow-x-auto">
+      {itemsKey.map((itemKey) => {
+        let item = toolbarItems[itemKey];
+        const IconTag = item.icon;
+
+        return (
+          <Button
+            variant="ghost"
+            size="icon"
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent the form from losing focus
+              return insertMarkdown(item.prefix, item.suffix);
+            }}
+          >
+            <IconTag className="w-5 h-5" />
+          </Button>
+        );
+      })}
+    </div>
+  );
+}
 
 const toolbarItems: Record<string, ToolbarItem> = {
   bold: {
@@ -213,58 +273,3 @@ const toolbarItems: Record<string, ToolbarItem> = {
     icon: AlignJustifyIcon,
   },
 } as const;
-
-type ToolbarProps = {
-  editorRef: MutableRefObject<HTMLTextAreaElement | null>;
-  itemsKey: (keyof typeof toolbarItems)[];
-};
-
-export function Toolbar({ editorRef, itemsKey }: ToolbarProps) {
-  //  Todo Memoize to avoid re-initializing for each re-render.
-  const insertMarkdown = (prefix: string, suffix: string = "") => {
-    if (!editorRef.current) return;
-
-    const textarea = editorRef.current;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-
-    const markdownText = `${prefix}${selectedText}${suffix}`;
-    const newText =
-      textarea.value.substring(0, start) +
-      markdownText +
-      textarea.value.substring(end);
-
-    textarea.value = newText;
-
-    // Move the cursor to after the inserted text
-    textarea.setSelectionRange(
-      start + prefix.length,
-      start + prefix.length + selectedText.length
-    );
-    // Focus back on the editable textarea to ensure the cursor is visible
-    //textarea.focus();
-  };
-
-  return (
-    <div className="flex items-center gap-2 divide-x border-black overflow-x-auto">
-      {itemsKey.map((itemKey) => {
-        let item = toolbarItems[itemKey];
-        const IconTag = item.icon;
-
-        return (
-          <Button
-            variant="ghost"
-            size="icon"
-            onMouseDown={(e) => {
-              e.preventDefault(); // Prevent the form from losing focus
-              return insertMarkdown(item.prefix, item.suffix);
-            }}
-          >
-            <IconTag className="w-5 h-5" />
-          </Button>
-        );
-      })}
-    </div>
-  );
-}
