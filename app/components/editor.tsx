@@ -27,6 +27,7 @@ import ReactMarkdown from "react-markdown";
 import { cn } from "~/utils";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { ScrollBar } from "./scrollable.area";
+import { Toggle } from "./toggle";
 
 export interface MarkdownEditorProps extends TextareaProps {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -69,13 +70,12 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // const newText = event.target.value;
-    // if (editorRef.current) {
-    //   editorRef.current.value = newText;
-    // }
-    const newText = editorRef.current?.value;
+    const newText = event.target.value;
+    if (editorRef.current) {
+      editorRef.current.value = newText;
+    }
 
-    saveToHistoryWithDebounce(newText);
+    // saveToHistoryWithDebounce(newText);
   };
 
   const saveToHistoryWithDebounce = debounce((text: string) => {
@@ -166,11 +166,11 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
         {/* Preview toggle */}
         <div className="flex gap-2 px-2 ">
-          <Button variant="ghost" size="icon" onClick={togglePreview}>
-            {isPreviewMode ? (
-              <EyeOffIcon className="h-5 w-5" />
-            ) : (
+          <Button onClick={togglePreview}>
+            {show ? (
               <EyeIcon className="h-5 w-5" />
+            ) : (
+              <EyeOffIcon className="h-5 w-5" />
             )}
           </Button>
         </div>
@@ -249,7 +249,7 @@ export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
         const IconTag = item.icon;
 
         return (
-          <div
+          <Button
             key={item.prefix}
             // variant="ghost"
             // size="icon"
@@ -259,7 +259,7 @@ export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
             }}
           >
             <IconTag className="w-5 h-5" />
-          </div>
+          </Button>
         );
       })}
     </div>
