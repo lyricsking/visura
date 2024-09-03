@@ -14,7 +14,7 @@ export function Navbar({ basePath, menu }: NavbarProps) {
         return (
           <NavLink
             key={menu.id}
-            to={"/"+basePath + "/" + menu.url}
+            to={"/" + basePath + "/" + menu.path}
             className={({ isActive, isPending }) =>
               `py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform ${
                 isActive

@@ -1,3 +1,4 @@
+import { config } from "@/config";
 import { Link } from "@remix-run/react";
 import {
   Activity,
@@ -31,38 +32,43 @@ export const handle = {
     id: "overview",
     label: "Overview",
   },
-  sidebarMenu: () => [
-    {
-      id: "orders",
-      label: "Orders",
-      url: "/dashboard/orders",
-    },
-    {
-      id: "subscriptions",
-      label: "Subscription",
-      url: "/dashboard/subscriptions",
-    },
-    {
-      id: "invoices",
-      label: "Invoices",
-      url: "/dashboard/invoices",
-    },
-    {
-      id: "transactions",
-      label: "Transactions",
-      url: "/dashboard/transactions",
-    },
-    {
-      id: "settings",
-      label: "Settings",
-      url: "/dashboard/settings",
-    },
-    {
-      id: "support",
-      label: "Support Center",
-      url: "/support",
-    },
-  ],
+  // sidebarMenu: () => [
+  //   {
+  //     id: "orders",
+  //     label: "Orders",
+  //     path: "/dashboard/orders",
+  //   },
+  //   {
+  //     id: "subscriptions",
+  //     label: "Subscription",
+  //     path: "/dashboard/subscriptions",
+  //   },
+  //   {
+  //     id: "invoices",
+  //     label: "Invoices",
+  //     path: "/dashboard/invoices",
+  //   },
+  //   {
+  //     id: "transactions",
+  //     label: "Transactions",
+  //     path: "/dashboard/transactions",
+  //   },
+  //   {
+  //     id: "settings",
+  //     label: "Settings",
+  //     path: "/dashboard/settings",
+  //   },
+  //   {
+  //     id: "support",
+  //     label: "Support Center",
+  //     path: "/support",
+  //   },
+  //   {
+  //     id: "blog",
+  //     label: "Blog",
+  //     path: `/dashboard/${config.blogPath}`,
+  //   },
+  // ],
 };
 
 export default function Overview() {

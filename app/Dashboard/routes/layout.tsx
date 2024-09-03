@@ -76,7 +76,7 @@ export default function Layout() {
                 menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
-              <Link to={dashboardMenu.url}>
+              <Link to={dashboardMenu.path}>
                 <h1 className="text-[24px] font-bold tracking-tight">
                   {config.appName}
                 </h1>

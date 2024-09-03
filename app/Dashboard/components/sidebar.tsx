@@ -18,7 +18,7 @@ import { config } from "@/config";
 export type Menu = {
   id: number | string;
   label: string;
-  url: string;
+  path: string;
   icon?: React.ElementType;
 };
 
@@ -57,7 +57,7 @@ export function Sidebar({
                 return (
                   <li key={menu.id}>
                     <NavLink
-                      to={"/" + basePath + "/" + menu.url}
+                      to={"/" + basePath + "/" + menu.path}
                       className={({ isActive, isPending }) =>
                         `flex items-center px-4 py-2 mt-5 text-gray-800 capitalize transition-colors duration-300 transform ${
                           isActive

@@ -1,17 +1,18 @@
 import { Link, Outlet } from "@remix-run/react";
 
 export const handle = {
+  pageName: "Blog",
   breadcrumb: {
-    id: "products",
-    label: "Products",
+    id: "blog",
+    label: "Blog",
   },
 };
 
-export default function Products() {
+export default function Blog() {
   return (
-    <div className="flex flex-col flex-1 items-start gap-4 md:gap-8">
-      <div className="mx-auto grid w-full max-w-7xl items-start bg-white rounded-md p-4 md:p-8 gap-4 md:grid-cols-[120px_1fr] lg:grid-cols-[200px_1fr] overflow-x-auto">
-        <nav className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 text-sm overflow-x-auto">
+    <div className="flex flex-col w-full max-w-7xl items-start gap-4 md:gap-8">
+      <div className="mx-auto grid items-start bg-white border rounded-md p-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr] overflow-x-auto">
+        <nav className="mx-auto grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 p-4 text-sm overflow-x-auto">
           <Link to="#" className="font-semibold text-primary">
             General
           </Link>
@@ -21,8 +22,9 @@ export default function Products() {
           <Link to="#">Organizations</Link>
           <Link to="#">Advanced</Link>
         </nav>
-
-        <Outlet />
+        <div className="mx-auto p-4">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

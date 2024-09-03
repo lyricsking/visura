@@ -56,7 +56,7 @@ export default defineConfig({
           route(
             adminDashboardPath,
             "Dashboard/routes/layout.tsx",
-            { id: "administration" },
+            { id: "admin" },
             () => {
               route("", "Dashboard/routes/admin-overview.tsx", {
                 index: true,

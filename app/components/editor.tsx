@@ -122,7 +122,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   ];
 
   return (
-    <div className="rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
+    <div className="w-full mx-auto border rounded-md bg-gray-100 divide-y">
       <div className="flex items-center w-full divide-x-2">
         <div className="flex-none flex items-center gap-2 px-2">
           <Button variant="ghost" size="icon" onClick={handleUndo}>
@@ -244,8 +244,8 @@ export function Toolbar({
   };
 
   return (
-    <ScrollArea className="whitespace-nowrap">
-      <div className="flex w-full items-center gap-x-4 p-4 divide-x">
+    <ScrollArea className="whitespace-nowrap" type="always">
+      <div className="w-max grid grid-flow-col auto-cols-fr space-x-4 p-4 divide-x">
         {itemsKey.map((itemKey) => {
           let item = toolbarItems[itemKey];
           const IconTag = item.icon;

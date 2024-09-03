@@ -39,7 +39,7 @@ export const handle = {
 
 export default function Products() {
   return (
-    <div className="mx-auto grid flex-1 auto-rows-max gap-4">
+    <div className="mx-auto grid auto-rows-max gap-4">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
           <CardHeader className="pb-3">
@@ -189,7 +189,7 @@ export default function Products() {
                           <Button
                             aria-haspopup="true"
                             size="icon"
-                            variant="text"
+                            variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>
@@ -232,7 +232,7 @@ export default function Products() {
                           <Button
                             aria-haspopup="true"
                             size="icon"
-                            variant="text"
+                            variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>
@@ -275,7 +275,7 @@ export default function Products() {
                           <Button
                             aria-haspopup="true"
                             size="icon"
-                            variant="text"
+                            variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>
@@ -318,7 +318,7 @@ export default function Products() {
                           <Button
                             aria-haspopup="true"
                             size="icon"
-                            variant="text"
+                            variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>
@@ -361,7 +361,7 @@ export default function Products() {
                           <Button
                             aria-haspopup="true"
                             size="icon"
-                            variant="text"
+                            variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>
@@ -404,7 +404,7 @@ export default function Products() {
                           <Button
                             aria-haspopup="true"
                             size="icon"
-                            variant="text"
+                            variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>

@@ -8,6 +8,7 @@ import {
   Users,
   Settings,
   LifeBuoy,
+  NewspaperIcon,
 } from "lucide-react";
 import { UserType } from "~/User/types/user.types";
 
@@ -18,34 +19,34 @@ const userDashboardMenuItems = [
   {
     id: "default",
     label: "Dashboard",
-    url: `overview`,
+    path: `overview`,
     icon: Package2,
   },
   {
     id: "orders",
     label: "Orders",
-    url: "orders",
+    path: "orders",
     icon: Package2,
   },
   {
     id: "subscriptions",
     label: "Subscription",
-    url: "subscriptions",
+    path: "subscriptions",
   },
   {
     id: "invoices",
     label: "Invoices",
-    url: "invoices",
+    path: "invoices",
   },
   {
     id: "transactions",
     label: "Transactions",
-    url: "transactions",
+    path: "transactions",
   },
   {
     id: "settings",
     label: "Settings",
-    url: "settings",
+    path: "settings",
   }
 ];
 
@@ -53,57 +54,63 @@ const adminDashboardMenuItems = [
   {
     id: "default",
     label: "Dashboard",
-    url: "overview",
+    path: "overview",
     icon: Package2,
   },
   {
     id: "orders",
     label: "Orders",
-    url: "orders",
+    path: "orders",
     icon: Package2,
   },
   {
     id: "subscriptions",
     label: "Subscription",
-    url: "subscriptions",
+    path: "subscriptions",
     icon: Boxes,
   },
   {
     id: "products",
     label: "Products",
-    url: "products",
+    path: "products",
     icon: Box,
   },
   {
     id: "invoice",
     label: "Invoice",
-    url: "invoice",
+    path: "invoice",
     icon: Receipt,
   },
   {
     id: "transactions",
     label: "Transactions",
-    url: "transactions",
+    path: "transactions",
     icon: CreditCard,
   },
   {
     id: "users",
     label: "Users",
-    url: "transactions",
+    path: "transactions",
     icon: Users,
   },
 
   {
     id: "settings",
     label: "Settings",
-    url: "settings",
+    path: "settings",
     icon: Settings,
   },
   {
     id: "support",
     label: "Support",
-    url: "support",
+    path: "support",
     icon: LifeBuoy,
+  },
+  {
+    id: "blog",
+    label: "Blog",
+    path: `${config.blogPath}`,
+    icon: NewspaperIcon,
   },
 ];
 
