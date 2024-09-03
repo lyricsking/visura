@@ -89,6 +89,7 @@ export default function PostForm() {
               id="excerpt"
               name="excerpt"
               defaultValue={excerpt || ""}
+              required
             />
           </div>
 
