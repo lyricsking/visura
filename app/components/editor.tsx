@@ -125,28 +125,22 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     <div className="rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
       <div className="flex items-center w-full divide-x-2">
         <div className="flex-none flex items-center gap-2 px-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleUndo}
-            disabled={historyStackRef.current.length === 0}
-          >
+          <Button variant="ghost" size="icon" onClick={handleUndo}>
             <Undo2Icon className="h-5 w-5" />
           </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleRedo}
-            disabled={redoStackRef.current.length === 0}
-          >
+          <Button variant="ghost" size="icon" onClick={handleRedo}>
             <Redo2Icon className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Toolbar */}
         <div className="flex-1 overflow-x-auto">
-          <Toolbar editorRef={editorRef} tools={tools} />
+          <Toolbar
+            contentRef={contentRef}
+            editorRef={editorRef}
+            tools={tools}
+          />
         </div>
 
         {/* Preview toggle */}
@@ -174,17 +168,15 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
             />
           </>
         ) : (
-          <>
-            {/* Preview */}
-            <div className="prose md:prose-lg lg:prose-xl min-h-44 w-full border-t-2 bg-white p-2">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw]}
-              >
-                {customMarkdownParser(contentRef.current)}
-              </ReactMarkdown>
-            </div>
-          </>
+          <div className="prose md:prose-lg lg:prose-xl min-h-44 w-full border-t-2 bg-white p-2">
+            {/* Preview */}{" "}
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+            >
+              {customMarkdownParser(contentRef.current)}
+            </ReactMarkdown>
+          </div>
         )}
       </div>
     </div>
@@ -215,10 +207,15 @@ type ToolbarItem = {
 
 type ToolbarProps = {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
+  contentRef: MutableRefObject<string>;
   tools: ToolbarItemKey[];
 };
 
-export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
+export function Toolbar({
+  contentRef,
+  editorRef,
+  tools: itemsKey,
+}: ToolbarProps) {
   //  Todo Memoize to avoid re-initializing for each re-render.
   const insertMarkdown = (prefix: string, suffix: string = "") => {
     if (!editorRef.current) return;
@@ -234,6 +231,7 @@ export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
       markdownText +
       textarea.value.substring(end);
 
+    contentRef.current = newText;
     textarea.value = newText;
 
     // Move the cursor to after the inserted text
@@ -289,15 +287,18 @@ const toolbarItems: Record<string, ToolbarItem> = {
     icon: StrikethroughIcon,
   },
   h1: {
-    prefix: "# ",
+    prefix: `\n# `,
+    suffix: `\n`,
     icon: Heading1Icon,
   },
   h2: {
     prefix: "## ",
+    suffix: "\n",
     icon: Heading2Icon,
   },
   h3: {
     prefix: "### ",
+    suffix: "\n",
     icon: Heading3Icon,
   },
   link: {

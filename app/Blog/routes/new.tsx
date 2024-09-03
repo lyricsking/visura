@@ -73,15 +73,6 @@ export default function PostForm() {
       </div>
 
       <div>
-        <label htmlFor="content">Content</label>
-        <MarkdownEditor
-          name="content"
-          defaultValue={content || ""}
-          editorRef={editorRef}
-        />
-      </div>
-
-      <div>
         <label htmlFor="excerpt">Excerpt</label>
         <Textarea id="excerpt" name="excerpt" defaultValue={excerpt || ""} />
       </div>
@@ -108,17 +99,11 @@ export default function PostForm() {
       </div>
 
       <div>
-        <label htmlFor="publishedOn">Published On</label>
-        <Input
-          id="publishedOn"
-          type="date"
-          name="publishedOn"
-          defaultValue={
-            publishedOn
-              ? new Date(publishedOn).toISOString().substring(0, 10)
-              : ""
-          }
-          className="input"
+        <label htmlFor="content">Content</label>
+        <MarkdownEditor
+          name="content"
+          defaultValue={content || ""}
+          editorRef={editorRef}
         />
       </div>
 

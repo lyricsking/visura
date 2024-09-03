@@ -62,6 +62,14 @@ export default defineConfig({
                 index: true,
               });
               route(
+                blogPath,
+                "Blog/routes/layout.tsx",
+                { id: "admin-blog-layout" },
+                () => {
+                  route("new", "Blog/routes/new.tsx");
+                }
+              );
+              route(
                 "products",
                 "Supplement/routes/product-layout.tsx",
                 { id: "admin-products" },
@@ -97,7 +105,6 @@ export default defineConfig({
             () => {
               route("", "Blog/routes/index.tsx", { index: true });
               route(":slug", "Blog/routes/post.tsx");
-              route("new", "Blog/routes/new.tsx");
             }
           );
           route("theme/update", "Theme/theme.action.tsx");
