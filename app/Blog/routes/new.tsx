@@ -1,5 +1,10 @@
 import React, { FormEvent, useRef } from "react";
-import { Form, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import {
+  Form,
+  useLoaderData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 import { Input } from "~/components/input";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
@@ -13,7 +18,7 @@ export default function PostForm() {
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
   let navigation = useNavigation();
-  let submit = useSubmit();
+  // let submit = useSubmit();
 
   let title = navigation.formData?.get("title")?.toString() || "";
   let slug = navigation.formData?.get("slug")?.toString() || "";
@@ -30,18 +35,19 @@ export default function PostForm() {
   const isSubmitting = navigation.state !== "idle";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault()
+    event.preventDefault();
 
-   
-     const formData = new FormData(event.currentTarget);
-     const content = formData.get('content') as string;
-    
-    
+    const formData = new FormData(event.currentTarget);
+    const content = formData.get("content") as string;
+    // Todo sanitize content here before sending to server.
   }
 
   return (
     <div className="grid auto-rows-max gap-4 border rounded-md">
-      <Form method="post" onSubmit={handleSubmit}>
+      <Form
+        method="post"
+        // onSubmit={handleSubmit}
+      >
         <div className="w-full grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
           <div>
             <label htmlFor="title">Title</label>
