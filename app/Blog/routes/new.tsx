@@ -36,79 +36,81 @@ export default function PostForm() {
   };
 
   return (
-    <Form method="post" onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="title">Title</label>
-        <Input
-          id="title"
-          type="text"
-          name="title"
-          defaultValue={title || ""}
-          required
-          className="input"
-        />
-      </div>
+    <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+      <Form method="post" onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="title">Title</label>
+          <Input
+            id="title"
+            type="text"
+            name="title"
+            defaultValue={title || ""}
+            required
+            className="input"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="slug">Slug</label>
-        <Input
-          id="slug"
-          type="text"
-          name="slug"
-          defaultValue={slug || ""}
-          className="input"
-        />
-      </div>
+        <div>
+          <label htmlFor="slug">Slug</label>
+          <Input
+            id="slug"
+            type="text"
+            name="slug"
+            defaultValue={slug || ""}
+            className="input"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="author">Author</label>
-        <Input
-          id="author"
-          type="text"
-          name="author"
-          value={author || ""}
-          readOnly
-          className="input"
-        />
-      </div>
+        <div>
+          <label htmlFor="author">Author</label>
+          <Input
+            id="author"
+            type="text"
+            name="author"
+            value={author || ""}
+            readOnly
+            className="input"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="excerpt">Excerpt</label>
-        <Textarea id="excerpt" name="excerpt" defaultValue={excerpt || ""} />
-      </div>
+        <div>
+          <label htmlFor="excerpt">Excerpt</label>
+          <Textarea id="excerpt" name="excerpt" defaultValue={excerpt || ""} />
+        </div>
 
-      <div>
-        <label htmlFor="featuredImage">Featured Image URL</label>
-        <Input
-          id="featuredImage"
-          type="file"
-          name="featuredImage"
-          className="input"
-        />
-      </div>
+        <div>
+          <label htmlFor="featuredImage">Featured Image URL</label>
+          <Input
+            id="featuredImage"
+            type="file"
+            name="featuredImage"
+            className="input"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="tags">Tags (comma separated)</label>
-        <Input
-          id="tags"
-          type="text"
-          name="tags"
-          defaultValue={tags?.join(", ") || ""}
-          className="input"
-        />
-      </div>
+        <div>
+          <label htmlFor="tags">Tags (comma separated)</label>
+          <Input
+            id="tags"
+            type="text"
+            name="tags"
+            defaultValue={tags?.join(", ") || ""}
+            className="input"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="content">Content</label>
-        <MarkdownEditor
-          name="content"
-          defaultValue={content || ""}
-          editorRef={editorRef}
-        />
-      </div>
+        <div>
+          <label htmlFor="content">Content</label>
+          <MarkdownEditor
+            name="content"
+            defaultValue={content || ""}
+            editorRef={editorRef}
+          />
+        </div>
 
-      <div>{/* <Button type="submit">Save Post</Button>*/}</div>
-    </Form>
+        <div>{/* <Button type="submit">Save Post</Button>*/}</div>
+      </Form>
+    </div>
   );
 }
 

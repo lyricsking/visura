@@ -61,23 +61,13 @@ export default defineConfig({
               route("", "Dashboard/routes/admin-overview.tsx", {
                 index: true,
               });
-              route(
-                blogPath,
-                "Blog/routes/layout.tsx",
-                { id: "admin-blog-layout" },
-                () => {
-                  route("new", "Blog/routes/new.tsx");
-                }
-              );
-              route(
-                "products",
-                "Supplement/routes/product-layout.tsx",
-                { id: "admin-products" },
-                () => {
-                  route("", "Supplement/routes/products.tsx", { index: true });
-                  route("edit", "Supplement/routes/product-edit.tsx");
-                }
-              );
+              route(blogPath, "Dashboard/routes/blog.tsx", () => {
+                route("edit", "Blog/routes/new.tsx");
+              });
+              route("products", "Dashboard/routes/product.tsx", () => {
+                route("", "Supplement/routes/products.tsx", { index: true });
+                route("edit", "Supplement/routes/product-edit.tsx");
+              });
               route("settings", "Setting/routes/admin-settings.tsx");
             }
           );
