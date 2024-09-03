@@ -244,7 +244,7 @@ export function Toolbar({
   };
 
   return (
-    <ScrollArea className="whitespace-nowrap" type="always">
+    <ScrollArea className="whitespace-nowrap">
       <div className="w-max grid grid-flow-col auto-cols-fr space-x-4 p-4 divide-x">
         {itemsKey.map((itemKey) => {
           let item = toolbarItems[itemKey];
