@@ -65,7 +65,6 @@ const CheckboxGroupForm = ({
 
       <div className="flex py-8 md:px-0">
         <Button
-          variant={"fill"}
           radius={"md"}
           className="h-12 w-full md:max-w-md mx-auto text-xl text-white text-center bg-indigo-400"
           type="submit"

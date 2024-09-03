@@ -36,7 +36,6 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   const { editorRef, defaultValue, ...attrs } = props;
   const historyStackRef = useRef<string[]>([]);
   const redoStackRef = useRef<string[]>([]);
-  const contentRef = useRef<string>(defaultValue?.toString() || "");
 
   const MAX_HISTORY_SIZE = 50;
 
@@ -66,7 +65,9 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
 
-    contentRef.current = newText;
+    if (editorRef.current) {
+      editorRef.current.value = newText;
+    }
 
     saveToHistoryWithDebounce(newText);
   };
@@ -78,14 +79,11 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   const handleUndo = () => {
     const history = historyStackRef.current;
     if (history.length > 0) {
-      const currentText = contentRef.current;
+      const currentText = editorRef.current?.value || "";
       redoStackRef.current.push(currentText);
       const lastState = history.pop();
-      if (lastState !== undefined) {
-        contentRef.current = lastState;
-        if (editorRef.current) {
-          editorRef.current.value = lastState;
-        }
+      if (editorRef.current && lastState !== undefined) {
+        editorRef.current.value = lastState;
       }
     }
   };
@@ -94,12 +92,9 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     const redoStack = redoStackRef.current;
     if (redoStack.length > 0) {
       const nextState = redoStack.pop();
-      if (nextState !== undefined) {
-        saveToHistory(contentRef.current);
-        contentRef.current = nextState;
-        if (editorRef.current) {
-          editorRef.current.value = nextState;
-        }
+      if (editorRef.current && nextState !== undefined) {
+        saveToHistory(editorRef.current.value);
+        editorRef.current.value = nextState;
       }
     }
   };
@@ -136,14 +131,10 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
         {/* Toolbar */}
         <div className="flex-1 overflow-x-auto">
-          <Toolbar
-            contentRef={contentRef}
-            editorRef={editorRef}
-            tools={tools}
-          />
+          <Toolbar editorRef={editorRef} tools={tools} />
         </div>
 
-        {/* Preview toggle */}
+        {/* Preview toggle: Used to toggle preview on or off */}
         <div className="flex-none px-2">
           <Button variant="ghost" size="icon" onClick={togglePreview}>
             {isPreviewMode ? (
@@ -151,30 +142,29 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
             ) : (
               <EyeOffIcon className="h-5 w-5" />
             )}
+
+            <span className="ml-2 hidden md:inline-block">Preview</span>
           </Button>
         </div>
       </div>
       {/* EditableContent Div and Preview */}
       <div className="mx-1 mb-1">
-        {!isPreviewMode ? (
-          <>
-            {/* The editor textarea */}
-            <Textarea
-              ref={editorRef}
-              onInput={handleInputChange}
-              defaultValue={contentRef.current}
-              className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
-              {...attrs}
-            />
-          </>
-        ) : (
-          <div className="prose md:prose-lg lg:prose-xl min-h-44 w-full border-t-2 bg-white p-2">
-            {/* Preview */}{" "}
+        {/* The editor textarea */}
+        <Textarea
+          ref={editorRef}
+          onInput={handleInputChange}
+          className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
+          {...attrs}
+        />
+
+        {isPreviewMode && (
+          <div className="flex min-h-44 w-full prose md:prose-lg lg:prose-xl border-t-2 bg-white p-2">
+            {/* Preview */}
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
             >
-              {customMarkdownParser(contentRef.current)}
+              {customMarkdownParser(editorRef.current?.value || "")}
             </ReactMarkdown>
           </div>
         )}
@@ -207,15 +197,10 @@ type ToolbarItem = {
 
 type ToolbarProps = {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
-  contentRef: MutableRefObject<string>;
   tools: ToolbarItemKey[];
 };
 
-export function Toolbar({
-  contentRef,
-  editorRef,
-  tools: itemsKey,
-}: ToolbarProps) {
+export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
   //  Todo Memoize to avoid re-initializing for each re-render.
   const insertMarkdown = (prefix: string, suffix: string = "") => {
     if (!editorRef.current) return;
@@ -231,7 +216,6 @@ export function Toolbar({
       markdownText +
       textarea.value.substring(end);
 
-    contentRef.current = newText;
     textarea.value = newText;
 
     // Move the cursor to after the inserted text
@@ -287,8 +271,8 @@ const toolbarItems: Record<string, ToolbarItem> = {
     icon: StrikethroughIcon,
   },
   h1: {
-    prefix: `\n# `,
-    suffix: `\n`,
+    prefix: "# ",
+    suffix: "\n",
     icon: Heading1Icon,
   },
   h2: {

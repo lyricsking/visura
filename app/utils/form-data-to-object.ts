@@ -1,4 +1,4 @@
-const formDataToObject = (formData: FormData)=>{
+const formDataToObject = (formData: FormData): Record<string, any> => {
   const formDataObj: any = {};
 
   formData.forEach((value, key) => {
@@ -12,8 +12,8 @@ const formDataToObject = (formData: FormData)=>{
       formDataObj[key] = value;
     }
   });
-  
+
   return formDataObj;
-}
+};
 
 export default formDataToObject;

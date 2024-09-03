@@ -1,20 +1,25 @@
-import React, { useRef } from "react";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import React, { FormEvent, useRef } from "react";
+import { Form, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import { Input } from "~/components/input";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
 import { Textarea } from "~/components/textarea";
-import { MarkdownEditor } from "~/components/editor";
+import { MarkdownEditor } from "~/components/markdown-editor";
+import Button from "~/components/button";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
 
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+
   let navigation = useNavigation();
+  let submit = useSubmit();
 
   let title = navigation.formData?.get("title")?.toString() || "";
   let slug = navigation.formData?.get("slug")?.toString() || "";
   let author = navigation.formData?.get("author")?.toString() || "";
-  let content = navigation.formData?.get("content")?.toString() || "# Block";
+  let content =
+    navigation.formData?.get("content")?.toString() || editorRef.current?.value;
   let excerpt = navigation.formData?.get("excerpt")?.toString() || "";
   let tags = navigation.formData?.get("tags")?.toString().split(", ") || [];
   let publishedOn =
@@ -22,18 +27,17 @@ export default function PostForm() {
       ? new Date(navigation.formData.get("publishedOn")!.toString())
       : new Date();
 
-  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const isSubmitting = navigation.state !== "idle";
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (editorRef.current) {
-      const markdownContent = editorRef.current.innerText;
-      // alert(JSON.stringify(markdownContent, null, 2));
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault()
 
-      const formData = new FormData();
-      formData.set("content", markdownContent);
-    }
-  };
+   
+     const formData = new FormData(event.currentTarget);
+     const content = formData.get('content') as string;
+    
+    
+  }
 
   return (
     <div className="grid auto-rows-max gap-4 border rounded-md">
@@ -48,38 +52,6 @@ export default function PostForm() {
               defaultValue={title || ""}
               required
               className="input"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="slug">Slug</label>
-            <Input
-              id="slug"
-              type="text"
-              name="slug"
-              defaultValue={slug || ""}
-              className="input"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="author">Author</label>
-            <Input
-              id="author"
-              type="text"
-              name="author"
-              value={author || ""}
-              readOnly
-              className="input"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="excerpt">Excerpt</label>
-            <Textarea
-              id="excerpt"
-              name="excerpt"
-              defaultValue={excerpt || ""}
             />
           </div>
 
@@ -100,20 +72,40 @@ export default function PostForm() {
               type="text"
               name="tags"
               defaultValue={tags?.join(", ") || ""}
+              required
               className="input"
+            />
+          </div>
+
+          <div className="col-span-full">
+            <label htmlFor="excerpt">Excerpt</label>
+            <Textarea
+              id="excerpt"
+              name="excerpt"
+              defaultValue={excerpt || ""}
             />
           </div>
 
           <div className="col-span-full">
             <label htmlFor="content">Content</label>
             <MarkdownEditor
+              editorRef={editorRef}
               name="content"
               defaultValue={content || ""}
-              editorRef={editorRef}
+              required
             />
           </div>
 
-          <div>{/* <Button type="submit">Save Post</Button>*/}</div>
+          <div>
+            <Button
+              variant="outline"
+              size="lg"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting" : "Save Post"}
+            </Button>
+          </div>
         </div>
       </Form>
     </div>
@@ -124,7 +116,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
-  console.log(formObject);
+  let content = formObject["content"];
 
   return json({});
 };
