@@ -108,7 +108,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     "h3",
     "link",
     "quote",
-    "image",
+    // "image",
     "numberList",
     "list",
     "leftAlign",
@@ -136,7 +136,12 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
         {/* Preview toggle: Used to toggle preview on or off */}
         <div className="flex-none px-2">
-          <Button variant="ghost" size="icon" onClick={togglePreview}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={togglePreview}
+          >
             {isPreviewMode ? (
               <EyeIcon className="h-5 w-5" />
             ) : (
@@ -148,17 +153,17 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         </div>
       </div>
       {/* EditableContent Div and Preview */}
-      <div className="mx-1 mb-1">
+      <div className="flex flex-col md:flex-row gap-2 mx-1 mb-1">
         {/* The editor textarea */}
         <Textarea
           ref={editorRef}
           onInput={handleInputChange}
-          className="min-h-44 w-full border-t-2 bg-white p-2 outline-none"
+          className="min-h-44 w-full rounded-none rounded-b-md bg-white p-2 outline-none"
           {...attrs}
         />
 
         {isPreviewMode && (
-          <div className="flex min-h-44 w-full prose md:prose-lg lg:prose-xl border-t-2 bg-white p-2">
+          <div className="min-h-44 w-full prose md:prose-lg lg:prose-xl rounded-b-md bg-white p-2">
             {/* Preview */}
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
