@@ -22,12 +22,11 @@ import {
   Undo2Icon,
 } from "lucide-react";
 import { useSearchParams } from "@remix-run/react";
-import { customMarkdownParser } from "~/utils/md-helper";
+import { customMarkdownParser } from "~/utils/markdown-utils";
 import ReactMarkdown from "react-markdown";
-import { cn } from "~/utils";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { ScrollBar } from "./scrollable.area";
-import { Toggle } from "./toggle";
+import remarkGfm from "remark-gfm";
+import { ScrollArea, ScrollBar } from "./scrollable.area";
+import rehypeRaw from "rehype-raw";
 
 export interface MarkdownEditorProps extends TextareaProps {
   editorRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -37,26 +36,19 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   const { editorRef, defaultValue, ...attrs } = props;
   const historyStackRef = useRef<string[]>([]);
   const redoStackRef = useRef<string[]>([]);
-  const contentRef = useRef<string>(defaultValue||"");
-  
+  const contentRef = useRef<string>(defaultValue?.toString() || "");
+
   const MAX_HISTORY_SIZE = 50;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const isPreviewMode = searchParams.has("preview");
-  const [show, setShow] = useState<boolean>(false);
-
-  useEffect(() => {
-    // alert(JSON.stringify(editorRef.current?.value, null, 2));
-  }, [editorRef.current]);
 
   const togglePreview = () => {
-    // setSearchParams((prev) => {
-    //   isPreviewMode ? prev.delete("preview") : prev.set("preview", "true");
+    setSearchParams((prev) => {
+      isPreviewMode ? prev.delete("preview") : prev.set("preview", "true");
 
-    //   return prev;
-    // });
-
-    setShow(!show);
+      return prev;
+    });
   };
 
   const saveToHistory = (text: string) => {
@@ -73,7 +65,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
-  
+
     contentRef.current = newText;
 
     saveToHistoryWithDebounce(newText);
@@ -91,8 +83,8 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
       const lastState = history.pop();
       if (lastState !== undefined) {
         contentRef.current = lastState;
-        if(editorRef.current){
-        editorRef.current.value = lastState;
+        if (editorRef.current) {
+          editorRef.current.value = lastState;
         }
       }
     }
@@ -111,7 +103,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
       }
     }
   };
-  
+
   const tools = [
     "bold",
     "italic",
@@ -123,16 +115,16 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     "quote",
     "image",
     "numberList",
-    "link",
+    "list",
     "leftAlign",
     "rightAlign",
     "justify",
   ];
 
   return (
-    <div className="flex flex-col rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
-      <div className="flex h-10 w-full items-center gap-2 divide-x-2">
-        <div className="flex gap-2 px-2">
+    <div className="rounded-md w-full max-w-lg mx-auto border bg-gray-100 divide-y">
+      <div className="flex items-center w-full divide-x-2">
+        <div className="flex-none flex items-center gap-2 px-2">
           <Button
             variant="ghost"
             size="icon"
@@ -153,12 +145,14 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         </div>
 
         {/* Toolbar */}
-        <Toolbar editorRef={editorRef} tools={tools} />
+        <div className="flex-1 overflow-x-auto">
+          <Toolbar editorRef={editorRef} tools={tools} />
+        </div>
 
         {/* Preview toggle */}
-        <div className="flex gap-2 px-2 ">
-          <Button onClick={togglePreview}>
-            {show ? (
+        <div className="flex-none px-2">
+          <Button variant="ghost" size="icon" onClick={togglePreview}>
+            {isPreviewMode ? (
               <EyeIcon className="h-5 w-5" />
             ) : (
               <EyeOffIcon className="h-5 w-5" />
@@ -168,7 +162,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
       </div>
       {/* EditableContent Div and Preview */}
       <div className="mx-1 mb-1">
-        {!show ? (
+        {!isPreviewMode ? (
           <>
             {/* The editor textarea */}
             <Textarea
@@ -182,8 +176,11 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         ) : (
           <>
             {/* Preview */}
-            <div className="min-h-44 w-full border-t-2 bg-white p-2">
-              <ReactMarkdown>
+            <div className="prose md:prose-lg lg:prose-xl min-h-44 w-full border-t-2 bg-white p-2">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+              >
                 {customMarkdownParser(contentRef.current)}
               </ReactMarkdown>
             </div>
@@ -194,21 +191,21 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   );
 }
 
-  // Debounce function to reduce frequency of state-saving
-  function debounce(saveFunc: Function, wait: number) {
-    let timeout: NodeJS.Timeout;
-    return function (...args: any[]) {
-      // callback funcion passed to setTimeout
-      const later = () => {
-        // Clear this active timeout from memory, sice we are handling it.
-        clearTimeout(timeout);
-        saveFunc(...args);
-      };
-      // Clear existing timeout, before setting a new one, this ensures that only the saveFunc is called once within 500ms.
+// Debounce function to reduce frequency of state-saving
+function debounce(saveFunc: Function, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return function (...args: any[]) {
+    // callback funcion passed to setTimeout
+    const later = () => {
+      // Clear this active timeout from memory, sice we are handling it.
       clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
+      saveFunc(...args);
     };
-  }
+    // Clear existing timeout, before setting a new one, this ensures that only the saveFunc is called once within 500ms.
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 type ToolbarItem = {
   prefix: string;
@@ -249,26 +246,29 @@ export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
   };
 
   return (
-    <div className="grid grid-flow-col auto-cols-min space-x-4 p-4 divide-x overflow-x-auto">
-      {itemsKey.map((itemKey) => {
-        let item = toolbarItems[itemKey];
-        const IconTag = item.icon;
+    <ScrollArea className="whitespace-nowrap">
+      <div className="flex w-full items-center gap-x-4 p-4 divide-x">
+        {itemsKey.map((itemKey) => {
+          let item = toolbarItems[itemKey];
+          const IconTag = item.icon;
 
-        return (
-          <Button
-            key={item.prefix}
-            // variant="ghost"
-            // size="icon"
-            onMouseDown={(e) => {
-              e.preventDefault(); // Prevent the form from losing focus
-              return insertMarkdown(item.prefix, item.suffix);
-            }}
-          >
-            <IconTag className="w-5 h-5" />
-          </Button>
-        );
-      })}
-    </div>
+          return (
+            <Button
+              key={item.prefix}
+              variant="ghost"
+              size="icon"
+              onMouseDown={(e) => {
+                e.preventDefault(); // Prevent the form from losing focus
+                return insertMarkdown(item.prefix, item.suffix);
+              }}
+            >
+              <IconTag className="w-5 h-5" />
+            </Button>
+          );
+        })}
+      </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }
 
@@ -301,7 +301,7 @@ const toolbarItems: Record<string, ToolbarItem> = {
     icon: Heading3Icon,
   },
   link: {
-    prefix: "[ link text ] (link url)",
+    prefix: "[link text](link url)",
     icon: LinkIcon,
   },
   quote: {
@@ -317,22 +317,22 @@ const toolbarItems: Record<string, ToolbarItem> = {
     icon: ListOrderedIcon,
   },
   list: {
-    prefix: "## ",
+    prefix: "- ",
     icon: ListIcon,
   },
   leftAlign: {
-    prefix: "<< ",
-    suffix: " <<",
+    prefix: "::left::",
+    suffix: "::",
     icon: AlignLeftIcon,
   },
   rightAlign: {
-    prefix: ">> ",
-    suffix: " >>",
+    prefix: "::right::",
+    suffix: "::",
     icon: AlignRightIcon,
   },
   justify: {
-    prefix: "== ",
-    suffix: " ==",
+    prefix: "::justify::",
+    suffix: "::",
     icon: AlignJustifyIcon,
   },
 } as const;
