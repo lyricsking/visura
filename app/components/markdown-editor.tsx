@@ -164,7 +164,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
         {isPreviewMode && (
           <div className="min-h-44 w-full prose md:prose-lg lg:prose-xl rounded-b-md bg-white p-2">
-            {/* Preview */}
+            {/* Preview */} 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}

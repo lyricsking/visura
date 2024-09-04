@@ -11,6 +11,8 @@ import formDataToObject from "~/utils/form-data-to-object";
 import { Textarea } from "~/components/textarea";
 import { MarkdownEditor } from "~/components/markdown-editor";
 import Button from "~/components/button";
+import { createPost } from "../server/post.server";
+import { IPost } from "../types/post.type";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
@@ -123,7 +125,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
-  let content = formObject["content"];
+  let post: Partial<IPost> = {
+    title: formObject['title'],
+    slug: "",
+    author: "",
+    content: "",
+    excerpt: "",
+    featuredImage: "",
+    tags: [],
+    publishedOn: undefined,
+  };
+
+  await createPost(post)
 
   return json({});
 };

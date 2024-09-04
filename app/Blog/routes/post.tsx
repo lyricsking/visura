@@ -2,14 +2,21 @@ import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { findPostBySlug } from "../server/post.server";
 import ReactMarkdown from "react-markdown";
+import { formatDateOrTime } from "~/utils/date";
 
 export default function Post() {
   const { post } = useLoaderData<typeof loader>();
 
+  let publishedOn = formatDateOrTime(new Date(post.publishedOn), {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <article className="max-w-3xl mx-auto px-4 md:py-8 md:px-6">
       <div className="p-4">
-        <p className="text-gray-500">Published on April 9, 2023</p>
+        <p className="text-gray-500">Published on {publishedOn}</p>
         <h1 className="text-5xl font-bold mt-1">{post.title}</h1>
 
         <div className="flex items-center mt-4">
