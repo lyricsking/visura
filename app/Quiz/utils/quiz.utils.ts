@@ -1,7 +1,7 @@
 import { Gender } from "~/Supplement/supplement.type";
 import { Answers, Question, QuestionCondition } from "../types/quiz.type";
 import { useNavigate } from "@remix-run/react";
-import { getNanoid } from "~/utils";
+import { getNanoid } from "~/utils/util";
 
 export const questions: Question[] = [
   {

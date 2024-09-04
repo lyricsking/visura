@@ -4,7 +4,16 @@ import { IPost } from "../types/post.type";
 import { faker } from "@faker-js/faker";
 
 export const createPost = async function (
-  data: Omit<IPost, "_id">
+  data: Pick<
+    IPost,
+    | "author"
+    | "title"
+    | "content"
+    | "excerpt"
+    | "featuredImage"
+    | "published"
+    | "tags"
+  >
 ): Promise<IPost> {
   try {
     const blog = await PostModel.create(data);
@@ -52,15 +61,15 @@ export const findPostBySlug = async ({
     throw error;
   }
 };
-export const generateDummyPosts = async (count: number = 5) => {
-  const posts: IPost[] = [];
 
+export const generateDummyPosts = async (
+  count: number = 5
+): Promise<boolean> => {
   PostModel.deleteMany();
-
+  let postCount = 0;
   for (let i = 0; i < count; i++) {
-    let post: Omit<IPost, "_id"> = {
+    await createPost({
       title: faker.lorem.sentence(),
-      slug: faker.helpers.slugify(faker.lorem.sentence().toLowerCase()),
       author: new mongoose.Types.ObjectId(), // Dummy ObjectId for the author
       content: faker.lorem.paragraphs(5, "\n\n"),
       excerpt: faker.lorem.paragraph(2),
@@ -69,13 +78,13 @@ export const generateDummyPosts = async (count: number = 5) => {
         ["tech", "news", "blogging", "coding", "health"],
         3
       ), // Choose random tags
-      publishedOn: faker.date.recent(),
-    };
+      published: faker.datatype.boolean(),
+    });
 
-    posts.push(await createPost(post));
+    postCount++;
   }
 
-  return posts;
+  return count === postCount;
 };
 
 const dummyPosts = generateDummyPosts(10);

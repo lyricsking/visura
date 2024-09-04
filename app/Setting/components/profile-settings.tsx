@@ -1,7 +1,7 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Form, useFetcher } from "@remix-run/react";
 import { SettingsType } from "../../Dashboard/type/settings.type";
-import { cn } from "~/utils";
+import { cn } from "~/utils/util";
 import { Input } from "~/components/input";
 import {
   ACCOUNT_UPDATE_ACTION,

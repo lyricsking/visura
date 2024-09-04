@@ -1,7 +1,7 @@
 // RadioGroup.js
 import React, { useRef } from "react";
 import { RadioGroupFormType } from "../types/quiz.type";
-import { cn } from "~/utils";
+import { cn } from "~/utils/util";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 

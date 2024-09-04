@@ -5,7 +5,7 @@ import { Answers, Question } from "../types/quiz.type";
 import { findSupplement } from "~/Supplement/supplement.server";
 import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
 import { IItem, IOrder } from "~/Order/types/order.type";
-import { getNanoid } from "~/utils";
+import { getNanoid } from "~/utils/util";
 import { QIDS_MAP_KEY, ANSWER_KEY, QUESTION_KEY } from "../utils/constants";
 import { questions, filterQuestions } from "../utils/quiz.utils";
 
@@ -201,7 +201,10 @@ export async function recommendSupplements(
         )
       )
         weight += 2;
-      if (supplement.gender === answers.gender || supplement.gender === Gender.both)
+      if (
+        supplement.gender === answers.gender ||
+        supplement.gender === Gender.both
+      )
         weight += 2;
       if (
         answers.healthGoals.some((goal: string) =>

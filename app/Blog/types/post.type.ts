@@ -9,5 +9,8 @@ export interface IPost {
   excerpt: string;
   featuredImage: string;
   tags: string[];
-  publishedOn: Date;
+  published: boolean;
+  publishedOn: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }

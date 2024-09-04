@@ -1,5 +1,5 @@
 import { ComponentProps, ComponentPropsWithRef } from "react";
-import { cn } from "~/utils";
+import { cn } from "~/utils/util";
 
 export type FeaturesParams = ComponentPropsWithRef<"div"> & {
   id: string;

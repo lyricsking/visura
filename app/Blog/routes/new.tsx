@@ -1,10 +1,5 @@
-import React, { FormEvent, useRef } from "react";
-import {
-  Form,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react";
+import { FormEvent, useRef } from "react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { Input } from "~/components/input";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
@@ -13,6 +8,9 @@ import { MarkdownEditor } from "~/components/markdown-editor";
 import Button from "~/components/button";
 import { createPost } from "../server/post.server";
 import { IPost } from "../types/post.type";
+import { getSlug } from "../utils/slug";
+import { getAuthUser } from "~/Auth/server/auth.server";
+import mongoose, { Types } from "mongoose";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
@@ -122,23 +120,45 @@ export default function PostForm() {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  let authUser = await getAuthUser(request);
+  if (!authUser || !authUser.id) {
+    throw new Error("You are not authorised to perform this operation");
+  }
+
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
-  let post: Partial<IPost> = {
-    title: formObject['title'],
-    slug: "",
-    author: "",
-    content: "",
-    excerpt: "",
+  let title = formObject["title"];
+  if (!title) {
+    throw new Error("Title was not provided.");
+  }
+
+  let excerpt = formObject["excerpt"];
+  if (!excerpt) {
+    throw new Error("Excerpt was not provided.");
+  }
+
+  let content = formObject["content"];
+  if (!content) {
+    throw new Error("Content was not provided.");
+  }
+
+  let tags = formObject["tags"];
+  if (!tags) {
+    throw new Error("No tag was provided.");
+  }
+
+  let post = await createPost({
+    title,
+    author: new Types.ObjectId(authUser.id),
+    excerpt,
+    content,
     featuredImage: "",
-    tags: [],
-    publishedOn: undefined,
-  };
+    tags,
+    published: false,
+  });
 
-  await createPost(post)
-
-  return json({});
+  return json({ post });
 };
 
 export const loader = async () => {

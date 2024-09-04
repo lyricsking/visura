@@ -1,6 +1,6 @@
 import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
-import { cn } from "~/utils";
+import { cn } from "~/utils/util";
 import { twMerge } from "tailwind-merge";
 
 const avatarVariant = cva("", {
