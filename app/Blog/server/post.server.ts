@@ -16,7 +16,8 @@ export const createPost = async function (
   >
 ): Promise<IPost> {
   try {
-    const blog = await PostModel.create(data);
+    const blog = new PostModel(data);
+    await blog.save();
     console.log(blog);
 
     return blog;
