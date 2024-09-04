@@ -12,7 +12,7 @@ export type PostModelType = Model<IPost, {}, IPostMethods>;
 const postSchema = new Schema<IPost, PostModelType>(
   {
     title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String, unique: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     content: { type: String, required: true },
     excerpt: { type: String, required: true },

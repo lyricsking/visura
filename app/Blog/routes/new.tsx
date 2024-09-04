@@ -11,6 +11,8 @@ import { IPost } from "../types/post.type";
 import { getSlug } from "../utils/slug";
 import { getAuthUser } from "~/Auth/server/auth.server";
 import mongoose, { Types } from "mongoose";
+import { useFileUpload } from "~/Dashboard/hooks/use-upload";
+import { UploadPreview } from "~/components/upload-image-preview";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
@@ -19,6 +21,8 @@ export default function PostForm() {
 
   let navigation = useNavigation();
   // let submit = useSubmit();
+
+  let { submit, isUploading, images } = useFileUpload();
 
   let title = navigation.formData?.get("title")?.toString() || "";
   let slug = navigation.formData?.get("slug")?.toString() || "";
@@ -62,15 +66,33 @@ export default function PostForm() {
           </div>
 
           <div>
-            <label htmlFor="featuredImage">Featured Image URL</label>
+            <label htmlFor="featuredImage">
+              {isUploading ? <p>Uploading Image...</p> : <p>Select an Image</p>}
+            </label>
             <Input
               id="featuredImage"
               type="file"
               name="featuredImage"
               className="input"
+              onChange={(e) => submit(e.currentTarget.files)}
+              style={{ display: "none" }}
             />
           </div>
-
+          <div>
+            {/*
+             * Here we render the images including the one we are
+             * uploading and the ones we've already  uploaded
+             */}
+            {images.map((file) => {
+              return (
+                <UploadPreview
+                  key={file.name}
+                  name={file.name}
+                  url={file.url}
+                />
+              );
+            })}
+          </div>
           <div>
             <label htmlFor="tags">Tags (comma separated)</label>
             <Input

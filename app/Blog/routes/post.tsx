@@ -7,18 +7,21 @@ import { formatDateOrTime } from "~/utils/date";
 export default function Post() {
   const { post } = useLoaderData<typeof loader>();
 
-  let publishedOn = formatDateOrTime(new Date(post.publishedOn), {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  let publishedOn = post.publishedOn
+    ? formatDateOrTime(new Date(post.publishedOn), {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
 
   return (
     <article className="max-w-3xl mx-auto px-4 md:py-8 md:px-6">
       <div className="p-4">
-        <p className="text-gray-500">Published on {publishedOn}</p>
+        {publishedOn && (
+          <p className="text-gray-500">Published on {publishedOn}</p>
+        )}
         <h1 className="text-5xl font-bold mt-1">{post.title}</h1>
-
         <div className="flex items-center mt-4">
           <img
             src="author-image-url"
