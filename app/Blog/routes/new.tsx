@@ -11,8 +11,8 @@ import { IPost } from "../types/post.type";
 import { getSlug } from "../utils/slug";
 import { getAuthUser } from "~/Auth/server/auth.server";
 import mongoose, { Types } from "mongoose";
-import { useFileUpload } from "~/Dashboard/hooks/use-upload";
-import { UploadPreview } from "~/components/upload-image-preview";
+import { useFileUpload } from "~/hooks/use-upload";
+import { ImagePreview } from "~/components/image-preview";
 
 export default function PostForm() {
   const data = useLoaderData<typeof loader>();
@@ -85,11 +85,7 @@ export default function PostForm() {
              */}
             {images.map((file) => {
               return (
-                <UploadPreview
-                  key={file.name}
-                  name={file.name}
-                  url={file.url}
-                />
+                <ImagePreview key={file.name} name={file.name} url={file.url} />
               );
             })}
           </div>
@@ -144,7 +140,7 @@ export default function PostForm() {
 export const action = async ({ request }: ActionFunctionArgs) => {
   let authUser = await getAuthUser(request);
   if (!authUser || !authUser.id) {
-    throw new Error("You are not authorised to perform this operation");
+    // throw new Error("You are not authorised to perform this operation");
   }
 
   const formData = await request.formData();

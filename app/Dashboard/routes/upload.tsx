@@ -12,6 +12,7 @@ import { useFetcher } from "@remix-run/react";
 
 export async function action({ request }: ActionFunctionArgs) {
   let folder = "post";
+
   const fileUploaderHandler = unstable_createFileUploadHandler({
     filter({ contentType }) {
       return contentType.includes("image");

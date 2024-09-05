@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export function UploadPreview({ name, url }: { name: string; url: string }) {
-  // Here we store the object url in a state to keep itbetween renders
+export function ImagePreview({ name, url }: { name: string; url: string }) {
+  // Here we store the object url in a state to keep it between renders
   let [objectUrl] = useState(() => {
     if (url.startsWith("blob:")) return url;
     return undefined;
@@ -15,7 +15,7 @@ export function UploadPreview({ name, url }: { name: string; url: string }) {
   return (
     <img
       alt={name}
-      src="url"
+      src={url}
       width={320}
       height={320}
       style={{
