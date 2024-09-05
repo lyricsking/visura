@@ -20,7 +20,10 @@ export function useFileUpload() {
 
   return {
     submit(files: FileList | null) {
+      alert("Uploading files")
       if (!files) return;
+      alert("Uploading files");
+
       let formData = new FormData();
       for (let file of files) formData.append("file", file);
       submit(formData, { method: "POST", encType: "multipart/form-data" });
