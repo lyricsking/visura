@@ -25,7 +25,7 @@ export default function PostForm() {
 
   let data: any = fetcher.data;
   let title =
-    data?.["values"]?.title || fetcher.formData?.get("title")?.toString() || "";
+    data?.values?.title || fetcher.formData?.get("title")?.toString() || "";
   let content =
     data?.values?.content ||
     fetcher.formData?.get("content")?.toString() ||
@@ -49,6 +49,13 @@ export default function PostForm() {
     }
   }, [images, isUploading]);
 
+  useEffect(() => {
+    if (data?.post) {
+      // Todo Show toast
+      alert("Post createie");
+      // Todo Reset form and navigate
+    }
+  }, [data]);
   return (
     <div className="grid auto-rows-max gap-4 border rounded-md">
       <fetcher.Form method="post">
@@ -62,9 +69,9 @@ export default function PostForm() {
                 name="title"
                 defaultValue={title || ""}
                 required
-                className={data?.errors.title ? "border-red-400" : ""}
+                className={data?.errors?.title ? "border-red-400" : ""}
               />
-              {data?.errors.title ? (
+              {data?.errors?.title ? (
                 <ValidationMessage
                   isSubmitting={isSubmitting}
                   error={data?.errors?.title}
@@ -75,7 +82,7 @@ export default function PostForm() {
             <div className="col-span-full">
               <label
                 htmlFor="featuredImage"
-                className={data?.errors.featuredImage ? "border-red-400" : ""}
+                className={data?.errors?.featuredImage ? "border-red-400" : ""}
               >
                 {isUploading ? (
                   <p>Uploading Image...</p>
@@ -91,7 +98,7 @@ export default function PostForm() {
                 onChange={(e) => uploadImage(e.currentTarget.files)}
                 style={{ display: "none" }}
               />
-              {data?.errors.featuredImage ? (
+              {data?.errors?.featuredImage ? (
                 <ValidationMessage
                   isSubmitting={isSubmitting}
                   error={data?.errors?.featuredImage}
@@ -122,7 +129,6 @@ export default function PostForm() {
                 name="tags"
                 defaultValue={tags?.join(", ") || ""}
                 required
-                className="input"
               />
             </div>
 

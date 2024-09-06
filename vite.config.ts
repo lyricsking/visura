@@ -97,7 +97,7 @@ export default defineConfig({
               route("", "Blog/routes/index.tsx", { index: true });
               route("new", "Blog/routes/new.tsx", { id: "blog-new" });
 
-              // route(":slug", "Blog/routes/post.tsx");
+              route(":slug", "Blog/routes/post.tsx");
               route("upload", "Dashboard/routes/upload.tsx", {
                 id: "upload-blog",
               });

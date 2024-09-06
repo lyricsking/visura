@@ -185,9 +185,6 @@ export default function Index() {
 }
 
 export const loader = async () => {
-  // await generateDummyPosts(10);
-  // await generateDummyTips(20),
-
   const [tips, posts] = await Promise.all([findTips(), findPosts({})]);
 
   return json({ tips, posts });
