@@ -13,6 +13,7 @@ import { useFileUpload } from "~/hooks/use-upload";
 import { ImagePreview } from "~/components/image-preview";
 import { parseError } from "~/utils/mongoose";
 import { ValidationMessage } from "~/components/ui/validation-message";
+import { cn } from "~/utils/util";
 
 export default function PostForm() {
   // const loaderData = useLoaderData<typeof loader>();
@@ -69,7 +70,10 @@ export default function PostForm() {
                 name="title"
                 defaultValue={title || ""}
                 required
-                className={data?.errors?.title ? "border-red-400" : ""}
+                className={cn(
+                  "w-full",
+                  data?.errors?.title ? "border-red-400" : ""
+                )}
               />
               {data?.errors?.title ? (
                 <ValidationMessage
@@ -79,7 +83,18 @@ export default function PostForm() {
               ) : null}
             </div>
 
-            <div className="col-span-full">
+            <div>
+              <label htmlFor="tags">Tags (comma separated)</label>
+              <Input
+                id="tags"
+                type="text"
+                name="tags"
+                defaultValue={tags?.join(", ") || ""}
+                required
+              />
+            </div>
+
+            <div className="col-span-full md:col-span-3 lg:col-span-2 flex items-center">
               <label
                 htmlFor="featuredImage"
                 className={data?.errors?.featuredImage ? "border-red-400" : ""}
@@ -121,18 +136,7 @@ export default function PostForm() {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="tags">Tags (comma separated)</label>
-              <Input
-                id="tags"
-                type="text"
-                name="tags"
-                defaultValue={tags?.join(", ") || ""}
-                required
-              />
-            </div>
-
-            <div className="col-span-full">
+            <div className="col-span-full ">
               <label htmlFor="excerpt">Excerpt</label>
               <Textarea
                 id="excerpt"
