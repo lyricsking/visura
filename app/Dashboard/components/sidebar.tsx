@@ -1,16 +1,8 @@
 import { NavLink } from "@remix-run/react";
 import React, {
-  Component,
-  ExoticComponent,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useState,
+  
 } from "react";
-import { useLocation, useSearchParams } from "@remix-run/react";
-import pkg from "../../../package.json";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
-import { Bars3Icon } from "@heroicons/react/16/solid";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
 import { config } from "@/config";

@@ -1,5 +1,4 @@
 import { NavLink } from "@remix-run/react";
-import { Link } from "lucide-react";
 import { Menu } from "./sidebar";
 
 export type NavbarProps = {

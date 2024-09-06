@@ -12,11 +12,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import Breadcrumb from "~/components/breadcrumb";
-import {
-  json,
-  LoaderFunction,
-  redirect,
-} from "@remix-run/node";
+import { json, LoaderFunction, redirect } from "@remix-run/node";
 import {
   getUserFromSession,
   isAuthenticated,

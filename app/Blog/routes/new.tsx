@@ -1,5 +1,13 @@
-import { FormEvent, useRef } from "react";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { FormEvent, useEffect, useRef } from "react";
+import {
+  Form,
+  usedata,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 import { Input } from "~/components/input";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
@@ -13,126 +21,155 @@ import { getAuthUser } from "~/Auth/server/auth.server";
 import mongoose, { Types } from "mongoose";
 import { useFileUpload } from "~/hooks/use-upload";
 import { ImagePreview } from "~/components/image-preview";
+import { parseError } from "~/utils/mongoose";
+import { ValidationMessage } from "~/components/ui/validation-message";
+import { cn } from "~/utils/util";
 
 export default function PostForm() {
-  const data = useLoaderData<typeof loader>();
+  // const loaderData = useLoaderData<typeof loader>();
 
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
-  let navigation = useNavigation();
-  // let submit = useSubmit();
+  let fetcher = useFetcher({ key: "submit-post" });
 
-  let { submit, isUploading, images } = useFileUpload();
+  let { submit: uploadImage, isUploading, images } = useFileUpload();
 
-  let title = navigation.formData?.get("title")?.toString() || "";
-  let slug = navigation.formData?.get("slug")?.toString() || "";
-  let author = navigation.formData?.get("author")?.toString() || "";
+  let data: any = fetcher.data;
+  let title =
+    data?.["values"]?.title || fetcher.formData?.get("title")?.toString() || "";
   let content =
-    navigation.formData?.get("content")?.toString() || editorRef.current?.value;
-  let excerpt = navigation.formData?.get("excerpt")?.toString() || "";
-  let tags = navigation.formData?.get("tags")?.toString().split(", ") || [];
-  let publishedOn =
-    navigation.formData && navigation.formData.get("publishedOn")
-      ? new Date(navigation.formData.get("publishedOn")!.toString())
-      : new Date();
+    data?.values?.content ||
+    fetcher.formData?.get("content")?.toString() ||
+    editorRef.current?.value;
+  let excerpt =
+    data?.values?.excerpt || fetcher.formData?.get("excerpt")?.toString() || "";
+  let tags =
+    (data?.values?.tags || fetcher.formData?.get("tags"))
+      ?.toString()
+      .split(", ") || [];
 
-  const isSubmitting = navigation.state !== "idle";
+  const isSubmitting = fetcher.state !== "idle";
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const content = formData.get("content") as string;
-    // Todo sanitize content here before sending to server.
-  }
+  useEffect(() => {
+    if (!isUploading && images && images.length > 0) {
+      // Set featuredImage to the first image in the images array
+      images.forEach((image) => {
+        if (!image.url.startsWith("blob:"))
+          fetcher.formData?.set("featuredImage", image.url);
+      });
+    }
+  }, [images, isUploading]);
 
   return (
     <div className="grid auto-rows-max gap-4 border rounded-md">
-      <Form
-        method="post"
-        // onSubmit={handleSubmit}
-      >
-        <div className="w-full grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-          <div>
-            <label htmlFor="title">Title</label>
-            <Input
-              id="title"
-              type="text"
-              name="title"
-              defaultValue={title || ""}
-              required
-              className="input"
-            />
-          </div>
+      <fetcher.Form method="post">
+        <fieldset disabled={isSubmitting}>
+          <div className="w-full grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+            <div>
+              <label htmlFor="title">Title</label>
+              <Input
+                id="title"
+                type="text"
+                name="title"
+                defaultValue={title || ""}
+                required
+                className={data?.errors.title ? "border-red-400" : ""}
+              />
+              {data?.errors.title ? (
+                <ValidationMessage
+                  isSubmitting={isSubmitting}
+                  error={data?.errors?.title}
+                />
+              ) : null}
+            </div>
 
-          <div>
-            <label htmlFor="featuredImage">
-              {isUploading ? <p>Uploading Image...</p> : <p>Select an Image</p>}
-            </label>
-            <Input
-              id="featuredImage"
-              type="file"
-              name="featuredImage"
-              className="input"
-              onChange={(e) => submit(e.currentTarget.files)}
-              style={{ display: "none" }}
-            />
-          </div>
-          <div>
-            {/*
-             * Here we render the images including the one we are
-             * uploading and the ones we've already  uploaded
-             */}
-            {images.map((file) => {
-              return (
-                <ImagePreview key={file.name} name={file.name} url={file.url} />
-              );
-            })}
-          </div>
-          <div>
-            <label htmlFor="tags">Tags (comma separated)</label>
-            <Input
-              id="tags"
-              type="text"
-              name="tags"
-              defaultValue={tags?.join(", ") || ""}
-              required
-              className="input"
-            />
-          </div>
+            <div className="col-span-full">
+              <label
+                htmlFor="featuredImage"
+                className={data?.errors.featuredImage ? "border-red-400" : ""}
+              >
+                {isUploading ? (
+                  <p>Uploading Image...</p>
+                ) : (
+                  <p>Select featured Image</p>
+                )}
+              </label>
+              <Input
+                id="featuredImage"
+                type="file"
+                name="featuredImage"
+                className="max-w-xs"
+                onChange={(e) => uploadImage(e.currentTarget.files)}
+                style={{ display: "none" }}
+              />
+              {data?.errors.featuredImage ? (
+                <ValidationMessage
+                  isSubmitting={isSubmitting}
+                  error={data?.errors?.featuredImage}
+                />
+              ) : null}
+              <div>
+                {/*
+                 * Here we render the images including the one we are
+                 * uploading and the ones we've already  uploaded
+                 */}
+                {images.map((file) => {
+                  return (
+                    <ImagePreview
+                      key={file.name}
+                      name={file.name}
+                      url={file.url}
+                    />
+                  );
+                })}
+              </div>
+            </div>
 
-          <div className="col-span-full">
-            <label htmlFor="excerpt">Excerpt</label>
-            <Textarea
-              id="excerpt"
-              name="excerpt"
-              defaultValue={excerpt || ""}
-              required
-            />
-          </div>
+            <div>
+              <label htmlFor="tags">Tags (comma separated)</label>
+              <Input
+                id="tags"
+                type="text"
+                name="tags"
+                defaultValue={tags?.join(", ") || ""}
+                required
+                className="input"
+              />
+            </div>
 
-          <div className="col-span-full">
-            <label htmlFor="content">Content</label>
-            <MarkdownEditor
-              editorRef={editorRef}
-              name="content"
-              defaultValue={content || ""}
-              required
-            />
-          </div>
+            <div className="col-span-full">
+              <label htmlFor="excerpt">Excerpt</label>
+              <Textarea
+                id="excerpt"
+                name="excerpt"
+                defaultValue={excerpt || ""}
+                required
+              />
+            </div>
 
-          <div>
-            <Button
-              variant="outline"
-              size="lg"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting" : "Save Post"}
-            </Button>
+            <div className="col-span-full">
+              <label htmlFor="content">Content</label>
+              <MarkdownEditor
+                editorRef={editorRef}
+                name="content"
+                defaultValue={content || ""}
+                required
+              />
+            </div>
+
+            <div>
+              <Button
+                variant="outline"
+                size="lg"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting" : "Save Post"}
+              </Button>
+            </div>
           </div>
-        </div>
-      </Form>
+        </fieldset>
+      </fetcher.Form>
     </div>
   );
 }
@@ -144,39 +181,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const formData = await request.formData();
-  const formObject = formDataToObject(formData);
+  const formObject: any = formDataToObject(formData);
+  console.log(Object.fromEntries(formData));
 
-  let title = formObject["title"];
-  if (!title) {
-    throw new Error("Title was not provided.");
-  }
+  // let title = formObject["title"];
+  // let excerpt = formObject["excerpt"];
+  // let content = formObject["content"];
+  // let tags = formObject["tags"];
+  // let featuredImage = formObject["featuredImage"];
 
-  let excerpt = formObject["excerpt"];
-  if (!excerpt) {
-    throw new Error("Excerpt was not provided.");
-  }
-
-  let content = formObject["content"];
-  if (!content) {
-    throw new Error("Content was not provided.");
-  }
-
-  let tags = formObject["tags"];
-  if (!tags) {
-    throw new Error("No tag was provided.");
-  }
-
-  let post = await createPost({
-    title,
-    author: new Types.ObjectId(authUser.id),
-    excerpt,
-    content,
-    featuredImage: "",
-    tags,
+  let response = await createPost({
+    ...formObject,
+    author: new Types.ObjectId(),
     published: false,
   });
 
-  return json({ post });
+  if (response.error) {
+    const values = Object.fromEntries(formData);
+    let errors = parseError(response.error);
+
+    return json({ errors, values });
+  }
+
+  return json({ post: response.data });
 };
 
 export const loader = async () => {

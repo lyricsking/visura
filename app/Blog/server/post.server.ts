@@ -1,7 +1,8 @@
-import mongoose, { ObjectId } from "mongoose";
-import PostModel from "../models/post.model";
+import mongoose, { ObjectId, ValidatorFunction } from "mongoose";
+import PostModel, { PostModelType } from "../models/post.model";
 import { IPost } from "../types/post.type";
 import { faker } from "@faker-js/faker";
+import { DBReponseType } from "~/utils/mongoose";
 
 export const createPost = async function (
   data: Pick<
@@ -14,15 +15,20 @@ export const createPost = async function (
     | "published"
     | "tags"
   >
-): Promise<IPost> {
-  try {
-    const blog = new PostModel(data);
-    await blog.save();
+): Promise<DBReponseType<IPost>> {
+  let response: DBReponseType<IPost> = {};
 
-    return blog;
-  } catch (error) {
-    console.log(error);
-    throw error;
+  try {
+    response.data = await PostModel.create(data);
+  } catch (err: mongoose.Error.ValidationError | any) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      response.error = err;
+    } else {
+      console.log(err);
+      throw err;
+    }
+  } finally {
+    return response;
   }
 };
 

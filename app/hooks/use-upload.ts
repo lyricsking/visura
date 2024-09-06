@@ -24,7 +24,11 @@ export function useFileUpload() {
 
       let formData = new FormData();
       for (let file of files) formData.append("file", file);
-      submit(formData, { method: "POST", encType: "multipart/form-data", action:"/blog/upload" });
+      submit(formData, {
+        method: "POST",
+        encType: "multipart/form-data",
+        action: "/blog/upload",
+      });
     },
     isUploading,
     images,
