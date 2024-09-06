@@ -1,13 +1,5 @@
-import { FormEvent, useEffect, useRef } from "react";
-import {
-  Form,
-  usedata,
-  useFetcher,
-  useLoaderData,
-  useLocation,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react";
+import { useEffect, useRef } from "react";
+import { useFetcher } from "@remix-run/react";
 import { Input } from "~/components/input";
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/utils/form-data-to-object";
@@ -15,15 +7,12 @@ import { Textarea } from "~/components/textarea";
 import { MarkdownEditor } from "~/components/markdown-editor";
 import Button from "~/components/button";
 import { createPost } from "../server/post.server";
-import { IPost } from "../types/post.type";
-import { getSlug } from "../utils/slug";
 import { getAuthUser } from "~/Auth/server/auth.server";
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { useFileUpload } from "~/hooks/use-upload";
 import { ImagePreview } from "~/components/image-preview";
 import { parseError } from "~/utils/mongoose";
 import { ValidationMessage } from "~/components/ui/validation-message";
-import { cn } from "~/utils/util";
 
 export default function PostForm() {
   // const loaderData = useLoaderData<typeof loader>();
