@@ -53,15 +53,16 @@ export default function PostForm() {
   useEffect(() => {
     if (data?.post) {
       // Todo Show toast
-      alert("Post createie");
+      alert("Post create");
       // Todo Reset form and navigate
     }
   }, [data]);
+
   return (
     <div className="mx-auto grid auto-rows-max gap-4">
       <fetcher.Form method="post">
         <fieldset disabled={isSubmitting}>
-          <div className="grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             <div>
               <label htmlFor="title">Title</label>
               <Input

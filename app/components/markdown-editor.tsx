@@ -6,9 +6,6 @@ import {
   AlignLeftIcon,
   AlignRightIcon,
   BoldIcon,
-  EyeIcon,
-  EyeOffIcon,
-  HandHelpingIcon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
@@ -22,7 +19,6 @@ import {
   StrikethroughIcon,
   Undo2Icon,
 } from "lucide-react";
-import { useSearchParams } from "@remix-run/react";
 import { customMarkdownParser } from "~/utils/markdown-utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -37,6 +33,10 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   const { editorRef, defaultValue, ...attrs } = props;
   const historyStackRef = useRef<string[]>([defaultValue?.toString() || ""]);
   const redoStackRef = useRef<string[]>([]);
+
+  const [preview, setPreview] = useState<string>(
+    editorRef.current?.value || ""
+  );
 
   const MAX_HISTORY_SIZE = 50;
 
@@ -61,6 +61,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
     saveToHistoryWithDebounce(newText);
 
+    // Update preview
     setPreview(newText);
   };
 
@@ -76,6 +77,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
       const lastState = history.pop();
       if (editorRef.current && lastState !== undefined) {
         editorRef.current.value = lastState;
+        setPreview(lastState);
       }
     }
   };
@@ -87,6 +89,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
       if (editorRef.current && nextState !== undefined) {
         saveToHistory(editorRef.current.value);
         editorRef.current.value = nextState;
+        setPreview(nextState);
       }
     }
   };
@@ -107,21 +110,6 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     "numberList",
     "list",
   ];
-
-  const [preview, setPreview] = useState<string>(editorRef.current?.value || "");
-
-  const handlePreview = () => setPreview(editorRef.current?.value || "");
-  
-
-  useEffect(()=>{
-   const editor = editorRef.current;
-   //  Attach the event listener
-   editor?.addEventListener("input", handlePreview)
-   // Cleanup function to remove event listener
-   return ()=>{
-    editor?.removeEventListener("input", handlePreview)
-   }
-  }, [])
 
   return (
     <div className="max-w-screen-sm border rounded-md bg-gray-100 divide-y">
