@@ -58,10 +58,10 @@ export default function PostForm() {
     }
   }, [data]);
   return (
-    <div className="grid auto-rows-max gap-4 border rounded-md">
+    <div className="mx-auto grid auto-rows-max gap-4">
       <fetcher.Form method="post">
         <fieldset disabled={isSubmitting}>
-          <div className="w-full grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 p-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             <div>
               <label htmlFor="title">Title</label>
               <Input

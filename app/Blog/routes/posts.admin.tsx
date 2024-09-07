@@ -37,21 +37,18 @@ export const handle = {
   },
 };
 
-export default function Products() {
+export default function Posts() {
   return (
     <div className="mx-auto grid auto-rows-max gap-4">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
           <CardHeader className="pb-3">
-            <CardTitle>Your Posts</CardTitle>.
-            <CardDescription className="max-w-lg text-balance leading-relaxed">
+            <CardTitle>Your Posts</CardTitle>
+            <CardContent className="max-w-lg text-balance leading-relaxed">
               Introducing Our Dynamic Orders Dashboard for Seamless Management
               and Insightful Analysis.
-            </CardDescription>
+            </CardContent>
           </CardHeader>
-          <CardFooter>
-            <Button>Create New Order</Button>
-          </CardFooter>
         </Card>
         <Card x-chunk="dashboard-05-chunk-1">
           <CardHeader className="pb-2">
@@ -131,7 +128,7 @@ export default function Products() {
         <TabsContent value="all">
           <Card x-chunk="dashboard-06-chunk-0 w-full">
             <CardHeader>
-              <CardTitle>Products</CardTitle>
+              <CardTitle>Posts</CardTitle>
               <CardDescription>
                 Manage your products and view their sales performance.
               </CardDescription>

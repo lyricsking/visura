@@ -62,7 +62,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Meta />
           <Links />
         </head>
-        <body className="bg-base-100 text-neutral overflow-x-hidden">
+        <body className="bg-base-100 text-neutral max-w-full overflow-x-hidden">
           {children}
           <ScrollRestoration
             getKey={(location) => {

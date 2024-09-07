@@ -8,6 +8,7 @@ import {
   BoldIcon,
   EyeIcon,
   EyeOffIcon,
+  HandHelpingIcon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
@@ -34,21 +35,10 @@ export interface MarkdownEditorProps extends TextareaProps {
 
 export function MarkdownEditor(props: MarkdownEditorProps) {
   const { editorRef, defaultValue, ...attrs } = props;
-  const historyStackRef = useRef<string[]>([]);
+  const historyStackRef = useRef<string[]>([defaultValue?.toString() || ""]);
   const redoStackRef = useRef<string[]>([]);
 
   const MAX_HISTORY_SIZE = 50;
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isPreviewMode = searchParams.has("preview");
-
-  const togglePreview = () => {
-    setSearchParams((prev) => {
-      isPreviewMode ? prev.delete("preview") : prev.set("preview", "true");
-
-      return prev;
-    });
-  };
 
   const saveToHistory = (text: string) => {
     const history = historyStackRef.current;
@@ -70,6 +60,8 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     }
 
     saveToHistoryWithDebounce(newText);
+
+    setPreview(newText);
   };
 
   const saveToHistoryWithDebounce = debounce((text: string) => {
@@ -103,6 +95,9 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     "bold",
     "italic",
     "strikethrough",
+    "leftAlign",
+    "rightAlign",
+    "justify",
     "h1",
     "h2",
     "h3",
@@ -111,15 +106,27 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
     // "image",
     "numberList",
     "list",
-    "leftAlign",
-    "rightAlign",
-    "justify",
   ];
 
+  const [preview, setPreview] = useState<string>(editorRef.current?.value || "");
+
+  const handlePreview = () => setPreview(editorRef.current?.value || "");
+  
+
+  useEffect(()=>{
+   const editor = editorRef.current;
+   //  Attach the event listener
+   editor?.addEventListener("input", handlePreview)
+   // Cleanup function to remove event listener
+   return ()=>{
+    editor?.removeEventListener("input", handlePreview)
+   }
+  }, [])
+
   return (
-    <div className="w-full mx-auto border rounded-md bg-gray-100 divide-y">
-      <div className="flex items-center w-full divide-x-2">
-        <div className="flex-none flex items-center gap-2 px-2">
+    <div className="max-w-screen-sm border rounded-md bg-gray-100 divide-y">
+      <div className="grid grid-cols-[20%_1fr] divide-x-2">
+        <div className="grid grid-cols-2 items-center gap-2 px-2">
           <Button variant="ghost" size="icon" onClick={handleUndo}>
             <Undo2Icon className="h-5 w-5" />
           </Button>
@@ -130,30 +137,10 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         </div>
 
         {/* Toolbar */}
-        <div className="flex-1 overflow-x-auto">
-          <Toolbar editorRef={editorRef} tools={tools} />
-        </div>
-
-        {/* Preview toggle: Used to toggle preview on or off */}
-        <div className="flex-none px-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={togglePreview}
-          >
-            {isPreviewMode ? (
-              <EyeIcon className="h-5 w-5" />
-            ) : (
-              <EyeOffIcon className="h-5 w-5" />
-            )}
-
-            <span className="ml-2 hidden md:inline-block">Preview</span>
-          </Button>
-        </div>
+        <Toolbar editorRef={editorRef} tools={tools} />
       </div>
       {/* EditableContent Div and Preview */}
-      <div className="flex flex-col md:flex-row gap-2 mx-1 mb-1">
+      <div className="flex flex-col gap-2 mx-1 mb-1">
         {/* The editor textarea */}
         <Textarea
           ref={editorRef}
@@ -162,17 +149,15 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
           {...attrs}
         />
 
-        {isPreviewMode && (
-          <div className="min-h-44 w-full prose md:prose-lg lg:prose-xl rounded-b-md bg-white p-2">
-            {/* Preview */} 
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw]}
-            >
-              {customMarkdownParser(editorRef.current?.value || "")}
-            </ReactMarkdown>
-          </div>
-        )}
+        <div className="min-h-44 w-full prose md:prose-lg lg:prose-xl rounded-md bg-white p-2">
+          {/* Preview */}
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+          >
+            {customMarkdownParser(preview)}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );
@@ -234,7 +219,7 @@ export function Toolbar({ editorRef, tools: itemsKey }: ToolbarProps) {
 
   return (
     <ScrollArea className="whitespace-nowrap">
-      <div className="w-max grid grid-flow-col auto-cols-fr space-x-4 p-4 divide-x">
+      <div className=" flex gap-4 p-4 divide-x overflow-x-auto">
         {itemsKey.map((itemKey) => {
           let item = toolbarItems[itemKey];
           const IconTag = item.icon;
