@@ -62,6 +62,7 @@ export default defineConfig({
                 index: true,
               });
               route(blogPath, "Dashboard/routes/blog.tsx", () => {
+                route("", "Blog/routes/posts.admin.tsx", { index: true });
                 route("edit", "Blog/routes/new.tsx");
               });
               route("products", "Dashboard/routes/product.tsx", () => {
