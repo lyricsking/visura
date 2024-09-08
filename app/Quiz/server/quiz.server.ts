@@ -1,12 +1,12 @@
 import { Session, createCookie } from "@remix-run/node";
 
-import { Gender, type ISupplement } from "~/Supplement/supplement.type";
-import { Answers, Question } from "../types/quiz.type";
-import { findSupplement } from "~/Supplement/supplement.server";
-import { addItemsToCart, deleteCart } from "~/Order/server/cart.server";
-import { IItem, IOrder } from "~/Order/types/order.type";
+import { deleteCart, addItemsToCart } from "~/Order/server/cart.server";
+import { IOrder, IItem } from "~/Order/types/order.type";
+import { findSupplement } from "~/Product/server/supplement.server";
+import { ISupplement, Gender } from "~/Product/types/supplement.type";
 import { getNanoid } from "~/utils/util";
-import { QIDS_MAP_KEY, ANSWER_KEY, QUESTION_KEY } from "../utils/constants";
+import { Question, Answers } from "../types/quiz.type";
+import { QIDS_MAP_KEY, ANSWER_KEY } from "../utils/constants";
 import { questions, filterQuestions } from "../utils/quiz.utils";
 
 export const quizPrefs = createCookie("quizPrefs", {

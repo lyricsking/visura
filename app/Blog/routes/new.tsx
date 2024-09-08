@@ -59,7 +59,7 @@ export default function PostForm() {
   }, [data]);
 
   return (
-    <div className="mx-auto grid auto-rows-max gap-4">
+    <div className="w-full grid gap-4 p-4">
       <fetcher.Form method="post">
         <fieldset disabled={isSubmitting}>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
@@ -71,10 +71,7 @@ export default function PostForm() {
                 name="title"
                 defaultValue={title || ""}
                 required
-                className={cn(
-                  "w-full",
-                  data?.errors?.title ? "border-red-400" : ""
-                )}
+                className={cn(data?.errors?.title ? "border-red-400" : "")}
               />
               {data?.errors?.title ? (
                 <ValidationMessage
@@ -95,7 +92,7 @@ export default function PostForm() {
               />
             </div>
 
-            <div className="col-span-full md:col-span-3 lg:col-span-2 flex items-center">
+            <div className="col-span-full">
               <label
                 htmlFor="featuredImage"
                 className={data?.errors?.featuredImage ? "border-red-400" : ""}
@@ -110,9 +107,8 @@ export default function PostForm() {
                 id="featuredImage"
                 type="file"
                 name="featuredImage"
-                className="max-w-xs"
-                onChange={(e) => uploadImage(e.currentTarget.files)}
                 style={{ display: "none" }}
+                onChange={(e) => uploadImage(e.currentTarget.files)}
               />
               {data?.errors?.featuredImage ? (
                 <ValidationMessage

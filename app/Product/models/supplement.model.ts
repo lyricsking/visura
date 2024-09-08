@@ -1,7 +1,7 @@
 import mongoose, { Schema, Model } from "mongoose";
-import type { ISupplement } from "./supplement.type";
+import type { ISupplement } from "../types/supplement.type";
 
-export type SupplementModel = Model<ISupplement>
+export type SupplementModel = Model<ISupplement>;
 const supplementSchema: Schema = new Schema<ISupplement, SupplementModel>({
   _id: { type: Schema.Types.ObjectId },
   name: { type: String, required: true },

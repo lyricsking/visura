@@ -34,45 +34,56 @@ export default defineConfig({
             route("shipping", "Order/routes/shipping.tsx");
             route("payment", "Order/routes/payment.tsx");
           });
-          route(
-            userDashboardPath,
-            "Dashboard/routes/layout.tsx",
-            { id: "account" },
-            () => {
-              route("", "Dashboard/routes/user-overview.tsx", {
-                index: true,
-              });
-              route("invoices/:status?", "Invoice/routes/invoices.tsx", () => {
-                route(":id", "Invoice/routes/invoice-id.tsx", { index: true });
-              });
-              route("orders/:status?", "Order/routes/orders.tsx", () => {
-                route(":id", "Order/routes/order-detail.tsx");
-              });
-              route("settings/:setting?", "Setting/routes/setting.tsx");
-              route("subscriptions", "Subscription/routes/subscription.tsx");
-              route("transactions", "Transaction/routes/transaction.tsx");
-            }
-          );
-          route(
-            adminDashboardPath,
-            "Dashboard/routes/layout.tsx",
-            { id: "admin" },
-            () => {
-              route("", "Dashboard/routes/admin-overview.tsx", {
-                index: true,
-              });
-              route(blogPath, "Dashboard/routes/blog.tsx", () => {
-                route("", "Blog/routes/posts.admin.tsx", { index: true });
-                route("edit", "Blog/routes/new.tsx");
-              });
-              route("products", "Dashboard/routes/product.tsx", () => {
-                route("", "Supplement/routes/products.tsx", { index: true });
-                route("edit", "Supplement/routes/product-edit.tsx");
-              });
-              route("settings", "Setting/routes/admin-settings.tsx");
-              route("upload", "Dashboard/routes/upload.tsx");
-            }
-          );
+          route("", "Dashboard/routes/layout.tsx", () => {
+            // route(
+            //   userDashboardPath,
+            //   "Dashboard/routes/layout.tsx",
+            //   { id: "account" },
+            //   () => {
+            //     route("", "Dashboard/routes/user-overview.tsx", {
+            //       index: true,
+            //     });
+            //     route(
+            //       "invoices/:status?",
+            //       "Invoice/routes/invoices.tsx",
+            //       () => {
+            //         route(":id", "Invoice/routes/invoice-id.tsx", {
+            //           index: true,
+            //         });
+            //       }
+            //     );
+            //     route("orders/:status?", "Order/routes/orders.tsx", () => {
+            //       route(":id", "Order/routes/order-detail.tsx");
+            //     });
+            //     route("settings/:setting?", "Setting/routes/setting.tsx");
+            //     route("subscriptions", "Subscription/routes/subscription.tsx");
+            //     route("transactions", "Transaction/routes/transaction.tsx");
+            //   }
+            // );
+            route(
+              adminDashboardPath,
+              "Dashboard/routes/layout.admin.tsx",
+              { id: "admin" },
+              () => {
+                route("", "Dashboard/routes/overview.admin.tsx", {
+                  index: true,
+                });
+                route(blogPath, "Blog/routes/blog.admin.tsx", () => {
+                  route("", "Blog/routes/posts.admin.tsx", {
+                    index: true,
+                  });
+                  route("edit", "Blog/routes/new.tsx");
+                });
+
+                route("products", "Product/routes/product.admin.tsx", () => {
+                  route("", "Product/routes/products.tsx", { index: true });
+                  route("edit", "Product/routes/product-edit.tsx");
+                });
+                route("settings", "Setting/routes/admin-settings.tsx");
+                route("upload", "Dashboard/routes/upload.tsx");
+              }
+            );
+          });
           route("support", "Support/routes/layout.tsx", () => {
             route("", "Support/routes/support.tsx", { index: true });
             route(

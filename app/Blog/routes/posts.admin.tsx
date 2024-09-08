@@ -30,7 +30,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import { Progress } from "~/components/progress";
 
 export const handle = {
-  pageName: "Product",
   breadcrumb: {
     id: "products-list",
     label: "Products",
@@ -39,7 +38,7 @@ export const handle = {
 
 export default function Posts() {
   return (
-    <div className="mx-auto grid auto-rows-max gap-4">
+    <div className="grid gap-4 p-4">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
           <CardHeader className="pb-3">
@@ -79,9 +78,8 @@ export default function Posts() {
           </CardFooter>
         </Card>
       </div>
-
-      <Tabs defaultValue="all" className="flex flex-col w-full">
-        <div className="flex w-full items-center justify-between gap-x-4">
+      <Tabs defaultValue="all" className="grid w-full">
+        <div className="grid grid-cols-2 items-center justify-between gap-x-4">
           <TabsList className="">
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="active">Active</TabsTrigger>
@@ -91,7 +89,7 @@ export default function Posts() {
             </TabsTrigger>
           </TabsList>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="grid grid-flow-col-dense items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 gap-1">

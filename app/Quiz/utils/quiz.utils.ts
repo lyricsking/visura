@@ -1,4 +1,4 @@
-import { Gender } from "~/Supplement/supplement.type";
+import { Gender } from "~/Product/types/supplement.type";
 import { Answers, Question, QuestionCondition } from "../types/quiz.type";
 import { useNavigate } from "@remix-run/react";
 import { getNanoid } from "~/utils/util";
