@@ -66,8 +66,8 @@ export default function Layout() {
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
         <PageLayoutHeaderItem spacing={"compact"} className="">
-          <div className="flex w-full justify-between space-x-2">
-            <div className="flex flex-row items-center gap-2 text-lg font-medium sm:text-sm md:gap-6">
+          <div className="flex w-full items-center justify-between space-x-2">
+            <div className="flex flex-row items-center gap-2 text-lg text-center font-medium sm:text-sm md:gap-6">
               <Sidebar
                 basePath={basePath}
                 menu={menu}

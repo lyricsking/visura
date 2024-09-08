@@ -1,7 +1,5 @@
 import { NavLink } from "@remix-run/react";
-import React, {
-  
-} from "react";
+import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
@@ -27,8 +25,8 @@ export function Sidebar({
 }: SidebarContentProps) {
   return (
     <Sheet>
-      <SheetTrigger className="md:hidden p-0 ">
-        <Button size="icon" className="shrink-0">
+      <SheetTrigger>
+        <Button size="sm" variant="ghost" className="px-0">
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle navigation menu</span>
         </Button>

@@ -43,7 +43,7 @@ export default function Posts() {
         <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
           <CardHeader className="pb-3">
             <CardTitle>Your Posts</CardTitle>
-            <CardContent className="max-w-lg text-balance leading-relaxed">
+            <CardContent className="text-balance leading-relaxed">
               Introducing Our Dynamic Orders Dashboard for Seamless Management
               and Insightful Analysis.
             </CardContent>

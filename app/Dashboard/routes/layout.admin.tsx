@@ -11,9 +11,9 @@ export default function AdminLayout() {
     <div className="w-full max-w-6xl mx-auto grid ">
       <div className="mx-auto grid border rounded-md p-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr]">
         <div className="grid bg-white rounded-md">
-          <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 p-4 text-sm overflow-x-auto">
+          <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 p-2 text-sm">
             <ScrollArea className="whitespace-nowrap" type="scroll">
-              <div className="flex md:flex-col items-center gap-4 divide-x">
+              <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
                 {submenu.map((item: any) => (
                   <NavLink
                     key={item.label}
@@ -34,7 +34,7 @@ export default function AdminLayout() {
             </ScrollArea>
           </nav>
         </div>
-        <div className="w-[42rem] mx-auto p-4 bg-white rounded-md">
+        <div className="w-full sm:w-[42rem] mx-auto sm:p-4 bg-white rounded-md">
           <Outlet />
         </div>
       </div>

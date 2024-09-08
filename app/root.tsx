@@ -1,26 +1,28 @@
 import stylesheet from "tailwind.css?url";
-import type {
-  LinksFunction,
+
+import {
   LoaderFunction,
+  json,
+  LinksFunction,
   MetaFunction,
 } from "@remix-run/node";
 import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  isRouteErrorResponse,
-  json,
-  useRouteError,
   useRouteLoaderData,
+  Meta,
+  Links,
+  ScrollRestoration,
+  Scripts,
+  Outlet,
+  useRouteError,
+  isRouteErrorResponse,
 } from "@remix-run/react";
-import clsx from "clsx";
+import { useEffect } from "react";
+
 import { getThemeSession } from "./Theme/theme.server";
 import { Theme, ThemeProvider } from "./Theme/theme.provider";
 import { config } from "@/config";
-import { useEffect } from "react";
 import { Toaster } from "./components/sonner";
+import { cn } from "./utils/util";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -55,26 +57,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, [data]);
 
   return (
-    <ThemeProvider theme={data?.theme}>
-      <html lang="en" className={clsx(data?.theme)}>
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <Meta />
-          <Links />
-        </head>
-        <body className="bg-base-100 text-neutral max-w-full overflow-x-hidden">
-          {children}
-          <Toaster />
-          <ScrollRestoration
-            getKey={(location) => {
-              return location.pathname;
-            }}
-          />
-          <Scripts />
-        </body>
-      </html>
-    </ThemeProvider>
+    // <ThemeProvider theme={data?.theme}>
+    <html
+      lang="en"
+      // className={cn(data?.theme)}
+    >
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body className="bg-base-100 text-neutral max-w-full overflow-x-hidden">
+        {children}
+        <Toaster />
+        <ScrollRestoration
+          getKey={(location) => {
+            return location.pathname;
+          }}
+        />
+        <Scripts />
+      </body>
+    </html>
+    // </ThemeProvider>
   );
 }
 
