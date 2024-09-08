@@ -20,6 +20,7 @@ import { getThemeSession } from "./Theme/theme.server";
 import { Theme, ThemeProvider } from "./Theme/theme.provider";
 import { config } from "@/config";
 import { useEffect } from "react";
+import { Toaster } from "./components/sonner";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -64,6 +65,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </head>
         <body className="bg-base-100 text-neutral max-w-full overflow-x-hidden">
           {children}
+          <Toaster />
           <ScrollRestoration
             getKey={(location) => {
               return location.pathname;

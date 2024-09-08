@@ -1,14 +1,12 @@
 import {
   json,
   NodeOnDiskFile,
-  redirect,
   unstable_composeUploadHandlers,
   unstable_createFileUploadHandler,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
   type ActionFunctionArgs,
 } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
 
 export async function action({ request }: ActionFunctionArgs) {
   let folder = "post";
