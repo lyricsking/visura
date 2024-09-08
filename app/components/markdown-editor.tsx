@@ -113,7 +113,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
   return (
     <div className="border rounded-md bg-gray-100 divide-y">
-      <div className="grid grid-cols-[12%_1fr] divide-x-2">
+      <div className="grid grid-cols-[20%_1fr] md:grid-cols-[12%_1fr] divide-x-2">
         <div className="grid grid-cols-2 items-center gap-2 px-2">
           <Button variant="ghost" size="icon" onClick={handleUndo}>
             <Undo2Icon className="h-5 w-5" />

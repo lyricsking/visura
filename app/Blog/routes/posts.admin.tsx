@@ -28,6 +28,11 @@ import {
 import { File, ListFilter, PlusCircle, MoreHorizontal } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import { Progress } from "~/components/progress";
+import { useLoaderData } from "@remix-run/react";
+import { findPosts } from "../server/post.server";
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export const handle = {
   breadcrumb: {
@@ -37,6 +42,12 @@ export const handle = {
 };
 
 export default function Posts() {
+  const data = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    toast(data.posts.length + " posts");
+  }, []);
+
   return (
     <div className="grid gap-4 p-4">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
@@ -427,3 +438,8 @@ export default function Posts() {
     </div>
   );
 }
+
+export const loader = async ({}: LoaderFunctionArgs) => {
+  const posts = await findPosts({});
+  return json({ posts });
+};
