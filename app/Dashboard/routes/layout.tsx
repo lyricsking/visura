@@ -96,7 +96,9 @@ export default function Layout() {
             parentRoute?.handle?.pageName ||
             "Dashboard"}
         </h1>
-        <Outlet context={{ user: data.user }} />
+        <div className="max-h-screen overflow-hidden">
+          {/* <Outlet context={{ user: data.user }} /> */}
+        </div>
       </PageLayoutContent>
     </PageLayout>
   );

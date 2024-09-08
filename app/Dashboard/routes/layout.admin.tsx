@@ -34,9 +34,12 @@ export default function AdminLayout() {
             </ScrollArea>
           </nav>
         </div>
-        <div className="w-full sm:w-[42rem] mx-auto sm:p-4 bg-white rounded-md">
-          <Outlet />
-        </div>
+
+        <ScrollArea className="whitespace-nowrap w-full sm:w-[42rem] bg-white rounded-md">
+          <div className="mx-auto sm:p-4">
+            <Outlet />
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

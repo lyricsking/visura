@@ -28,7 +28,7 @@ export const handle = {
 
 export default function BlogLayout() {
   return (
-    <div>
+    <div className="">
       <Outlet />
     </div>
   );
