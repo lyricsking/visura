@@ -14,7 +14,7 @@ import { ImagePreview } from "~/components/image-preview";
 import { parseError } from "~/utils/mongoose";
 import { ValidationMessage } from "~/components/ui/validation-message";
 import { cn } from "~/utils/util";
-import { toast } from "sonner";
+import { useToast } from "~/hooks/use-toast";
 
 export default function PostForm() {
   // const loaderData = useLoaderData<typeof loader>();
@@ -41,9 +41,9 @@ export default function PostForm() {
 
   const isSubmitting = fetcher.state !== "idle";
 
-  useEffect(() => {
-    toast("Post created.");
+  const { toast } = useToast();
 
+  useEffect(() => {
     if (!isUploading && images && images.length > 0) {
       // Set featuredImage to the first image in the images array
       images.forEach((image) => {
@@ -56,7 +56,7 @@ export default function PostForm() {
   useEffect(() => {
     if (data?.post) {
       // Todo Show toast
-      toast("Post created.");
+      toast({ description: "Post created." });
       // Todo Reset form and navigate
     }
   }, [data]);

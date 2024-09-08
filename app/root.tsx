@@ -21,8 +21,9 @@ import { useEffect } from "react";
 import { getThemeSession } from "./Theme/theme.server";
 import { Theme, ThemeProvider } from "./Theme/theme.provider";
 import { config } from "@/config";
-import { Toaster } from "./components/sonner";
+
 import { cn } from "./utils/util";
+import { Toaster } from "./components/toaster";
 
 export type LoaderData = {
   theme: Theme | null;
