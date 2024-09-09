@@ -1,9 +1,15 @@
 "use client";
 
+import { ToastViewportProps } from "@radix-ui/react-toast";
+import { VariantProps } from "class-variance-authority";
 // Inspired by react-hot-toast library
 import * as React from "react";
 
-import type { ToastActionElement, ToastProps } from "~/components/toast";
+import type {
+  ToastActionElement,
+  ToastProps,
+  toastViewportVariants,
+} from "~/components/toast";
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
@@ -13,6 +19,7 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  position?: VariantProps<typeof toastViewportVariants>;
 };
 
 const actionTypes = {

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export interface DBReponseType<T> {
-  data?: T;
+  data?: T | null;
   error?: mongoose.Error;
 }
 

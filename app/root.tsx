@@ -24,6 +24,7 @@ import { config } from "@/config";
 
 import { cn } from "./utils/util";
 import { Toaster } from "./components/toaster";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -69,7 +70,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-base-100 text-neutral max-w-full overflow-x-hidden">
+      <body className="bg-base-100 text-neutral max-h-screen max-w-full overflow-x-hidden">
         {children}
         <Toaster />
         <ScrollRestoration

@@ -1,5 +1,6 @@
 import { Calendar, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
+import { formatDateByParts } from "~/utils/date";
 
 type TipCardProps = {
   tip: ITips;
@@ -16,6 +17,12 @@ export const TipCard = (props: TipCardProps) => {
             src="/path/to/football-icon.png"
             alt="Football"
             className="w-6 h-6 mr-2"
+            // alt={post.title}
+            // width="804"
+            // height="452"
+            // className="rounded-md border bg-muted transition-colors"
+            // src={"/images/tips/" + post.featuredImage}
+            // className="w-6 h-6 mr-2"
           />
           <h3 className="mb-3 text-xl font-bold">
             {tip.prediction.outcome.value}
@@ -32,11 +39,11 @@ export const TipCard = (props: TipCardProps) => {
             <span className="mr-2">
               <Calendar className="h-5 w-5" />
             </span>
-            {tip.matchDate + ""}
+            {tip.matchDate ? formatDateByParts(new Date(tip.matchDate)) : "-"}
           </p>
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-4 mt-2">
+      <div className="flex flex-wrap items-center gap-4 mt-2 hidden">
         <div className="inline-flex">
           <MessageCircleIcon className="h-5 w-5 mr-2" />
           <p className=" text-sm text-gray-500">9 comments</p>

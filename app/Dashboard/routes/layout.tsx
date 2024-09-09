@@ -26,6 +26,7 @@ import { findOrCreateUserProfiles } from "~/User/server/user.server";
 import { Navbar } from "../components/navbar";
 import { dashboardMenuFor } from "../utils/menu";
 import { config } from "@/config";
+import { ScrollArea } from "~/components/scrollable.area";
 
 export const handle = {
   breadcrumb: {
@@ -96,9 +97,8 @@ export default function Layout() {
             parentRoute?.handle?.pageName ||
             "Dashboard"}
         </h1>
-        <div className="max-h-screen overflow-hidden">
-          {/* <Outlet context={{ user: data.user }} /> */}
-        </div>
+
+        <Outlet context={{ user: data.user }} />
       </PageLayoutContent>
     </PageLayout>
   );

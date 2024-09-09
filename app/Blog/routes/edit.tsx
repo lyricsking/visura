@@ -66,7 +66,7 @@ export default function PostForm() {
       <fetcher.Form method="post">
         <fieldset disabled={isSubmitting}>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-            <div>
+            <div className="md:cols-span-2 lg:col-span-1 xl:col-span-2">
               <label htmlFor="title">Title</label>
               <Input
                 id="title"
@@ -84,7 +84,7 @@ export default function PostForm() {
               ) : null}
             </div>
 
-            <div>
+            <div className="md:cols-span-2 lg:col-span-1 xl:col-span-2">
               <label htmlFor="tags">Tags (comma separated)</label>
               <Input
                 id="tags"

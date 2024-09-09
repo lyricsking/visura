@@ -14,7 +14,7 @@ const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(
     return (
       <Comp
         ref={ref}
-        className={twMerge("flex flex-col min-h-screen w-full", className)}
+        className={twMerge("flex flex-col w-full", className)}
         {...props}
       >
         {children}

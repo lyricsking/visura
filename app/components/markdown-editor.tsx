@@ -95,15 +95,15 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
   };
 
   const tools = [
+    "h1",
+    "h2",
+    "h3",
     "bold",
     "italic",
     "strikethrough",
     "leftAlign",
     "rightAlign",
     "justify",
-    "h1",
-    "h2",
-    "h3",
     "link",
     "quote",
     // "image",
@@ -113,7 +113,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
 
   return (
     <div className="border rounded-md bg-gray-100 divide-y">
-      <div className="grid grid-cols-[20%_1fr] md:grid-cols-[12%_1fr] divide-x-2">
+      <div className="grid grid-cols-[20%_1fr] md:grid-cols-[8%_1fr] divide-x-2">
         <div className="grid grid-cols-2 items-center gap-2 px-2">
           <Button variant="ghost" size="icon" onClick={handleUndo}>
             <Undo2Icon className="h-5 w-5" />
@@ -137,7 +137,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
           {...attrs}
         />
 
-        <div className="min-h-44 w-full prose md:prose-lg lg:prose-xl rounded-md bg-white p-2">
+        <div className="min-h-44 min-w-full prose md:prose-lg lg:prose-xl rounded-md bg-white p-2">
           {/* Preview */}
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}

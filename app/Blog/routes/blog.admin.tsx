@@ -15,14 +15,6 @@ export const handle = {
       path: `${config.blogPath}/edit`,
       label: "New",
     },
-    {
-      path: `${config.blogPath}/edit`,
-      label: "Edit",
-    },
-    {
-      path: `${config.blogPath}/edit`,
-      label: "Some other",
-    },
   ],
 };
 

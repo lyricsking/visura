@@ -8,14 +8,27 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
+  toastViewportVariants,
 } from "~/components/toast";
+import { ToastViewportProps } from "@radix-ui/react-toast";
+import { VariantProps } from "class-variance-authority";
 
 export function Toaster() {
   const { toasts } = useToast();
+  let viewportPosition: VariantProps<typeof toastViewportVariants>["position"];
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({
+        id,
+        title,
+        description,
+        action,
+        position,
+        ...props
+      }) {
+        viewportPosition = position;
+
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
@@ -29,7 +42,7 @@ export function Toaster() {
           </Toast>
         );
       })}
-      <ToastViewport />
+      <ToastViewport position={viewportPosition} />
     </ToastProvider>
   );
 }

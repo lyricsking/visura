@@ -72,7 +72,7 @@ export default defineConfig({
                   route("", "Blog/routes/posts.admin.tsx", {
                     index: true,
                   });
-                  route("edit", "Blog/routes/new.tsx");
+                  route("edit", "Blog/routes/edit.tsx");
                 });
 
                 route("products", "Product/routes/product.admin.tsx", () => {
@@ -107,8 +107,7 @@ export default defineConfig({
             { id: "blog-layout" },
             () => {
               route("", "Blog/routes/index.tsx", { index: true });
-              route("new", "Blog/routes/new.tsx", { id: "blog-new" });
-
+              // route("new", "Blog/routes/edit.tsx", { id: "blog-new" });
               route(":slug", "Blog/routes/post.tsx");
               route("upload", "Dashboard/routes/upload.tsx", {
                 id: "upload-blog",

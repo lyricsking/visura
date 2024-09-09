@@ -52,6 +52,26 @@ export const findPosts = async (fields: Partial<IPost>): Promise<IPost[]> => {
   }
 };
 
+export const publishPost = async (
+  id: string | ObjectId
+): Promise<DBReponseType<IPost>> => {
+  let response: DBReponseType<IPost> = {};
+  try {
+    response.data = await PostModel.findById(id)
+      .exec()
+      .then((post) => post?.publish());
+  } catch (err: mongoose.Error.ValidationError | any) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      response.error = err;
+    } else {
+      console.log(err);
+      throw err;
+    }
+  } finally {
+    return response;
+  }
+};
+
 type FindPostBySlugType = {
   slug: IPost["slug"];
 };

@@ -37,12 +37,10 @@ const postSchema = new Schema<IPost, PostModelType>(
 
 postSchema.pre("save", function (next) {
   // If the title is not modified there's no need to generate new slug
-  if (!this.isModified("title")) {
-    return next();
+  if (this.isModified("title")) {
+    // Only generate slug when the post is created or title modified.
+    this.slug = getSlug(this.title);
   }
-  // Only generate slug when the post is created or title modified.
-  this.slug = getSlug(this.title);
-
   next();
 });
 
@@ -54,8 +52,15 @@ postSchema.pre("save", function (next) {
 
 // Instance method to check password validity
 postSchema.method("publish", async function (): Promise<IPost> {
-  this.published = true;
-  this.publishedOn = new Date();
+  //  Only set published to true if the post is not currently published.
+  if (!this.published) {
+    this.published = true;
+    //  Set the `publishedOn` field to the current date if it's not
+    // already set, the field should only be set once.
+    if (!this.publishedOn) {
+      this.publishedOn = new Date();
+    }
+  }
 
   return this.save();
 });

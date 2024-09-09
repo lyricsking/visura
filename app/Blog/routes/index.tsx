@@ -90,7 +90,7 @@ export default function Index() {
               </CardHeader>
 
               <CardContent>
-                <ScrollArea className="whitespace-nowrap">
+                <ScrollArea className="whitespace-nowrap" type="auto">
                   <div className="w-max grid grid-flow-col auto-cols-fr space-x-4 p-4 divide-x">
                     {tips.map((tip, index) => (
                       <TipCard key={index} tip={tip as unknown as ITips} />
@@ -142,7 +142,7 @@ export default function Index() {
               </CardHeader>
 
               <CardContent>
-                <ScrollArea className="h-96 w-full">
+                <ScrollArea className="h-96 w-full" type="auto">
                   <div className="grid sm:grid-cols-2 gap-6 p-4 divide-y">
                     {tips.map((tip, index) => (
                       <TipCard key={index} tip={tip as unknown as ITips} />
@@ -169,7 +169,7 @@ export default function Index() {
               <h3 className="col-span-full mt-8 text-3xl text-center sm:text-4xl font-bold tracking-tight mb-10">
                 Team News
               </h3>
-              <ScrollArea className="h-96 w-full">
+              <ScrollArea className="h-96 w-full" type="auto">
                 <div className="grid sm:grid-cols-2 w-full items-start p-6 md:p-8 gap-6">
                   {posts.map((post) => (
                     <PostSummary key={post._id} post={post} />
@@ -185,7 +185,10 @@ export default function Index() {
 }
 
 export const loader = async () => {
-  const [tips, posts] = await Promise.all([findTips(), findPosts({})]);
+  const [tips, posts] = await Promise.all([
+    findTips(),
+    findPosts({ published: true }),
+  ]);
 
   return json({ tips, posts });
 };
