@@ -8,10 +8,10 @@ import {
 } from "~/components/dropdown.menu";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
-import { IUserProfile } from "~/User/types/user-profile.type";
+import { IUserProfile } from "~/core/User/types/user-profile.type";
 import { useEffect } from "react";
-import { IHydratedUser } from "~/User/models/user.model";
-import { UserType } from "~/User/types/user.types";
+import { IHydratedUser } from "~/core/User/models/user.model";
+import { UserType } from "~/core/User/types/user.types";
 // import { UserIcon } from "@heroicons/react/20/solid";
 
 //type Props = ButtonProps;
