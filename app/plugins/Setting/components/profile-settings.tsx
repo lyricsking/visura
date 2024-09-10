@@ -1,13 +1,13 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Form, useFetcher } from "@remix-run/react";
-import { SettingsType } from "../../../core/Dashboard/type/settings.type";
+import { SettingsType } from "../../Dashboard/type/settings.type";
 import { cn } from "~/utils/util";
 import { Input } from "~/components/input";
 import {
   ACCOUNT_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
-} from "../../../core/Dashboard/utils/constants";
+} from "../../Dashboard/utils/constants";
 import Button from "~/components/button";
 
 export default function ProfileSettings({ user }: SettingsType) {

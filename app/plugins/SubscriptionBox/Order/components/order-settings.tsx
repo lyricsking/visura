@@ -10,8 +10,8 @@ import {
   SelectValue,
 } from "~/components/select";
 import { Textarea } from "~/components/textarea";
-import { SettingsType } from "~/core/Dashboard/type/settings.type";
-import { ORDER_UPDATE_ACTION } from "~/core/Dashboard/utils/constants";
+import { SettingsType } from "~/plugins/Dashboard/type/settings.type";
+import { ORDER_UPDATE_ACTION } from "~/plugins/Dashboard/utils/constants";
 
 export default function OrderSettings({ user: { profile } }: SettingsType) {
   const order = profile?.preferences.order;

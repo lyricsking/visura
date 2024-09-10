@@ -7,18 +7,17 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import { useQuiz } from "~/plugins/subscription-box/Quiz/utils/quiz.utils";
-import Button from "~/components/button";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getUserFromSession } from "~/core/Auth/server/auth.server";
-import { CartIcon } from "../components/cart-icon";
-import { config } from "@/config";
+import { config } from "~/config";
+import { plugins } from "~/core/plugins";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
-
-  const { startQuiz } = useQuiz();
+  const headerIcons = plugins
+    .filter((plugin) => plugin.headerIcon)
+    .map((plugin) => plugin.headerIcon);
 
   return (
     <PageLayout>
@@ -34,16 +33,7 @@ export default function Layout() {
           </Link>
 
           <div className="flex h-full divide-x">
-            <Button
-              variant="outline"
-              size="sm"
-              radius="md"
-              onClick={() => startQuiz()}
-              className="hidden"
-            >
-              Get started
-            </Button>
-            <CartIcon />
+            {headerIcons.map((Icon, index) => Icon && <Icon />)}
             <div className="flex-none mx-auto">
               <AccountMenuButton user={data?.user} />
             </div>

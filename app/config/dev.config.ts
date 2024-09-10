@@ -1,3 +1,3 @@
-import { Config } from "./config.type";
+import { Config } from ".";
 
 export const config: Partial<Config> = {};

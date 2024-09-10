@@ -18,8 +18,8 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 
-import { getThemeSession } from "./core/Theme/theme.server";
-import { Theme, ThemeProvider } from "./core/Theme/theme.provider";
+import { getThemeSession } from "./plugins/Theme/theme.server";
+import { Theme, ThemeProvider } from "./plugins/Theme/theme.provider";
 import { config } from "@/config";
 
 import { cn } from "./utils/util";

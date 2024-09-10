@@ -19,14 +19,13 @@ import {
   setUserToSession,
 } from "~/core/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
-import { Sidebar } from "~/core/Dashboard/components/sidebar";
-import HeaderIcons from "../components/header-icons";
+import { Sidebar } from "~/plugins/Dashboard/components/sidebar";
+import HeaderIcons from "../plugins/Dashboard/components/header-icons";
 import { isAuthUser } from "~/core/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/core/User/server/user.server";
-import { Navbar } from "../components/navbar";
-import { dashboardMenuFor } from "../utils/menu";
+import { Navbar } from "../plugins/Dashboard/components/navbar";
+import { dashboardMenuFor } from "../plugins/Dashboard/utils/menu";
 import { config } from "@/config";
-import { ScrollArea } from "~/components/scrollable.area";
 
 export const handle = {
   breadcrumb: {

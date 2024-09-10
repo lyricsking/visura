@@ -9,7 +9,7 @@ export function CartIcon() {
   };
   return (
     <Button
-      variant={"text"}
+      variant="ghost"
       size={"icon"}
       radius={"none"}
       onClick={goTocart}

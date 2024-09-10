@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import ProfileSettings from "../components/profile-settings";
 import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
-import OrderSettings from "~/plugins/subscription-box/Order/components/order-settings";
+import OrderSettings from "~/plugins/SubscriptionBox/Order/components/order-settings";
 import { commitSession, getSession } from "~/utils/session";
 import {
   disableUser,
@@ -21,7 +21,7 @@ import {
   updateUserPreference,
   updateUserProfile,
 } from "~/core/User/server/user-profile.server";
-import { SettingsType } from "../../../core/Dashboard/type/settings.type";
+import { SettingsType } from "../../Dashboard/type/settings.type";
 import formDataToObject from "~/utils/form-data-to-object";
 import {
   ACCOUNT_UPDATE_ACTION,
@@ -30,7 +30,7 @@ import {
   ORDER_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
-} from "../../../core/Dashboard/utils/constants";
+} from "../../Dashboard/utils/constants";
 import { IUserProfile } from "~/core/User/types/user-profile.type";
 import {
   getUserFromSession,

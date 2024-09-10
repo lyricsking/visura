@@ -1,6 +1,6 @@
 import { useFetcher } from "@remix-run/react";
-import { SettingsType } from "../../../core/Dashboard/type/settings.type";
-import { DISPLAY_UPDATE_ACTION } from "../../../core/Dashboard/utils/constants";
+import { SettingsType } from "../../Dashboard/type/settings.type";
+import { DISPLAY_UPDATE_ACTION } from "../../Dashboard/utils/constants";
 import { Label } from "~/components/label";
 import {
   Select,

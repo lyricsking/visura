@@ -1,5 +1,5 @@
 import { useFetcher } from "@remix-run/react";
-import { action } from "~/core/Dashboard/routes/upload";
+import { action } from "~/plugins/Dashboard/routes/upload";
 
 export function useFileUpload() {
   let { submit, data, state, formData } = useFetcher<typeof action>();

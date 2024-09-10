@@ -1,4 +1,4 @@
-import { Config } from "./config.type";
+import { Config } from ".";
 
 export const config: Config = {
   appName: "HarmonySport.",
@@ -7,4 +7,5 @@ export const config: Config = {
   copyrightText: "HarmonyBlog",
   description: "Subscription  based health store.",
   userDashboardPath: "account",
+  plugins: {}
 };

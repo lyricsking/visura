@@ -13,7 +13,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import pkg from "../../../../package.json";
-import { useQuiz } from "~/plugins/subscription-box/Quiz/utils/quiz.utils";
+import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import { config } from "@/config";
 

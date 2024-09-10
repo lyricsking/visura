@@ -7,6 +7,7 @@ export interface Plugin {
   version: string;
   init: () => void; // Method to init the plugin
   routes?: (route: DefineRouteFunction) => void;
+  headerIcon?: React.ElementType
 }
 
 export const plugins: Plugin[] = [];

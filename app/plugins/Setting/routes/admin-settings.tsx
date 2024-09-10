@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/dropdown.menu";
 import { Checkbox } from "~/components/checkbox";
-import { SettingsType } from "~/core/Dashboard/type/settings.type";
+import { SettingsType } from "~/plugins/Dashboard/type/settings.type";
 
 export const handle = {
   pageName: "Settings",

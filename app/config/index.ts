@@ -1,6 +1,7 @@
 import { config as defaultConfig } from "./default.config";
 import { config as devConfig } from "./dev.config";
 import { config as prodConfig } from "./prod.config";
+import runtimeConfig from "./config.json";
 
 export interface PluginOptions {
   enabled: boolean;
@@ -40,4 +41,5 @@ switch (env) {
 export const config: Config = {
   ...defaultConfig,
   ...envConfig,
+  ...defaultConfig,
 };
