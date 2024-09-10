@@ -5,8 +5,6 @@ import runtimeConfig from "./config.json";
 
 export interface PluginOptions {
   enabled: boolean;
-  description: string; // Description of the plugin
-  version: string; // Plugin version
   setings?: Record<string, any>; // Optional plugin setting
 }
 

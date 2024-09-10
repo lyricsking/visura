@@ -4,6 +4,7 @@ import { config } from "~/config";
 
 export interface Plugin {
   name: string;
+  description: string,
   version: string;
   init: () => void; // Method to init the plugin
   routes?: (route: DefineRouteFunction) => void;
