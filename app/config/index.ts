@@ -39,5 +39,5 @@ switch (env) {
 export const config: Config = {
   ...defaultConfig,
   ...envConfig,
-  ...defaultConfig,
+  ...runtimeConfig,
 };

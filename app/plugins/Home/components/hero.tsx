@@ -1,4 +1,4 @@
-import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
+import { useQuiz } from "~/plugins/subscription-box/Quiz/utils/quiz.utils";
 import Button, { buttonVariants } from "~/components/button";
 import { findFontByName } from "~/shared/data/fonts";
 import { cn } from "~/utils/util";

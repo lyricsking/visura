@@ -3,16 +3,16 @@ import { Session, createCookie } from "@remix-run/node";
 import {
   deleteCart,
   addItemsToCart,
-} from "~/plugins/SubscriptionBox/Order/server/cart.server";
+} from "~/plugins/subscription-box/Order/server/cart.server";
 import {
   IOrder,
   IItem,
-} from "~/plugins/SubscriptionBox/Order/types/order.type";
-import { findSupplement } from "~/plugins/SubscriptionBox/Product/server/supplement.server";
+} from "~/plugins/subscription-box/Order/types/order.type";
+import { findSupplement } from "~/plugins/subscription-box/Product/server/supplement.server";
 import {
   ISupplement,
   Gender,
-} from "~/plugins/SubscriptionBox/Product/types/supplement.type";
+} from "~/plugins/subscription-box/Product/types/supplement.type";
 import { getNanoid } from "~/utils/util";
 import { Question, Answers } from "../types/quiz.type";
 import { QIDS_MAP_KEY, ANSWER_KEY } from "../utils/constants";

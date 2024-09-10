@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { Outlet, useLoaderData, Link } from "@remix-run/react";
-import InvoiceList from "~/plugins/SubscriptionBox/Invoice/components/invoice-list";
+import InvoiceList from "~/plugins/subscription-box/Invoice/components/invoice-list";
 
 // Mock data for demonstration
 const mockData = {
