@@ -3,6 +3,7 @@ import { CartIcon } from "./components/CartIcon";
 
 const SubscriptionBox: Plugin = {
   name: "Blog",
+  description: "",
   version: "0.0.1",
   init: function (): void {
     console.log("SubscriptionBox plugin initialized");

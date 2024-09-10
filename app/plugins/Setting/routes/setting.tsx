@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import ProfileSettings from "../components/profile-settings";
 import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
-import OrderSettings from "~/plugins/subscription-box/Order/components/order-settings";
+import OrderSettings from "~/plugins/SubscriptionBox/Order/components/order-settings";
 import { commitSession, getSession } from "~/utils/session";
 import {
   disableUser,

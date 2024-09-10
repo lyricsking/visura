@@ -8,7 +8,7 @@ import {
   useNavigate,
   useOutletContext,
 } from "@remix-run/react";
-import id from "~/plugins/subscription-box/Order/routes/id";
+import id from "~/plugins/SubscriptionBox/Order/routes/id";
 import formDataToObject from "~/utils/form-data-to-object";
 import { action } from "../actions/finish.action";
 import { Checkbox } from "~/components/checkbox";

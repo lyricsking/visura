@@ -9,7 +9,7 @@ import Hero from "../components/hero";
 import HomeCarousel from "../components/home-carousel";
 import Explanation from "../components/explanation";
 import { findFontByName } from "~/shared/data/fonts";
-import { useQuiz } from "~/plugins/subscription-box/Quiz/utils/quiz.utils";
+import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
 import Button from "~/components/button";
 import { config } from "@/config";
 
