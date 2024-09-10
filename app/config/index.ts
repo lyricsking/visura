@@ -1,24 +1,22 @@
-import { config as defaultConfig } from "./default.config";
-import { config as devConfig } from "./dev.config";
-import { config as prodConfig } from "./prod.config";
-import runtimeConfig from "./config.json";
+import defaultConfig from "./default.config.json";
+import devConfig from "./dev.config.json";
+import prodConfig from "./prod.config.json";
+import { z } from "zod";
 
-export interface PluginOptions {
-  enabled: boolean;
-  setings?: Record<string, any>; // Optional plugin setting
-}
+const pluginOptionSchema = z.object({
+  enabled: z.boolean(),
+  settings: z.optional(z.record(z.any())), // Optional plugin setting
+});
 
-export interface Config {
-  appName: string;
-  blogPath: string;
-  copyrightText: string;
-  description: string;
-  adminDashboardPath: string;
-  userDashboardPath: string;
-  plugins: {
-    [pluginName: string]: PluginOptions;
-  };
-}
+export type PluginOptions = z.infer<typeof pluginOptionSchema>;
+
+export const configSchema = z.object({
+  appName: z.string(),
+  description: z.string(),
+  plugins: z.record(pluginOptionSchema),
+});
+
+export type Config = z.infer<typeof configSchema>;
 
 // Determine the current environment
 const env = process.env.NODE_ENV || "development";
@@ -35,9 +33,17 @@ switch (env) {
     break;
 }
 
-// Merge the default config with the environment-specific config
-export const config: Config = {
-  ...defaultConfig,
-  ...envConfig,
-  ...runtimeConfig,
+const loadConfig = (): Config => {
+  // Merge the default config with the environment-specific config
+  let config = { ...envConfig, defaultConfig };
+
+  const configParse = configSchema.safeParse(config);
+  if (configParse.error) {
+    throw configParse.error;
+  }
+
+  return configParse.data;
 };
+
+const config: Config = loadConfig();
+export default config;
