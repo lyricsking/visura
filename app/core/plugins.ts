@@ -1,26 +1,21 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 import config from "~/config";
+import { AppContext } from "./core";
 
 export interface Plugin {
   name: string;
   description: string;
   version: string;
-  init: () => void; // Method to init the plugin
+  init: (app: AppContext) => void; // Method to init the plugin
   routes?: (route: DefineRouteFunction) => void;
   headerIcon?: React.ElementType;
 }
-
-export const plugins: Plugin[] = [];
-// Registers a plugin
-export const registerPlugin = (plugin: Plugin) => {
-  plugins.push(plugin);
-};
 
 /**
  * Checks which plugins are enabled and dynamically imports their default module
  * @returns
  */
-export const loadPlugins = async () => {
+export const loadPlugins = async (app: AppContext) => {
   for (const [pluginName, pluginConfig] of Object.entries(config.plugins)) {
     if (pluginConfig.enabled) {
       // Dynamiclly import the plugin's routes
@@ -28,7 +23,7 @@ export const loadPlugins = async () => {
         .default;
       // Typescript assertion to ensure the plugin implements the Plugin interface
       if (isValidPlugin(pluginModule)) {
-        registerPlugin(pluginModule);
+        pluginModule.init(app);
       } else {
         console.error(`Plugin "${pluginName}" is not a valid plugin.`);
       }
@@ -43,3 +38,5 @@ function isValidPlugin(plugin: any): plugin is Plugin {
     typeof plugin.routes === "function"
   );
 }
+
+export type PluginTypes = {}

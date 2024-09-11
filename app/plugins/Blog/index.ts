@@ -11,3 +11,7 @@ const BlogPlugin: Plugin = {
 };
 
 export default BlogPlugin;
+
+declare module "~/core/plugins" {
+  interface PluginTypes {}
+}
