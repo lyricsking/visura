@@ -1,14 +1,13 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import plugin from "tailwindcss";
-import { config } from "~/config";
+import config from "~/config";
 
 export interface Plugin {
   name: string;
-  description: string,
+  description: string;
   version: string;
   init: () => void; // Method to init the plugin
   routes?: (route: DefineRouteFunction) => void;
-  headerIcon?: React.ElementType
+  headerIcon?: React.ElementType;
 }
 
 export const plugins: Plugin[] = [];
