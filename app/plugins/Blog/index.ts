@@ -8,7 +8,7 @@ const blog = (app: AppContext) => {
   app.use(pluginName, new BlogPlugin(app));
 };
 
-declare module "~/core/plugins" {
+declare module "~/core/declarations" {
   interface PluginTypes {
     [pluginName]: BlogPlugin;
   }
