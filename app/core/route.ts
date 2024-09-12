@@ -1,9 +1,9 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { plugins } from "./plugins";
-import { config } from "~/config";
+import config from "~/config";
+import { appContext as app } from "~/entry.server";
 
 const defineAppRoutes = (route: DefineRouteFunction) => {
-  const { userDashboardPath, adminDashboardPath, blogPath } = config;
+  /**const { userDashboardPath, adminDashboardPath, blogPath } = config;
   const defaultRoutes = () => {
     route("", "Home/routes/layout.tsx", () => {
       route("", "Home/routes/index.tsx", { index: true });
@@ -91,8 +91,8 @@ const defineAppRoutes = (route: DefineRouteFunction) => {
     });
     route("theme/update", "Theme/theme.action.tsx");
   };
-
-  return plugins.flatMap((plugin) => plugin.routes && plugin.routes(route));
+*/
+  //return app.plugins.flatMap((plugin) => plugin.routes && plugin.routes(route));
 };
 
 export default defineAppRoutes;

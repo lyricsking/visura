@@ -1,18 +1,20 @@
-import { IPlugin } from "~/core/plugins";
 import { PluginTypes } from "./declarations";
 
 export class AppContext {
-  private plugins: Partial<PluginTypes> = {};
+  plugins: Partial<PluginTypes> = {};
 
-  use<T extends keyof PluginTypes>(pluginName: T, pluginInstance: PluginTypes[T]) {
+  use<T extends keyof PluginTypes>(
+    pluginName: T,
+    pluginInstance: PluginTypes[T]
+  ) {
     this.plugins[pluginName] = pluginInstance;
   }
 
-  plugin<T extends keyof PluginTypes>(pluginName: T): PluginTypes[T] | undefined {
+  plugin<T extends keyof PluginTypes>(
+    pluginName: T
+  ): PluginTypes[T] | undefined {
     return this.plugins[pluginName];
   }
 
-  plugins() {
-    return this.plugins;
-  }
+  //plugins() { return this.plugins}
 }

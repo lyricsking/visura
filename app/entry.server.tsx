@@ -145,6 +145,6 @@ function handleBrowserRequest(
 // Init db connection
 await connectToDatabase();
 
-const appContext = new AppContext();
+export const appContext = new AppContext();
 // Load plugins
 loadPlugins(appContext);
