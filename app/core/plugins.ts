@@ -6,10 +6,11 @@ export interface IPlugin {
   name: string;
   description: string;
   version: string;
-  init: (app: AppContext) => void; // Method to init the plugin
   routes?: (route: DefineRouteFunction) => void;
   headerIcon?: React.ElementType;
 }
+
+export type PluginDefaultExport = (app: AppContext) => void;
 
 /**
  * Checks which plugins are enabled and dynamically imports their default module
@@ -18,24 +19,26 @@ export interface IPlugin {
 export const loadPlugins = async (app: AppContext) => {
   for (const [pluginName, pluginConfig] of Object.entries(config.plugins)) {
     if (pluginConfig.enabled) {
-      // Dynamiclly import the plugin's routes
-      const pluginModule = (await import(`../plugins/${pluginName}/index`))
-        .default;
-      // Typescript assertion to ensure the plugin implements the Plugin interface
-      if (isValidPlugin(pluginModule)) {
-        pluginModule(app)
-      } else {
-        console.error(`Plugin "${pluginName}" is not a valid plugin.`);
+      try {
+        // Dynamically import the plugin's default module
+        const pluginModule = (await import(`../plugins/${pluginName}/index`)).default;
+
+        // Type assertion to ensure the plugin satisfies PluginDefaultExport
+        if (isValidPluginFunction(pluginModule)) {
+          pluginModule(app); // Call the plugin with AppContext
+        } else {
+          console.error(`Plugin "${pluginName}" does not satisfy PluginDefaultExport.`);
+        }
+      } catch (error) {
+        console.error(`Failed to load plugin "${pluginName}":`, error);
       }
     }
   }
 };
 
-function isValidPlugin(plugin: any): plugin is IPlugin {
-  return (
-    typeof plugin.name === "string" &&
-    typeof plugin.init === "function" &&
-    typeof plugin.routes === "function"
-  );
+/**
+ * Ensures the plugin's default export matches the PluginDefaultExport type
+ */
+function isValidPluginFunction(plugin: any): plugin is PluginDefaultExport {
+  return typeof plugin === 'function';
 }
-
