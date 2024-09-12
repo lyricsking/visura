@@ -1,7 +1,7 @@
-import { Plugin } from "~/core/plugins";
+import { IPlugin } from "~/core/plugins";
 import { CartIcon } from "./components/CartIcon";
 
-const SubscriptionBox: Plugin = {
+const SubscriptionBox: IPlugin = {
   name: "Blog",
   description: "",
   version: "0.0.1",

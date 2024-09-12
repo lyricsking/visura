@@ -2,7 +2,7 @@ import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 import config from "~/config";
 import { AppContext } from "./core";
 
-export interface Plugin {
+export interface IPlugin {
   name: string;
   description: string;
   version: string;
@@ -23,7 +23,7 @@ export const loadPlugins = async (app: AppContext) => {
         .default;
       // Typescript assertion to ensure the plugin implements the Plugin interface
       if (isValidPlugin(pluginModule)) {
-        pluginModule.init(app);
+        pluginModule(app)
       } else {
         console.error(`Plugin "${pluginName}" is not a valid plugin.`);
       }
@@ -31,7 +31,7 @@ export const loadPlugins = async (app: AppContext) => {
   }
 };
 
-function isValidPlugin(plugin: any): plugin is Plugin {
+function isValidPlugin(plugin: any): plugin is IPlugin {
   return (
     typeof plugin.name === "string" &&
     typeof plugin.init === "function" &&
@@ -39,4 +39,3 @@ function isValidPlugin(plugin: any): plugin is Plugin {
   );
 }
 
-export type PluginTypes = {}

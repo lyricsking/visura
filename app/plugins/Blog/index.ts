@@ -1,17 +1,15 @@
-import { Plugin } from "~/core/plugins";
+import { IPlugin } from "~/core/plugins";
+import BlogPlugin from "./blog.class";
+import { AppContext } from "~/core/core";
 
-const BlogPlugin: Plugin = {
-  name: "Blog",
-  description: "",
-  version: "0.0.1",
-  init: function (): void {
-    console.log("Blog plugin initialized");
-  },
-  routes: (route) => {},
+export const pluginName = "blog";
+
+const blog = (app: AppContext) => {
+  app.use(pluginName, new BlogPlugin(app));
 };
 
-export default BlogPlugin;
-
 declare module "~/core/plugins" {
-  interface PluginTypes {}
+  interface PluginTypes {
+    [pluginName]: BlogPlugin;
+  }
 }
