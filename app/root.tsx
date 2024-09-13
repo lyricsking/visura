@@ -20,11 +20,11 @@ import { useEffect } from "react";
 
 import { getThemeSession } from "./plugins/Theme/theme.server";
 import { Theme, ThemeProvider } from "./plugins/Theme/theme.provider";
-import { config } from "@/config";
 
 import { cn } from "./utils/util";
 import { Toaster } from "./components/toaster";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import config from "./config";
 
 export type LoaderData = {
   theme: Theme | null;
