@@ -1,6 +1,6 @@
 import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
 import Button, { buttonVariants } from "~/components/button";
-import { findFontByName } from "~/shared/data/fonts";
+import { findFontByName } from "~/utils/fonts";
 import { cn } from "~/utils/util";
 
 export default function Hero() {
@@ -27,7 +27,7 @@ export default function Hero() {
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Button
-            variant="text"
+            variant="ghost"
             radius="md"
             className="text-white bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() => startQuiz()}

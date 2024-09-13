@@ -1,13 +1,9 @@
-import { CommonProps } from "~/shared/types/common.props";
-
 export type StatParams = {
   counter: number;
   prefix?: string;
   suffix?: string;
   description: string;
 };
-
-type Params = CommonProps;
 
 const currentYear = new Date().getFullYear();
 const startYear = new Date("March 1, 2017").getFullYear();
@@ -25,7 +21,7 @@ const stats: StatParams[] = [
   { counter: 3, description: "Happy clients and counting" },
 ];
 
-export default function Stats(params: Params) {
+export default function Stats() {
   return (
     <div className="bg-primary text-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">

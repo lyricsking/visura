@@ -1,5 +1,4 @@
-import { config } from "@/config";
-import { IPost } from "../types/post.type";
+import config from "@/config";
 import { formatDateOrTime } from "~/utils/date";
 import { Link } from "@remix-run/react";
 
@@ -10,7 +9,7 @@ type PostSummaryProps = {
 export function PostSummary(props: PostSummaryProps) {
   let { post } = props;
 
-  let blogPath = config.blogPath;
+  let blogPath = "config.blogPath";
   let dateFormat = post.publishedOn
     ? formatDateOrTime(new Date(post.publishedOn), {
         month: "long",

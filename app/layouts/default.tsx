@@ -10,14 +10,14 @@ import {
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getUserFromSession } from "~/core/Auth/server/auth.server";
-import { config } from "~/config";
-import { plugins } from "~/core/plugin";
+import { plugins } from "~/plugins";
+import config from "~/config";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
-  const headerIcons = plugins
-    .filter((plugin) => plugin.headerIcon)
-    .map((plugin) => plugin.headerIcon);
+  // const headerIcons = plugins
+  //   .filter((plugin) => plugin.headerIcon)
+  //   .map((plugin) => plugin.headerIcon);
 
   return (
     <PageLayout>
@@ -33,7 +33,7 @@ export default function Layout() {
           </Link>
 
           <div className="flex h-full divide-x">
-            {headerIcons.map((Icon, index) => Icon && <Icon />)}
+            {/* {headerIcons.map((Icon, index) => Icon && <Icon />)} */}
             <div className="flex-none mx-auto">
               <AccountMenuButton user={data?.user} />
             </div>

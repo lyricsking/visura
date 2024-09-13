@@ -15,7 +15,7 @@ class SubscriptionBox implements IPlugin {
   routes(route: DefineRouteFunction) {}
 }
 
-const blog = (app: AppContext) => {
+const subscription = (app: AppContext) => {
   app.usePlugin(pluginName, new SubscriptionBox(app));
   console.log("Blog plugin initialized");
 };
@@ -26,4 +26,4 @@ declare module "~/core/declarations" {
   }
 }
 
-export default blog;
+export default subscription;

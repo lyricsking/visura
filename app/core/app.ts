@@ -16,11 +16,14 @@ export class AppContext {
   usePlugin<T extends keyof PluginTypes & string>(
     path: T,
     plugin: PluginTypes[T],
-    options?: PluginOptions<PluginTypes[T]>
+    options?: PluginOptions
   ) {
-    this.plugins[path] = plugin;
+    if (options && options.enabled) {
+      this.plugins[path] = plugin;
 
-    plugin.routes(this.route);
+      options?.routes?.(this.route);
+    }
+    return this;
   }
 
   plugin<T extends keyof PluginTypes>(

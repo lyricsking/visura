@@ -8,7 +8,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import AccountMenuButton from "~/components/ui/account-menu-button";
-import { config } from "@/config";
+import config from "~/config";
 import Button from "~/components/button";
 
 export default function Layout() {

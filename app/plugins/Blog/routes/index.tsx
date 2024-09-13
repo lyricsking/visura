@@ -1,6 +1,5 @@
 import { LinksFunction, json, type MetaFunction } from "@remix-run/node";
-import { findFontByName } from "~/shared/data/fonts";
-import { config } from "@/config";
+import config from "~/config";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import Button from "~/components/button";
@@ -21,6 +20,7 @@ import { ScrollArea, ScrollBar } from "~/components/scrollable.area";
 import { PostSummary } from "../components/post-summary";
 import { IPost } from "../types/post.type";
 import { Types } from "mongoose";
+import { findFontByName } from "~/utils/fonts";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");

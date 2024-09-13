@@ -1,24 +1,13 @@
-import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { ElementType, JSX } from "react";
 import { AppContext } from "~/core/app";
-import { IPlugin } from "~/core/declarations";
+import { BlogPlugin } from "./blog.class";
 
 export const pluginName = "blog";
 
-class BlogPlugin implements IPlugin {
-  headerIcon?: ElementType<any, keyof JSX.IntrinsicElements> | undefined;
-  name = "";
-  description = "";
-  version = "0.0.1";
-  /**
-   *
-   */
-  constructor(app: AppContext) {}
-  routes(route: DefineRouteFunction) {}
-}
-
 const blog = (app: AppContext) => {
-  app.usePlugin(pluginName, new BlogPlugin(app));
+  app.usePlugin(pluginName, new BlogPlugin(app), {
+    enabled: true,
+    path: "",
+  });
   console.log("Blog plugin initialized");
 };
 

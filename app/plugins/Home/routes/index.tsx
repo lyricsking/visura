@@ -4,14 +4,13 @@ import {
   LoaderFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import pkg from "../../../../package.json";
 import Hero from "../components/hero";
 import HomeCarousel from "../components/home-carousel";
 import Explanation from "../components/explanation";
-import { findFontByName } from "~/shared/data/fonts";
-import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
+import config from "~/config";
 import Button from "~/components/button";
-import { config } from "@/config";
+import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
+import { findFontByName } from "~/utils/fonts";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
