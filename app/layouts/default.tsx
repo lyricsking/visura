@@ -11,7 +11,7 @@ import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getUserFromSession } from "~/core/Auth/server/auth.server";
 import { config } from "~/config";
-import { plugins } from "~/core/plugins";
+import { plugins } from "~/core/plugin";
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();

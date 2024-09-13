@@ -6,6 +6,7 @@
   "copyrightText": "HarmonyBlog",
   "userDashboardPath": "account",
   "plugins": {
-    "LandingPage": { "enabled": true }
+    "Blog": { "enabled": true },
+    "Home": { "enabled": true }
   }
 }

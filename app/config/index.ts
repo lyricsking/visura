@@ -35,7 +35,7 @@ switch (env) {
 
 const loadConfig = (): Config => {
   // Merge the default config with the environment-specific config
-  let config = { ...envConfig, defaultConfig };
+  let config = { ...defaultConfig, ...envConfig };
 
   const configParse = configSchema.safeParse(config);
   if (configParse.error) {

@@ -12,8 +12,6 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import connectToDatabase from "./core/database/db.server";
-import { loadPlugins } from "./core/plugins";
-import { AppContext } from "./core/core";
 
 const ABORT_DELAY = 5_000;
 
@@ -144,7 +142,3 @@ function handleBrowserRequest(
 
 // Init db connection
 await connectToDatabase();
-
-export const appContext = new AppContext();
-// Load plugins
-loadPlugins(appContext);
