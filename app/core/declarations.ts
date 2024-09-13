@@ -14,7 +14,7 @@ export interface IPlugin {
   /**
    * A list of plugin routes that should be available __externally__ to clients
    */
-  routes(defineRoute: DefineRouteFunction): void;
+  init(app: AppContext): void;
 }
 
 export type PluginInitializer = (app: AppContext) => void;

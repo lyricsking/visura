@@ -5,7 +5,7 @@ export class AppContext {
   /**
    *
    */
-  constructor(private route: DefineRouteFunction) {}
+  constructor(public route: DefineRouteFunction) {}
 
   plugins: Partial<PluginTypes> = {};
 
@@ -15,14 +15,10 @@ export class AppContext {
 
   usePlugin<T extends keyof PluginTypes & string>(
     path: T,
-    plugin: PluginTypes[T],
-    options?: PluginOptions
+    plugin: PluginTypes[T]
   ) {
-    if (options && options.enabled) {
-      this.plugins[path] = plugin;
+    this.plugins[path] = plugin;
 
-      options?.routes?.(this.route);
-    }
     return this;
   }
 
