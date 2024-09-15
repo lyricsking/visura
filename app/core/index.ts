@@ -1,22 +1,23 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { plugins } from "../plugins";
-import { AppContext } from "./app";
+import config from "../config";
+import { loadPlugins } from "../plugins";
+import { plugins } from "./plugin";
 
 const initApp = (route: DefineRouteFunction): void => {
   // Load all plugins to memory
-  loadPlugins()
+  loadPlugins();
   // Dynamically register route for each of the enabled plugin routed
   Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
-      if (pluginConfig.enabled) {
-        const enabledPlugin = plugins[pluginName];
-        if (enabledPlugin && enabledPlugin.registerRoutes) {
-          const routes = enabledPlugin.registerRoutes(defineRoute);
-          // Registers the routes in the routing system
-          // For example:
-          // defineRoute("/", "Home/routes/index.ts");
-        }
+    if (pluginConfig.enabled) {
+      const enabledPlugin = plugins[pluginName];
+      if (enabledPlugin && enabledPlugin.registerRoutes) {
+        const routes = enabledPlugin.registerRoutes(route);
+        // Registers the routes in the routing system
+        // For example:
+        // defineRoute("/", "Home/routes/index.ts");
       }
-    });
+    }
+  });
 };
 
 export default initApp;

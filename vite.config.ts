@@ -9,6 +9,7 @@ installGlobals();
 export default defineConfig({
   server: { port: 3000 },
   plugins: [
+    tsconfigPaths(),
     remix({
       ignoredRouteFiles: ["**/.*"],
       // appDirectory: "app",
@@ -21,6 +22,5 @@ export default defineConfig({
         });
       },
     }),
-    tsconfigPaths(),
   ],
 });

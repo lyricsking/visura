@@ -1,18 +1,17 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { AppContext } from "~/core/app";
-import { IPlugin } from "~/core/declarations";
+import { IPlugin, registerPlugin } from "../../core/plugin";
 
 export const pluginPath = "blog";
 
 const blogPlugin: IPlugin = {
   name: pluginPath,
-  registerRoute: (defineRoute: DefineRouteFunction) => {
-    defineRoute(this.name, "layouts/default.tsx", () => {
-    defineRoute("", "~/Blog/routes/index.tsx", { index: true });
-  });
-  }
-}
+  registerRoutes: (defineRoute: DefineRouteFunction) => {
+    defineRoute(pluginPath, "layouts/default.tsx", () => {
+      defineRoute("", "plugins/blog/routes/index.tsx", { index: true });
+    });
+  },
+};
 
-const blog = () => registerPlugin(blogPlugin)
+const blog = () => registerPlugin(blogPlugin);
 
 export default blog;
