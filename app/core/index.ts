@@ -3,10 +3,20 @@ import { plugins } from "../plugins";
 import { AppContext } from "./app";
 
 const initApp = (route: DefineRouteFunction): void => {
-  const app = new AppContext(route);
-
-  // Configure plugins
-  app.configure(plugins);
+  // Load all plugins to memory
+  loadPlugins()
+  // Dynamically register route for each of the enabled plugin routed
+  Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
+      if (pluginConfig.enabled) {
+        const enabledPlugin = plugins[pluginName];
+        if (enabledPlugin && enabledPlugin.registerRoutes) {
+          const routes = enabledPlugin.registerRoutes(defineRoute);
+          // Registers the routes in the routing system
+          // For example:
+          // defineRoute("/", "Home/routes/index.ts");
+        }
+      }
+    });
 };
 
 export default initApp;

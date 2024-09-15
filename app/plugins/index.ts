@@ -1,12 +1,10 @@
-import { AppContext } from "../core/app";
-import blog from "./Blog";
+import blog from "./blog";
 
 /**
- * Checks which plugins are enabled and dynamically loads them
+ * Calls each feature's loader function.
+ * Each loader function registers the plugin in the plugin registry.
  * @returns
  */
-export const plugins = async (app: AppContext) => {
-  // app.configure(home);
-  app.configure(blog);
-  // app.configure(subscription);
+export const loadPlugins = async  () => {
+  blog();
 };
