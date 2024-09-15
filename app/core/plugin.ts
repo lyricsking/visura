@@ -1,11 +1,10 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
+import { PluginSettingsSchema } from "~/config";
 
 export interface IPlugin {
   name: string;
-  adminMenuLinks?: { path: string; label: string }[];
-  accountMenuLinks?: { path: string; label: string };
-  defaultConfig?: any;
-  registerRoutes: (defineRoute: DefineRouteFunction) => any; // This could register routes
+  defaultConfig: PluginSettingsSchema;
+  registerRoutes: (path: string, defineRoute: DefineRouteFunction) => any; // This could register routes
 }
 
 export const plugins: { [pluginName: string]: IPlugin } = {};

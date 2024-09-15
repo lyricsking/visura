@@ -3,9 +3,18 @@ import devConfig from "./dev.config.json";
 import prodConfig from "./prod.config.json";
 import { z } from "zod";
 
+const pluginSettingsSchema = z
+  .object({
+    path: z.string(),
+    adminMenuLinks: z.optional(z.array(z.string())),
+    accountMenuLinks: z.optional(z.array(z.string())),
+  })
+  .passthrough();
+export type PluginSettingsSchema = z.infer<typeof pluginSettingsSchema>;
+
 const pluginOptionSchema = z.object({
   enabled: z.boolean(),
-  settings: z.optional(z.record(z.any())), // Optional plugin setting
+  settings: pluginSettingsSchema, // Optional plugin setting
 });
 
 export type PluginOptions = z.infer<typeof pluginOptionSchema>;

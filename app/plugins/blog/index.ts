@@ -5,8 +5,11 @@ export const pluginPath = "blog";
 
 const blogPlugin: IPlugin = {
   name: pluginPath,
-  registerRoutes: (defineRoute: DefineRouteFunction) => {
-    defineRoute(pluginPath, "layouts/default.tsx", () => {
+  defaultConfig: {
+    path: "",
+  },
+  registerRoutes: (path, defineRoute: DefineRouteFunction) => {
+    defineRoute(path, "layouts/default.tsx", () => {
       defineRoute("", "plugins/blog/routes/index.tsx", { index: true });
     });
   },

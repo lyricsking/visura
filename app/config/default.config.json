@@ -6,6 +6,11 @@
   "copyrightText": "HarmonyBlog",
   "userDashboardPath": "account",
   "plugins": {
-    "blog": { "enabled": true }
+    "blog": {
+      "enabled": true,
+      "settings": {
+        "path": "blog"
+      }
+    }
   }
 }

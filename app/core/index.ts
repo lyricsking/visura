@@ -11,7 +11,7 @@ const initApp = (route: DefineRouteFunction): void => {
     if (pluginConfig.enabled) {
       const enabledPlugin = plugins[pluginName];
       if (enabledPlugin && enabledPlugin.registerRoutes) {
-        const routes = enabledPlugin.registerRoutes(route);
+        enabledPlugin.registerRoutes(enabledPlugin.defaultConfig.path, route);
         // Registers the routes in the routing system
         // For example:
         // defineRoute("/", "Home/routes/index.ts");
