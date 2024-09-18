@@ -15,6 +15,4 @@ const blogPlugin: IPlugin = {
   },
 };
 
-const blog = () => registerPlugin(blogPlugin);
-
-export default blog;
+export default blogPlugin;
