@@ -35,8 +35,28 @@ const tipsSchema = new Schema<ITips, TipsModelType>(
     teamA: { type: String, required: true },
   teamB: { type: String, required: true },
   matchDate: { type: Date, required: true },
-  country: { type: String, enum: Object.keys(Country), required: true },
-  league: { type: String, enum: League, required: true },
+  leagueCountry: {
+    type: Schema.Types.ObjectId,
+    ref: 'LeagueCountry',
+    required: true,
+  },
+  league: {
+    type: Schema.Types.ObjectId,
+    ref: 'League',
+    required: true,
+    validate: {
+      validator: async function(league) {
+        const mLeague = await League.findById(league);
+        if (!mLeague) {
+          throw new Error('League not found');
+        }
+  
+        // Check if the League belongs to the selected country
+        return mLeague.country.equals(this.country);
+      },
+      message: 'Invalid league for the selected country.',
+    },
+  },
   teamARank: { type: Number, required: true },
   teamBRank: { type: Number, required: true },
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
