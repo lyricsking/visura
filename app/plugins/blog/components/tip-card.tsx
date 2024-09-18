@@ -1,6 +1,7 @@
 import { Calendar, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
 import { formatDateByParts } from "~/utils/date";
+import Button from "~/components/button";
 
 type TipCardProps = {
   tip: ITips;
@@ -27,6 +28,7 @@ export const TipCard = (props: TipCardProps) => {
           <h3 className="mb-3 text-xl font-bold">
             {tip.prediction.outcome.value}
           </h3>
+          <Button variant="outline">See Predictions</Button>
         </div>
         <div>
           <h4 className="text-md font-semibold">
