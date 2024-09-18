@@ -5,6 +5,8 @@ import loadPlugins from "../plugins";
 const initApp = (route: DefineRouteFunction): void => {
   // Load all plugins to memory
   const plugins = loadPlugins();
+  console.log(plugins);
+
   // Dynamically register route for each of the enabled plugin routed
   Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
     if (pluginConfig.enabled) {

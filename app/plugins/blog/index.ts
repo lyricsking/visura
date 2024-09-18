@@ -1,10 +1,11 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { IPlugin, registerPlugin } from "../../core/plugin";
+import { IPlugin } from "../../core/plugin";
 
 export const pluginPath = "blog";
 
 const blogPlugin: IPlugin = {
   name: pluginPath,
+  version: "0.0.1",
   defaultConfig: {
     path: "",
   },
