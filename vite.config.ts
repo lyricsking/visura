@@ -23,4 +23,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  optimizeDeps: {
+    exclude: ["@mapbox"], // Mapbox lib causing error during build time.
+  },
 });
