@@ -1,59 +1,34 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { IPlugin } from "~/core/plugin"; // Ensure you import the plugin interface from where it's defined
+import { IPlugin } from "~/core/plugin";
+import blogPlugin from "./blog";
 
+// Define your plugin loader function
 const loadPlugins = (): { [key: string]: IPlugin } => {
-  try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    const pluginDir = __dirname;
+  // Manually register plugins
+  const plugins: { [key: string]: IPlugin } = {};
 
-    // Read the plugins directory synchronously
-    const pluginFolders = fs.readdirSync(pluginDir);
+  const allPlugins = [blogPlugin];
 
-    // Initialize an empty object to store plugins by name
-    const pluginsByName: { [key: string]: IPlugin } = {};
+  // Iterate through the manually imported plugins
+  for (const plugin of allPlugins) {
+    if (
+      !plugin.name ||
+      !plugin.version
+      // || typeof plugin.init !== "function"
+    ) {
+      throw new Error(
+        `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
+      );
+    }
 
-    // Iterate through each folder in the plugins directory
-    pluginFolders.forEach((pluginFolder) => {
-      const pluginPath = path.join(pluginDir, pluginFolder, "index.ts");
+    // Ensure plugin names are unique
+    if (plugins[plugin.name]) {
+      throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
+    }
 
-      try {
-        // Synchronously load the plugin
-        const plugin: IPlugin = require(pluginPath).default;
-
-        // Ensure the plugin matches the IPlugin interface
-        if (
-          !plugin.name ||
-          !plugin.version
-          //        ||     typeof plugin.init !== "function"
-        ) {
-          throw new Error(
-            `Invalid plugin: ${pluginFolder}. Plugin must have a name, version, and init function.`
-          );
-        }
-
-        // Check for duplicate plugin names
-        if (pluginsByName[plugin.name]) {
-          throw new Error(
-            `Cannot register a duplicate plugin: ${plugin.name}. Plugin name must be unique.`
-          );
-        }
-
-        // Add the plugin to the object, using its name as the key
-        pluginsByName[plugin.name] = plugin;
-      } catch (err) {
-        console.error(`Error loading plugin from ${pluginPath}:`, err);
-      }
-    });
-
-    // Return the object mapping plugin names to plugin objects
-    return pluginsByName;
-  } catch (err) {
-    console.error("Error loading plugins:", err);
-    return {};
+    plugins[plugin.name] = plugin;
   }
+
+  return plugins;
 };
 
 export default loadPlugins;

@@ -18,24 +18,21 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 
-import { getThemeSession } from "./plugins/Theme/theme.server";
-import { Theme, ThemeProvider } from "./plugins/Theme/theme.provider";
-
 import { cn } from "./utils/util";
 import { Toaster } from "./components/toaster";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import config from "./config";
 
 export type LoaderData = {
-  theme: Theme | null;
+  //theme: Theme | null;
 };
 
 // read the state from the cookie
 export const loader: LoaderFunction = async ({ request }) => {
-  const themeSession = await getThemeSession(request);
+  //const themeSession = await getThemeSession(request);
 
   const data: LoaderData = {
-    theme: themeSession.getTheme(),
+    //theme: themeSession.getTheme(),
   };
 
   return json(data);
@@ -53,10 +50,6 @@ export const meta: MetaFunction = () => {
 };
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData("root") as LoaderData;
-
-  useEffect(() => {
-    JSON.stringify(data, null, 2);
-  }, [data]);
 
   return (
     // <ThemeProvider theme={data?.theme}>
