@@ -4,6 +4,7 @@ import { findPostById, findPostBySlug } from "../server/post.server";
 import ReactMarkdown from "react-markdown";
 import { formatDateOrTime } from "~/utils/date";
 import { findTipBySlug } from "../server/tips.server";
+import { Card, CardContent } from "~/components/card";
 
 export default function TipPage() {
   const { tip } = useLoaderData<typeof loader>();
@@ -46,14 +47,19 @@ export default function TipPage() {
       </div>
 
       <div className="p-4">
-        <img
-          src={tip.featuredImage}
-          alt={title}
-          className="w-full h-auto border rounded-lg mb-6"
-        />
+        <Card className="w-full bg-white/90 overflow-hidden mb-6">
+          <CardContent>
+            <div className="grid grid-flow-col auto-cols-auto gap-6 divide-y sm:divide-x sm:divide-y-0">
+              <div>{tip.teamA}</div>
+              <div></div>
+              <div>{tip.teamB}</div>
+            </div>
+          </CardContent>
+        </Card>
         {/* Formatted content here */}
         <div className="prose md:prose-lg lg:prose-xl">
-          <ReactMarkdown>{}</ReactMarkdown>
+          <h4 className="text-2xl font-semibold">Match Preview</h4>
+          <ReactMarkdown>{tip.introduction}</ReactMarkdown>
         </div>
       </div>
     </article>

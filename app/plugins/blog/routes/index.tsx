@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "~/components/select";
 import { SelectItem } from "@radix-ui/react-select";
-import { findTips } from "../server/tips.server";
 import { findPosts, generateDummyPosts } from "../server/post.server";
 import { useLoaderData } from "@remix-run/react";
 import { TipCard } from "../components/tip-card";
@@ -21,6 +20,7 @@ import { PostSummary } from "../components/post-summary";
 import { IPost } from "../types/post.type";
 import { Types } from "mongoose";
 import { findFontByName } from "~/utils/fonts";
+import { findTips } from "../server/tips.server";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");

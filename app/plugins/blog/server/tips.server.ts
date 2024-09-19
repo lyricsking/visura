@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import TipsModel, { HydratedTips } from "../models/tips.model";
 import { DBReponseType } from "~/utils/mongoose";
 import { faker } from "@faker-js/faker";
+import { ITips } from "../types/tips.type";
 
 export const createTip = async (data: ITips): Promise<HydratedTips> => {
   try {
@@ -26,6 +27,16 @@ export const findOneById = async (): Promise<HydratedTips[]> => {
   }
 };
 
+export const findTips = async (): Promise<HydratedTips[]> => {
+  try {
+    const tips = await TipsModel.find().exec();
+
+    return tips;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const findTipBySlug = async ({
   slug,
 }: any): Promise<DBReponseType<ITips>> => {
@@ -41,39 +52,6 @@ export const findTipBySlug = async ({
 
 // Helper to generate random ObjectId
 const generateObjectId = () => new Types.ObjectId();
-
-const PredictionType = {
-  outcome: "outcome",
-  scoreline: "scoreline",
-} as const;
-type PredictionType = keyof typeof PredictionType;
-
-type IPrediction = Record<
-  PredictionType,
-  {
-    value: string;
-    reason: string;
-  }
->;
-
-interface ITips {
-  _id: Types.ObjectId;
-  slug: string;
-  teamA: string;
-  teamB: string;
-  matchDate: Date;
-  leagueCountry: Types.ObjectId;
-  league: Types.ObjectId;
-  teamARank: number;
-  teamBRank: number;
-  author: Types.ObjectId;
-  prediction: IPrediction;
-  introduction: string;
-  excerpt: string;
-  featuredImage: string;
-  tags: string[];
-  publishedOn: Date;
-}
 
 // Generator function for ITips
 export function generateTips(length: number = 1): ITips[] {
