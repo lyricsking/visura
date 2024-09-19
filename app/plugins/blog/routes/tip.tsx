@@ -25,6 +25,14 @@ export default function TipPage() {
       })
     : null;
 
+  let matchDate = tip.matchDate
+    ? formatDateOrTime(new Date(tip.matchDate), {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+
   return (
     <article className="w-full mx-auto max-w-3xl px-4 md:py-8 md:px-6">
       <div className="flex flex-col p-4">
@@ -51,7 +59,7 @@ export default function TipPage() {
           <CardContent>
             <div className="grid grid-flow-col auto-cols-auto gap-6 divide-y sm:divide-x sm:divide-y-0">
               <div>{tip.teamA}</div>
-              <div></div>
+              <div>{matchDate}</div>
               <div>{tip.teamB}</div>
             </div>
           </CardContent>
