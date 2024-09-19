@@ -91,7 +91,7 @@ export default function Index() {
 
               <CardContent>
                 {/* <ScrollArea className="whitespace-nowrap" type="auto"> */}
-                <div className="w-max grid sm:grid-cols-2 gap-x-4 p-4 divide-y sm:divide-x sm:divide-y-0">
+                <div className="grid sm:grid-cols-2 gap-6 divide-y sm:divide-x sm:divide-y-0">
                   {tips.map((tip, index) => (
                     <TipCard key={index} tip={tip as unknown as ITips} />
                   ))}
@@ -100,17 +100,6 @@ export default function Index() {
                 {/*<ScrollBar orientation="horizontal" />
                 </ScrollArea>*/}
               </CardContent>
-
-              <CardFooter className="justify-center border-t p-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-1 border border-gray-600"
-                >
-                  <ArrowBigDownDash className="h-3.5 w-3.5" />
-                  Load more
-                </Button>
-              </CardFooter>
             </Card>
           </div>
 
@@ -143,7 +132,7 @@ export default function Index() {
 
               <CardContent>
                 <ScrollArea className="h-[500px] w-full" type="auto">
-                  <div className="grid sm:grid-cols-2 gap-6 p-4 divide-y">
+                  <div className="grid sm:grid-cols-2 gap-6 divide-y sm:divide-x sm:divide-y-0">
                     {tips.map((tip, index) => (
                       <TipCard key={index} tip={tip as unknown as ITips} />
                     ))}

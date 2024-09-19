@@ -5,35 +5,81 @@ const FootballIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 64 64"
-      width="64px"
-      height="64px"
-      fill="currentColor"
+      width="100"
+      height="100"
       {...props}
     >
-      <circle cx="32" cy="32" r="32" fill="#000" />
-      <path
-        fill="#fff"
-        d="M32 4.8c-15 0-27.2 12.2-27.2 27.2S17 59.2 32 59.2 59.2 47 59.2 32 47 4.8 32 4.8zm0 51.4c-13.3 0-24.2-10.8-24.2-24.2S18.7 7.8 32 7.8s24.2 10.8 24.2 24.2-10.9 24.2-24.2 24.2z"
+      {/* Outer Circle */}
+      <circle
+        cx="32"
+        cy="32"
+        r="32"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="2"
       />
+
+      {/* Hexagons and pentagons on the football */}
+      {/* Center black pentagon */}
+      <polygon points="32,16 37,22 34,29 28,29 25,22" fill="#000000" />
+
+      {/* Upper hexagon */}
       <polygon
-        fill="#fff"
-        points="32 16.6 37.2 22 35.7 28.8 32 31.7 28.3 28.8 26.8 22 32 16.6"
+        points="32,8 37,16 32,16 28,16"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
       />
+
+      {/* Upper left hexagon */}
       <polygon
-        fill="#fff"
-        points="21.7 24.4 23.4 30.8 20.6 34.4 15.6 33.4 13.5 27.9 17.2 23.9"
+        points="25,14 20,22 25,22 28,16"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
       />
+
+      {/* Upper right hexagon */}
       <polygon
-        fill="#fff"
-        points="42.3 24.4 46.8 23.9 50.5 27.9 48.4 33.4 43.4 34.4 40.6 30.8"
+        points="39,14 44,22 39,22 37,16"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
       />
+
+      {/* Lower left hexagon */}
       <polygon
-        fill="#fff"
-        points="23.7 41.2 24.7 46.6 30.4 47.5 33.3 43.8 29.9 39.9 24.4 40.9"
+        points="28,29 23,37 28,37 32,29"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
       />
+
+      {/* Lower right hexagon */}
       <polygon
-        fill="#fff"
-        points="40.3 41.2 35.6 40.9 30.1 39.9 33.7 43.8 36.6 47.5 42.3 46.6"
+        points="37,29 42,37 37,37 34,29"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
+      />
+
+      {/* Lower pentagon */}
+      <polygon points="32,48 28,43 34,43 32,48" fill="#000000" />
+
+      {/* Left lower hexagon */}
+      <polygon
+        points="23,37 18,43 23,43 28,37"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
+      />
+
+      {/* Right lower hexagon */}
+      <polygon
+        points="42,37 47,43 42,43 37,37"
+        fill="#FFFFFF"
+        stroke="#000000"
+        stroke-width="1"
       />
     </svg>
   );

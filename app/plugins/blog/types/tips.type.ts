@@ -6,18 +6,22 @@ export const PredictionType = {
 } as const;
 export type PredictionType = keyof typeof PredictionType;
 
-export type IPrediction = Record<PredictionType, {
-  value: string;
-  reason: string;
-  }>;
+export type IPrediction = Record<
+  PredictionType,
+  {
+    value: string;
+    reason: string;
+  }
+>;
 
 export interface ITips {
   _id: Types.ObjectId;
+  slug: string;
   teamA: string;
   teamB: string;
   matchDate: Date;
-  country: Types.ObjectId;
-  league: string;
+  leagueCountry: Types.ObjectId;
+  league: Types.ObjectId;
   teamARank: number;
   teamBRank: number;
   author: Types.ObjectId;

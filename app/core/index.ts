@@ -5,14 +5,16 @@ import loadPlugins from "../plugins";
 const initApp = (route: DefineRouteFunction): void => {
   // Load all plugins to memory
   const plugins = loadPlugins();
-  console.log(plugins);
 
   // Dynamically register route for each of the enabled plugin routed
   Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
     if (pluginConfig.enabled) {
       const enabledPlugin = plugins[pluginName];
       if (enabledPlugin && enabledPlugin.registerRoutes) {
-        enabledPlugin.registerRoutes(enabledPlugin.defaultConfig.path, route);
+        enabledPlugin.registerRoutes(
+          pluginConfig.settings.path || enabledPlugin.defaultConfig.path,
+          route
+        );
         // Registers the routes in the routing system
         // For example:
         // defineRoute("/", "Home/routes/index.ts");

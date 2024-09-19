@@ -1,6 +1,6 @@
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import TipsModel, { HydratedTips } from "../models/tips.model";
-import { Country, ITips, League, PredictionType } from "../types/tips.type";
+import { DBReponseType } from "~/utils/mongoose";
 import { faker } from "@faker-js/faker";
 
 export const createTip = async (data: ITips): Promise<HydratedTips> => {
@@ -26,65 +26,97 @@ export const findOneById = async (): Promise<HydratedTips[]> => {
   }
 };
 
-export const findTips = async (): Promise<HydratedTips[]> => {
+export const findTipBySlug = async ({
+  slug,
+}: any): Promise<DBReponseType<ITips>> => {
+  let response: DBReponseType<ITips> = {};
   try {
-    const tips = await TipsModel.find().exec();
-
-    return tips;
+    // !response.data = await TipsModel.findOne({ slug }).exec();
+    response.data = generateTips()[0];
+    return response;
   } catch (error) {
     throw error;
   }
 };
-export async function generateDummyTips(
-  count: number = 5
-): Promise<HydratedTips[]> {
-  const countries = Object.keys(Country) as (keyof typeof Country)[];
-  const selectedCountry = faker.helpers.arrayElement(countries);
-  const selectedLeague = faker.helpers.arrayElement(
-    Country[selectedCountry]
-  ) as League;
 
-  await TipsModel.deleteMany();
+// Helper to generate random ObjectId
+const generateObjectId = () => new Types.ObjectId();
 
-  let tips = [];
-  for (let index = 0; index < count; index++) {
-    let teamA = faker.location.city();
-    let teamB = faker.location.city();
+const PredictionType = {
+  outcome: "outcome",
+  scoreline: "scoreline",
+} as const;
+type PredictionType = keyof typeof PredictionType;
 
-    let tip: ITips = {
-      _id: new Types.ObjectId(),
-      teamA,
-      teamB,
-      matchDate: faker.date.future(),
-      country: selectedCountry,
-      league: selectedLeague,
-      teamARank: faker.number.int({ min: 1, max: 20 }),
-      teamBRank: faker.number.int({ min: 1, max: 20 }),
-      author: new Types.ObjectId(),
-      prediction: {
-        [PredictionType.outcome]: {
-          value: faker.helpers.arrayElement([teamA, teamB, "Draw"]),
-          reason: faker.lorem.sentence(),
-        },
-        [PredictionType.scoreline]: {
-          value: `${faker.number.int({ min: 0, max: 5 })}-${faker.number.int({
-            min: 0,
-            max: 5,
-          })}`,
-          reason: faker.lorem.sentence(),
-        },
+type IPrediction = Record<
+  PredictionType,
+  {
+    value: string;
+    reason: string;
+  }
+>;
+
+interface ITips {
+  _id: Types.ObjectId;
+  slug: string;
+  teamA: string;
+  teamB: string;
+  matchDate: Date;
+  leagueCountry: Types.ObjectId;
+  league: Types.ObjectId;
+  teamARank: number;
+  teamBRank: number;
+  author: Types.ObjectId;
+  prediction: IPrediction;
+  introduction: string;
+  excerpt: string;
+  featuredImage: string;
+  tags: string[];
+  publishedOn: Date;
+}
+
+// Generator function for ITips
+export function generateTips(length: number = 1): ITips[] {
+  const tip = (): ITips => ({
+    _id: generateObjectId(),
+    slug: faker.lorem.slug(),
+    teamA: faker.company.name(),
+    teamB: faker.company.name(),
+    matchDate: faker.date.future(),
+    leagueCountry: generateObjectId(),
+    league: generateObjectId(),
+    teamARank: faker.number.int({ min: 1, max: 20 }),
+    teamBRank: faker.number.int({ min: 1, max: 20 }),
+    author: generateObjectId(),
+    prediction: {
+      outcome: {
+        value: faker.helpers.arrayElement(["win", "draw", "loss"]),
+        reason: faker.lorem.sentence(),
       },
-      introduction: faker.lorem.paragraph(),
-      excerpt: faker.lorem.sentence(),
-      featuredImage: faker.image.url(),
-      tags: faker.helpers.arrayElements(
-        ["football", "premier league", "match", "sports", "prediction"],
-        3
-      ),
-      publishedOn: faker.date.past(),
-    };
+      scoreline: {
+        value: `${faker.number.int({
+          min: 0,
+          max: 5,
+        })}-${faker.number.int({
+          min: 0,
+          max: 5,
+        })}`,
+        reason: faker.lorem.sentence(),
+      },
+    },
+    introduction: faker.lorem.paragraph(),
+    excerpt: faker.lorem.sentence(),
+    featuredImage: faker.image.imageUrl(),
+    tags: faker.helpers.arrayElements(
+      ["football", "sports", "prediction", "league", "analysis"],
+      faker.datatype.number({ min: 1, max: 5 })
+    ),
+    publishedOn: faker.date.past(),
+  });
 
-    tips.push(await createTip(tip));
+  const tips: ITips[] = [];
+  for (let index = 0; index < length; index++) {
+    tips.push(tip());
   }
 
   return tips;

@@ -9,7 +9,7 @@
     "blog": {
       "enabled": true,
       "settings": {
-        "path": "blog"
+        "path": ""
       }
     }
   }

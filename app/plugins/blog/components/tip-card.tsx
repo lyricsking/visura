@@ -1,7 +1,13 @@
-import { Calendar, MessageCircleIcon } from "lucide-react";
+import { Calendar, Link2, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
 import { formatDateByParts } from "~/utils/date";
-import Button from "~/components/button";
+import Button, { buttonVariants } from "~/components/button";
+import FootballIcon from "~/components/ui/football";
+import { Link } from "@remix-run/react";
+import { cn } from "~/utils/util";
+import config from "~/config";
+import blogPlugin from "..";
+import { getSlug } from "../utils/slug";
 
 type TipCardProps = {
   tip: ITips;
@@ -10,32 +16,49 @@ type TipCardProps = {
 export const TipCard = (props: TipCardProps) => {
   const { tip } = props;
 
+  let path = config.plugins[blogPlugin.name].settings.path;
+  path && path.length > 0 ? path : "/" + path;
+  path += "/tips";
+
+  let title =
+    tip.leagueCountry +
+    " " +
+    tip.league +
+    " - " +
+    tip.teamA +
+    " vs " +
+    tip.teamB;
+
   return (
-    <div className="p-4 border-gray-200">
+    <div className="py-4 border-gray-200">
       <div className="flex flex-col items-start justify-between">
-        <div className="flex items-center">
-          <img
-            src="/path/to/football-icon.png"
-            alt="Football"
-            className="w-6 h-6 mr-2"
-            // alt={post.title}
-            // width="804"
-            // height="452"
-            // className="rounded-md border bg-muted transition-colors"
-            // src={"/images/tips/" + post.featuredImage}
-            // className="w-6 h-6 mr-2"
-          />
-          <h3 className="mb-3 text-xl font-bold">
-            {tip.prediction.outcome.value}
-          </h3>
-          <Button variant="outline">See Predictions</Button>
+        <div className="w-full flex items-center justify-between">
+          <div className="flex items-center">
+            <img
+              src="/images/football.png"
+              alt="football img"
+              className="h-6 w-6 mr-2"
+            />
+            <h3 className="text-xl font-bold">
+              {tip.prediction.outcome.value}
+            </h3>
+          </div>
+          <Link
+            to={path + "/" + getSlug(title)}
+            className={cn(
+              buttonVariants({ variant: "outline", radius: "md" }),
+              "text-white bg-red-400 "
+            )}
+          >
+            See Predictions
+          </Link>
         </div>
         <div>
           <h4 className="text-md font-semibold">
             {tip.teamA} vs {tip.teamB}
           </h4>
           <p className="text-sm text-gray-500">
-            {tip.country} {tip.league}
+            {tip.leagueCountry} {tip.league}
           </p>
           <p className="text-sm text-gray-500 flex items-center">
             <span className="mr-2">
