@@ -57,7 +57,7 @@ export default function TipPage() {
       <div className="p-4">
         <Card className="w-full bg-white/90 overflow-hidden mb-6">
           <CardContent>
-            <div className="grid grid-cols-[30%_1fr_30%] gap-6 divide-y sm:divide-x sm:divide-y-0">
+            <div className="grid grid-cols-[20%_1fr_20%] gap-6 divide-y sm:divide-x sm:divide-y-0">
               <div>{tip.teamA}</div>
               <div>{matchDate}</div>
               <div>{tip.teamB}</div>
