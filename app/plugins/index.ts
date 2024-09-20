@@ -1,12 +1,13 @@
 import { IPlugin } from "~/core/plugin";
 import blogPlugin from "./blog";
+import dashboardPlugin from "./dashboard";
 
 // Define your plugin loader function
 const loadPlugins = (): { [key: string]: IPlugin } => {
   // Manually register plugins
   const plugins: { [key: string]: IPlugin } = {};
 
-  const allPlugins = [blogPlugin];
+  const allPlugins = [blogPlugin, dashboardPlugin];
 
   // Iterate through the manually imported plugins
   for (const plugin of allPlugins) {

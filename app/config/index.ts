@@ -10,7 +10,7 @@ const pluginSettingsSchema = z
     accountMenuLinks: z.optional(z.array(z.string())),
   })
   .passthrough();
-export type PluginSettingsSchema = z.infer<typeof pluginSettingsSchema>;
+export type PluginSettingsType = z.infer<typeof pluginSettingsSchema>;
 
 const pluginOptionSchema = z.object({
   enabled: z.boolean(),

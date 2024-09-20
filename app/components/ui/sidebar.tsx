@@ -3,7 +3,7 @@ import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
-import { config } from "@/config";
+import config from "~/config";
 
 export type Menu = {
   id: number | string;

@@ -19,13 +19,12 @@ import {
   setUserToSession,
 } from "~/core/Auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
-import { Sidebar } from "~/plugins/Dashboard/components/sidebar";
-import HeaderIcons from "../plugins/Dashboard/components/header-icons";
 import { isAuthUser } from "~/core/Auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/core/User/server/user.server";
-import { Navbar } from "../plugins/Dashboard/components/navbar";
-import { dashboardMenuFor } from "../plugins/Dashboard/utils/menu";
-import { config } from "@/config";
+import { Sidebar } from "~/components/ui/sidebar";
+import config from "~/config";
+import { Navbar } from "~/components/ui/navbar";
+import HeaderIcons from "~/components/ui/header-icons";
 
 export const handle = {
   breadcrumb: {
@@ -38,13 +37,6 @@ export const handle = {
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
   let location = useLocation();
-
-  let basePath = location.pathname.includes(config.userDashboardPath)
-    ? config.userDashboardPath
-    : config.adminDashboardPath;
-  let [dashboardMenu, ...menu] = dashboardMenuFor(
-    basePath === config.userDashboardPath ? "customer" : "staff"
-  );
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);

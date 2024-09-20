@@ -1,10 +1,10 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { PluginSettingsSchema } from "~/config";
+import { PluginSettingsType } from "~/config";
 
-export interface IPlugin {
+export interface IPlugin<Configs extends PluginSettingsType = any> {
   name: string;
   description: string;
   version: string;
-  defaultConfig: PluginSettingsSchema;
-  registerRoutes: (path: string, defineRoute: DefineRouteFunction) => any; // This could register routes
+  defaultConfig: Configs;
+  registerRoutes: (defineRoute: DefineRouteFunction, config: Configs) => any; // This could register routes
 }
