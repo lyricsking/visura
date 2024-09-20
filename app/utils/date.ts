@@ -31,7 +31,7 @@ export function formatDateByParts(date: Date): string {
     (part) => part.type === "dayPeriod"
   )?.value;
   // Combibe the formatted date parts into a string
-  const formattedDate = `${year}-${month}-${day} ${hour}:${minute} ${dayPeriod}`;
+  const formattedDate = `${day}-${month}-${year} ${hour}:${minute} ${dayPeriod}`;
 
   return formattedDate;
 }
