@@ -32,7 +32,7 @@ export function PostSummary(props: PostSummaryProps) {
       <h2 className="text-2xl font-extrabold">{post.title}</h2>
       <p className="text-muted-foreground">{post.excerpt}</p>
       <p className="text-sm text-muted-foreground">{dateFormat ?? null}</p>
-      <Link className="absolute inset-0" to={`/${post.slug}`}>
+      <Link className="absolute inset-0" to={`/news/${post.slug}`}>
         <span className="sr-only">View Article</span>
       </Link>
     </article>

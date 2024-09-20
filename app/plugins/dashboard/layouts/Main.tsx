@@ -17,14 +17,17 @@ import {
   getUserFromSession,
   isAuthenticated,
   setUserToSession,
-} from "~/core/Auth/server/auth.server";
+} from "~/core/auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
-import { isAuthUser } from "~/core/Auth/utils/helper";
+import { isAuthUser } from "~/core/auth/utils/helper";
 import { findOrCreateUserProfiles } from "~/core/User/server/user.server";
 import { Sidebar } from "~/components/ui/sidebar";
-import config from "~/config";
+import config, { PluginSettingsType } from "~/config";
 import { Navbar } from "~/components/ui/navbar";
-import HeaderIcons from "~/components/ui/header-icons";
+import HeaderIcons from "~/plugins/dashboard/components/header-icons";
+import dashboardPlugin from "..";
+import { Menu } from "~/utils/menu";
+import plugins from "~/plugins";
 
 export const handle = {
   breadcrumb: {
@@ -34,7 +37,7 @@ export const handle = {
   },
 };
 
-export default function Layout() {
+export default function Main() {
   const data = useLoaderData<typeof loader>();
   let location = useLocation();
 
@@ -54,6 +57,17 @@ export default function Layout() {
     }
   });
 
+  const menu: Menu[] = [];
+  Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
+    if (pluginConfig.enabled) {
+      const plugin = plugins[pluginName];
+
+      if (plugin && plugin.dashboardMenu) {
+        menu.push(...plugin.dashboardMenu);
+      }
+    }
+  });
+
   return (
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
@@ -61,16 +75,15 @@ export default function Layout() {
           <div className="flex w-full items-center justify-between space-x-2">
             <div className="flex flex-row items-center gap-2 text-lg text-center font-medium sm:text-sm md:gap-6">
               <Sidebar
-                basePath={basePath}
                 menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
-              <Link to={dashboardMenu.path}>
+              <Link to={config.plugins[dashboardPlugin.name].settings.path}>
                 <h1 className="text-[24px] font-bold tracking-tight">
                   {config.appName}
                 </h1>
               </Link>
-              <Navbar basePath={basePath} menu={menu} />
+              <Navbar menu={menu} />
             </div>
 
             <HeaderIcons user={data.user} />

@@ -12,13 +12,15 @@ import { IUserProfile } from "~/core/User/types/user-profile.type";
 import { useEffect } from "react";
 import { IHydratedUser } from "~/core/User/models/user.model";
 import { UserType } from "~/core/User/types/user.types";
-// import { UserIcon } from "@heroicons/react/20/solid";
+import { Menu } from "~/utils/menu";
+import { ReceiptRefundIcon } from "@heroicons/react/20/solid";
 
 //type Props = ButtonProps;
 type Props = {
   user?: IHydratedUser;
+  menu?: Menu[];
 };
-export default function AccountMenuButton({ user }: Props) {
+export default function AccountMenuButton({ menu, user }: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,37 +43,33 @@ export default function AccountMenuButton({ user }: Props) {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-white">
-        <DropdownMenuLabel>Account</DropdownMenuLabel>
+        {/*  <DropdownMenuLabel>Account</DropdownMenuLabel>*/}
         <DropdownMenuSeparator />
-        {/* Optionally allow to navigate to dashboard in not already in the the dashboard */}
-        {user &&
-          user?.type === UserType.customer &&
-          !location.pathname.includes("admin") && (
-            <DropdownMenuItem
-              onSelect={() => {
-                navigate("/administration");
-              }}
-            >
-              Backend
-            </DropdownMenuItem>
-          )}
-        {profile && !location.pathname.includes("dashboard") && (
-          <DropdownMenuItem
-            onSelect={() => {
-              navigate("/account");
-            }}
-          >
-            Dashboard
-          </DropdownMenuItem>
-        )}
+        {/* Optionally allow to navigate to dashboard if not already in the the dashboard */}
+        {menu &&
+          menu.map((menuItem) => {
+            const Icon = menuItem.icon;
+            return (
+              <DropdownMenuItem
+                key={menuItem.id}
+                onSelect={() => {
+                  navigate(menuItem.path);
+                }}
+              >
+                {Icon && <Icon className="w-6 h-6 mr-4" />}
+                {menuItem.label}
+              </DropdownMenuItem>
+            );
+          })}
         {/* Navigate to support page */}
-        <DropdownMenuItem
+        {/*  <DropdownMenuItem
           onSelect={() => {
             navigate("/support");
           }}
         >
           Support
         </DropdownMenuItem>
+  */}{" "}
         {/* Sign out */}
         {profile ? (
           <DropdownMenuItem

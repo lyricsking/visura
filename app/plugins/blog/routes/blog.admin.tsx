@@ -1,18 +1,18 @@
-import { config } from "@/config";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { loadConfigFromFile } from "vite";
 import { findPosts } from "../server/post.server";
+import config from "~/config";
 
 export const handle = {
   pageName: "Blog",
   submenu: [
     {
-      path: `${config.blogPath}`,
+      path: ``,
       label: "Blog",
     },
     {
-      path: `${config.blogPath}/edit`,
+      path: `edit`,
       label: "New",
     },
   ],

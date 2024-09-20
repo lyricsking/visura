@@ -1,11 +1,11 @@
 import { BellIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Input } from "~/components/input";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { IHydratedUser } from "~/core/User/models/user.model";
 
 type HeaderSearchProps = {
   user: IHydratedUser;
 };
+
 export default function HeaderIcons(props: HeaderSearchProps) {
   return (
     <div className="grid grid-flow-col grid-cols-[1fr_auto] items-center gap-x-1 px-1">

@@ -4,25 +4,14 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
 import config from "~/config";
-
-export type Menu = {
-  id: number | string;
-  label: string;
-  path: string;
-  icon?: React.ElementType;
-};
+import { Menu as MenuType } from "~/utils/menu";
 
 export type SidebarContentProps = {
-  basePath: string;
-  menu: Menu[];
+  menu: MenuType[];
   side?: "top" | "bottom" | "left" | "right";
 };
 
-export function Sidebar({
-  basePath,
-  menu,
-  side = "left",
-}: SidebarContentProps) {
+export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
   return (
     <Sheet>
       <SheetTrigger>
@@ -47,7 +36,7 @@ export function Sidebar({
                 return (
                   <li key={menu.id}>
                     <NavLink
-                      to={"/" + basePath + "/" + menu.path}
+                      to={menu.path}
                       className={({ isActive, isPending }) =>
                         `flex items-center px-4 py-2 mt-5 text-gray-800 capitalize transition-colors duration-300 transform ${
                           isActive

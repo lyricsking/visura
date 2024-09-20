@@ -5,9 +5,9 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import pkg from "~/../package.json";
 
 import Button from "~/components/button";
+import config from "~/config";
 
 export default function Layout() {
   return (
@@ -16,7 +16,7 @@ export default function Layout() {
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">
-              {pkg.name}.
+              {config.appName}
             </h1>
           </Link>
           <Button
@@ -30,7 +30,7 @@ export default function Layout() {
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet context={{ appname: pkg.name }} />
+        <Outlet context={{}} />
       </PageLayoutContent>
     </PageLayout>
   );

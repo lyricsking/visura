@@ -20,7 +20,7 @@ export default function Signin() {
       <div className="max-w-sm md:max-w-lg mx-auto p-6 sm:p-12 md:border md:shadow-md">
         <div className="mt-0 flex flex-col items-center">
           <img
-            className="h-12 w-12"
+            className="h-12 w-12 hidden"
             src="/illustrations/avatar.svg"
             alt={appname + " Logo"}
           />

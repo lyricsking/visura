@@ -1,19 +1,18 @@
 import { NavLink } from "@remix-run/react";
-import { Menu } from "./sidebar";
+import { Menu } from "~/utils/menu";
 
 export type NavbarProps = {
-  basePath: string;
   menu: Menu[];
 };
 
-export function Navbar({ basePath, menu }: NavbarProps) {
+export function Navbar({ menu }: NavbarProps) {
   return (
     <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
       {menu.map((menu) => {
         return (
           <NavLink
             key={menu.id}
-            to={"/" + basePath + "/" + menu.path}
+            to={menu.path}
             className={({ isActive, isPending }) =>
               `py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform ${
                 isActive

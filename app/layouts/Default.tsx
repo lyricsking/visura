@@ -9,11 +9,10 @@ import {
 } from "~/components/ui/page.layout";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
-import { getUserFromSession } from "~/core/Auth/server/auth.server";
-import { plugins } from "~/plugins";
+import { getUserFromSession } from "~/core/auth/server/auth.server";
 import config from "~/config";
 
-export default function Layout() {
+export default function Default() {
   const data = useLoaderData<typeof loader>();
   // const headerIcons = plugins
   //   .filter((plugin) => plugin.headerIcon)

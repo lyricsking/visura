@@ -1,23 +1,43 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 import { IPlugin } from "../../core/plugin";
+import { Menu } from "~/utils/menu";
 import { PluginSettingsType } from "~/config";
+import {
+  Package2,
+  Boxes,
+  Box,
+  Receipt,
+  CreditCard,
+  Users,
+  Settings,
+  LifeBuoy,
+  NewspaperIcon,
+} from "lucide-react";
 
-const dashboardPath = "dashboard";
-
-const dashboardPlugin: IPlugin<PluginSettingsType> = {
+const dashboardPlugin: IPlugin = {
   name: "dashboard",
   description: "",
   version: "0.0.1",
   defaultConfig: {
-    path: dashboardPath,
+    path: "dashboard",
   },
+  dashboardMenu: [
+    {
+      id: "default",
+      label: "Dashboard",
+      path: "",
+      icon: Package2,
+    },
+  ],
   registerRoutes: (
     defineRoute: DefineRouteFunction,
     config: PluginSettingsType
   ) => {
-    defineRoute(config.path, "plugins/dashboard/layouts/dashboard.tsx", () => {
-      defineRoute("", "plugins/dashboard/routes/user-overview.tsx", {
-        index: true,
+    defineRoute(config.path, "plugins/dashboard/layouts/Main.tsx", () => {
+      defineRoute("", "plugins/dashboard/layouts/User.tsx", () => {
+        defineRoute("", "plugins/dashboard/routes/user-overview.tsx", {
+          index: true,
+        });
       });
       //   //   defineRoute(
       //   //       "invoices/:status?",
@@ -61,3 +81,9 @@ const dashboardPlugin: IPlugin<PluginSettingsType> = {
 };
 
 export default dashboardPlugin;
+
+declare module "~/core/plugin" {
+  export interface IPlugin {
+    dashboardMenu?: Menu[];
+  }
+}

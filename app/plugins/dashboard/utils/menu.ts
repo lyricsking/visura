@@ -1,4 +1,4 @@
-import { config } from "@/config";
+import config from "@/config";
 import {
   Package2,
   Boxes,
@@ -11,9 +11,6 @@ import {
   NewspaperIcon,
 } from "lucide-react";
 import { UserType } from "~/core/User/types/user.types";
-
-const userDashboardMenuItem = config.userDashboardPath;
-const adminDashboardMenuItem = config.adminDashboardPath;
 
 const userDashboardMenuItems = [
   {
@@ -109,7 +106,7 @@ const adminDashboardMenuItems = [
   {
     id: "blog",
     label: "Blog",
-    path: `${config.blogPath}`,
+    // path: `${config.blogPath}`,
     icon: NewspaperIcon,
   },
 ];

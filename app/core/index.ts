@@ -1,10 +1,17 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 import config from "../config";
-import loadPlugins from "../plugins";
+import plugins from "../plugins";
 
 const initApp = (route: DefineRouteFunction): void => {
-  // Load all plugins to memory
-  const plugins = loadPlugins();
+  // Register defualt routes
+  // auth routes
+  route("auth", "core/auth/routes/layout.tsx", () => {
+    route("", "core/auth/routes/signin.tsx", { index: true });
+    route("signup", "core/auth/routes/signup.tsx");
+    route("google/callback", "core/auth/routes/google-callback.tsx");
+    route("google/signin", "core/auth/routes/google-signin.tsx");
+    route("signout", "core/auth/routes/signout.tsx");
+  });
 
   // Dynamically register route for each of the enabled plugin routed
   Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {

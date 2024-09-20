@@ -10,7 +10,8 @@ const pluginSettingsSchema = z
     accountMenuLinks: z.optional(z.array(z.string())),
   })
   .passthrough();
-export type PluginSettingsType = z.infer<typeof pluginSettingsSchema>;
+export interface PluginSettingsType
+  extends z.infer<typeof pluginSettingsSchema> {}
 
 const pluginOptionSchema = z.object({
   enabled: z.boolean(),
@@ -19,11 +20,13 @@ const pluginOptionSchema = z.object({
 
 export type PluginOptions = z.infer<typeof pluginOptionSchema>;
 
-export const configSchema = z.object({
-  appName: z.string(),
-  description: z.string(),
-  plugins: z.record(pluginOptionSchema),
-});
+export const configSchema = z
+  .object({
+    appName: z.string().readonly(),
+    description: z.string().readonly(),
+    plugins: z.record(pluginOptionSchema).readonly(),
+  })
+  .readonly();
 
 export type Config = z.infer<typeof configSchema>;
 
@@ -53,6 +56,5 @@ const loadConfig = (): Config => {
 
   return configParse.data;
 };
-
 const config: Config = loadConfig();
 export default config;

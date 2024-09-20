@@ -7,7 +7,7 @@ import { Textarea } from "~/components/textarea";
 import { MarkdownEditor } from "~/components/markdown-editor";
 import Button from "~/components/button";
 import { createPost } from "../server/post.server";
-import { getAuthUser } from "~/core/Auth/server/auth.server";
+import { getAuthUser } from "~/core/auth/server/auth.server";
 import { Types } from "mongoose";
 import { useFileUpload } from "~/hooks/use-upload";
 import { ImagePreview } from "~/components/image-preview";

@@ -1,6 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getUserFromSession } from "~/core/Auth/server/auth.server";
+import { getUserFromSession } from "~/core/auth/server/auth.server";
 import { IHydratedUser } from "~/core/User/models/user.model";
 
 export const handle = {

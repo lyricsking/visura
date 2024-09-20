@@ -1,6 +1,7 @@
 import { IPlugin } from "~/core/plugin";
 import blogPlugin from "./blog";
 import dashboardPlugin from "./dashboard";
+import { Menu } from "~/utils/menu";
 
 // Define your plugin loader function
 const loadPlugins = (): { [key: string]: IPlugin } => {
@@ -32,4 +33,11 @@ const loadPlugins = (): { [key: string]: IPlugin } => {
   return plugins;
 };
 
-export default loadPlugins;
+const plugins = loadPlugins();
+export default plugins;
+
+declare module "~/core/plugin" {
+  export interface IPlugin {
+    dashboardMenu?: Menu[];
+  }
+}
