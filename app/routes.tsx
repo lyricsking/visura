@@ -3,15 +3,6 @@ import config from "../config";
 import plugins from "../plugins";
 
 const initApp = (route: DefineRouteFunction): void => {
-  // Register defualt routes
-  // auth routes
-  route("auth", "core/auth/routes/layout.tsx", () => {
-    route("", "core/auth/routes/signin.tsx", { index: true });
-    route("signup", "core/auth/routes/signup.tsx");
-    route("google/callback", "core/auth/routes/google-callback.tsx");
-    route("google/signin", "core/auth/routes/google-signin.tsx");
-    route("signout", "core/auth/routes/signout.tsx");
-  });
 
   // Dynamically register route for each of the enabled plugin routed
   Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
@@ -33,16 +24,7 @@ const initApp = (route: DefineRouteFunction): void => {
 export default initApp;
 
 const defaultRoutes = () => {
-  // route("", "Home/routes/layout.tsx", () => {
-  //   route("", "Home/routes/index.tsx", { index: true });
-  // });
-  // route("auth", "Auth/routes/layout.tsx", () => {
-  //   route("", "Auth/routes/signin.tsx", { index: true });
-  //   route("signup", "Auth/routes/signup.tsx");
-  //   route("google/callback", "Auth/routes/google-callback.tsx");
-  //   route("google/signin", "Auth/routes/google-signin.tsx");
-  //   route("signout", "Auth/routes/signout.tsx");
-  // });
+  
   // route("cart", "Order/routes/layout.tsx", () => {
   //   route("", "Order/routes/cart.tsx", { index: true });
   //   route("shipping", "Order/routes/shipping.tsx");

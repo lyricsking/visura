@@ -2,7 +2,7 @@ import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import initApp from "./app/core";
+import routes from "./app/route";
 
 installGlobals();
 
@@ -17,9 +17,7 @@ export default defineConfig({
       // publicPath: "/build/",
       // serverBuildPath: "build/index.js",
       routes(defineRoutes) {
-        return defineRoutes((route) => {
-          initApp(route);
-        });
+        return defineRoutes(routes);
       },
     }),
   ],

@@ -39,6 +39,7 @@ const dashboardPlugin: IPlugin = {
           index: true,
         });
       });
+      defineRoute()
       //   //   defineRoute(
       //   //       "invoices/:status?",
       //   //       "Invoice/routes/invoices.tsx",
@@ -84,6 +85,10 @@ export default dashboardPlugin;
 
 declare module "~/core/plugin" {
   export interface IPlugin {
-    dashboardMenu?: Menu[];
+    defaultConfig: PluginSettingsType&{adminPath: string}
+    dashboardMenu?: (Menu &
+    {
+      element: React.ReactNode
+    })[]
   }
 }
