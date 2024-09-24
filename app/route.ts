@@ -1,12 +1,12 @@
-import { defineRoutes } from "vite-plugin-remix";
+import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 
-export default defineRoutes((route) => {
+export default function routes(route: DefineRouteFunction) {
   // Define all your static routes first
-  // Homepage 
-  route("", "Home/routes/layout.tsx", {id:"home"}, () => {
+  // Homepage
+  route("", "Home/routes/layout.tsx", { id: "home" }, () => {
     route("", "Home/routes/index.tsx", { index: true });
   });
-  
+
   // Auth routes
   route("auth", "auth/routes/layout.tsx", () => {
     route("", "auth/routes/signin.tsx", { index: true });
@@ -18,4 +18,4 @@ export default defineRoutes((route) => {
 
   // Catch-all route for plugin routes
   route("*", "routes/catchAll.tsx");
-});
+}

@@ -9,7 +9,6 @@ import { Card, CardContent, CardFooter, CardHeader } from "~/components/card";
 export default function TipPage() {
   const { tip } = useLoaderData<typeof loader>();
   let title = tip.teamA + " - " + tip.teamB;
-
   let publishedOn = tip.publishedOn
     ? formatDateOrTime(new Date(tip.publishedOn), {
         month: "long",
