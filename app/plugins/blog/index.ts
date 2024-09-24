@@ -1,7 +1,7 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { IPlugin } from "../../core/plugin";
 import config, { Config, PluginSettingsType } from "../../config";
 import { NewspaperIcon } from "lucide-react";
+import { IPlugin } from "~/plugin";
 
 const blogPlugin: IPlugin<PluginSettingsType> = {
   name: "blog",
@@ -10,14 +10,6 @@ const blogPlugin: IPlugin<PluginSettingsType> = {
   defaultConfig: {
     path: "",
   },
-  dashboardMenu: [
-    {
-      id: "blog",
-      label: "Blog",
-      path: "blog",
-      icon: NewspaperIcon,
-    },
-  ],
   registerRoutes: (
     defineRoute: DefineRouteFunction,
     pluginConfig: PluginSettingsType
