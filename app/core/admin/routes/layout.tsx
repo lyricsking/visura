@@ -37,7 +37,7 @@ export const handle = {
   },
 };
 
-export default function Main() {
+export default function Layout() {
   const data = useLoaderData<typeof loader>();
   let location = useLocation();
 
