@@ -16,7 +16,7 @@ export default function Layout() {
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">
-              {config.appName}
+              {config.app.appName}
             </h1>
           </Link>
           <Button

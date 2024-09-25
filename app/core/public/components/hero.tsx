@@ -1,11 +1,8 @@
-import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
 import Button, { buttonVariants } from "~/components/button";
 import { findFontByName } from "~/utils/fonts";
 import { cn } from "~/utils/util";
 
 export default function Hero() {
-  const { startQuiz } = useQuiz();
-
   const font = findFontByName("Playfair Display");
 
   return (
@@ -30,7 +27,7 @@ export default function Hero() {
             variant="ghost"
             radius="md"
             className="text-white bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={() => startQuiz()}
+            onClick={() => {}}
           >
             Get started
           </Button>

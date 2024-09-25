@@ -1,10 +1,12 @@
-type MenuType = "app"|"admin";
+import { Menu } from "~/utils/menu";
 
-const menu: Record<MenuType, Menu[]> = {};
+type MenuType = "app" | "admin";
 
-export function addMenu(menuType: MenuType, menuItem: Menu){
-  menu[menuType] = {
-    ...menu[menuType],
-    menuItem,
-  }
+const menu: Record<MenuType, Menu[]> = {
+  app: [],
+  admin: [],
+};
+
+export function addMenu(menuType: MenuType, menuItem: Menu) {
+  menu[menuType] = [...menu[menuType], menuItem];
 }

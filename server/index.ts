@@ -39,35 +39,14 @@ app.use(express.static("build/client", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-async function getBuild() {
-  try {
-    const build = viteDevServer
-      ? await viteDevServer.ssrLoadModule("virtual:remix/server-build")
-      : // @ts-expect-error - the file might not exist yet but it will
-        // eslint-disable-next-line import/no-unresolved
-        await import("../build/server/remix.js");
-
-    return { build: build as unknown as ServerBuild, error: null };
-  } catch (error) {
-    // Catch error and return null to make express happy and avoid an unrecoverable crash
-    console.error("Error creating build:", error);
-    return { error: error, build: null as unknown as ServerBuild };
-  }
-}
+const build = viteDevServer
+  ? () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
+  : // @ts-expect-error - the file might not exist yet but it will
+    // eslint-disable-next-line import/no-unresolved
+    await import("../build/server/index.js");
 
 // handle SSR requests
-app.all(
-  "*",
-  createRequestHandler({
-    build: async () => {
-      const { error, build } = await getBuild();
-      if (error) {
-        throw error;
-      }
-      return build;
-    },
-  })
-);
+app.all("*", createRequestHandler({ build }));
 
 // Init db connection in synchronous function, since async/await is not allowed.
 async function init() {
@@ -76,7 +55,7 @@ async function init() {
   await loadPlugins();
 }
 
-await init();
+//await init();
 
 const port = process.env.PORT || 3000;
 app.listen(port, () =>

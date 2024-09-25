@@ -1,4 +1,3 @@
-import { config } from "@/config";
 import { Link } from "@remix-run/react";
 import {
   Activity,

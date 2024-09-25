@@ -3,7 +3,7 @@ import { ActionFunction, LoaderFunction } from "@remix-run/node";
 export type RouteType = "app" | "admin";
 export type Route = {
   path: string;
-  component: React.ComponentType;
+  component: React.ElementType;
   loader?: LoaderFunction;
   action?: ActionFunction;
 };

@@ -27,7 +27,7 @@ export default function Default() {
         >
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
-              {config.appName}
+              {config.app.appName}
             </h1>
           </Link>
 
