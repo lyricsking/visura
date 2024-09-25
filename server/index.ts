@@ -3,6 +3,8 @@ import { type ServerBuild } from "@remix-run/node";
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
+import connectToDatabase from "~/database/db.server.js";
+import { loadPlugins } from "~/plugin.js";
 
 const viteDevServer =
   process.env.NODE_ENV === "production"
