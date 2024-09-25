@@ -4,23 +4,25 @@ export default function routes(route: DefineRouteFunction) {
   // Define all static routes first
   
   // Homepage
-  route("", "routes/index.tsx", { index: true });
-  /*
-route("", "Home/routes/layout.tsx", { id: "home" }, () => {
-    route("", "routes/index.tsx", { index: true });
-  });
-*/
+  route("", "core/public/routes/home.tsx", { index: true });
+
   // Auth routes
-  route("auth", "auth/routes/layout.tsx", () => {
-    route("", "auth/routes/signin.tsx", { index: true });
-    route("signup", "auth/routes/signup.tsx");
-    route("google/callback", "auth/routes/google-callback.tsx");
-    route("google/signin", "auth/routes/google-signin.tsx");
-    route("signout", "auth/routes/signout.tsx");
+  route("auth", "core/auth/routes/layout.tsx", () => {
+    route("", "core/auth/routes/signin.tsx", { index: true });
+    route("signup", "core/auth/routes/signup.tsx");
+    route("google/callback", "core/auth/routes/google-callback.tsx");
+    route("google/signin", "core/auth/routes/google-signin.tsx");
+    route("signout", "core/auth/routes/signout.tsx");
   });
 
+  // Admin routes
+  route("administration", "core/admin/routes/layout.tsx", () => {
+    route("", "")
+  });
+
+
   // Catch-all route for plugin routes
-  route("*", "routes/catch-all.tsx");
+  route("*", "core/public/routes/catch-all.tsx");
 }
 
 const defaultRoutes = () => {
