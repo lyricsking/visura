@@ -16,12 +16,18 @@ export default defineConfig({
       // assetsBuildDirectory: "public/build",
       // publicPath: "/build/",
       // serverBuildPath: "build/index.js",
+      serverBuildFile: 'remix.js',
       routes(defineRoutes) {
         return defineRoutes(routes);
       },
+   future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+      },
       buildEnd: async () => {
         await esbuild.build({
-          alias: { "~": "./app" },
+          alias: {"~": "./app"},
           outfile: "build/server/index.js",
           entryPoints: ["server/index.ts"],
           external: ['./build/server/*'],
@@ -33,9 +39,8 @@ export default defineConfig({
         }).catch((error: unknown) => {
           console.error('Error building server:', error);
           process.exit(1);
-        });
-      }
-    }),
+        })
+      } }),
     tsconfigPaths()
   ],
   optimizeDeps: {
