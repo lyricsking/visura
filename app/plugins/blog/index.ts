@@ -8,13 +8,26 @@ const blogPlugin: IPlugin<PluginSettingsType> = {
   description: "",
   version: "0.0.1",
   defaultConfig: {
-    path: "",
   },
-  registerRoutes: (
-    defineRoute: DefineRouteFunction,
-    pluginConfig: PluginSettingsType
-  ) => {
-    defineRoute(pluginConfig.path, "layouts/Default.tsx", () => {
+  onInit(){
+    routes.forEach((route) => {
+      addRoute(route)
+    });
+    
+    
+  },
+  onDestroy(){}
+ };
+
+export default blogPlugin;
+
+const routes: Record<RouteType, Route[]> = {
+  "app": [
+    {}
+  ]
+}
+
+    /*defineRoute(pluginConfig.path, "layouts/Default.tsx", () => {
       defineRoute("", "plugins/blog/routes/index.tsx", { index: true });
       defineRoute("news/:slug", "plugins/blog/routes/post.tsx");
       defineRoute("tips/:slug", "plugins/blog/routes/tip.tsx");
@@ -35,7 +48,4 @@ const blogPlugin: IPlugin<PluginSettingsType> = {
         });
       }
     );
-  },
-};
-
-export default blogPlugin;
+    */

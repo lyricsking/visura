@@ -34,6 +34,8 @@ export const loadPlugins = async () => {
         // Synchronously load the plugin using dynamic import
         const plugin: IPlugin = await import(pluginPath).default;
         
+        console.log(`Loading plugin: ${plugin.name}.`);
+        
         if (!plugin.name || !plugin.version || typeof plugin.init !== "function") {
           throw new Error(`Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`);
         }
@@ -41,11 +43,14 @@ export const loadPlugins = async () => {
         if (plugins[plugin.name]) {
           throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
         }
-        
+        // Cache plugin to memory
+        plugins[plugin.name] = plugin;
+        // Initialize plugin only if it is enabled.
         if(pluginsConfig[plugin.name]) {
-          plugins[plugin.name] = plugin;
+          console.log(`Initializing plugin: ${plugin.name}`);     
+          plugin.onInit();
           
-          plugin.onInit()
+          console.log(`Plugin: ${plugin.name} initialized`);
         } 
         console.log(`Plugin ${plugin.name} loaded.`);
         

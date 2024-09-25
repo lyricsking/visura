@@ -40,7 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ q });
 };
 
-export default function Home() {
+export default function DefaultHome() {
   const { startQuiz } = useQuiz();
 
   return (

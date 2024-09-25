@@ -1,24 +1,24 @@
 export const loader = async (arg: LoaderFunctionArgs) => {
   const homepagePath = config.homepage;
   const route = findRoute("app", homepagePath)
-  
-  if(!route || Array.isArray(route)){
+
+  if (!route || Array.isArray(route)) {
     return null;
   }
-  
+
   const routeData = route.loader(arg);
-  
-  return json({data: routeData, path: homepagePath})
+
+  return json({ data: routeData, path: homepagePath })
 }
 
-export default function Index() {
-  const {data, path} = useLoaderData<typeof loader>();
-  
+export default function Home() {
+  const { data, path } = useLoaderData < typeof loader > ();
+
   const route = findRoute("app", path)
-  if(!path || !route || Array.isArray(route)){
-      return <></>;
+  if (!path || !route || Array.isArray(route)) {
+    return <DefaultHome/>;
   }
-  
+
   const Component = route.component;
 
   return <Component data={data} />

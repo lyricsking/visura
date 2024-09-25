@@ -4,10 +4,12 @@ export default function routes(route: DefineRouteFunction) {
   // Define all static routes first
   
   // Homepage
-  route("", "Home/routes/layout.tsx", { id: "home" }, () => {
-    route("", "Home/routes/index.tsx", { index: true });
+  route("", "routes/index.tsx", { index: true });
+  /*
+route("", "Home/routes/layout.tsx", { id: "home" }, () => {
+    route("", "routes/index.tsx", { index: true });
   });
-
+*/
   // Auth routes
   route("auth", "auth/routes/layout.tsx", () => {
     route("", "auth/routes/signin.tsx", { index: true });
@@ -18,7 +20,7 @@ export default function routes(route: DefineRouteFunction) {
   });
 
   // Catch-all route for plugin routes
-  route("*", "routes/catchAll.tsx");
+  route("*", "routes/catch-all.tsx");
 }
 
 const defaultRoutes = () => {
