@@ -18,8 +18,8 @@ export const loadPlugins = async () => {
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    // const pluginDir = path.join(__dirname, 'plugins');
-    const pluginDir = __dirname;
+    const pluginDir = path.join(__dirname, 'plugins');
+    //const pluginDir = __dirname;
     // Read the plugins directory synchronously
     const pluginFolders = fs.readdirSync(pluginDir);
     
@@ -42,7 +42,11 @@ export const loadPlugins = async () => {
           throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
         }
         
-        pluginsConfig[plugin.name] && (plugins[plugin.name] = plugin);
+        if(pluginsConfig[plugin.name]) {
+          plugins[plugin.name] = plugin;
+          
+          plugin.onInit()
+        } 
         console.log(`Plugin ${plugin.name} loaded.`);
         
       } catch (err) {
