@@ -12,9 +12,9 @@ export interface IPlugin {
   layoutComponent?: React.ComponentType;
 }
 
-const plugins: { [key: string]: IPlugin } = {};
+export const plugins: { [key: string]: IPlugin } = {};
 
-const loadPlugins = () => {
+export const loadPlugins = async () => {
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -22,26 +22,36 @@ const loadPlugins = () => {
     const pluginDir = __dirname;
     // Read the plugins directory synchronously
     const pluginFolders = fs.readdirSync(pluginDir);
+    
+    
+    const pluginsConfig = config.plugins;
 
     // Filter and load only directories containing an index.ts file
-    const loadedPlugins = pluginFolders.map((pluginFolder) => {
+    pluginFolders.forEach((pluginFolder) => {
       const pluginPath = path.join(pluginDir, pluginFolder, 'index.ts');
+      
       try {
         // Synchronously load the plugin using dynamic import
-        const plugin = require(pluginPath).default;
-        return plugin;
+        const plugin: IPlugin = await import(pluginPath).default;
+        
+        if (!plugin.name || !plugin.version || typeof plugin.init !== "function") {
+          throw new Error(`Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`);
+        }
+        // Ensure plugin names are unique
+        if (plugins[plugin.name]) {
+          throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
+        }
+        
+        pluginsConfig[plugin.name] && (plugins[plugin.name] = plugin);
+        console.log(`Plugin ${plugin.name} loaded.`);
+        
       } catch (err) {
         console.error(`Error loading plugin from ${pluginPath}:`, err);
-        return null;
       }
     });
-
-    // Return only successfully loaded plugins
-    return loadedPlugins.filter(Boolean);
   } catch (err) {
     console.error('Error loading plugins:', err);
-    return [];
+  }finally{
+    console.log(`Loaded ${Object.keys(plugins).length} plugins`);
   }
 };
-
-export default loadPlugins;

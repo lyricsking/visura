@@ -140,10 +140,3 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
-
-// Init db connection in synchronous function, since async/await is not allowed.
-async function init() {
-  await connectToDatabase();
-}
-
-init();

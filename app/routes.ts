@@ -1,30 +1,26 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import config from "../config";
-import plugins from "../plugins";
 
-const initApp = (route: DefineRouteFunction): void => {
-
-  // Dynamically register route for each of the enabled plugin routed
-  Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
-    if (pluginConfig.enabled) {
-      const enabledPlugin = plugins[pluginName];
-      if (enabledPlugin && enabledPlugin.registerRoutes) {
-        // Registers the routes in the routing system
-        // For example:
-        // defineRoute("/", "Home/routes/index.ts");
-        enabledPlugin.registerRoutes(
-          route,
-          pluginConfig.settings || enabledPlugin.defaultConfig
-        );
-      }
-    }
+export default function routes(route: DefineRouteFunction) {
+  // Define all your static routes first
+  // Homepage
+  route("", "Home/routes/layout.tsx", { id: "home" }, () => {
+    route("", "Home/routes/index.tsx", { index: true });
   });
-};
 
-export default initApp;
+  // Auth routes
+  route("auth", "auth/routes/layout.tsx", () => {
+    route("", "auth/routes/signin.tsx", { index: true });
+    route("signup", "auth/routes/signup.tsx");
+    route("google/callback", "auth/routes/google-callback.tsx");
+    route("google/signin", "auth/routes/google-signin.tsx");
+    route("signout", "auth/routes/signout.tsx");
+  });
+
+  // Catch-all route for plugin routes
+  route("*", "routes/catchAll.tsx");
+}
 
 const defaultRoutes = () => {
-  
   // route("cart", "Order/routes/layout.tsx", () => {
   //   route("", "Order/routes/cart.tsx", { index: true });
   //   route("shipping", "Order/routes/shipping.tsx");

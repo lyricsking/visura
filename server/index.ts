@@ -52,6 +52,7 @@ async function getBuild() {
     return { error: error, build: null as unknown as ServerBuild };
   }
 }
+
 // handle SSR requests
 app.all(
   "*",
@@ -65,6 +66,15 @@ app.all(
     },
   })
 );
+
+// Init db connection in synchronous function, since async/await is not allowed.
+async function init() {
+  await connectToDatabase();
+  //  Load plugins
+  await loadPlugins();
+}
+
+await init();
 
 const port = process.env.PORT || 3000;
 app.listen(port, () =>
