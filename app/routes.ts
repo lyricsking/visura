@@ -1,7 +1,8 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 
 export default function routes(route: DefineRouteFunction) {
-  // Define all your static routes first
+  // Define all static routes first
+  
   // Homepage
   route("", "Home/routes/layout.tsx", { id: "home" }, () => {
     route("", "Home/routes/index.tsx", { index: true });

@@ -1,0 +1,7 @@
+{
+  "default": {
+    "blog": true
+  },
+  "development": {},
+  "production":{}
+}
