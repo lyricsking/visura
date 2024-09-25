@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "node ./server.js",
-    "start": "cross-env NODE_ENV=production node ./server.js",
+    "dev": "tsx server/index.ts",
+    "start": "cross-env NODE_ENV=production node ./build/server/index.js",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "seed": "npx tsx ./app/database/seed/seed.ts",
     "typecheck": "tsc"
