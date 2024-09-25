@@ -27,14 +27,14 @@ export const loadPlugins = async () => {
     const pluginsConfig = config.plugins;
 
     // Filter and load only directories containing an index.ts file
-    pluginFolders.forEach(async (pluginFolder) => {
+    for (let pluginFolder of pluginFolders) {
       const pluginPath = path.join(pluginDir, pluginFolder, "index.ts");
 
       try {
         // Synchronously load the plugin using dynamic import
         const plugin: IPlugin = (await import(pluginPath)).default;
 
-        console.log(`Loading plugin: ${plugin.name}.`);
+        console.log(`Loading plugin "${plugin.name}".`);
 
         if (
           !plugin.name ||
@@ -53,19 +53,18 @@ export const loadPlugins = async () => {
         plugins[plugin.name] = plugin;
         // Initialize plugin only if it is enabled.
         if (pluginsConfig[plugin.name]) {
-          console.log(`Initializing plugin: ${plugin.name}`);
           plugin.onInit();
 
-          console.log(`Plugin: ${plugin.name} initialized`);
+          console.log(`${plugin.name} initialized`);
         }
-        console.log(`Plugin ${plugin.name} loaded.`);
+        console.log(`${plugin.name} plugin loaded.`);
       } catch (err) {
         console.error(`Error loading plugin from ${pluginPath}:`, err);
+      } finally {
+        console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
       }
-    });
+    }
   } catch (err) {
     console.error("Error loading plugins:", err);
-  } finally {
-    console.log(`Loaded ${Object.keys(plugins).length} plugins`);
   }
 };

@@ -1,15 +1,20 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 import config, { Config } from "../../config";
-import { NewspaperIcon } from "lucide-react";
+import { List, NewspaperIcon } from "lucide-react";
 import { IPlugin } from "~/plugin";
+import { Route, RouteType, addRoute } from "~/actions/route.action";
 
 const blogPlugin: IPlugin = {
   name: "blog",
   description: "",
   version: "0.0.1",
   onInit() {
-    routes.forEach((route) => {
-      addRoute(route);
+    routes["app"].forEach((route) => {
+      addRoute("app", route);
+    });
+
+    routes["admin"].forEach((route) => {
+      addRoute("admin", route);
     });
   },
   onDestroy() {},
@@ -18,7 +23,8 @@ const blogPlugin: IPlugin = {
 export default blogPlugin;
 
 const routes: Record<RouteType, Route[]> = {
-  app: [{}],
+  app: [],
+  admin: [],
 };
 
 /*defineRoute(pluginConfig.path, "layouts/Default.tsx", () => {

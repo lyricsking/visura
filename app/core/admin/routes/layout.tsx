@@ -1,5 +1,6 @@
 import {
   Link,
+  NavLink,
   Outlet,
   useLoaderData,
   useLocation,
@@ -20,14 +21,15 @@ import {
 } from "~/core/auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
 import { isAuthUser } from "~/core/auth/utils/helper";
-import { findOrCreateUserProfiles } from "~/core/User/server/user.server";
-import { Sidebar } from "~/components/ui/sidebar";
-import config, { PluginSettingsType } from "~/config";
-import { Navbar } from "~/components/ui/navbar";
-import HeaderIcons from "~/plugins/dashboard/components/header-icons";
-import dashboardPlugin from "..";
 import { Menu } from "~/utils/menu";
-import plugins from "~/plugins";
+import config from "~/config";
+import { plugins } from "~/plugin";
+import { Sidebar } from "~/components/ui/sidebar";
+import { Navbar } from "~/components/ui/navbar";
+import HeaderIcons from "../components/header-icons";
+import { ScrollArea, ScrollBar } from "~/components/scrollable.area";
+import { cn } from "~/utils/util";
+import { findOrCreateUserProfiles } from "~/user/server/user.server";
 
 export const handle = {
   breadcrumb: {
@@ -58,15 +60,6 @@ export default function Layout() {
   });
 
   const menu: Menu[] = [];
-  Object.entries(config.plugins).forEach(([pluginName, pluginConfig]) => {
-    if (pluginConfig.enabled) {
-      const plugin = plugins[pluginName];
-
-      if (plugin && plugin.dashboardMenu) {
-        menu.push(...plugin.dashboardMenu);
-      }
-    }
-  });
 
   return (
     <PageLayout className="bg-gray-100">
@@ -78,9 +71,9 @@ export default function Layout() {
                 menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
-              <Link to={config.plugins[dashboardPlugin.name].settings.path}>
+              <Link to="">
                 <h1 className="text-[24px] font-bold tracking-tight">
-                  {config.appName}
+                  {config.app.appName}
                 </h1>
               </Link>
               <Navbar menu={menu} />
@@ -102,43 +95,41 @@ export default function Layout() {
             "Dashboard"}
         </h1>
 
-  <div className="w-full mx-auto sm:w-full grid px-4 sm:px-8">
-      <div className="grid sm:border sm:rounded-md py-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr]">
-        <div className="grid bg-white rounded-md">
-          <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
-            <ScrollArea className="whitespace-nowrap" type="scroll">
-              <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
-                {submenu.map((item: any) => (
-                  <NavLink
-                    key={item.label}
-                    to={item.path}
-                    end
-                    className={({ isActive }) =>
-                      cn("w-full text-center", {
-                        "font-semibold text-primary bg-slate-200 p-2 rounded-md":
-                          isActive,
-                      })
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
+        <div className="w-full mx-auto sm:w-full grid px-4 sm:px-8">
+          <div className="grid sm:border sm:rounded-md py-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr]">
+            <div className="grid bg-white rounded-md">
+              <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
+                <ScrollArea className="whitespace-nowrap" type="scroll">
+                  <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
+                    {[].map((item: any) => (
+                      <NavLink
+                        key={item.label}
+                        to={item.path}
+                        end
+                        className={({ isActive }) =>
+                          cn("w-full text-center", {
+                            "font-semibold text-primary bg-slate-200 p-2 rounded-md":
+                              isActive,
+                          })
+                        }
+                      >
+                        {item.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+              </nav>
+            </div>
+
+            <ScrollArea className="h-screen w-full" type="auto">
+              <div className="w-full py-8 px-4 md:py-12 md:px-6 bg-white rounded-md">
+                <Outlet context={{ user: data.user }} />
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
-          </nav>
-        </div>
-
-        <ScrollArea className="h-screen w-full" type="auto">
-          <div className="w-full py-8 px-4 md:py-12 md:px-6 bg-white rounded-md">  
-        <Outlet context={{ user: data.user }} />
           </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
-    </div>
-  
-
+        </div>
       </PageLayoutContent>
     </PageLayout>
   );

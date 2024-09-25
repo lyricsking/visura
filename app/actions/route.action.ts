@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
 
-export type RouteType = {};
+export type RouteType = "app" | "admin";
 export type Route = {
   path: string;
   component: React.ComponentType;
@@ -8,7 +8,10 @@ export type Route = {
   action?: ActionFunction;
 };
 
-const routes: { [key: RouteType]: Route[] } = {};
+const routes: Record<RouteType, Route[]> = {
+  app: [],
+  admin: [],
+};
 
 const homePaths: Record<string, string> = {};
 
@@ -16,7 +19,10 @@ export function addRoute(type: RouteType, route: Route) {
   routes[type] = [...routes[type], route];
 }
 
-export function findRoute(type: RouteType, path?: string) {
+export function findRoute(
+  type: RouteType,
+  path?: string
+): undefined | Route | Route[] {
   const typeRoutes = routes[type];
 
   if (!typeRoutes) return undefined;

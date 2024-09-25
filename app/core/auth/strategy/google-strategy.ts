@@ -1,6 +1,5 @@
 import { GoogleStrategy } from "remix-auth-google";
-import { findOrCreateUserProfiles } from "~/core/User/server/user.server";
-import { IUserProfile } from "~/core/User/types/user-profile.type";
+import { findOrCreateUserProfiles } from "~/user/server/user.server";
 import { setUserToSession } from "../server/auth.server";
 import { AuthUser } from "../types/auth-user.type";
 

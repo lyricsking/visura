@@ -2,13 +2,13 @@ import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 
 export default function routes(route: DefineRouteFunction) {
   // Define all static routes first
-  
+
   // Public pages
   route("", "core/public/routes/layout.tsx", () => {
     route("", "core/public/routes/home.tsx", { index: true });
     route("*", "core/public/routes/catch-all.tsx");
   });
-  
+
   // Auth routes
   route("auth", "core/auth/routes/layout.tsx", () => {
     route("", "core/auth/routes/signin.tsx", { index: true });
@@ -20,7 +20,7 @@ export default function routes(route: DefineRouteFunction) {
 
   // Admin routes
   route("administration", "core/admin/routes/layout.tsx", () => {
-    route("", "core/admin/routes/index.tsx", {index:true})
+    route("", "core/admin/routes/overview.tsx", { index: true });
     route("*", "core/admin/routes/catch-all.tsx");
   });
 
