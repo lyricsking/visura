@@ -138,3 +138,42 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
+
+
+export const createApp = (build: ServerBuild, viteDevServer: ViteDevServer): Express => {
+
+  
+const app = express();
+
+app.use(compression());
+
+// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
+app.disable("x-powered-by");
+
+// handle asset requests
+if (viteDevServer) {
+  app.use(viteDevServer.middlewares);
+} else {
+  // Vite fingerprints its assets so we can cache forever.
+  app.use(
+    "/assets",
+    express.static("../../build/client/assets", { immutable: true, maxAge: "1y" })
+  );
+}
+
+// Everything else (like favicon.ico) is cached for an hour. You may want to be
+// more aggressive with this caching.
+app.use(express.static("../../build/client", { maxAge: "1h" }));
+
+app.use(morgan("tiny"));
+
+// handle SSR requests
+app.all("*", createRequestHandler({ build }));
+
+// Init db connection in synchronous function, since async/await is not allowed.
+  await connectToDatabase();
+  //  Load plugins
+  await loadPlugins();
+  
+  return app;
+}
