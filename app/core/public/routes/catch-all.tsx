@@ -10,7 +10,7 @@ export const loader: LoaderFunction = async (args) => {
   const { params, request } = args;
   const url = new URL(request.url);
   console.log(url.toString());
-  
+
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
   const pluginRoutes = findRoute("app");
@@ -23,6 +23,8 @@ export const loader: LoaderFunction = async (args) => {
 
       if (matchResult) {
         const { path, params } = matchResult;
+        console.log(path, params);
+
         // Do something with the matched params
         // e.g., load the post based on postId
         const data = route.loader && (await route.loader(args));
@@ -39,15 +41,12 @@ export const loader: LoaderFunction = async (args) => {
 
 export default function CatchAll() {
   const { path, data, params } = useLoaderData<typeof loader>();
-  
+
   const route = findRoute("app", path);
-  
-  if (!route || path === NOT_FOUND_PATH)
-    return <NotFound />;
-  
+
+  if (!route || path === NOT_FOUND_PATH) return <NotFound />;
 
   if (!Array.isArray(route)) {
     return <route.component {...data} />;
   }
-
 }
