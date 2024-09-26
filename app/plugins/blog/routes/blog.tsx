@@ -45,8 +45,6 @@ export const meta: MetaFunction = () => {
 export default function Blog({ tips, posts }: any) {
   //const { tips, posts } = useLoaderData<typeof loader>();
 
-  console.log(tips, posts);
-
   const font = findFontByName("Courier Prime");
 
   return (

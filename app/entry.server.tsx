@@ -19,6 +19,7 @@ import morgan from "morgan";
 import { ViteDevServer } from "vite";
 import connectToDatabase from "./database/db.server";
 import { loadPlugins } from "./plugin";
+import { unknown } from "zod";
 
 const ABORT_DELAY = 5_000;
 
@@ -165,21 +166,21 @@ export const createApp = async (
     // Vite fingerprints its assets so we can cache forever.
     app.use(
       "/assets",
-      express.static("../build/client/assets", {
+      express.static("build/client/assets", {
         immutable: true,
-        maxAge: "1y",
+        maxAge: 2,
       })
     );
   }
 
   // Everything else (like favicon.ico) is cached for an hour. You may want to be
   // more aggressive with this caching.
-  app.use(express.static("../build/client", { maxAge: "1h" }));
+  app.use(express.static("../../build/client", { maxAge: 2 }));
 
   app.use(morgan("tiny"));
 
   // handle SSR requests
-  app.all("*", createRequestHandler({ build }));
+  app.all("*", createRequestHandler({ build: build as unknown as any}));
 
   // Init db connection in synchronous function, since async/await is not allowed.
   connectToDatabase();

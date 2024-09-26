@@ -9,8 +9,10 @@ const NOT_FOUND_PATH = "not-found";
 export const loader: LoaderFunction = async (args) => {
   const { params, request } = args;
   const url = new URL(request.url);
-  const path = url.pathname; // e.g., "/blog/posts/first-post"
+  console.log(url.toString());
   
+  const path = url.pathname; // e.g., "/blog/posts/first-post"
+
   const pluginRoutes = findRoute("app");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
@@ -40,9 +42,12 @@ export default function CatchAll() {
   
   const route = findRoute("app", path);
   
-  if(!route || path === NOT_FOUND_PATH) return <NotFound />;
+  if (!route || path === NOT_FOUND_PATH)
+    return <NotFound />;
   
+
   if (!Array.isArray(route)) {
     return <route.component {...data} />;
   }
+
 }
