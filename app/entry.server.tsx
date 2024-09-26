@@ -11,6 +11,14 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import { createRequestHandler } from "@remix-run/express";
+import { type ServerBuild } from "@remix-run/node";
+import compression from "compression";
+import express from "express";
+import morgan from "morgan";
+import { ViteDevServer } from "vite";
+import connectToDatabase from "./database/db.server";
+import { loadPlugins } from "./plugin";
 
 const ABORT_DELAY = 5_000;
 
@@ -139,41 +147,44 @@ function handleBrowserRequest(
   });
 }
 
+export const createApp = async (
+  build: ServerBuild,
+  viteDevServer?: ViteDevServer
+) => {
+  const app = express();
 
-export const createApp = (build: ServerBuild, viteDevServer: ViteDevServer): Express => {
+  app.use(compression());
 
-  
-const app = express();
+  // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
+  app.disable("x-powered-by");
 
-app.use(compression());
+  // handle asset requests
+  if (viteDevServer) {
+    app.use(viteDevServer.middlewares);
+  } else {
+    // Vite fingerprints its assets so we can cache forever.
+    app.use(
+      "/assets",
+      express.static("../build/client/assets", {
+        immutable: true,
+        maxAge: "1y",
+      })
+    );
+  }
 
-// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
-app.disable("x-powered-by");
+  // Everything else (like favicon.ico) is cached for an hour. You may want to be
+  // more aggressive with this caching.
+  app.use(express.static("../build/client", { maxAge: "1h" }));
 
-// handle asset requests
-if (viteDevServer) {
-  app.use(viteDevServer.middlewares);
-} else {
-  // Vite fingerprints its assets so we can cache forever.
-  app.use(
-    "/assets",
-    express.static("../../build/client/assets", { immutable: true, maxAge: "1y" })
-  );
-}
+  app.use(morgan("tiny"));
 
-// Everything else (like favicon.ico) is cached for an hour. You may want to be
-// more aggressive with this caching.
-app.use(express.static("../../build/client", { maxAge: "1h" }));
+  // handle SSR requests
+  app.all("*", createRequestHandler({ build }));
 
-app.use(morgan("tiny"));
-
-// handle SSR requests
-app.all("*", createRequestHandler({ build }));
-
-// Init db connection in synchronous function, since async/await is not allowed.
-  await connectToDatabase();
+  // Init db connection in synchronous function, since async/await is not allowed.
+  connectToDatabase();
   //  Load plugins
   await loadPlugins();
-  
+
   return app;
-}
+};
