@@ -4,12 +4,13 @@ import { match } from "path-to-regexp";
 import { findRoute } from "~/actions/route.action";
 import NotFound from "./not-found";
 
+const NOT_FOUND_PATH = "not-found";
+
 export const loader: LoaderFunction = async (args) => {
   const { params, request } = args;
   const url = new URL(request.url);
   const path = url.pathname; // e.g., "/blog/posts/first-post"
   
-  return json({});
   const pluginRoutes = findRoute("app");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
@@ -31,17 +32,17 @@ export const loader: LoaderFunction = async (args) => {
   // If no route matched, return 404
   //throw new Response("Not Found", { status: 404 });
   // Return default path
-  return json({ path: "not-found", data: {} });
+  return json({ path: NOT_FOUND_PATH, data: {} });
 };
 
 export default function CatchAll() {
-  return <NotFound />;
   const { path, data, params } = useLoaderData<typeof loader>();
-
+  
   const route = findRoute("app", path);
-
-  if (route && !Array.isArray(route)) {
+  
+  if(!route || path === NOT_FOUND_PATH) return <NotFound />;
+  
+  if (!Array.isArray(route)) {
     return <route.component {...data} />;
   }
-  return <NotFound />;
 }
