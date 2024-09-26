@@ -25,7 +25,7 @@ export function PostSummary(props: PostSummaryProps) {
         width="804"
         height="452"
         className="rounded-md border bg-muted transition-colors"
-        src={"/images/post/" + post.featuredImage}
+        src={post.featuredImage}
       />
       <h2 className="text-2xl font-extrabold">{post.title}</h2>
       <p className="text-muted-foreground">{post.excerpt}</p>
