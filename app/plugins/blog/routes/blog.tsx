@@ -92,9 +92,10 @@ export default function Blog({ tips, posts }: any) {
               <CardContent>
                 {/* <ScrollArea className="whitespace-nowrap" type="auto"> */}
                 <div className="grid sm:grid-cols-2 gap-6 divide-y sm:divide-x sm:divide-y-0">
-                  {tips.map((tip, index) => (
-                    <TipCard key={index} tip={tip as unknown as ITips} />
-                  ))}
+                  {tips &&
+                    tips.map((tip, index) => (
+                      <TipCard key={index} tip={tip as unknown as ITips} />
+                    ))}
                 </div>
 
                 {/*<ScrollBar orientation="horizontal" />
@@ -133,9 +134,10 @@ export default function Blog({ tips, posts }: any) {
               <CardContent>
                 <ScrollArea className="h-[500px] w-full" type="auto">
                   <div className="grid sm:grid-cols-2 gap-6 divide-y sm:divide-x sm:divide-y-0">
-                    {tips.map((tip, index) => (
-                      <TipCard key={index} tip={tip as unknown as ITips} />
-                    ))}
+                    {tips &&
+                      tips.map((tip, index) => (
+                        <TipCard key={index} tip={tip as unknown as ITips} />
+                      ))}
                   </div>
                 </ScrollArea>
               </CardContent>
@@ -160,9 +162,10 @@ export default function Blog({ tips, posts }: any) {
               </h3>
               <ScrollArea className="h-96 w-full" type="auto">
                 <div className="grid sm:grid-cols-2 w-full items-start p-6 md:p-8 gap-6">
-                  {posts.map((post) => (
-                    <PostSummary key={post._id} post={post} />
-                  ))}
+                  {posts &&
+                    posts.map((post) => (
+                      <PostSummary key={post._id} post={post} />
+                    ))}
                 </div>
               </ScrollArea>
             </div>
@@ -179,5 +182,5 @@ export const loader = async () => {
     findPosts({ published: true }),
   ]);
 
-  return json({ tips, posts });
+  return { tips, posts };
 };
