@@ -16,7 +16,7 @@ type TipCardProps = {
 export const TipCard = (props: TipCardProps) => {
   const { tip } = props;
 
-  let path = config.plugins[blogPlugin.name].settings.path;
+  let path = "";
   path && path.length > 0 ? path : "/" + path;
   path += "/tips";
 

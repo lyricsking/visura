@@ -3,6 +3,7 @@ import config, { Config } from "../../config";
 import { List, NewspaperIcon } from "lucide-react";
 import { IPlugin } from "~/plugin";
 import { Route, RouteType, addRoute } from "~/actions/route.action";
+import Blog, { loader as blogLoader } from "./routes/blog";
 
 const blogPlugin: IPlugin = {
   name: "blog",
@@ -23,7 +24,13 @@ const blogPlugin: IPlugin = {
 export default blogPlugin;
 
 const routes: Record<RouteType, Route[]> = {
-  app: [],
+  app: [
+    {
+      path: "/blog",
+      component: Blog,
+      loader: blogLoader,
+    },
+  ],
   admin: [],
 };
 

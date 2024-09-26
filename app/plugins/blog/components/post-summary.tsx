@@ -1,7 +1,6 @@
-import config from "@/config";
+import config from "~/config";
 import { formatDateOrTime } from "~/utils/date";
 import { Link } from "@remix-run/react";
-import { blogPath } from "..";
 import { useEffect } from "react";
 
 type PostSummaryProps = {
@@ -11,7 +10,6 @@ type PostSummaryProps = {
 export function PostSummary(props: PostSummaryProps) {
   let { post } = props;
 
-  let path = config.plugins["blog"].settings.path || blogPath;
   let dateFormat = post.publishedOn
     ? formatDateOrTime(new Date(post.publishedOn), {
         month: "long",

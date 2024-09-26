@@ -6,7 +6,7 @@ export default function routes(route: DefineRouteFunction) {
   // Public pages
   route("", "core/public/routes/layout.tsx", () => {
     route("", "core/public/routes/home.tsx", { index: true });
-    route("*", "core/public/routes/catch-all.tsx");
+    route("/*", "core/public/routes/catch-all.tsx");
   });
 
   // Auth routes

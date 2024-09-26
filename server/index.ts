@@ -43,7 +43,7 @@ const build = viteDevServer
   ? () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
   : // @ts-expect-error - the file might not exist yet but it will
     // eslint-disable-next-line import/no-unresolved
-    await import("../build/server/index.js");
+    await import("../build/server/remix.js");
 
 // handle SSR requests
 app.all("*", createRequestHandler({ build }));
@@ -55,7 +55,7 @@ async function init() {
   await loadPlugins();
 }
 
-//await init();
+await init();
 
 const port = process.env.PORT || 3000;
 app.listen(port, () =>

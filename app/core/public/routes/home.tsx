@@ -21,11 +21,11 @@ export default function Home() {
   const { data, path } = useLoaderData<typeof loader>();
 
   const route = findRoute("app", path);
-  if (!path || !route || Array.isArray(route)) {
-    return <DefaultHome />;
+  if (route && !Array.isArray(route)) {
+    const Component = route && route.component;
+
+    return <Component {...data} />;
   }
 
-  const Component = route && route.component;
-
-  return <Component {...data} />;
+  return <DefaultHome />;
 }

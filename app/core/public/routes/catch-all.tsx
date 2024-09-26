@@ -2,6 +2,7 @@ import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import { findRoute } from "~/actions/route.action";
+import NotFound from "./not-found";
 
 export let loader: LoaderFunction = async (args) => {
   const { params, request } = args;
@@ -9,18 +10,21 @@ export let loader: LoaderFunction = async (args) => {
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
   const pluginRoutes = findRoute("app");
+  console.log(pluginRoutes);
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
     // Try matching the URL with the registered plugin paths
     for (let route of pluginRoutes) {
+      console.log(route);
       const matchRoute = match(route.path, { decode: decodeURIComponent });
       const matchResult = matchRoute(path);
 
       if (matchResult) {
         const { path, params } = matchResult;
+        console.log(path);
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data = route.loader && route.loader(args);
+        const data = route.loader && (await route.loader(args));
         return { path: route.path, data: data, params };
       }
     }
@@ -36,5 +40,9 @@ export default function CatchAll() {
   const { path, data, params } = useLoaderData<typeof loader>();
 
   const route = findRoute("app", path);
-  return route && !Array.isArray(route) ? <route.component {...data} /> : null;
+
+  if (route && !Array.isArray(route)) {
+    return <route.component {...data} />;
+  }
+  return <NotFound />;
 }

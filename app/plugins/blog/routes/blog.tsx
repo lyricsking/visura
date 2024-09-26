@@ -37,13 +37,13 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: config.appName },
-    { name: "description", content: config.description },
+    { title: config.app.appName },
+    { name: "description", content: config.app.description },
   ];
 };
 
-export default function Index() {
-  const { tips, posts } = useLoaderData<typeof loader>();
+export default function Blog({ tips, posts }: any) {
+  //const { tips, posts } = useLoaderData<typeof loader>();
 
   console.log(tips, posts);
 
