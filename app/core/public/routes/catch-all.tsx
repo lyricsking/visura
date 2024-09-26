@@ -4,11 +4,12 @@ import { match } from "path-to-regexp";
 import { findRoute } from "~/actions/route.action";
 import NotFound from "./not-found";
 
-export let loader: LoaderFunction = async (args) => {
+export const loader: LoaderFunction = async (args) => {
   const { params, request } = args;
   const url = new URL(request.url);
   const path = url.pathname; // e.g., "/blog/posts/first-post"
-
+  
+  return json({});
   const pluginRoutes = findRoute("app");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
@@ -22,7 +23,6 @@ export let loader: LoaderFunction = async (args) => {
         // Do something with the matched params
         // e.g., load the post based on postId
         const data = route.loader && (await route.loader(args));
-        console.log(data);
         return json({ path: route.path, data: data, params });
       }
     }
@@ -35,6 +35,7 @@ export let loader: LoaderFunction = async (args) => {
 };
 
 export default function CatchAll() {
+  return <NotFound />;
   const { path, data, params } = useLoaderData<typeof loader>();
 
   const route = findRoute("app", path);
