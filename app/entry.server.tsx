@@ -149,6 +149,11 @@ const initApp = async () => {
   const plugins = await loadPlugins();
   //  Load plugins
   singleton<Record<string, IPlugin>>("plugins", () => plugins);
+  // Init routes
+  singleton<Record<RoutType, Route[]>>("routes", {
+    app:[],
+    admin:[]
+  })
 }
 
 initApp();

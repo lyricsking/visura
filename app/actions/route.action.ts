@@ -9,17 +9,11 @@ export type Route = {
   action?: ActionFunction;
 };
 
-export const routes = singleton<Record<RouteType, Route[]>>(
-  "routes", {
-    app: [],
-    admin: []
-  }
-)!;
+const mRoutes = singleton<Record<RouteType, Route[]>>()
 
 const homePaths: Record<string, string> = {};
 
 export function addRoute(type: RouteType, route: Route) {
-  const mRoutes = routes
   mRoutes[type] = [...routes[type], route];
 }
 
