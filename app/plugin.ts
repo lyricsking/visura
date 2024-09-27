@@ -13,9 +13,12 @@ export interface IPlugin {
   layoutComponent?: React.ComponentType;
 }
 
-export const plugins: { [key: string]: IPlugin } = {};
+export const plugins = () => singleton<Record<string, IPlugin>>("plugins");
 
 export const loadPlugins = async () => {
+  const plugins: Record<string, IPlugin> = {};
+  
+  
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -62,6 +65,7 @@ export const loadPlugins = async () => {
         console.error(`Error loading plugin from ${pluginPath}:`, err);
       } finally {
         console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
+        return plugins;
       }
     }
   } catch (err) {

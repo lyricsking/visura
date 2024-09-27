@@ -145,7 +145,7 @@ const initApp = () => {
   // Init db connection in synchronous function, since async/await is not allowed.
   connectToDatabase();
   //  Load plugins
-  loadPlugins();
+  singleton<Record<string, IPlugin>>("plugins", loadPlugins)
 }
 
 initApp();
