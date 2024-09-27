@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import config from "./config";
+import { singleton } from "./utils/singleton";
 
 export interface IPlugin {
   name: string;
@@ -13,12 +14,11 @@ export interface IPlugin {
   layoutComponent?: React.ComponentType;
 }
 
-export const plugins = () => singleton<Record<string, IPlugin>>("plugins");
+//export const plugins = () => singleton<Record<string, IPlugin>>("plugins");
 
 export const loadPlugins = async () => {
   const plugins: Record<string, IPlugin> = {};
-  
-  
+
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -63,12 +63,12 @@ export const loadPlugins = async () => {
         console.log(`${plugin.name} plugin loaded.`);
       } catch (err) {
         console.error(`Error loading plugin from ${pluginPath}:`, err);
-      } finally {
-        console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
-        return plugins;
       }
     }
   } catch (err) {
     console.error("Error loading plugins:", err);
+  } finally {
+    console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
+    return plugins;
   }
 };

@@ -12,7 +12,8 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import connectToDatabase from "./database/db.server";
-import { loadPlugins } from "./plugin";
+import { IPlugin, loadPlugins } from "./plugin";
+import { singleton } from "./utils/singleton";
 
 const ABORT_DELAY = 5_000;
 
@@ -141,11 +142,13 @@ function handleBrowserRequest(
   });
 }
 
-const initApp = () => {
+const initApp = async () => {
   // Init db connection in synchronous function, since async/await is not allowed.
   connectToDatabase();
+
+  const plugins = await loadPlugins();
   //  Load plugins
-  singleton<Record<string, IPlugin>>("plugins", loadPlugins)
+  singleton<Record<string, IPlugin>>("plugins", () => plugins);
 }
 
 initApp();

@@ -1,4 +1,5 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { singleton } from "~/utils/singleton";
 
 export type RouteType = "app" | "admin";
 export type Route = {
@@ -8,15 +9,18 @@ export type Route = {
   action?: ActionFunction;
 };
 
-export const routes: Record<RouteType, Route[]> = {
-  app: [],
-  admin: [],
-};
+export const routes = singleton<Record<RouteType, Route[]>>(
+  "routes", {
+    app: [],
+    admin: []
+  }
+)!;
 
 const homePaths: Record<string, string> = {};
 
 export function addRoute(type: RouteType, route: Route) {
-  routes[type] = [...routes[type], route];
+  const mRoutes = routes
+  mRoutes[type] = [...routes[type], route];
 }
 
 export function findRoute(
