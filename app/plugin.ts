@@ -6,7 +6,7 @@ import { singleton } from "./utils/singleton";
 
 export interface IPlugin {
   name: string;
-  description: stringring;
+  description: string;
   version: string;
   settings?: Record<string, any>;
   onInit?: () => void;

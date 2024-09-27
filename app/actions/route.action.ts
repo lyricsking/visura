@@ -9,19 +9,23 @@ export type Route = {
   action?: ActionFunction;
 };
 
-const mRoutes = singleton<Record<RouteType, Route[]>>()
+export const routes = singleton<Record<RouteType, Route[]>>("routes", {
+  admin:[],
+  app:[]
+})
 
 const homePaths: Record<string, string> = {};
 
 export function addRoute(type: RouteType, route: Route) {
-  mRoutes[type] = [...routes[type], route];
+  const mRoutes = routes.get();
+  mRoutes[type] = [...mRoutes[type], route];
 }
 
 export function findRoute(
   type: RouteType,
   path?: string
 ): undefined | Route | Route[] {
-  const typeRoutes = routes[type];
+  const typeRoutes = routes.get()[type];
 
   if (!typeRoutes) return undefined;
 
