@@ -1,9 +1,6 @@
-import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import config, { Config } from "../../config";
-import { List, NewspaperIcon } from "lucide-react";
 import { IPlugin } from "~/plugin";
 import { Route, RouteType, addRoute } from "~/actions/route.action";
-import Blog, { loader as blogLoader } from "./routes/blog";
+import { blogIndexLoader } from "./loaders/blog.loader";
 
 const blogPlugin: IPlugin = {
   name: "blog",
@@ -27,8 +24,8 @@ const routes: Record<RouteType, Route[]> = {
   app: [
     {
       path: "/blog",
-      component: Blog,
-      loader: blogLoader,
+      file: "blog/routes/blog.tsx",
+      loader: blogIndexLoader,
     },
   ],
   admin: [],

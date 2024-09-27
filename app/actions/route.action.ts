@@ -4,7 +4,11 @@ import { singleton } from "~/utils/singleton";
 export type RouteType = "app" | "admin";
 export type Route = {
   path: string;
-  component: React.ElementType;
+  /**
+   * The path to the file that exports the React component rendered by this
+   * route as its default export, relative to the `app` directory.
+   */
+  file: string;
   loader?: LoaderFunction;
   action?: ActionFunction;
 };

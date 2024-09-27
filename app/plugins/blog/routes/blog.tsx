@@ -11,16 +11,11 @@ import {
   SelectValue,
 } from "~/components/select";
 import { SelectItem } from "@radix-ui/react-select";
-import { findPosts, generateDummyPosts } from "../server/post.server";
-import { useLoaderData } from "@remix-run/react";
 import { TipCard } from "../components/tip-card";
 import { ITips } from "../types/tips.type";
-import { ScrollArea, ScrollBar } from "~/components/scrollable.area";
+import { ScrollArea } from "~/components/scrollable.area";
 import { PostSummary } from "../components/post-summary";
-import { IPost } from "../types/post.type";
-import { Types } from "mongoose";
 import { findFontByName } from "~/utils/fonts";
-import { findTips } from "../server/tips.server";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -173,12 +168,3 @@ export default function Blog({ tips, posts }: any) {
     </div>
   );
 }
-
-export const loader = async () => {
-  const [tips, posts] = await Promise.all([
-    findTips(),
-    findPosts({ published: true }),
-  ]);
-
-  return { tips, posts };
-};

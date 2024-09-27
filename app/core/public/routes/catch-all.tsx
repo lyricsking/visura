@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import { findRoute, routes } from "~/actions/route.action";
 import NotFound from "./not-found";
-import { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 
 const NOT_FOUND_PATH = "not-found";
 
@@ -27,7 +27,12 @@ export const loader: LoaderFunction = async (args) => {
         // Do something with the matched params
         // e.g., load the post based on postId
         const data = route.loader && (await route.loader(args));
-        return json({ path: route.path, data: data, params });
+        return json({
+          path: route.path,
+          data: data,
+          params,
+          componentPath: route.file,
+        });
       }
     }
   }
@@ -39,19 +44,20 @@ export const loader: LoaderFunction = async (args) => {
 };
 
 export default function CatchAll() {
-  const { path, data, params } = useLoaderData<typeof loader>();
-  
-  useEffect(() => {
-    alert(JSON.stringify({path}, null, 2));
-  }, []);
+  const { path, data, params, componentPath } = useLoaderData<typeof loader>();
 
+  if (!componentPath || path === NOT_FOUND_PATH) return <NotFound />;
 
-  const route = findRoute("app", path);
+  // Use React.lazy to dynamically import the component
+  const DynamicComponent = React.lazy(
+    () => import(`../../../plugins/` + componentPath)
+  );
 
-  if (!route || path === NOT_FOUND_PATH) return <NotFound />;
+  //return <DynamicComponent {...data} />;
 
-  if (!Array.isArray(route)) {
-    return <route.component {...data} />;
-  }
-
+  return (
+    <Suspense fallback={<div>Loading component...</div>}>
+      <DynamicComponent {...data} />
+    </Suspense>
+  );
 }

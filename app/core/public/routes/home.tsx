@@ -1,31 +1,44 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { findRoute } from "~/actions/route.action";
 import config from "~/config";
 import DefaultHome from "./default-home";
+import React, { Suspense } from "react";
 
-export const loader = async (arg: LoaderFunctionArgs) => {
+export const loader:LoaderFunction = async (arg) => {
   const homepagePath = config.app.homepage;
   const route = findRoute("app", homepagePath);
 
-  if (!route || Array.isArray(route)) {
-    return json({ data: null, path: homepagePath });
+  console.log(homepagePath);
+  
+  if (route && !Array.isArray(route)) {
+    const routeData = route.loader && (await route.loader(arg));
+
+    return json({
+      data: routeData,
+      path: homepagePath,
+      filePath: route.file
+    });
   }
 
-  const routeData = route.loader && route.loader(arg);
-
-  return json({ data: routeData, path: homepagePath });
+  return json({ data: null, path: "default" });
 };
 
 export default function Home() {
-  const { data, path } = useLoaderData<typeof loader>();
+  const { path, data, params, filePath } = useLoaderData<typeof loader>();
 
-  const route = findRoute("app", path);
-  if (route && !Array.isArray(route)) {
-    const Component = route && route.component;
+  if (!filePath || path === "default") return <DefaultHome />;
 
-    return <Component {...data} />;
-  }
+  // Use React.lazy to dynamically import the component
+  const DynamicComponent = React.lazy(
+    () => import(`../../../plugins/` + filePath)
+  );
 
-  return <DefaultHome />;
+  //return <DynamicComponent {...data} />;
+
+  return (
+    <Suspense fallback={<div>Loading component...</div>}>
+      <DynamicComponent {...data} />
+    </Suspense>
+  );
 }
