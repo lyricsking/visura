@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async (args) => {
 
       if (matchResult) {
         const { path, params } = matchResult;
-        console.log("third path", path);
 
         // Do something with the matched params
         // e.g., load the post based on postId
@@ -41,15 +40,18 @@ export const loader: LoaderFunction = async (args) => {
 
 export default function CatchAll() {
   const { path, data, params } = useLoaderData<typeof loader>();
+  
+  useEffect(() => {
+    alert(JSON.stringify({path}, null, 2));
+  }, []);
+
 
   const route = findRoute("app", path);
-  useEffect(() => {
-    alert(JSON.stringify(routes.app.length, null, 2));
-  }, []);
 
   if (!route || path === NOT_FOUND_PATH) return <NotFound />;
 
   if (!Array.isArray(route)) {
-    //return <route.component {...data} />;
+    return <route.component {...data} />;
   }
+
 }

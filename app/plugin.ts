@@ -4,6 +4,8 @@ import { fileURLToPath } from "url";
 import config from "./config";
 import { singleton } from "./utils/singleton";
 
+export const PLUGIN_KEY = "plugins";
+
 export interface IPlugin {
   name: string;
   description: string;
@@ -14,7 +16,7 @@ export interface IPlugin {
   layoutComponent?: React.ComponentType;
 }
 
-//export const plugins = () => singleton<Record<string, IPlugin>>("plugins");
+export const plugins = singleton<Record<string, IPlugin>>(PLUGIN_KEY);
 
 export const loadPlugins = async () => {
   const plugins: Record<string, IPlugin> = {};

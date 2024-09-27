@@ -9,7 +9,8 @@ export type Route = {
   action?: ActionFunction;
 };
 
-export const routes = singleton<Record<RouteType, Route[]>>("routes", {
+const ROUTE_KEY = "routes"
+export const routes = singleton<Record<RouteType, Route[]>>(ROUTE_KEY, {
   admin:[],
   app:[]
 })
@@ -18,20 +19,28 @@ const homePaths: Record<string, string> = {};
 
 export function addRoute(type: RouteType, route: Route) {
   const mRoutes = routes.get();
-  mRoutes[type] = [...mRoutes[type], route];
+  if (mRoutes) {
+    mRoutes[type] = [...mRoutes[type], route];
+    routes.set(mRoutes);
+  }
 }
 
 export function findRoute(
   type: RouteType,
   path?: string
 ): undefined | Route | Route[] {
-  const typeRoutes = routes.get()[type];
+  const mRoutes = routes.get()
+  if (mRoutes) {
+    const typeRoutes = mRoutes[type];
 
-  if (!typeRoutes) return undefined;
+    if (!typeRoutes) return undefined;
 
-  if (!path) return typeRoutes;
+    if (!path) return typeRoutes;
 
-  return typeRoutes.find((route) => route.path === path);
+    return typeRoutes.find((route) => route.path === path);
+  }
+  
+  return undefined;
 }
 
 export function addHomepagePath(name: string, path: string) {

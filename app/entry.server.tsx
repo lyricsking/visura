@@ -12,7 +12,7 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import connectToDatabase from "./database/db.server";
-import { IPlugin, loadPlugins } from "./plugin";
+import { IPlugin, loadPlugins, PLUGIN_KEY } from "./plugin";
 import { singleton } from "./utils/singleton";
 
 const ABORT_DELAY = 5_000;
@@ -148,12 +148,7 @@ const initApp = async () => {
 
   const plugins = await loadPlugins();
   //  Load plugins
-  singleton<Record<string, IPlugin>>("plugins", () => plugins);
-  // Init routes
-  singleton<Record<RoutType, Route[]>>("routes", {
-    app:[],
-    admin:[]
-  })
+  singleton<Record<string, IPlugin>>(PLUGIN_KEY, () => plugins);
 }
 
 initApp();
