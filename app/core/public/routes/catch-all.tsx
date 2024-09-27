@@ -1,15 +1,15 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
-import { findRoute } from "~/actions/route.action";
+import { findRoute, routes } from "~/actions/route.action";
 import NotFound from "./not-found";
+import { useEffect } from "react";
 
 const NOT_FOUND_PATH = "not-found";
 
 export const loader: LoaderFunction = async (args) => {
   const { params, request } = args;
   const url = new URL(request.url);
-  console.log(url.toString());
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async (args) => {
 
       if (matchResult) {
         const { path, params } = matchResult;
-        console.log(path, params);
+        console.log("third path", path);
 
         // Do something with the matched params
         // e.g., load the post based on postId
@@ -43,10 +43,13 @@ export default function CatchAll() {
   const { path, data, params } = useLoaderData<typeof loader>();
 
   const route = findRoute("app", path);
+  useEffect(() => {
+    alert(JSON.stringify(routes.app.length, null, 2));
+  }, []);
 
   if (!route || path === NOT_FOUND_PATH) return <NotFound />;
 
   if (!Array.isArray(route)) {
-    return <route.component {...data} />;
+    //return <route.component {...data} />;
   }
 }

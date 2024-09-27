@@ -113,5 +113,5 @@ export const generateDummyPosts = async (
   return count === postCount;
 };
 
-// const dummyPosts = generateDummyPosts(10);
-// console.log(dummyPosts);
+//const dummyPosts = generateDummyPosts(10);
+//console.log(dummyPosts);

@@ -8,7 +8,7 @@ export type Route = {
   action?: ActionFunction;
 };
 
-const routes: Record<RouteType, Route[]> = {
+export const routes: Record<RouteType, Route[]> = {
   app: [],
   admin: [],
 };
@@ -37,3 +37,4 @@ export function addHomepagePath(name: string, path: string) {
     homePaths[name] = path;
   }
 }
+
