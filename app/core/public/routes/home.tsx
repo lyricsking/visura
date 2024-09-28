@@ -25,7 +25,7 @@ export const loader:LoaderFunction = async (arg) => {
 };
 
 export default function Home() {
-  const { path, data, params, filePath } = useLoaderData<typeof loader>();
+  const { path, data, filePath } = useLoaderData<typeof loader>();
 
   if (!filePath || path === "default") return <DefaultHome />;
 
