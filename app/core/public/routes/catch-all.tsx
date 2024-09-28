@@ -23,6 +23,8 @@ export const loader: LoaderFunction = async (args) => {
 
       if (matchResult) {
         const { path, params } = matchResult;
+        
+        console.log(params);
 
         // Do something with the matched params
         // e.g., load the post based on postId
@@ -50,7 +52,7 @@ export default function CatchAll() {
 
   // Use React.lazy to dynamically import the component
   const DynamicComponent = React.lazy(
-    () => import(`../../../plugins/` + componentPath)
+    () => import(/* @vite-ignore */ `../../../plugins/${componentPath}`)
   );
 
   //return <DynamicComponent {...data} />;

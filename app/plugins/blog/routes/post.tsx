@@ -1,11 +1,9 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { findPostBySlug } from "../server/post.server";
 import ReactMarkdown from "react-markdown";
 import { formatDateOrTime } from "~/utils/date";
+import { loader } from "../loaders/post.loader";
 
-export default function Post() {
-  const { post } = useLoaderData<typeof loader>();
+export default function Post({ post }: ReturnType<typeof loader>){
 
   let publishedOn = post.publishedOn
     ? formatDateOrTime(new Date(post.publishedOn), {
@@ -51,15 +49,3 @@ export default function Post() {
     </article>
   );
 }
-
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  let slug = params["slug"];
-  if (!slug) throw Error("Post slug id must be provided.");
-
-  let post = await findPostBySlug({ slug });
-  console.log(post);
-
-  if (!post) throw Error("No post was found with such.");
-
-  return json({ post });
-};
