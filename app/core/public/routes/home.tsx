@@ -31,7 +31,7 @@ export default function Home() {
 
   // Use React.lazy to dynamically import the component
   const DynamicComponent = React.lazy(
-    () => import(`../../../plugins/` + filePath)
+    () => import(`../../../plugins/${ filePath}`)
   );
 
   //return <DynamicComponent {...data} />;

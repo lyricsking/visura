@@ -1,5 +1,4 @@
 import {
-  json,
   LinksFunction,
   LoaderFunctionArgs,
   type MetaFunction,
@@ -31,13 +30,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 //style={{ fontFamily: font.value }}
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const q = url.searchParams.get("q") || "";
-
-  return json({ q });
-};
 
 export default function DefaultHome() {
   return (
