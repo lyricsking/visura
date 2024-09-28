@@ -37,7 +37,9 @@ export const loadPlugins = async () => {
 
       try {
         // Synchronously load the plugin using dynamic import
-        const plugin: IPlugin = (await import(pluginPath as string)).default;
+        const plugin: IPlugin = (
+          await import(/* @vite-ignore */ pluginPath as string)
+        ).default;
 
         console.log(`Loading plugin "${plugin.name}".`);
 

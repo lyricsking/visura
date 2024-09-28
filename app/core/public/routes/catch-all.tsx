@@ -1,5 +1,5 @@
 import { LoaderFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Params, createSearchParams, useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import { findRoute, routes } from "~/actions/route.action";
 import NotFound from "./not-found";
@@ -23,12 +23,11 @@ export const loader: LoaderFunction = async (args) => {
 
       if (matchResult) {
         const { path, params } = matchResult;
-        
-        console.log(params);
 
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data = route.loader && (await route.loader(args));
+        const data =
+          route.loader && (await route.loader({ params: params as Params }));
         return json({
           path: route.path,
           data: data,

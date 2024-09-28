@@ -1,5 +1,12 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { Params } from "@remix-run/react";
 import { singleton } from "~/utils/singleton";
+
+export type PluginLoaderFunctionArgs = {
+  params: Params;
+};
+
+export type PluginLoaderFunction = (args: PluginLoaderFunctionArgs) => any;
 
 export type RouteType = "app" | "admin";
 export type Route = {
@@ -9,15 +16,15 @@ export type Route = {
    * route as its default export, relative to the `app` directory.
    */
   file: string;
-  loader?: LoaderFunction;
+  loader?: PluginLoaderFunction;
   action?: ActionFunction;
 };
 
-const ROUTE_KEY = "routes"
+const ROUTE_KEY = "routes";
 export const routes = singleton<Record<RouteType, Route[]>>(ROUTE_KEY, {
-  admin:[],
-  app:[]
-})
+  admin: [],
+  app: [],
+});
 
 const homePaths: Record<string, string> = {};
 
@@ -33,7 +40,7 @@ export function findRoute(
   type: RouteType,
   path?: string
 ): undefined | Route | Route[] {
-  const mRoutes = routes.get()
+  const mRoutes = routes.get();
   if (mRoutes) {
     const typeRoutes = mRoutes[type];
 
@@ -43,7 +50,7 @@ export function findRoute(
 
     return typeRoutes.find((route) => route.path === path);
   }
-  
+
   return undefined;
 }
 
@@ -52,4 +59,3 @@ export function addHomepagePath(name: string, path: string) {
     homePaths[name] = path;
   }
 }
-
