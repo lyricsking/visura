@@ -29,6 +29,8 @@ export const findOneById = async (): Promise<HydratedTips[]> => {
 
 export const findTips = async (): Promise<HydratedTips[]> => {
   try {
+    await generateTips(10)
+    
     const tips = await TipsModel.find().exec();
 
     return tips;

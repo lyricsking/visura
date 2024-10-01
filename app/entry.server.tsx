@@ -27,6 +27,9 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  
+  singleton("mongoose", createDBConnection());
+  
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
@@ -141,14 +144,3 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
-
-const initApp = async () => {
-  // Init db connection in synchronous function, since async/await is not allowed.
-  connectToDatabase();
-
-  const plugins = await loadPlugins();
-  //  Load plugins
-  singleton<Record<string, IPlugin>>(PLUGIN_KEY, () => plugins);
-}
-
-initApp();

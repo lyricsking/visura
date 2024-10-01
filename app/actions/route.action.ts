@@ -7,14 +7,20 @@ export type PluginLoaderFunctionArgs = {
 };
 
 export type PluginLoaderFunction = (args: PluginLoaderFunctionArgs) => any;
-
-export type RouteType = "app" | "admin";
-export type Route = {
-  path: string;
+const Route = Type.Object({
+  path: Type.String(),
   /**
    * The path to the file that exports the React component rendered by this
    * route as its default export, relative to the `app` directory.
    */
+  componentPath: Type.String(),
+   loader?: PluginLoaderFunction,
+  action?: ActionFunction,
+})
+
+export type RouteType = "app" | "admin";
+export type Route = {
+  path: string;
   file: string;
   loader?: PluginLoaderFunction;
   action?: ActionFunction;

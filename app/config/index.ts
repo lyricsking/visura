@@ -2,6 +2,13 @@ import appConfig from "./app.config.json";
 import pluginsConfig from "./plugin.config.json";
 import { z } from "zod";
 
+export const pluginSchema = z.object({
+  name: z.string().readonly(),
+  activated: z.boolean().readonly(),
+  version: z.number().readonly(),
+  routes: z.optional()
+});
+
 export const configSchema = z
   .object({
     app: z.object({
