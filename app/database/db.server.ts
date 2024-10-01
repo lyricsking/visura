@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export default function createDBConnection(){
+export default async function createDBConnection(){
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -14,17 +14,17 @@ if (!MONGODB_URI) {
 }
 
 if (!mongoose.connection.readyState) {
-  await mongoose.connect(MONGO_URI);
+  await mongoose.connect(MONGODB_URI);
   console.log('Mongoose connected');
 }
 
 process.on("SIGINT", async () => {
-  await mongooseClient.conn.connection.close();
+  await mongoose.connection.close();
   process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
-  await mongooseClient.conn.connection.close();
+  await mongoose.connection.close();
   process.exit(0);
 });
   return mongoose;

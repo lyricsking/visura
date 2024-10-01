@@ -14,6 +14,9 @@ import { renderToPipeableStream } from "react-dom/server";
 import connectToDatabase from "./database/db.server";
 import { IPlugin, loadPlugins, PLUGIN_KEY } from "./plugin";
 import { singleton } from "./utils/singleton";
+import createDBConnection from "./database/db.server";
+import mongoose from "mongoose";
+import _default from "node_modules/vite-tsconfig-paths/dist";
 
 const ABORT_DELAY = 5_000;
 
@@ -28,8 +31,8 @@ export default function handleRequest(
   loadContext: AppLoadContext
 ) {
   
-  singleton("mongoose", createDBConnection());
-  
+  singleton("mongoose", createDBConnection);
+
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
@@ -144,3 +147,5 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
+
+
