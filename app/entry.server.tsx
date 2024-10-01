@@ -17,6 +17,7 @@ import { singleton } from "./utils/singleton";
 import createDBConnection from "./database/db.server";
 import mongoose from "mongoose";
 import _default from "node_modules/vite-tsconfig-paths/dist";
+import Context from "./context";
 
 const ABORT_DELAY = 5_000;
 
@@ -31,8 +32,9 @@ export default function handleRequest(
   loadContext: AppLoadContext
 ) {
   
-  singleton("mongoose", createDBConnection);
-
+  singleton("mongoose", ()=>createDBConnection);
+  singleton("context",()=>new Context())
+  
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
