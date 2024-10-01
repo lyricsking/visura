@@ -18,9 +18,9 @@ import {
   getUserFromSession,
   isAuthenticated,
   setUserToSession,
-} from "~/core/auth/server/auth.server";
+} from "~/auth/server/auth.server";
 import { getSubdomain } from "~/utils/domain";
-import { isAuthUser } from "~/core/auth/utils/helper";
+import { isAuthUser } from "~/auth/utils/helper";
 import { Menu } from "~/utils/menu";
 import config from "~/config";
 import { plugins } from "~/plugin";
