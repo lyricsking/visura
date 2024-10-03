@@ -3,10 +3,10 @@
     {
       "name": "blog",
       "description": "",
-      "activated": true,
+      "enabled": true,
       "version": 0
     }
   ],
   "development": {},
-  "production":{}
+  "production": {}
 }

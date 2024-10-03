@@ -14,7 +14,7 @@ import { renderToPipeableStream } from "react-dom/server";
 import { singleton } from "./utils/singleton";
 import createDBConnection from "./database/db.server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
-import Context from "./context";
+import Context from "./app";
 
 const ABORT_DELAY = 5_000;
 
@@ -28,13 +28,12 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  
   singleton("mongoose", () => createDBConnection);
-  
-  const app = singleton("context", () => new Context())
+
+  const app = singleton<Context>("context", () => new Context());
   //await app.init();
-  app.init();
-  
+  if (app) app.init();
+
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
@@ -149,5 +148,3 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
-
-

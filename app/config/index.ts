@@ -3,7 +3,7 @@ import { z } from "zod";
 export const pluginSchema = z.object({
   name: z.string().readonly(),
   description: z.string().readonly(),
-  activated: z.boolean().readonly(),
+  enabled: z.boolean().readonly(),
   version: z.number().readonly(),
 });
 
