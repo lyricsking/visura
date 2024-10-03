@@ -21,7 +21,6 @@ import { useEffect } from "react";
 import { cn } from "./utils/util";
 import { Toaster } from "./components/toaster";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import config from "./config";
 
 export type LoaderData = {
   //theme: Theme | null;

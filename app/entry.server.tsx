@@ -18,7 +18,7 @@ import Context from "./app";
 
 const ABORT_DELAY = 5_000;
 
-export default function handleRequest(
+export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
@@ -30,7 +30,7 @@ export default function handleRequest(
 ) {
   singleton("mongoose", () => createDBConnection);
 
-  singleton<Context>("context", () => new Context()).then((app) => {
+  await singleton<Context>("context", () => new Context()).then((app) => {
     //await app.init();
     if (app) app.init();
   });

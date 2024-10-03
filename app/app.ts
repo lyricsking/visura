@@ -5,6 +5,7 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import * as lo from "lodash";
 
 export default class AppContext {
   private readonly config: Config;
@@ -31,10 +32,7 @@ export default class AppContext {
         ...appConfig["default"],
         ...appConfig[env],
       },
-      plugins: {
-        ...pluginsConfig["default"],
-        ...pluginsConfig[env],
-      },
+      plugins: [...pluginsConfig["default"], ...pluginsConfig[env]],
     };
 
     const configParse = configSchema.safeParse(envConfig);

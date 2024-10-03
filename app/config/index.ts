@@ -7,15 +7,13 @@ export const pluginSchema = z.object({
   version: z.number().readonly(),
 });
 
-export const configSchema = z
-  .object({
-    app: z.object({
-      appName: z.string().readonly(),
-      description: z.string().readonly(),
-      homepage: z.string().readonly(),
-    }),
-    plugins: z.array(pluginSchema).readonly(),
-  })
-  .readonly();
+export const configSchema = z.object({
+  app: z.object({
+    appName: z.string().readonly(),
+    description: z.string().readonly(),
+    homepage: z.string().readonly(),
+  }),
+  plugins: z.array(pluginSchema),
+});
 
 export type Config = z.infer<typeof configSchema>;
