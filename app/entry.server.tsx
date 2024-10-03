@@ -11,11 +11,8 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
-import connectToDatabase from "./database/db.server";
-import { IPlugin, loadPlugins, PLUGIN_KEY } from "./plugin";
 import { singleton } from "./utils/singleton";
 import createDBConnection from "./database/db.server";
-import mongoose from "mongoose";
 import _default from "node_modules/vite-tsconfig-paths/dist";
 import Context from "./context";
 

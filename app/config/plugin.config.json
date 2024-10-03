@@ -2,7 +2,7 @@
   "default": [
     {
       "name": "blog",
-      "desceiprion": "",
+      "description": "",
       "activated": true,
       "version": 0
     }

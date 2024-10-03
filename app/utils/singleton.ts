@@ -1,4 +1,4 @@
-export function singleton<Value>(name: string, initializer?: (() => Promise<Value> | Value)) {
+export function singleton<Value>(name: string, initializer?: (() => Promise<Value>) | Value): Value | undefined {
   const yolo = global as any;
   yolo.__singletons ??= {};
 
@@ -12,5 +12,5 @@ export function singleton<Value>(name: string, initializer?: (() => Promise<Valu
   }
 
   // Return the singleton value
-  return yolo.__singletons[name];
+  return yolo.__singletons[name] ;
 }

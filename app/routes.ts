@@ -3,24 +3,24 @@ import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 export default function routes(route: DefineRouteFunction) {
   // Define all static routes first
   // Auth routes
-  route("auth", "core/auth/routes/layout.tsx", () => {
-    route("", "core/auth/routes/signin.tsx", { index: true });
-    route("signup", "core/auth/routes/signup.tsx");
-    route("google/callback", "core/auth/routes/google-callback.tsx");
-    route("google/signin", "core/auth/routes/google-signin.tsx");
-    route("signout", "core/auth/routes/signout.tsx");
+  route("auth", "auth/routes/layout.tsx", () => {
+    route("", "auth/routes/signin.tsx", { index: true });
+    route("signup", "auth/routes/signup.tsx");
+    route("google/callback", "auth/routes/google-callback.tsx");
+    route("google/signin", "auth/routes/google-signin.tsx");
+    route("signout", "auth/routes/signout.tsx");
   });
 
   // Admin routes
-  route("administration", "core/admin/routes/layout.tsx", () => {
-    route("", "core/admin/routes/overview.tsx", { index: true });
-    route("*", "core/admin/routes/catch-all.tsx");
+  route("administration", "admin/routes/layout.tsx", () => {
+    route("", "admin/routes/overview.tsx", { index: true });
+    route("*", "admin/routes/catch-all.tsx");
   });
 
   // Public pages, registered last so that catch all route would match non handle routes only.
-  route("/", "core/public/routes/layout.tsx", () => {
-    route("", "core/public/routes/home.tsx", { index: true });
-    route("*", "core/public/routes/catch-all.tsx");
+  route("/", "public/routes/layout.tsx", () => {
+    route("", "public/routes/home.tsx", { index: true });
+    route("*", "public/routes/catch-all.tsx");
   });
 }
 

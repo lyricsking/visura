@@ -1,22 +1,12 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { Params } from "@remix-run/react";
 import { singleton } from "~/utils/singleton";
-
+import z from "zod"
 export type PluginLoaderFunctionArgs = {
   params: Params;
 };
 
 export type PluginLoaderFunction = (args: PluginLoaderFunctionArgs) => any;
-const Route = Type.Object({
-  path: Type.String(),
-  /**
-   * The path to the file that exports the React component rendered by this
-   * route as its default export, relative to the `app` directory.
-   */
-  componentPath: Type.String(),
-   loader?: PluginLoaderFunction,
-  action?: ActionFunction,
-})
 
 export type RouteType = "app" | "admin";
 export type Route = {
@@ -28,17 +18,16 @@ export type Route = {
 
 const ROUTE_KEY = "routes";
 export const routes = singleton<Record<RouteType, Route[]>>(ROUTE_KEY, {
-  admin: [],
   app: [],
+  admin: [],
 });
 
 const homePaths: Record<string, string> = {};
 
 export function addRoute(type: RouteType, route: Route) {
-  const mRoutes = routes.get();
+  const mRoutes = routes;
   if (mRoutes) {
     mRoutes[type] = [...mRoutes[type], route];
-    routes.set(mRoutes);
   }
 }
 
@@ -46,9 +35,9 @@ export function findRoute(
   type: RouteType,
   path?: string
 ): undefined | Route | Route[] {
-  const mRoutes = routes.get();
+  const mRoutes = routes;
   if (mRoutes) {
-    const typeRoutes = mRoutes[type];
+    const typeRoutes = mRoutes [type];
 
     if (!typeRoutes) return undefined;
 
