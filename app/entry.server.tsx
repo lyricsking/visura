@@ -31,7 +31,7 @@ export default function handleRequest(
   
   singleton("mongoose", () => createDBConnection);
   
-  const app= singleton("context", () => new Context())
+  const app = singleton("context", () => new Context())
   //await app.init();
   app.init();
   
