@@ -41,17 +41,24 @@ export const loader: LoaderFunction = async (args) => {
   // If no route matched, return 404
   //throw new Response("Not Found", { status: 404 });
   // Return default path
-  return json({ path: NOT_FOUND_PATH, data: {} });
+  return json({ pathname: NOT_FOUND_PATH, data: {} });
 };
 
 export default function CatchAll() {
-  const { path, data, params, componentPath } = useLoaderData<typeof loader>();
+  const { pathname, data, params, componentPath } = useLoaderData<typeof loader>();
+  
+  // Get the current file's path
+  const __filename = fileURLToPath(import.meta.url);
+  // Get the current directory name
+  const __dirname = path.dirname(__filename);
+  // Navigate up to the `app` directory
+  const pluginComponentPath = path.resolve(__dirname, "../../../plugins", componentPath);
 
-  if (!componentPath || path === NOT_FOUND_PATH) return <NotFound />;
+  if (!componentPath || pathname === NOT_FOUND_PATH) return <NotFound />;
 
   // Use React.lazy to dynamically import the component
   const DynamicComponent = React.lazy(
-    () => import(/* @vite-ignore */ `../../../plugins/${componentPath}`)
+    () => import(/* @vite-ignore */pluginComponentPath)
   );
 
   //return <DynamicComponent {...data} />;

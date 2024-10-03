@@ -1,7 +1,12 @@
 {
-  "default": {
-    "blog": true
-  },
+  "default": [
+    {
+      "name": "blog",
+      "description": "",
+      "activated": true,
+      "version": 0
+    }
+  ],
   "development": {},
   "production":{}
 }

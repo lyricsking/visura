@@ -11,9 +11,10 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
-import connectToDatabase from "./database/db.server";
-import { IPlugin, loadPlugins, PLUGIN_KEY } from "./plugin";
 import { singleton } from "./utils/singleton";
+import createDBConnection from "./database/db.server";
+import _default from "node_modules/vite-tsconfig-paths/dist";
+import Context from "./context";
 
 const ABORT_DELAY = 5_000;
 
@@ -27,6 +28,13 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  
+  singleton("mongoose", () => createDBConnection);
+  
+  const app = singleton("context", () => new Context())
+  //await app.init();
+  app.init();
+  
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
@@ -142,13 +150,4 @@ function handleBrowserRequest(
   });
 }
 
-const initApp = async () => {
-  // Init db connection in synchronous function, since async/await is not allowed.
-  connectToDatabase();
 
-  const plugins = await loadPlugins();
-  //  Load plugins
-  singleton<Record<string, IPlugin>>(PLUGIN_KEY, () => plugins);
-}
-
-initApp();
