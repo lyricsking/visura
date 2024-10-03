@@ -42,8 +42,8 @@ export const findTipBySlug = async ({
 }: any): Promise<DBReponseType<ITips>> => {
   let response: DBReponseType<ITips> = {};
   try {
-    // !response.data = await TipsModel.findOne({ slug }).exec();
-    response.data = generateTips()[0];
+    response.data = await TipsModel.findOne({ slug }).exec();
+    //response.data = generateTips()[0];
     return response;
   } catch (error) {
     throw error;
@@ -54,7 +54,7 @@ export const findTipBySlug = async ({
 const generateObjectId = () => new Types.ObjectId();
 
 // Generator function for ITips
-export function generateTips(length: number = 1): ITips[] {
+export async function generateTips(length: number = 1) {
   const tip = (): ITips => ({
     _id: generateObjectId(),
     slug: faker.lorem.slug(),
@@ -94,8 +94,9 @@ export function generateTips(length: number = 1): ITips[] {
 
   const tips: ITips[] = [];
   for (let index = 0; index < length; index++) {
-    tips.push(tip());
+    //tips.push(tip());
+    await createTip(tip());
   }
 
-  return tips;
+  //return tips;
 }

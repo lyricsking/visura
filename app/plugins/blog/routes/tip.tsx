@@ -1,13 +1,13 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { findPostById, findPostBySlug } from "../server/post.server";
 import ReactMarkdown from "react-markdown";
 import { formatDateByParts, formatDateOrTime } from "~/utils/date";
 import { findTipBySlug } from "../server/tips.server";
 import { Card, CardContent, CardFooter, CardHeader } from "~/components/card";
+import { loader } from "../loaders/tip.loader";
 
-export default function TipPage() {
-  const { tip } = useLoaderData<typeof loader>();
+export default function TipPage({ tip }: ReturnType<typeof loader>) {
   let title = tip.teamA + " - " + tip.teamB;
   let publishedOn = tip.publishedOn
     ? formatDateOrTime(new Date(tip.publishedOn), {
@@ -117,15 +117,3 @@ export default function TipPage() {
     </article>
   );
 }
-
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  let slug = params["slug"];
-  if (!slug) throw Error("Tip id must be provided.");
-
-  let tip = await findTipBySlug({ slug });
-  console.log(tip);
-
-  if (!tip.data) throw Error("No tip was found with such.");
-
-  return json({ tip: tip.data });
-};

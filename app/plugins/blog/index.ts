@@ -2,6 +2,7 @@ import { IPlugin } from "~/plugin";
 import { Route, RouteType, addRoute } from "~/actions/route.action";
 import { loader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
+import { loader as tipLoader } from "./loaders/tip.loader";
 
 const blogPlugin: IPlugin = {
   name: "blog",
@@ -31,8 +32,13 @@ const routes: Record<RouteType, Route[]> = {
     {
       path: "/news/:slug",
       file: "blog/routes/post.tsx",
-      loader: postLoader
-    }
+      loader: postLoader,
+    },
+    {
+      path: "/tips/:slug",
+      file: "blog/routes/tip.tsx",
+      loader: postLoader,
+    },
   ],
   admin: [],
 };
