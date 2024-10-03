@@ -32,8 +32,9 @@ export default function handleRequest(
   loadContext: AppLoadContext
 ) {
   
-  singleton("mongoose", ()=>createDBConnection);
-  singleton("context",()=>new Context())
+  singleton("mongoose", () => createDBConnection);
+  
+  singleton("context", () => new Context())
   
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
