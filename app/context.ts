@@ -8,10 +8,17 @@ import { fileURLToPath } from "url";
 
 export default class Context {
   private readonly config: Config;
-  private readonly plugins: Record<string, IPlugin>={};
+  private readonly plugins: Record<string, IPlugin>;
 
    constructor() {
     this.config = this.loadConfig();
+    this.plugins = {};
+  }
+  
+  // Async initialization logic for loading plugins
+  async init() {
+    // Load plugins asynchronously
+    this.plugins = await this.loadPlugins();
   }
 
   private loadConfig() {
@@ -37,63 +44,66 @@ export default class Context {
 
     return configParse.data;
   }
+  
+  async loadPlugins() {
+  const plugins: Record<string, IPlugin> = {};
 
-   async  loadPlugins(){
-    const plugins: Record<string, IPlugin> = {};
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const pluginDir = path.join(__dirname, "plugins");
 
-    try {
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
-      const pluginDir = path.join(__dirname, "plugins");
-      //const pluginDir = __dirname;
-      // Read the plugins directory synchronously
-      const pluginFolders = fs.readdirSync(pluginDir);
+    // Asynchronously read the plugins directory
+    const pluginFolders = await fs.promises.readdir(pluginDir, { withFileTypes: true });
 
-      const pluginsConfig = this.config.plugins;
+    const pluginsConfig = this.config.plugins;
 
-      // Filter and load only directories containing an index.ts file
-      for (let pluginFolder of pluginFolders) {
-        const pluginPath = path.join(pluginDir, pluginFolder, "index.ts");
+    // Loop through only enabled plugins in the config
+    for (const [pluginName, pluginConfig] of Object.entries(pluginsConfig)) {
+      if (pluginConfig.enabled) {
+        const pluginFolder = pluginFolders.find(folder => folder.isDirectory() && folder.name === pluginName);
 
-        try {
-          // Synchronously load the plugin using dynamic import
-          const plugin: IPlugin = (
-            await import(/* @vite-ignore */ pluginPath as string)
-          ).default;
+        if (pluginFolder) {
+          const pluginPath = path.join(pluginDir, pluginFolder.name, "index.ts");
 
-          console.log(`Loading plugin "${plugin.name}".`);
+          try {
+            // Dynamically load the plugin only if it is enabled
+            const plugin: IPlugin = (await import(/* @vite-ignore */ pluginPath)).default;
 
-          if (
-            !plugin.name ||
-            !plugin.version ||
-            typeof plugin.onInit !== "function"
-          ) {
-            throw new Error(
-              `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
-            );
-          }
-          // Ensure plugin names are unique
-          if (plugins[plugin.name]) {
-            throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
-          }
-          // Cache plugin to memory
-          plugins[plugin.name] = plugin;
-          // Initialize plugin only if it is enabled.
-          if (pluginsConfig.find([plugin.name]) {
+            console.log(`Loading plugin "${plugin.name}".`);
+
+            if (!plugin.name || !plugin.version || typeof plugin.onInit !== "function") {
+              throw new Error(
+                `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
+              );
+            }
+
+            // Ensure plugin names are unique
+            if (plugins[plugin.name]) {
+              throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
+            }
+
+            // Initialize the plugin
             plugin.onInit();
-
             console.log(`${plugin.name} initialized`);
+
+            // Cache the plugin in memory
+            plugins[plugin.name] = plugin;
+
+            console.log(`${plugin.name} plugin loaded.`);
+          } catch (err) {
+            console.error(`Error loading plugin from ${pluginPath}:`, err);
           }
-          console.log(`${plugin.name} plugin loaded.`);
-        } catch (err) {
-          console.error(`Error loading plugin from ${pluginPath}:`, err);
         }
+      } else {
+        console.log(`${pluginName} is disabled and will not be loaded.`);
       }
-    } catch (err) {
-      console.error("Error loading plugins:", err);
-    } finally {
-      console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
-      return plugins;
     }
-  };
+  } catch (err) {
+    console.error("Error loading plugins:", err);
+  } finally {
+    console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
+    return plugins;
+  }
+}
 }

@@ -31,7 +31,9 @@ export default function handleRequest(
   
   singleton("mongoose", () => createDBConnection);
   
-  singleton("context", () => new Context())
+  const app= singleton("context", () => new Context())
+  //await app.init();
+  app.init();
   
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
