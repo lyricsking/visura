@@ -25,6 +25,7 @@ import { withConfig } from "./utils/global-loader";
 
 export type LoaderData = {
   //theme: Theme | null;
+  config: any
 };
 
 // read the state from the cookie
@@ -43,19 +44,19 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   // Access the appConfig from the loader's returned data
   if (data && data.config) {
-    return [
-      { title: data.appConfig.appName }, // Dynamically set the title using AppContext
-      {
-        name: "description",
-        content: data.appConfig.description || "Default description",
-      },
-    ];
+    return [{ title: "" }, { name: "description", content: "" }];
   }
-
-  return [{ title: "" }, { name: "description", content: "" }];
+  
+  return [
+    { title: "" }, // Dynamically set the title using AppContext
+    {
+      name: "description",
+      content: "",
+    },
+  ];
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
