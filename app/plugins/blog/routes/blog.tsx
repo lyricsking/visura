@@ -16,6 +16,7 @@ import { ScrollArea } from "~/components/scrollable.area";
 import { PostSummary } from "../components/post-summary";
 import { findFontByName } from "~/utils/fonts";
 import { blogLoader } from "../loaders/index.loader";
+import { useEffect } from "react";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -39,10 +40,12 @@ export const meta: MetaFunction<typeof blogLoader> = ({ data }) => {
   ];
 };
 
-export default function Blog({ tips, posts }: any) {
+export default function Blog({ tips, posts }: any, path: string) {
   //const { tips, posts } = useLoaderData<typeof loader>();
 
   const font = findFontByName("Courier Prime");
+
+  console.log("path", path);
 
   return (
     <div className="flex flex-col items-start">

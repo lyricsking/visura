@@ -74,7 +74,7 @@ export default function CatchAll() {
 
     return (
       <Suspense fallback={<div>Loading component...</div>}>
-        <DynamicComponent {...data} />
+        <DynamicComponent {...data} pathname={pathname} />
       </Suspense>
     );
   }

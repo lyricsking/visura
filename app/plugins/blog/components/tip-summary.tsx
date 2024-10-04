@@ -17,15 +17,6 @@ export const TipSummary = (props: TipCardProps) => {
   path && path.length > 0 ? path : "/" + path;
   path += "/tips";
 
-  let title =
-    tip.leagueCountry +
-    " " +
-    tip.league +
-    " - " +
-    tip.teamA +
-    " vs " +
-    tip.teamB;
-
   return (
     <div className="py-4 border-gray-200">
       <div className="flex flex-col items-start justify-between">
