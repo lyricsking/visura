@@ -31,10 +31,11 @@ export const loader: LoaderFunction = withConfig(async (args, config, app) => {
         // e.g., load the post based on postId
         const data =
           route.loader && (await route.loader({ params: params as Params }));
+
         return json({
-          path: route.path,
           data: data,
           params,
+          pathname: route.path,
           componentPath: route.file,
         });
       }
@@ -58,22 +59,24 @@ export default function CatchAll() {
   // Navigate up to the `app` directory
   const pluginComponentPath = path.resolve(
     __dirname,
-    "../../../plugins",
+    "../../plugins",
     componentPath
   );
 
-  if (!componentPath || pathname === NOT_FOUND_PATH) return <NotFound />;
+  if (componentPath && pathname !== NOT_FOUND_PATH) {
+    // Use React.lazy to dynamically import the component
+    const DynamicComponent = React.lazy(
+      () => import(/* @vite-ignore */ pluginComponentPath)
+    );
 
-  // Use React.lazy to dynamically import the component
-  const DynamicComponent = React.lazy(
-    () => import(/* @vite-ignore */ pluginComponentPath)
-  );
+    //return <DynamicComponent {...data} />;
 
-  //return <DynamicComponent {...data} />;
+    return (
+      <Suspense fallback={<div>Loading component...</div>}>
+        <DynamicComponent {...data} />
+      </Suspense>
+    );
+  }
 
-  return (
-    <Suspense fallback={<div>Loading component...</div>}>
-      <DynamicComponent {...data} />
-    </Suspense>
-  );
+  return <NotFound />;
 }

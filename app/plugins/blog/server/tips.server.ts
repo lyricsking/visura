@@ -7,7 +7,6 @@ import { ITips } from "../types/tips.type";
 export const createTip = async (data: ITips): Promise<HydratedTips> => {
   try {
     const tips = await TipsModel.create(data);
-    console.log(tips);
 
     return tips;
   } catch (error) {
@@ -29,8 +28,8 @@ export const findOneById = async (): Promise<HydratedTips[]> => {
 
 export const findTips = async (): Promise<HydratedTips[]> => {
   try {
-    await generateTips(10)
-    
+    await generateTips(10);
+
     const tips = await TipsModel.find().exec();
 
     return tips;
@@ -86,10 +85,10 @@ export async function generateTips(length: number = 1) {
     },
     introduction: faker.lorem.paragraph(),
     excerpt: faker.lorem.sentence(),
-    featuredImage: faker.image.imageUrl(),
+    featuredImage: faker.image.url(),
     tags: faker.helpers.arrayElements(
       ["football", "sports", "prediction", "league", "analysis"],
-      faker.datatype.number({ min: 1, max: 5 })
+      faker.number.int({ min: 1, max: 5 })
     ),
     publishedOn: faker.date.past(),
   });

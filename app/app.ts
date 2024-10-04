@@ -66,7 +66,6 @@ export default class AppContext {
 
       // Loop through only enabled plugins in the config
       for (const pluginConfig of pluginsConfig) {
-        console.log("Dir", pluginConfig);
         if (pluginConfig.enabled) {
           const pluginFolder = pluginFolders.find(
             (folder) =>

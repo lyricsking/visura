@@ -28,7 +28,7 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  singleton("mongoose", () => createDBConnection);
+  singleton("mongoose", createDBConnection);
 
   await singleton<AppContext>("app", () => new AppContext()).then((app) => {
     //await app.init();

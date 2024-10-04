@@ -37,7 +37,7 @@ const routes: Record<RouteType, Route[]> = {
     {
       path: "/tips/:slug",
       file: "blog/routes/tip.tsx",
-      loader: postLoader,
+      loader: tipLoader,
     },
   ],
   admin: [],
