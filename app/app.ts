@@ -121,3 +121,8 @@ export default class AppContext {
     }
   }
 }
+
+export const app = await singleton<AppContext>("context", () => new AppContext()).then((app) => {
+    //await app.init();
+    if (app) app.init();
+  });
