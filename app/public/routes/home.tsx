@@ -28,26 +28,13 @@ export const loader: LoaderFunction = withConfig(async (arg, config, app) => {
 });
 
 export default function Home() {
-  const { componentPath, data, pathname } = useLoaderData<typeof loader>();
-
-  // Get the current file's path
-  const __filename = fileURLToPath(import.meta.url);
-  // Get the current directory name
-  const __dirname = path.dirname(__filename);
-  // Navigate up to the `app` directory
-  const pluginComponentPath = path.resolve(
-    __dirname,
-    "../../plugins",
-    componentPath
-  );
+  const { componentPath, data, pathname } = useLoaderData < typeof loader > ();
 
   if (componentPath && pathname !== "default") {
     // Use React.lazy to dynamically import the component
-    const DynamicComponent = React.lazy(
-      () => import(/* @vite-ignore */ pluginComponentPath)
+    const DynamicComponent = React.lazy(() =>
+      import( /* @vite-ignore */ `/plugins/${componentPath}`)
     );
-
-    //return <DynamicComponent {...data} />;
 
     return (
       <Suspense fallback={<div>Loading component...</div>}>
