@@ -6,10 +6,17 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import * as lo from "lodash";
+import { Route, RouteType } from "./actions/route.action";
 
 export default class AppContext {
   private readonly _config: Config;
   private plugins: Record<string, IPlugin>;
+  private routes: Record<RouteType, Route[]> = {
+    app: [],
+    admin: [],
+  };
+
+  private homePaths: Record<string, string> = {};
 
   constructor() {
     this._config = this.loadConfig();
@@ -100,7 +107,7 @@ export default class AppContext {
               }
 
               // Initialize the plugin
-              plugin.onInit();
+              plugin.onInit(this);
               console.log(`${plugin.name} initialized`);
 
               // Cache the plugin in memory
@@ -133,5 +140,31 @@ export default class AppContext {
 
   get configs() {
     return this._config.app;
+  }
+
+  addRoute(type: RouteType, route: Route) {
+    const mRoutes = this.routes;
+    if (mRoutes) {
+      mRoutes[type] = [...mRoutes[type], route];
+    }
+  }
+  findRoute(type: RouteType, path?: string): undefined | Route | Route[] {
+    const mRoutes = this.routes;
+    if (mRoutes) {
+      const typeRoutes = mRoutes[type];
+
+      if (!typeRoutes) return undefined;
+
+      if (!path) return typeRoutes;
+
+      return typeRoutes.find((route) => route.path === path);
+    }
+
+    return undefined;
+  }
+  addHomepagePath(name: string, path: string) {
+    if (!this.homePaths[name]) {
+      this.homePaths[name] = path;
+    }
   }
 }

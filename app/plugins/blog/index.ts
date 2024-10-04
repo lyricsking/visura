@@ -1,5 +1,5 @@
 import { IPlugin } from "~/plugin";
-import { Route, RouteType, addRoute } from "~/actions/route.action";
+import { Route, RouteType } from "~/actions/route.action";
 import { loader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
 import { loader as tipLoader } from "./loaders/tip.loader";
@@ -8,13 +8,13 @@ const blogPlugin: IPlugin = {
   name: "blog",
   description: "",
   version: "0.0.1",
-  onInit() {
+  onInit(app) {
     routes["app"].forEach((route) => {
-      addRoute("app", route);
+      app.addRoute("app", route);
     });
 
     routes["admin"].forEach((route) => {
-      addRoute("admin", route);
+      app.addRoute("admin", route);
     });
   },
   onDestroy() {},

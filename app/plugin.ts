@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { singleton } from "./utils/singleton";
+import AppContext from "./app";
 
 export const PLUGIN_KEY = "plugins";
 
@@ -10,7 +11,7 @@ export interface IPlugin {
   description: string;
   version: string;
   settings?: Record<string, any>;
-  onInit?: () => void;
-  onDestroy?: () => void;
+  onInit: (app: AppContext) => void;
+  onDestroy: () => void;
   layoutComponent?: React.ComponentType;
 }
