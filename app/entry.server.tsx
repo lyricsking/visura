@@ -30,7 +30,7 @@ export default async function handleRequest(
 ) {
   singleton("mongoose", () => createDBConnection);
   
-  await singleton<AppContext>("context", () => new AppContext()).then((app) => {
+  await singleton<AppContext>("app", () => new AppContext()).then((app) => {
     //await app.init();
     if (app) app.init();
   });
