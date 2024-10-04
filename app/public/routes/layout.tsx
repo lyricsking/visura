@@ -10,10 +10,10 @@ import {
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getUserFromSession } from "~/auth/server/auth.server";
-import config from "~/config";
+import { withConfig } from "~/utils/global-loader";
 
 export default function Default() {
-  const data = useLoaderData<typeof loader>();
+  const { config, user } = useLoaderData<typeof loader>();
   // const headerIcons = plugins
   //   .filter((plugin) => plugin.headerIcon)
   //   .map((plugin) => plugin.headerIcon);
@@ -27,21 +27,21 @@ export default function Default() {
         >
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
-              {config.app.appName}
+              {config.appName}
             </h1>
           </Link>
 
           <div className="flex h-full divide-x">
             {/* {headerIcons.map((Icon, index) => Icon && <Icon />)} */}
             <div className="flex-none mx-auto">
-              <AccountMenuButton user={data?.user} />
+              <AccountMenuButton user={user} />
             </div>
           </div>
         </PageLayoutHeaderItem>
       </PageLayoutHeader>
 
       <PageLayoutContent>
-        <Outlet context={{ user: data.user }} />
+        <Outlet context={{ user: user }} />
       </PageLayoutContent>
 
       <PageLayoutFooter columns="1" asChild>
@@ -51,8 +51,10 @@ export default function Default() {
   );
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUserFromSession(request);
+export const loader: LoaderFunction = withConfig(
+  async ({ request }, config) => {
+    const user = await getUserFromSession(request);
 
-  return json({ user: user });
-};
+    return json({ config: config, user: user });
+  }
+);

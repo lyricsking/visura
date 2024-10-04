@@ -8,11 +8,11 @@ import { fileURLToPath } from "url";
 import * as lo from "lodash";
 
 export default class AppContext {
-  private readonly config: Config;
+  private readonly _config: Config;
   private plugins: Record<string, IPlugin>;
 
   constructor() {
-    this.config = this.loadConfig();
+    this._config = this.loadConfig();
     this.plugins = {};
   }
 
@@ -56,13 +56,15 @@ export default class AppContext {
         withFileTypes: true,
       });
 
-      const pluginsConfig = this.config.plugins;
+      const pluginsConfig = this._config.plugins;
 
       // Loop through only enabled plugins in the config
-      for (const [pluginName, pluginConfig] of Object.entries(pluginsConfig)) {
+      for (const pluginConfig of pluginsConfig) {
+        console.log("Dir", pluginConfig);
         if (pluginConfig.enabled) {
           const pluginFolder = pluginFolders.find(
-            (folder) => folder.isDirectory() && folder.name === pluginName
+            (folder) =>
+              folder.isDirectory() && folder.name === pluginConfig.name
           );
 
           if (pluginFolder) {
@@ -110,7 +112,9 @@ export default class AppContext {
             }
           }
         } else {
-          console.log(`${pluginName} is disabled and will not be loaded.`);
+          console.log(
+            `${pluginConfig.name} is disabled and will not be loaded.`
+          );
         }
       }
     } catch (err) {
@@ -122,6 +126,12 @@ export default class AppContext {
   }
 
   get(name: string) {
-    return Object.entries(this.config.app).find(([key, value]) => key === name);
+    return Object.entries(this._config.app).find(
+      ([key, value]) => key === name
+    );
+  }
+
+  get configs() {
+    return this._config.app;
   }
 }

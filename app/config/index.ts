@@ -16,25 +16,4 @@ export const configSchema = z.object({
   plugins: z.array(pluginSchema),
 });
 
-export type Config = z.infer < typeof configSchema > ;
-
-function loadConfig() {
-  // Determine the current environment
-  const env =
-    process.env.NODE_ENV === "production" ? "production" : "development";
-
-  const envConfig: Partial < Config > = {
-    app: {
-      ...appConfig["default"],
-      ...appConfig[env],
-    },
-    plugins: [...pluginsConfig["default"], ...pluginsConfig[env]],
-  };
-
-  const configParse = configSchema.safeParse(envConfig);
-  if (configParse.error) {
-    throw configParse.error;
-  }
-
-  return configParse.data;
-}
+export type Config = z.infer<typeof configSchema>;

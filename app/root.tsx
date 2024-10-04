@@ -25,7 +25,7 @@ import { withConfig } from "./utils/global-loader";
 
 export type LoaderData = {
   //theme: Theme | null;
-  config: any
+  config: any;
 };
 
 // read the state from the cookie
@@ -49,12 +49,12 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (data && data.config) {
     return [{ title: "" }, { name: "description", content: "" }];
   }
-  
+
   return [
-    { title: "" }, // Dynamically set the title using AppContext
+    { title: "Title" },
     {
       name: "description",
-      content: "",
+      content: "Description",
     },
   ];
 };
