@@ -1,13 +1,12 @@
 import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { findRoute } from "~/actions/route.action";
 import DefaultHome from "./default-home";
 import React, { Suspense } from "react";
 import { withConfig } from "~/utils/global-loader";
 
-export const loader: LoaderFunction = withConfig(async (arg, config) => {
+export const loader: LoaderFunction = withConfig(async (arg, config, app) => {
   const homepagePath = config.homepage;
-  const route = findRoute("app", homepagePath);
+  const route = app?.findRoute("app", homepagePath);
 
   console.log(homepagePath);
 

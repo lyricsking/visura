@@ -7,7 +7,8 @@ import { Config } from "~/config";
 export function withConfig(
   callback: (
     args: LoaderFunctionArgs,
-    config: any
+    config: any,
+    app?: AppContext
   ) => Promise<Response> | Response
 ): LoaderFunction {
   return async (args: LoaderFunctionArgs) => {
@@ -16,6 +17,6 @@ export function withConfig(
     if (appContext) appConfig = appContext.configs;
 
     // Pass the config to the callback and return the final response
-    return callback(args, appConfig || {});
+    return callback(args, appConfig || {}, appContext);
   };
 }

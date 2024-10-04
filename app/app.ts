@@ -5,7 +5,6 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import * as lo from "lodash";
 import { Route, RouteType } from "./actions/route.action";
 
 export default class AppContext {
