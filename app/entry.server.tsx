@@ -14,7 +14,7 @@ import { renderToPipeableStream } from "react-dom/server";
 import { singleton } from "./utils/singleton";
 import createDBConnection from "./database/db.server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
-import Context from "./app";
+import AppContext from "./app";
 
 const ABORT_DELAY = 5_000;
 
@@ -29,7 +29,7 @@ export default async function handleRequest(
   loadContext: AppLoadContext
 ) {
   singleton("mongoose", () => createDBConnection);
-  
+
   await singleton<AppContext>("app", () => new AppContext()).then((app) => {
     //await app.init();
     if (app) app.init();

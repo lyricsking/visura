@@ -21,32 +21,43 @@ import { useEffect } from "react";
 import { cn } from "./utils/util";
 import { Toaster } from "./components/toaster";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { withConfig } from "./utils/global-loader";
 
 export type LoaderData = {
   //theme: Theme | null;
 };
 
 // read the state from the cookie
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = withConfig((args, config) => {
   //const themeSession = await getThemeSession(request);
 
   const data: LoaderData = {
     //theme: themeSession.getTheme(),
+    config: config,
   };
 
   return json(data);
-};
+});
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: config.appName },
-    { name: "description", content: config.description },
-  ];
+export const meta: MetaFunction = ({ data }) => {
+  // Access the appConfig from the loader's returned data
+  if (data && data.config) {
+    return [
+      { title: data.appConfig.appName }, // Dynamically set the title using AppContext
+      {
+        name: "description",
+        content: data.appConfig.description || "Default description",
+      },
+    ];
+  }
+
+  return [{ title: "" }, { name: "description", content: "" }];
 };
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData("root") as LoaderData;
 

@@ -120,8 +120,8 @@ export default class AppContext {
       return plugins;
     }
   }
-  
-  config(name: string){
-    return this.config.app.find((key) => key === name);
+
+  get(name: string) {
+    return Object.entries(this.config.app).find(([key, value]) => key === name);
   }
 }
