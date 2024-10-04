@@ -30,7 +30,8 @@ export const loader: LoaderFunction = withConfig(async (args, config, app) => {
         // Do something with the matched params
         // e.g., load the post based on postId
         const data =
-          route.loader && (await route.loader({ params: params as Params }));
+          route.loader &&
+          (await route.loader({ app: app!, params: params as Params }));
 
         return json({
           data: data,

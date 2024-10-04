@@ -1,6 +1,6 @@
 import { IPlugin } from "~/plugin";
 import { Route, RouteType } from "~/actions/route.action";
-import { loader as blogLoader } from "./loaders/index.loader";
+import { blogLoader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
 import { loader as tipLoader } from "./loaders/tip.loader";
 

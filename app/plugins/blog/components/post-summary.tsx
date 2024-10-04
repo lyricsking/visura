@@ -1,7 +1,5 @@
-import config from "~/config";
 import { formatDateOrTime } from "~/utils/date";
 import { Link } from "@remix-run/react";
-import { useEffect } from "react";
 
 type PostSummaryProps = {
   post: any;

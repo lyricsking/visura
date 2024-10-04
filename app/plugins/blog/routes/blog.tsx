@@ -1,5 +1,4 @@
 import { LinksFunction, json, type MetaFunction } from "@remix-run/node";
-import config from "~/config";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import Button from "~/components/button";
@@ -11,11 +10,12 @@ import {
   SelectValue,
 } from "~/components/select";
 import { SelectItem } from "@radix-ui/react-select";
-import { TipCard } from "../components/tip-card";
+import { TipSummary } from "../components/tip-summary";
 import { ITips } from "../types/tips.type";
 import { ScrollArea } from "~/components/scrollable.area";
 import { PostSummary } from "../components/post-summary";
 import { findFontByName } from "~/utils/fonts";
+import { blogLoader } from "../loaders/index.loader";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
@@ -30,10 +30,12 @@ export const links: LinksFunction = () => {
   return links;
 };
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof blogLoader> = ({ data }) => {
+  const { app } = data as any;
+
   return [
-    { title: config.app.appName },
-    { name: "description", content: config.app.description },
+    { title: app.appName },
+    { name: "description", content: app.description },
   ];
 };
 
@@ -87,7 +89,7 @@ export default function Blog({ tips, posts }: any) {
                 <div className="grid sm:grid-cols-2 gap-6 divide-y sm:divide-x sm:divide-y-0">
                   {tips &&
                     tips.map((tip, index) => (
-                      <TipCard key={index} tip={tip as unknown as ITips} />
+                      <TipSummary key={index} tip={tip as unknown as ITips} />
                     ))}
                 </div>
 
@@ -129,7 +131,7 @@ export default function Blog({ tips, posts }: any) {
                   <div className="grid sm:grid-cols-2 gap-6 divide-y sm:divide-x sm:divide-y-0">
                     {tips &&
                       tips.map((tip, index) => (
-                        <TipCard key={index} tip={tip as unknown as ITips} />
+                        <TipSummary key={index} tip={tip as unknown as ITips} />
                       ))}
                   </div>
                 </ScrollArea>

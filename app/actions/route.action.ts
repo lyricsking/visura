@@ -2,7 +2,9 @@ import { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { Params } from "@remix-run/react";
 import { singleton } from "~/utils/singleton";
 import z from "zod";
+import AppContext from "~/app";
 export type PluginLoaderFunctionArgs = {
+  app: AppContext;
   params: Params;
 };
 

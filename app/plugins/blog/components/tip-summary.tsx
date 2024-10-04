@@ -1,11 +1,9 @@
-import { Calendar, Link2, MessageCircleIcon } from "lucide-react";
+import { Calendar, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
 import { formatDateByParts } from "~/utils/date";
-import Button, { buttonVariants } from "~/components/button";
-import FootballIcon from "~/components/ui/football";
+import { buttonVariants } from "~/components/button";
 import { Link } from "@remix-run/react";
 import { cn } from "~/utils/util";
-import blogPlugin from "..";
 import { getSlug } from "../utils/slug";
 
 type TipCardProps = {
@@ -43,7 +41,7 @@ export const TipSummary = (props: TipCardProps) => {
             </h3>
           </div>
           <Link
-            to={path + "/" + getSlug(title)}
+            to={path + "/" + tip.slug}
             className={cn(
               buttonVariants({ variant: "outline", radius: "md" }),
               "text-white bg-red-400 "
