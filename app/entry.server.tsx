@@ -29,8 +29,11 @@ export default async function handleRequest(
   loadContext: AppLoadContext
 ) {
   singleton("mongoose", () => createDBConnection);
-
-  await app;
+  
+  await singleton<AppContext>("context", () => new AppContext()).then((app) => {
+    //await app.init();
+    if (app) app.init();
+  });
 
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
