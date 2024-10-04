@@ -14,7 +14,8 @@ export const loader: LoaderFunction = withConfig(async (arg, config, app) => {
   console.log("Home", homepagePath);
 
   if (route && !Array.isArray(route)) {
-    const routeData = route.loader && (await route.loader({app: app!, param:arg.params}));
+    const routeData =
+      route.loader && (await route.loader({ app: app!, params: arg.params }));
 
     return json({
       data: routeData,
