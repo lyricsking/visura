@@ -1,4 +1,4 @@
-import { Link, Outlet } from "@remix-run/react";
+import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
 import {
   PageLayout,
   PageLayoutContent,
@@ -7,17 +7,18 @@ import {
 } from "~/components/ui/page.layout";
 
 import Button from "~/components/button";
-import config from "~/config";
-
+import { withConfig } from "~/utils/global-loader";
+export const loader = withConfig((args, config, app) => {
+  return json({ appName: app?.configs.appName });
+});
 export default function Layout() {
+  const { appName } = useLoaderData<typeof loader>();
   return (
     <PageLayout className="bg-gray-100 max-h-screen overflow-y-auto no-scrollbar">
       <PageLayoutHeader>
         <PageLayoutHeaderItem className="border">
           <Link to={"/"} replace>
-            <h1 className="text-[28px] font-bold tracking-tight">
-              {config.app.appName}
-            </h1>
+            <h1 className="text-[28px] font-bold tracking-tight">{appName}</h1>
           </Link>
           <Button
             variant={"outline"}
