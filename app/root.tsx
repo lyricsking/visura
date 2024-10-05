@@ -15,26 +15,29 @@ import {
   Outlet,
   useRouteError,
   isRouteErrorResponse,
+  useLoaderData,
 } from "@remix-run/react";
 import { useEffect } from "react";
 
 import { cn } from "./utils/util";
 import { Toaster } from "./components/toaster";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { withConfig } from "./utils/global-loader";
+import { withContext } from "./utils/context-loader";
+import AppContext from "./app";
+import { applyDiscount } from "./tempPlugins/SubscriptionBox/Order/server/cart.server";
+import { Config } from "./config";
 
 export type LoaderData = {
   //theme: Theme | null;
-  config: any;
+  config: Config["app"];
 };
 
 // read the state from the cookie
-export const loader: LoaderFunction = withConfig((args, config) => {
+export const loader = withContext(({ app }) => {
   //const themeSession = await getThemeSession(request);
 
   const data: LoaderData = {
-    //theme: themeSession.getTheme(),
-    config: config,
+    config: app.configs,
   };
 
   return json(data);
@@ -90,7 +93,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const { config } = useLoaderData() as LoaderData;
+
+  return <Outlet context={{ config }} />;
 }
 
 export function ErrorBoundary() {

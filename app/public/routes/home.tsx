@@ -2,12 +2,9 @@ import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import DefaultHome from "./default-home";
 import React, { Suspense } from "react";
-import { withConfig } from "~/utils/global-loader";
+import { withContext } from "~/utils/context-loader";
 
-import path from "path";
-import { fileURLToPath } from "url";
-
-export const loader: LoaderFunction = withConfig(async (arg, config, app) => {
+export const loader: LoaderFunction = withContext(async (arg, config, app) => {
   const homepagePath = config.homepage;
   const route = app?.findRoute("app", homepagePath);
 
@@ -20,7 +17,7 @@ export const loader: LoaderFunction = withConfig(async (arg, config, app) => {
     return json({
       data: routeData,
       pathname: homepagePath,
-      componentPath: route.file,
+      componentPath: route.component,
     });
   }
 
@@ -33,7 +30,7 @@ export default function Home() {
   if (componentPath && pathname !== "default") {
     // Use React.lazy to dynamically import the component
     const DynamicComponent = React.lazy(
-      () => import(/* @vite-ignore */ `../../plugins/${componentPath}`)
+      () => import(/* @vite-ignore */ `/app/${componentPath}`)
     );
 
     return (

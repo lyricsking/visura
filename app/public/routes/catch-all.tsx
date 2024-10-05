@@ -1,16 +1,13 @@
 import { LoaderFunction, json } from "@remix-run/node";
-import { Params, createSearchParams, useLoaderData } from "@remix-run/react";
+import { Params, useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import NotFound from "./not-found";
 import React, { Suspense, useEffect } from "react";
-import { withConfig } from "~/utils/global-loader";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { withContext } from "~/utils/context-loader";
 
 const NOT_FOUND_PATH = "not-found";
 
-export const loader: LoaderFunction = withConfig(async (args, config, app) => {
+export const loader: LoaderFunction = withContext(async (args, config, app) => {
   const { params, request } = args;
   const url = new URL(request.url);
 
@@ -37,7 +34,7 @@ export const loader: LoaderFunction = withConfig(async (args, config, app) => {
           data: data,
           params,
           pathname: route.path,
-          componentPath: route.file,
+          componentPath: route.component,
         });
       }
     }
@@ -53,13 +50,12 @@ export default function CatchAll() {
   const { pathname, data, params, componentPath } =
     useLoaderData<typeof loader>();
 
-
-  if (componentPath && pathname !== NOT_FOUND_PATH){
+  if (componentPath && pathname !== NOT_FOUND_PATH) {
     // Use React.lazy to dynamically import the component
-    const DynamicComponent = React.lazy(() =>
-      import( /* @vite-ignore */ `../../plugins/${componentPath}`)
+    const DynamicComponent = React.lazy(
+      () => import(/* @vite-ignore */ `/app/${componentPath}`)
     );
-    
+
     return (
       <Suspense fallback={<div>Loading component...</div>}>
         <DynamicComponent {...data} pathname={pathname} />

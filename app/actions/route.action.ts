@@ -13,7 +13,7 @@ export type PluginLoaderFunction = (args: PluginLoaderFunctionArgs) => any;
 export type RouteType = "app" | "admin";
 export type Route = {
   path: string;
-  file: string;
+  component: string;
   loader?: PluginLoaderFunction;
   action?: ActionFunction;
 };

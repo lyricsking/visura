@@ -26,17 +26,17 @@ const routes: Record<RouteType, Route[]> = {
   app: [
     {
       path: "/blog",
-      file: "blog/routes/blog.tsx",
+      component: "blog/routes/blog.tsx",
       loader: blogLoader,
     },
     {
       path: "/news/:slug",
-      file: "blog/routes/post.tsx",
+      component: "blog/routes/post.tsx",
       loader: postLoader,
     },
     {
       path: "/tips/:slug",
-      file: "blog/routes/tip.tsx",
+      component: "blog/routes/tip.tsx",
       loader: tipLoader,
     },
   ],
