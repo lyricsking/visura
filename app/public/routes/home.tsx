@@ -28,12 +28,12 @@ export const loader: LoaderFunction = withConfig(async (arg, config, app) => {
 });
 
 export default function Home() {
-  const { componentPath, data, pathname } = useLoaderData < typeof loader > ();
+  const { componentPath, data, pathname } = useLoaderData<typeof loader>();
 
   if (componentPath && pathname !== "default") {
     // Use React.lazy to dynamically import the component
-    const DynamicComponent = React.lazy(() =>
-      import( /* @vite-ignore */ `/plugins/${componentPath}`)
+    const DynamicComponent = React.lazy(
+      () => import(/* @vite-ignore */ `../../plugins/${componentPath}`)
     );
 
     return (

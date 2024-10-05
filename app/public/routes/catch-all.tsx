@@ -57,7 +57,7 @@ export default function CatchAll() {
   if (componentPath && pathname !== NOT_FOUND_PATH){
     // Use React.lazy to dynamically import the component
     const DynamicComponent = React.lazy(() =>
-      import( /* @vite-ignore */ `/plugins/${componentPath}`)
+      import( /* @vite-ignore */ `../../plugins/${componentPath}`)
     );
     
     return (
