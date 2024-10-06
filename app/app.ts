@@ -16,13 +16,14 @@ export default class AppContext {
     app: [],
     admin: [],
   };
+  private homePaths: Record<string, string> = {};
 
-  private readonly _menu: Record<MenuType, Menu[]> = {
+  private readonly _menus: Record<MenuType, Menu[]> = {
     app: [],
     admin: [],
   };
 
-  private homePaths: Record<string, string> = {};
+  private readonly _routeMenus: Record<string, Menu[]> = {};
 
   constructor() {
     this._config = this.loadConfig();
@@ -31,7 +32,7 @@ export default class AppContext {
 
   // Async initialization logic for loading plugins
   async init() {
-    // Load plugins asynchronously
+    // Load plugins asynchronousllllly
     this.plugins = await this.loadPlugins();
   }
 
@@ -176,9 +177,25 @@ export default class AppContext {
   }
 
   addMenu(menuType: MenuType, menuItem: Menu) {
-    this._menu[menuType] = [...this._menu[menuType], menuItem];
+    this._menus[menuType] = [...this._menus[menuType], menuItem];
   }
-  get adminMenu() {
-    return this._menu.admin;
+
+  get dashboardMenu() {
+    return this._menus.admin;
+  }
+
+  addRouteMenu(menuItem: Menu) {
+    const path = menuItem.path;
+
+    const currentPathMenus = this._routeMenus[path] || [];
+    currentPathMenus.push(menuItem);
+
+    this._routeMenus[path] = currentPathMenus;
+  }
+
+  getRouteMenu(routePath: string): Menu[] | undefined {
+    return Object.entries(this._routeMenus).find(
+      ([path, menuItem]) => path === routePath
+    )?.[1];
   }
 }

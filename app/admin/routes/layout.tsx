@@ -29,6 +29,7 @@ import { ScrollArea, ScrollBar } from "~/components/scrollable.area";
 import { cn } from "~/utils/util";
 import { findOrCreateUserProfiles } from "~/user/server/user.server";
 import { withContext } from "~/utils/context-loader";
+import { useEffect } from "react";
 
 export const handle = {
   breadcrumb: {
@@ -58,8 +59,6 @@ export default function Layout() {
     }
   });
 
-  const menu: Menu[] = data.menu;
-
   let currentpage =
     currentRoute?.handle?.pageName || parentRoute?.handle?.pageName;
   if (currentpage && typeof currentpage === "function") {
@@ -67,6 +66,9 @@ export default function Layout() {
       currentRoute?.handle?.data || parentRoute?.handle?.data
     );
   }
+
+  const menu: Menu[] = data.menu;
+  const routeMenu: Menu[] = currentRoute.data?.routeMenu;
 
   return (
     <PageLayout className="bg-gray-100">
@@ -103,31 +105,32 @@ export default function Layout() {
 
         <div className="w-full mx-auto sm:w-full grid px-4 sm:px-8">
           <div className="grid sm:border sm:rounded-md py-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr]">
-            <div className="grid bg-white rounded-md">
-              <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
-                <ScrollArea className="whitespace-nowrap" type="scroll">
-                  <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
-                    {menu.map((item: any) => (
-                      <NavLink
-                        key={item.label}
-                        to={item.path}
-                        end
-                        className={({ isActive }) =>
-                          cn("w-full text-center", {
-                            "font-semibold text-primary bg-slate-200 p-2 rounded-md":
-                              isActive,
-                          })
-                        }
-                      >
-                        {item.label}
-                      </NavLink>
-                    ))}
-                  </div>
-                  <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-              </nav>
-            </div>
-
+            {routeMenu && (
+              <div className="grid bg-white rounded-md">
+                <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
+                  <ScrollArea className="whitespace-nowrap" type="scroll">
+                    <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
+                      {routeMenu.map((item) => (
+                        <NavLink
+                          key={item.id}
+                          to={item.path}
+                          end
+                          className={({ isActive }) =>
+                            cn("w-full text-center", {
+                              "font-semibold text-primary bg-slate-200 p-2 rounded-md":
+                                isActive,
+                            })
+                          }
+                        >
+                          {item.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+                </nav>
+              </div>
+            )}
             <ScrollArea className="h-screen w-full" type="auto">
               <div className="w-full py-8 px-4 md:py-12 md:px-6 bg-white rounded-md">
                 <Outlet context={{ user: data.user }} />
@@ -165,7 +168,7 @@ export const loader: LoaderFunction = withContext(async ({ request, app }) => {
   }
 
   // If additional admin menu is provided
-  const adminMenu = app.adminMenu;
+  const adminMenu = app.dashboardMenu;
   // Return user object if provided.
   return json({
     appName: app?.configs.appName,

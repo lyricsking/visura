@@ -21,7 +21,7 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
-  const pluginRoutes = app?.findRoute("app");
+  const pluginRoutes = app?.findRoute("admin");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
     // Try matching the URL with the registered plugin paths
@@ -31,6 +31,8 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
 
       if (matchResult) {
         const { path, params } = matchResult;
+
+        const routeMenu = app.getRouteMenu(route.path);
 
         // Do something with the matched params
         // e.g., load the post based on postId
@@ -43,6 +45,7 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
           params,
           pathname: route.path,
           componentPath: route.component,
+          routeMenu: routeMenu,
         });
       }
     }
