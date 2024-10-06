@@ -10,7 +10,7 @@ import {
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import { LoaderFunction, json } from "@remix-run/node";
 import { getUserFromSession } from "~/auth/server/auth.server";
-import { withConfig } from "~/utils/global-loader";
+import { withContext } from "~/utils/context-loader";
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
@@ -51,10 +51,8 @@ export default function Default() {
   );
 }
 
-export const loader: LoaderFunction = withConfig(
-  async ({ request }, config) => {
-    const user = await getUserFromSession(request);
+export const loader: LoaderFunction = withContext(async ({ app, request }) => {
+  const user = await getUserFromSession(request);
 
-    return json({ config: config, user: user });
-  }
-);
+  return json({ config: app.configs, user: user });
+});

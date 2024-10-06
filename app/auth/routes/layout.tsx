@@ -7,8 +7,8 @@ import {
 } from "~/components/ui/page.layout";
 
 import Button from "~/components/button";
-import { withConfig } from "~/utils/global-loader";
-export const loader = withConfig((args, config, app) => {
+import { withContext } from "~/utils/context-loader";
+export const loader = withContext(({ app }) => {
   return json({ appName: app?.configs.appName });
 });
 export default function Layout() {

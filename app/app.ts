@@ -6,11 +6,18 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Route, RouteType } from "./actions/route.action";
+import { MenuType } from "./actions/menu.action";
+import { Menu } from "./utils/menu";
 
 export default class AppContext {
   private readonly _config: Config;
   private plugins: Record<string, IPlugin>;
   private routes: Record<RouteType, Route[]> = {
+    app: [],
+    admin: [],
+  };
+
+  private readonly _menu: Record<MenuType, Menu[]> = {
     app: [],
     admin: [],
   };
@@ -146,6 +153,7 @@ export default class AppContext {
       mRoutes[type] = [...mRoutes[type], route];
     }
   }
+
   findRoute(type: RouteType, path?: string): undefined | Route | Route[] {
     const mRoutes = this.routes;
     if (mRoutes) {
@@ -160,9 +168,17 @@ export default class AppContext {
 
     return undefined;
   }
+
   addHomepagePath(name: string, path: string) {
     if (!this.homePaths[name]) {
       this.homePaths[name] = path;
     }
+  }
+
+  addMenu(menuType: MenuType, menuItem: Menu) {
+    this._menu[menuType] = [...this._menu[menuType], menuItem];
+  }
+  get adminMenu() {
+    return this._menu.admin;
   }
 }

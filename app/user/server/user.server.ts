@@ -35,17 +35,17 @@ export const createUser = async (props: CreateUserProps) => {
   }
 };
 
-export const findOrCreateUserProfiles = async (
-  {
-    firstName,
-    lastName,
-    email,
-    photo,
-    type = "customer",
-  }: Pick<IUser, "email"> &
-    Partial<Pick<IUser, "type">> &
-    Partial<Pick<IUserProfile, "firstName" | "lastName" | "photo">>
-): Promise<IHydratedUser> => {
+export const findOrCreateUserProfiles = async ({
+  firstName,
+  lastName,
+  email,
+  photo,
+  type = "customer",
+}: Pick<IUser, "email"> &
+  Partial<Pick<IUser, "type">> &
+  Partial<
+    Pick<IUserProfile, "firstName" | "lastName" | "photo">
+  >): Promise<IHydratedUser> => {
   // Attempt to retrieve user with the email and updatuing the user as active.
   let user = await updateUser(email, { isActive: true }, { path: "profile" });
 
@@ -152,9 +152,9 @@ export const updateUser = async (
   }
   const updatedUser = await updatedUserQuery.exec();
 
-  if (!updatedUser) {
-    throw new Error("User or profile not found");
-  }
+  //  if (!updatedUser) {
+  //    throw new Error("User or profile not found");
+  //  }
 
   return updatedUser;
 };

@@ -1,6 +1,6 @@
 import { Menu } from "~/utils/menu";
 
-type MenuType = "app" | "admin";
+export type MenuType = "app" | "admin";
 
 const menu: Record<MenuType, Menu[]> = {
   app: [],

@@ -3,15 +3,16 @@ import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
 import { Menu } from "lucide-react";
 import Button from "~/components/button";
-import config from "~/config";
 import { Menu as MenuType } from "~/utils/menu";
+import { renderIcon } from "./icon-loader";
 
 export type SidebarContentProps = {
+  appName: string;
   menu: MenuType[];
   side?: "top" | "bottom" | "left" | "right";
 };
 
-export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
+export function Sidebar({ appName, menu, side = "left" }: SidebarContentProps) {
   return (
     <Sheet>
       <SheetTrigger>
@@ -24,14 +25,14 @@ export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
         <div className="flex flex-col" aria-label="Sidebar">
           <div className="flex items-center justify-center h-20 border-b border-gray-300 dark:border-gray-700">
             <h1 className="text-2xl font-semibold" aria-label="Logo">
-              {config.appName}
+              {appName}
             </h1>
           </div>
 
           <nav className="grid gap-6 text-lg font-medium">
             <ul>
               {menu.map((menu) => {
-                const Icon = menu.icon;
+                // const Icon = menu.icon;
 
                 return (
                   <li key={menu.id}>
@@ -46,7 +47,9 @@ export function Sidebar({ menu, side = "left" }: SidebarContentProps) {
                       }
                       end={true}
                     >
-                      {Icon && <Icon className="w-5 h-5 inline-block mr-2" />}
+                      {/* {Icon && <Icon className="w-5 h-5 inline-block mr-2" />}*/}
+                      {menu.icon && renderIcon(menu.icon)}
+
                       {menu.label}
                     </NavLink>
                   </li>

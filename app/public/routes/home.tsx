@@ -4,15 +4,14 @@ import DefaultHome from "./default-home";
 import React, { Suspense } from "react";
 import { withContext } from "~/utils/context-loader";
 
-export const loader: LoaderFunction = withContext(async (arg, config, app) => {
-  const homepagePath = config.homepage;
+export const loader: LoaderFunction = withContext(async ({ params, app }) => {
+  const homepagePath = app.configs.homepage;
   const route = app?.findRoute("app", homepagePath);
 
   console.log("Home", homepagePath);
 
   if (route && !Array.isArray(route)) {
-    const routeData =
-      route.loader && (await route.loader({ app: app!, params: arg.params }));
+    const routeData = route.loader && (await route.loader({ app, params }));
 
     return json({
       data: routeData,

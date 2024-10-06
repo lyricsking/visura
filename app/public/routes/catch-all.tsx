@@ -7,8 +7,7 @@ import { withContext } from "~/utils/context-loader";
 
 const NOT_FOUND_PATH = "not-found";
 
-export const loader: LoaderFunction = withContext(async (args, config, app) => {
-  const { params, request } = args;
+export const loader: LoaderFunction = withContext(async ({ app, request }) => {
   const url = new URL(request.url);
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"

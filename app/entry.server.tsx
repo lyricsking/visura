@@ -30,9 +30,11 @@ export default async function handleRequest(
 ) {
   singleton("mongoose", createDBConnection);
 
-  await singleton<AppContext>("app", () => new AppContext()).then((app) => {
+  await singleton<AppContext>("app", async () => {
+    const app = new AppContext();
     //await app.init();
-    if (app) app.init();
+    if (app) await app.init();
+    return app;
   });
 
   return isbot(request.headers.get("user-agent") || "")

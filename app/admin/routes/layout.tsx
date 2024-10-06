@@ -28,7 +28,7 @@ import HeaderIcons from "../components/header-icons";
 import { ScrollArea, ScrollBar } from "~/components/scrollable.area";
 import { cn } from "~/utils/util";
 import { findOrCreateUserProfiles } from "~/user/server/user.server";
-import { withConfig } from "~/utils/global-loader";
+import { withContext } from "~/utils/context-loader";
 
 export const handle = {
   breadcrumb: {
@@ -58,7 +58,7 @@ export default function Layout() {
     }
   });
 
-  const menu: Menu[] = [];
+  const menu: Menu[] = data.menu;
 
   return (
     <PageLayout className="bg-gray-100">
@@ -67,6 +67,7 @@ export default function Layout() {
           <div className="flex w-full items-center justify-between space-x-2">
             <div className="flex flex-row items-center gap-2 text-lg text-center font-medium sm:text-sm md:gap-6">
               <Sidebar
+                appName={data.appName}
                 menu={menu}
                 side={data.user.type === "customer" ? "right" : "left"}
               />
@@ -134,33 +135,38 @@ export default function Layout() {
   );
 }
 
-export const loader: LoaderFunction = withConfig(
-  async ({ request }, _, app) => {
-    // Get the authenticated user or redirects to auth page
-    const auth = await isAuthenticated(request);
-    if (auth && typeof auth === "string") {
-      return redirect(auth);
-    }
-    // check the subdomain we are accessing the page from, useed to manage staff users access.
-    let subdomain = getSubdomain(request);
-    // if the user has role access to the subdomain
-    // Get the cache user object from session, could be undefined or IHydrated user.
-    let user = await getUserFromSession(request);
-    // If the authUser object returned from authentication is of type AuthUser
-    // (i.e user is authenticated) but the the cache user is null or undefined,
-    // it means the cached user is invalidated, so we fetch a new object
-    // from server and cache.
-    if (isAuthUser(auth) && !user) {
-      // Cache invalidated, we fetch a new user object
-      user = await findOrCreateUserProfiles({ email: auth.email });
+export const loader: LoaderFunction = withContext(async ({ request, app }) => {
+  // Get the authenticated user or redirects to auth page
+  const auth = await isAuthenticated(request);
 
-      await setUserToSession(request, user);
-    }
-
-    // Return user object if provided.
-    return json({ appName: app?.configs.appName, ...(user && { user }) });
+  if (auth && typeof auth === "string") {
+    return redirect(auth);
   }
-);
+  // check the subdomain we are accessing the page from, useed to manage staff users access.
+  let subdomain = getSubdomain(request);
+  // if the user has role access to the subdomain
+  // Get the cache user object from session, could be undefined or IHydrated user.
+  let user = await getUserFromSession(request);
+  // If the authUser object returned from authentication is of type AuthUser
+  // (i.e user is authenticated) but the the cache user is null or undefined,
+  // it means the cached user is invalidated, so we fetch a new object
+  // from server and cache.
+  if (isAuthUser(auth) && !user) {
+    // Cache invalidated, we fetch a new user object
+    user = await findOrCreateUserProfiles({ email: auth.email });
+
+    await setUserToSession(request, user);
+  }
+
+  // If additional admin menu is provided
+  const adminMenu = app.adminMenu;
+  // Return user object if provided.
+  return json({
+    appName: app?.configs.appName,
+    menu: adminMenu,
+    ...(user && { user }),
+  });
+});
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
 //   let { defaultShouldRevalidate, formAction } = props;

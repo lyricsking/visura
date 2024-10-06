@@ -3,6 +3,7 @@ import { Route, RouteType } from "~/actions/route.action";
 import { blogLoader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
 import { loader as tipLoader } from "./loaders/tip.loader";
+import { ListIcon } from "lucide-react";
 
 const blogPlugin: IPlugin = {
   name: "blog",
@@ -16,6 +17,14 @@ const blogPlugin: IPlugin = {
     routes["admin"].forEach((route) => {
       app.addRoute("admin", route);
     });
+
+    app.addMenu("admin", {
+      id: "blog",
+      path: "plugins/blog/routes/blog.tsx",
+      label: "Blog",
+      //   icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFjdGl2aXR5Ij48cGF0aCBkPSJNMjIgMTJoLTIuNDhhMiAyIDAgMCAwLTEuOTMgMS40NmwtMi4zNSA4LjM2YS4yNS4yNSAwIDAgMS0uNDggMEw5LjI0IDIuMThhLjI1LjI1IDAgMCAwLS40OCAwbC0yLjM1IDguMzZBMiAyIDAgMCAxIDQuNDkgMTJIMiIvPjwvc3ZnPg==",
+      icon: "lucide-ListIcon",
+    });
   },
   onDestroy() {},
 };
@@ -26,17 +35,17 @@ const routes: Record<RouteType, Route[]> = {
   app: [
     {
       path: "/blog",
-      component: "blog/routes/blog.tsx",
+      component: "plugins/blog/routes/blog.tsx",
       loader: blogLoader,
     },
     {
       path: "/news/:slug",
-      component: "blog/routes/post.tsx",
+      component: "plugins/blog/routes/post.tsx",
       loader: postLoader,
     },
     {
       path: "/tips/:slug",
-      component: "blog/routes/tip.tsx",
+      component: "plugins/blog/routes/tip.tsx",
       loader: tipLoader,
     },
   ],
