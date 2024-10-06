@@ -1,4 +1,4 @@
-import { ForwardRefExoticComponent, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 
 export const renderIcon = (icon: string) => {
   if (icon.startsWith("data:image")) {

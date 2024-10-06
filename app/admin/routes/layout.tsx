@@ -60,6 +60,14 @@ export default function Layout() {
 
   const menu: Menu[] = data.menu;
 
+  let currentpage =
+    currentRoute?.handle?.pageName || parentRoute?.handle?.pageName;
+  if (currentpage && typeof currentpage === "function") {
+    currentpage = currentpage(
+      currentRoute?.handle?.data || parentRoute?.handle?.data
+    );
+  }
+
   return (
     <PageLayout className="bg-gray-100">
       <PageLayoutHeader position={"sticky"} className="bg-white">
@@ -90,9 +98,7 @@ export default function Layout() {
 
       <PageLayoutContent>
         <h1 className="text-3xl font-bold text-gray-900 py-6 px-4 sm:px-6 lg:px-8">
-          {currentRoute?.handle?.pageName ||
-            parentRoute?.handle?.pageName ||
-            "Dashboard"}
+          {currentpage || "Dashboard"}
         </h1>
 
         <div className="w-full mx-auto sm:w-full grid px-4 sm:px-8">
@@ -101,7 +107,7 @@ export default function Layout() {
               <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
                 <ScrollArea className="whitespace-nowrap" type="scroll">
                   <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
-                    {[].map((item: any) => (
+                    {menu.map((item: any) => (
                       <NavLink
                         key={item.label}
                         to={item.path}

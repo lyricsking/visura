@@ -1,27 +1,49 @@
-import { LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunction, json } from "@remix-run/node";
+import { Params, useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
-import { Route, findRoute } from "~/actions/route.action";
+import React, { Suspense, useEffect } from "react";
+import NotFound from "~/public/routes/not-found";
+import { withContext } from "~/utils/context-loader";
 
-export const loader: LoaderFunction = async (args) => {
-  const { params, request } = args;
+const NOT_FOUND_PATH = "not-found";
 
+export const handle = {
+  pageName: (data: any) => "CatchAll",
+  breadcrumb: {
+    id: "dashboard",
+    label: "CatchAll",
+    path: "/dashboard",
+  },
+};
+
+export const loader: LoaderFunction = withContext(async ({ app, request }) => {
   const url = new URL(request.url);
+
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
-  const pluginRoutes = findRoute("app") as Route[];
+  const pluginRoutes = app?.findRoute("app");
+
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
     // Try matching the URL with the registered plugin paths
-    for (const route of pluginRoutes) {
+    for (let route of pluginRoutes) {
       const matchRoute = match(route.path, { decode: decodeURIComponent });
       const matchResult = matchRoute(path);
 
       if (matchResult) {
         const { path, params } = matchResult;
+
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data = route.loader && (await route.loader(args));
-        return { path: route.path, data: data, params };
+        const data =
+          route.loader &&
+          (await route.loader({ app: app!, params: params as Params }));
+
+        return json({
+          data: data,
+          params,
+          pathname: route.path,
+          componentPath: route.component,
+        });
       }
     }
   }
@@ -29,17 +51,25 @@ export const loader: LoaderFunction = async (args) => {
   // If no route matched, return 404
   //throw new Response("Not Found", { status: 404 });
   // Return default path
-  return { path: "not-found", data: {} };
-};
+  return json({ pathname: NOT_FOUND_PATH, data: {} });
+});
 
 export default function CatchAll() {
-  const { path, data, params } = useLoaderData<typeof loader>();
+  const { pathname, data, params, componentPath } =
+    useLoaderData<typeof loader>();
 
-  const route = findRoute("app", path);
+  if (componentPath && pathname !== NOT_FOUND_PATH) {
+    // Use React.lazy to dynamically import the component
+    const DynamicComponent = React.lazy(
+      () => import(/* @vite-ignore */ `/app/${componentPath}`)
+    );
 
-  return route && !Array.isArray(route) ? (
-    <route.component {...data} />
-  ) : (
-    <p>No route matched</p>
-  );
+    return (
+      <Suspense fallback={<div>Loading component...</div>}>
+        <DynamicComponent {...data} pathname={pathname} />
+      </Suspense>
+    );
+  }
+
+  return <NotFound />;
 }
