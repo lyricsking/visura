@@ -4,6 +4,8 @@ import { blogLoader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
 import { loader as tipLoader } from "./loaders/tip.loader";
 import { ListIcon, LucideLayoutDashboard } from "lucide-react";
+import { loader as adminBlogLoader } from "./server/blog.server";
+import { loader as editPostLoader } from "./server/edit.server";
 
 const blogPlugin: IPlugin = {
   name: "blog",
@@ -26,10 +28,10 @@ const blogPlugin: IPlugin = {
       icon: "lucide-ListIcon",
     });
 
-    app.addRouteMenu({
-      id: "/administration/blog",
-      path: "/administration/blog",
-      label: "Blog Settings",
+    app.addRouteMenu("/administration/blog", {
+      id: "/administration/blog/edit",
+      path: "/administration/blog/edit",
+      label: "Create Post",
     });
   },
   onDestroy() {},
@@ -58,8 +60,13 @@ const routes: Record<RouteType, Route[]> = {
   admin: [
     {
       path: "/administration/blog",
-      component: "plugins/blog/routes/blog.tsx",
-      loader: blogLoader,
+      component: "plugins/blog/routes/admin/posts.tsx",
+      loader: adminBlogLoader,
+    },
+    {
+      path: "/administration/blog/edit",
+      component: "plugins/blog/routes/admin/edit.tsx",
+      loader: editPostLoader,
     },
   ],
 };

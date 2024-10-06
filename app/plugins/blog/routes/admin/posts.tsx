@@ -38,7 +38,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import { Progress } from "~/components/progress";
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import { findPosts, publishPost } from "../server/post.server";
+import { findPosts, publishPost } from "../../server/post.server";
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { cn } from "~/utils/util";
 import { formatDateByParts } from "~/utils/date";
@@ -50,8 +50,8 @@ export const handle = {
   },
 };
 
-export default function Posts() {
-  const data = useLoaderData<typeof loader>();
+export default function Posts({ posts }: any) {
+  //const data = useLoaderData<typeof loader>();
 
   return (
     <div className="mx-auto grid gap-4">
@@ -182,7 +182,7 @@ export default function Posts() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.posts.map((post) => (
+                  {posts.map((post) => (
                     <TableRow key={post._id}>
                       <TableCell className="hidden sm:table-cell">
                         <img
@@ -267,22 +267,3 @@ export default function Posts() {
     </div>
   );
 }
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const action = formData.get("action");
-
-  if (action === "publish") {
-    const id = formData.get("id");
-    if (id) {
-      console.log(await publishPost(id as string));
-    }
-    return json({ success: true });
-  }
-};
-
-export const loader = async ({}: LoaderFunctionArgs) => {
-  const posts = await findPosts({});
-
-  return json({ posts });
-};

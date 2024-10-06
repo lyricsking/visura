@@ -184,9 +184,7 @@ export default class AppContext {
     return this._menus.admin;
   }
 
-  addRouteMenu(menuItem: Menu) {
-    const path = menuItem.path;
-
+  addRouteMenu(path: string, menuItem: Menu) {
     const currentPathMenus = this._routeMenus[path] || [];
     currentPathMenus.push(menuItem);
 

@@ -8,7 +8,6 @@ import {
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
 import AccountMenuButton from "~/components/ui/account-menu-button";
-import config from "~/config";
 import Button from "~/components/button";
 
 export default function Layout() {
@@ -17,9 +16,7 @@ export default function Layout() {
       <PageLayoutHeader>
         <PageLayoutHeaderItem spacing={"compact"} className="bg-white">
           <Link to={"/"} replace>
-            <h1 className="text-2xl font-bold tracking-tight">
-              {config.appName}
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight">{"app name"}</h1>
           </Link>
 
           <Button variant="outline" className=" hidden bg-gray-100" radius="md">

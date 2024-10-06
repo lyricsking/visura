@@ -1,8 +1,7 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { loadConfigFromFile } from "vite";
-import { findPosts } from "../server/post.server";
-import config from "~/config";
+import { findPosts } from "../../server/post.server";
 
 export const handle = {
   pageName: "Blog",
