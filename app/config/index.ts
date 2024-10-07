@@ -12,6 +12,7 @@ export const configSchema = z.object({
     appName: z.string().readonly(),
     description: z.string().readonly(),
     homepage: z.string().readonly(),
+    enableSignup: z.boolean(),
   }),
   plugins: z.array(pluginSchema),
 });

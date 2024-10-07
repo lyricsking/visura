@@ -6,4 +6,4 @@ node_modules
 /sessions
 .env
 /app/temp-plugin
-/.yarn
+.yarn/install-state.gz

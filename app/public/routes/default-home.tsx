@@ -6,7 +6,6 @@ import {
 import Hero from "../components/hero";
 import HomeCarousel from "../components/home-carousel";
 import Explanation from "../components/explanation";
-import config from "~/config";
 import Button from "~/components/button";
 import { findFontByName } from "~/utils/fonts";
 
@@ -23,12 +22,12 @@ export const links: LinksFunction = () => {
   return links;
 };
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: config.app.appName },
-    { name: "description", content: config.app.description },
-  ];
-};
+// export const meta: MetaFunction = () => {
+//   return [
+//     { title: config.app.appName },
+//     { name: "description", content: config.app.description },
+//   ];
+// };
 //style={{ fontFamily: font.value }}
 
 export default function DefaultHome() {

@@ -27,6 +27,9 @@ import AppContext from "./app";
 import { applyDiscount } from "./tempPlugins/SubscriptionBox/Order/server/cart.server";
 import { Config } from "./config";
 
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: stylesheet },
+];
 export type LoaderData = {
   //theme: Theme | null;
   config: Config["app"];
@@ -42,10 +45,6 @@ export const loader = withContext(({ app }) => {
 
   return json(data);
 });
-
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
-];
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   // Access the appConfig from the loader's returned data
