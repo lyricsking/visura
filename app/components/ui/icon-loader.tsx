@@ -1,8 +1,14 @@
+import { StringColorFormat } from "@faker-js/faker";
 import { Suspense, lazy } from "react";
+import { cn } from "~/utils/util";
 
-export const renderIcon = (icon: string) => {
+export type RenderIconProps = {
+  icon: string;
+  className: string;
+};
+export const renderIcon = ({ icon, className }: RenderIconProps) => {
   if (icon.startsWith("data:image")) {
-    return <img src={icon} alt="icon" className="w-5 h-5 inline-block mr-2" />;
+    return <img src={icon} alt="icon" className={cn(className)} />;
   } else if (icon.startsWith("lucide-")) {
     return <DynamicLucideIcon iconName={icon.replace("lucide-", "")} />;
   }

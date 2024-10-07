@@ -8,12 +8,10 @@ import {
 } from "~/components/dropdown.menu";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
-import { IUserProfile } from "~/core/User/types/user-profile.type";
-import { useEffect } from "react";
-import { IHydratedUser } from "~/core/User/models/user.model";
-import { UserType } from "~/core/User/types/user.types";
 import { Menu } from "~/utils/menu";
 import { ReceiptRefundIcon } from "@heroicons/react/20/solid";
+import { IHydratedUser } from "~/user/models/user.model";
+import { renderIcon } from "./icon-loader";
 
 //type Props = ButtonProps;
 type Props = {
@@ -48,7 +46,7 @@ export default function AccountMenuButton({ menu, user }: Props) {
         {/* Optionally allow to navigate to dashboard if not already in the the dashboard */}
         {menu &&
           menu.map((menuItem) => {
-            const Icon = menuItem.icon;
+            const icon = menuItem.icon;
             return (
               <DropdownMenuItem
                 key={menuItem.id}
@@ -56,7 +54,7 @@ export default function AccountMenuButton({ menu, user }: Props) {
                   navigate(menuItem.path);
                 }}
               >
-                {Icon && <Icon className="w-6 h-6 mr-4" />}
+                {icon && renderIcon({ icon: icon, className: "w-6 h-6 mr-4" })}
                 {menuItem.label}
               </DropdownMenuItem>
             );

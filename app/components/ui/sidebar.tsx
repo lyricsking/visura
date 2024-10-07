@@ -48,7 +48,11 @@ export function Sidebar({ appName, menu, side = "left" }: SidebarContentProps) {
                       end={true}
                     >
                       {/* {Icon && <Icon className="w-5 h-5 inline-block mr-2" />}*/}
-                      {menu.icon && renderIcon(menu.icon)}
+                      {menu.icon &&
+                        renderIcon({
+                          icon: menu.icon,
+                          className: "w-5 h-5 inline-block mr-2",
+                        })}
 
                       {menu.label}
                     </NavLink>
