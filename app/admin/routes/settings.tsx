@@ -63,7 +63,7 @@ export default function Settings() {
   const params = useParams();
 
   const onSettingChange = (newSetting: string) => {
-    navigate(`/dashboard/settings/${newSetting}`);
+    navigate(`/administration/settings/${newSetting}`);
   };
 
   const Tag = settingsKeys[setting as keyof typeof settingsKeys];

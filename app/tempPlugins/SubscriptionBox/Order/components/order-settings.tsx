@@ -1,4 +1,6 @@
 import { useFetcher } from "@remix-run/react";
+import { SettingsType } from "~/admin/type/settings.type";
+import { ORDER_UPDATE_ACTION } from "~/admin/utils/constants";
 import Button from "~/components/button";
 import { Input } from "~/components/input";
 import { Label } from "~/components/label";
@@ -10,8 +12,6 @@ import {
   SelectValue,
 } from "~/components/select";
 import { Textarea } from "~/components/textarea";
-import { SettingsType } from "~/plugins/Dashboard/type/settings.type";
-import { ORDER_UPDATE_ACTION } from "~/plugins/Dashboard/utils/constants";
 
 export default function OrderSettings({ user: { profile } }: SettingsType) {
   const order = profile?.preferences.order;
