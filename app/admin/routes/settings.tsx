@@ -5,7 +5,7 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 import ProfileSettings from "../components/profile-settings";
@@ -35,6 +35,7 @@ import {
   DISPLAY_UPDATE_ACTION,
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
+import PluginManager from "../components/plugin-settings";
 
 export const handle = {
   pageName: "Settings",
@@ -48,11 +49,12 @@ export const handle = {
 const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   account: ProfileSettings,
   notifications: NotificationSettings,
-  display: DisplaySettings,
+  //display: DisplaySettings,
   //privacy: PrivacySettings,
-  order: OrderSettings,
+  //order: OrderSettings,
   //health: HealthSettings,
   //payment: PaymentSettings,
+  plugin: PluginManager,
 };
 
 export default function Settings() {
@@ -63,6 +65,8 @@ export default function Settings() {
   const params = useParams();
 
   const onSettingChange = (newSetting: string) => {
+    alert(JSON.stringify(newSetting, null, 2));
+
     navigate(`/administration/settings/${newSetting}`);
   };
 
@@ -77,7 +81,7 @@ export default function Settings() {
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent value={setting} className="h-fit">
+      <TabsContent key={setting} value={setting} className="h-fit">
         {<Tag user={user as IHydratedUser} />}
       </TabsContent>
     </Tabs>
@@ -133,6 +137,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const settingsType = params.setting || "account";
+  console.log(settingsType);
   // Todo use the settingsType to fetch appropriate data to be modified
   let session = await getSession(request);
 
