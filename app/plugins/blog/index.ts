@@ -1,44 +1,17 @@
 import { IPlugin } from "~/plugin";
-import { Route, RouteType } from "~/actions/route.action";
 import { blogLoader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
 import { loader as tipLoader } from "./loaders/tip.loader";
 import { ListIcon, LucideLayoutDashboard } from "lucide-react";
 import { loader as adminBlogLoader } from "./server/blog.server";
 import { loader as editPostLoader } from "./server/edit.server";
+import { Route, RouteType } from "~/app";
 
 const blogPlugin: IPlugin = {
-  name: "blog",
+  id: "blog",name: "Blog Plugin",
   description: "",
   version: "0.0.1",
   onInit(app) {
-    routes["app"].forEach((route) => {
-      app.addRoute("app", route);
-    });
-
-    routes["admin"].forEach((route) => {
-      app.addRoute("admin", route);
-    });
-
-    app.addMenu("admin", {
-      id: "blog",
-      path: "/administration/blog",
-      label: "Blog",
-      //   icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFjdGl2aXR5Ij48cGF0aCBkPSJNMjIgMTJoLTIuNDhhMiAyIDAgMCAwLTEuOTMgMS40NmwtMi4zNSA4LjM2YS4yNS4yNSAwIDAgMS0uNDggMEw5LjI0IDIuMThhLjI1LjI1IDAgMCAwLS40OCAwbC0yLjM1IDguMzZBMiAyIDAgMCAxIDQuNDkgMTJIMiIvPjwvc3ZnPg==",
-      icon: "lucide-ListIcon",
-    });
-
-    app.addRouteMenu("/administration/blog", {
-      id: "/administration/blog/edit",
-      path: "/administration/blog/edit",
-      label: "Create Post",
-    });
-  },
-  onDestroy() {},
-};
-
-export default blogPlugin;
-
 const routes: Record<RouteType, Route[]> = {
   app: [
     {
@@ -70,6 +43,26 @@ const routes: Record<RouteType, Route[]> = {
     },
   ],
 };
+
+    app.addMenu("admin", {
+      id: "blog",
+      path: "/administration/blog",
+      label: "Blog",
+      //   icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFjdGl2aXR5Ij48cGF0aCBkPSJNMjIgMTJoLTIuNDhhMiAyIDAgMCAwLTEuOTMgMS40NmwtMi4zNSA4LjM2YS4yNS4yNSAwIDAgMS0uNDggMEw5LjI0IDIuMThhLjI1LjI1IDAgMCAwLS40OCAwbC0yLjM1IDguMzZBMiAyIDAgMCAxIDQuNDkgMTJIMiIvPjwvc3ZnPg==",
+      icon: "lucide-ListIcon",
+    });
+
+    app.addRouteMenu("/administration/blog", {
+      id: "/administration/blog/edit",
+      path: "/administration/blog/edit",
+      label: "Create Post",
+    });
+  },
+  onDestroy() {},
+};
+
+export default blogPlugin;
+
 
 /*defineRoute(pluginConfig.path, "layouts/Default.tsx", () => {
       defineRoute("", "plugins/blog/routes/index.tsx", { index: true });

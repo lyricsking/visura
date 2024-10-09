@@ -5,9 +5,34 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { Route, RouteType } from "./actions/route.action";
-import { MenuType } from "./actions/menu.action";
-import { Menu } from "./utils/menu";
+import { Menu } from "~/utils/menu";
+
+export type PluginLoaderFunction = (
+  app: AppContext
+) => (args: any) => Promise<Response | any>; // Adjust the return type as necessary
+
+export type PluginActionFunction = (
+  app: AppContext
+) => (args: any) => Promise<Response | any>; // Adjust the return type as necessary
+
+export type RouteType = "app" | "admin";
+export type Route = {
+  path: string;
+  component: string;
+  loader?: PluginLoaderFunction;
+  action?: PluginActionFunction;
+};
+
+export type MenuType = "app" | "admin";
+
+const menu: Record<MenuType, Menu[]> = {
+  app: [],
+  admin: [],
+};
+
+export function addMenu(menuType: MenuType, menuItem: Menu) {
+  menu[menuType] = [...menu[menuType], menuItem];
+}
 
 export default class AppContext {
   private readonly _config: Config;
@@ -84,7 +109,7 @@ export default class AppContext {
 
       // Loop through only enabled plugins in the config
       for (const pluginConfig of pluginsConfig) {
-        if (pluginConfig.enabled) {
+        if (pluginConfig.isActive) {
           const pluginFolder = pluginFolders.find(
             (folder) =>
               folder.isDirectory() && folder.name === pluginConfig.name

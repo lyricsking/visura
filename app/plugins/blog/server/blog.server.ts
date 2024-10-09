@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { findPosts, publishPost } from "./post.server";
-import { PluginLoaderFunctionArgs } from "~/actions/route.action";
+import AppContext, { PluginLoaderFunction } from "~/app";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -15,8 +15,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const loader = async ({}: PluginLoaderFunctionArgs) => {
-  const posts = await findPosts({});
+export const loader:PluginLoaderFunction = (app: AppContext) => {
+  return async () => {
+    const posts = await findPosts({});
 
-  return { posts };
-};
+    return posts ;
+  }
+}

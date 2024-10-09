@@ -1,11 +1,13 @@
 import { z } from "zod";
 
+const STATUSES = ["active", "inactive"] as const;
+
 export const pluginSchema = z.object({
   id:z.string(),
   name: z.string().readonly(),
   description: z.string().readonly(),
   version: z.number().readonly(),
-  isEnabled: z.boolean().readonly(),
+  isActive: z.boolean().default(false)
 });
 
 export const configSchema = z.object({

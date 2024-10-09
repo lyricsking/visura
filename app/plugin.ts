@@ -1,7 +1,3 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { singleton } from "./utils/singleton";
 import AppContext from "./app";
 
 export const PLUGIN_KEY = "plugins";

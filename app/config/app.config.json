@@ -3,7 +3,7 @@
     "appName": "HarmonySport.",
     "description": "Subscription  based health store.",
     "homepage": "/blog",
-    "enableSignup": false
+    "allowSignup": false
   },
   "development": {},
   "production": {}
