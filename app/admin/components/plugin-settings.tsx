@@ -18,13 +18,7 @@ export default function PluginSetting(plugins: Plugin[]) {
     id: string,
     type: "enable" | "disable" | "install" | "uninstall"
   ) => {
-    if (plugin.id === id) {
-      if (type === "install") plugin.isInstalled = true;
-      if (type === "uninstall") plugin.isInstalled = false;
-      if (type === "enable") plugin.isEnabled = true;
-      if (type === "disable") plugin.isEnabled = false;
-    }
-  };
+   };
 
   // Rendering the plugin management UI
   return (

@@ -54,5 +54,6 @@ export default function Default() {
 export const loader: LoaderFunction = withContext(async ({ app, request }) => {
   const user = await getUserFromSession(request);
 
-  return json({ config: app.configs, user: user });
-});
+    return json({config: app.configs, user: user });
+  }
+)

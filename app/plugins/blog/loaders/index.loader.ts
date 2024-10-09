@@ -4,7 +4,7 @@ import {
 import { findPosts } from "../server/post.server";
 import { findTips } from "../server/tips.server";
 
-export const blogLoader = () => {
+export const blogLoader:PluginLoaderFunction= () => {
   return async () => {
     const [tips, posts] = await Promise.all([
       findTips(),

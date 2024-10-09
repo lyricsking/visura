@@ -2,7 +2,7 @@ import { IPlugin } from "~/plugin";
 import { blogLoader as blogLoader } from "./loaders/index.loader";
 import { loader as postLoader } from "./loaders/post.loader";
 import { loader as tipLoader } from "./loaders/tip.loader";
-import { ListIcon, LucideLayoutDashboard } from "lucide-react";
+import { AppWindow, ListIcon, LucideLayoutDashboard } from "lucide-react";
 import { loader as adminBlogLoader } from "./server/blog.server";
 import { loader as editPostLoader } from "./server/edit.server";
 import { Route, RouteType } from "~/app";
@@ -12,38 +12,36 @@ const blogPlugin: IPlugin = {
   description: "",
   version: "0.0.1",
   onInit(app) {
-const routes: Record<RouteType, Route[]> = {
-  app: [
-    {
+    app.addRoute("app", {
       path: "/blog",
       component: "plugins/blog/routes/blog.tsx",
-      loader: blogLoader,
-    },
-    {
+      loader: blogLoader(app),
+    });
+
+    app.addRoute("app", {
       path: "/news/:slug",
       component: "plugins/blog/routes/post.tsx",
-      loader: postLoader,
-    },
-    {
+      loader: postLoader(app),
+    });
+
+    app.addRoute("app", {
       path: "/tips/:slug",
       component: "plugins/blog/routes/tip.tsx",
-      loader: tipLoader,
-    },
-  ],
-  admin: [
-    {
-      path: "/administration/blog",
-      component: "plugins/blog/routes/admin/posts.tsx",
-      loader: adminBlogLoader,
-    },
-    {
+      loader: tipLoader(app),
+    }); 
+
+    app.addRoute(
+      "admin",      {
+        path: "/administration/blog",
+        component: "plugins/blog/routes/admin/posts.tsx",
+        loader: adminBlogLoader(app),
+      }    );
+    app.addRoute("admin", {
       path: "/administration/blog/edit",
       component: "plugins/blog/routes/admin/edit.tsx",
-      loader: editPostLoader,
-    },
-  ],
-};
-
+      loader: editPostLoader(app),
+    });
+    
     app.addMenu("admin", {
       id: "blog",
       path: "/administration/blog",

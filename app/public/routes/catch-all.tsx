@@ -27,7 +27,7 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
         // e.g., load the post based on postId
         const data =
           route.loader &&
-          (await route.loader({ app: app!, params: params as Params }));
+          (await route.loader({params}));
 
         return json({
           data: data,

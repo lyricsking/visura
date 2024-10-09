@@ -9,7 +9,7 @@ import { Menu } from "~/utils/menu";
 
 export type PluginLoaderFunction = (
   app: AppContext
-) => (args: any) => Promise<Response | any>; // Adjust the return type as necessary
+) => (args: any) => Promise<any>|any; // Adjust the return type as necessary
 
 export type PluginActionFunction = (
   app: AppContext
@@ -19,8 +19,8 @@ export type RouteType = "app" | "admin";
 export type Route = {
   path: string;
   component: string;
-  loader?: PluginLoaderFunction;
-  action?: PluginActionFunction;
+  loader?: ReturnType<PluginLoaderFunction>;
+  action?: ReturnType<PluginActionFunction>;
 };
 
 export type MenuType = "app" | "admin";

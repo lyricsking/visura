@@ -29,7 +29,6 @@ import { ScrollArea, ScrollBar } from "~/components/scrollable.area";
 import { cn } from "~/utils/util";
 import { findOrCreateUserProfiles } from "~/user/server/user.server";
 import { withContext } from "~/utils/context-loader";
-import { useEffect } from "react";
 
 export const handle = {
   breadcrumb: {

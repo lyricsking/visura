@@ -5,7 +5,7 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { ReactElement, useEffect } from "react";
+import { ElementType, lazy, ReactElement, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 import ProfileSettings from "../components/profile-settings";
@@ -36,6 +36,7 @@ import {
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
 import PluginSetting from "../components/plugin-settings";
+import { Route } from "~/app";
 
 export const handle = {
   pageName: "Settings",
@@ -46,16 +47,23 @@ export const handle = {
   },
 };
 
-const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
-  account: ProfileSettings,
-  notifications: NotificationSettings,
+
+const settingsKeys: Route[] = [
+  {
+    path: "",
+    component:"",
+  },
+   {path: "", component:""},
   //display: DisplaySettings,
   //privacy: PrivacySettings,
   //order: OrderSettings,
   //health: HealthSettings,
   //payment: PaymentSettings,
-  plugin: PluginSetting,
-};
+  {
+    path: "",
+    component:""
+  },
+]
 
 export default function Settings() {
   const { setting } = useLoaderData<typeof loader>();
@@ -70,7 +78,7 @@ export default function Settings() {
     navigate(`/administration/settings/${newSetting}`);
   };
 
-  const Tag = settingsKeys[setting as keyof typeof settingsKeys];
+  const Tag =lazy(()=>import("../components/account-settings"));
 
   return (
     <Tabs defaultValue={setting} onValueChange={onSettingChange}>
