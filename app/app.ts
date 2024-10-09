@@ -30,12 +30,6 @@ export default class AppContext {
     this.plugins = {};
   }
 
-  // Async initialization logic for loading plugins
-  async init() {
-    // Load plugins asynchronousllllly
-    this.plugins = await this.loadPlugins();
-  }
-
   private loadConfig() {
     // Determine the current environment
     const env =
@@ -55,6 +49,22 @@ export default class AppContext {
     }
 
     return configParse.data;
+  }
+
+  get(name: string) {
+    return Object.entries(this._config.app).find(
+      ([key, value]) => key === name
+    );
+  }
+
+  get configs() {
+    return this._config.app;
+  }
+
+  // Async initialization logic for loading plugins
+  async init() {
+    // Load plugins asynchronousllllly
+    this.plugins = await this.loadPlugins();
   }
 
   private async loadPlugins() {
@@ -137,17 +147,13 @@ export default class AppContext {
       return plugins;
     }
   }
-
-  get(name: string) {
-    return Object.entries(this._config.app).find(
+  
+  plugin(name: string){
+    return Object.entries(this.plugins.a).find(
       ([key, value]) => key === name
     );
   }
-
-  get configs() {
-    return this._config.app;
-  }
-
+  
   addRoute(type: RouteType, route: Route) {
     const mRoutes = this.routes;
     if (mRoutes) {

@@ -7,6 +7,7 @@ import AppContext from "./app";
 export const PLUGIN_KEY = "plugins";
 
 export interface IPlugin {
+  id: string;
   name: string;
   description: string;
   version: string;

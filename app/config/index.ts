@@ -1,10 +1,11 @@
 import { z } from "zod";
 
 export const pluginSchema = z.object({
+  id:z.string(),
   name: z.string().readonly(),
   description: z.string().readonly(),
-  enabled: z.boolean().readonly(),
   version: z.number().readonly(),
+  isEnabled: z.boolean().readonly(),
 });
 
 export const configSchema = z.object({
@@ -12,7 +13,7 @@ export const configSchema = z.object({
     appName: z.string().readonly(),
     description: z.string().readonly(),
     homepage: z.string().readonly(),
-    enableSignup: z.boolean(),
+    allowSignup: z.boolean(),
   }),
   plugins: z.array(pluginSchema),
 });

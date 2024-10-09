@@ -7,6 +7,10 @@ export type PluginLoaderFunctionArgs = {
   app: AppContext;
   params: Params;
 };
+// Define the interface for the loader function
+interface LoaderFunction {
+  (app: any): () => Promise<Response | any>; // Adjust the return type as necessary
+}
 
 export type PluginLoaderFunction = (args: PluginLoaderFunctionArgs) => any;
 

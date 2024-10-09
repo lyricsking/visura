@@ -7,7 +7,7 @@ type ContextLoaderFunctionArgs = LoaderFunctionArgs & {
   app: AppContext;
 };
 
-// Higher-order function to wrap the loader and pass config
+// Higher-order function to wrap the loader and pass app context
 export function withContext(
   callback: (params: ContextLoaderFunctionArgs) => Promise<Response> | Response
 ): LoaderFunction {
@@ -19,3 +19,4 @@ export function withContext(
     return callback({ ...args, app: appContext });
   };
 }
+

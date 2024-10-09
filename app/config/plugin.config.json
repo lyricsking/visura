@@ -1,8 +1,9 @@
 {
   "default": [
     {
-      "name": "blog",
-      "description": "",
+      "id": "blog",
+      "name": "Blog",
+      "description": "A sample plugin for blogging.",
       "enabled": true,
       "version": 0
     }

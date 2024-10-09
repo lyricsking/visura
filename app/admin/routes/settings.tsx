@@ -35,7 +35,7 @@ import {
   DISPLAY_UPDATE_ACTION,
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
-import PluginManager from "../components/plugin-settings";
+import PluginSetting from "../components/plugin-settings";
 
 export const handle = {
   pageName: "Settings",
@@ -54,7 +54,7 @@ const settingsKeys: Record<string, (props: SettingsType) => ReactElement> = {
   //order: OrderSettings,
   //health: HealthSettings,
   //payment: PaymentSettings,
-  plugin: PluginManager,
+  plugin: PluginSetting,
 };
 
 export default function Settings() {
