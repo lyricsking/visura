@@ -5,7 +5,6 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { Menu } from "~/utils/menu";
 
 export type PluginLoaderFunction = (
   app: AppContext
@@ -17,6 +16,7 @@ export type PluginActionFunction = (
 
 export type RouteType = "app" | "admin";
 export type Route = {
+  id?:string;
   path: string;
   component: string;
   loader?: ReturnType<PluginLoaderFunction>;
@@ -24,14 +24,21 @@ export type Route = {
 };
 
 export type MenuType = "app" | "admin";
-
-const menu: Record<MenuType, Menu[]> = {
-  app: [],
-  admin: [],
+export type Menu = {
+  id: number | string;
+  label: string;
+  path: string;
+  icon?: string;
 };
 
-export function addMenu(menuType: MenuType, menuItem: Menu) {
-  menu[menuType] = [...menu[menuType], menuItem];
+export type SettingsTab = {
+  id?: string,
+  label: string,
+  path: string;
+  component: string;
+  loader?: ReturnType<PluginLoaderFunction>;
+  action?: ReturnType<PluginActionFunction>;
+  icon?:string;
 }
 
 export default class AppContext {
@@ -49,6 +56,8 @@ export default class AppContext {
   };
 
   private readonly _routeMenus: Record<string, Menu[]> = {};
+
+  private readonly _settingsTabs: SettingsTab[] = [];
 
   constructor() {
     this._config = this.loadConfig();
