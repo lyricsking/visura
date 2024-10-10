@@ -8,8 +8,6 @@ export const loader: LoaderFunction = withContext(async ({ params, app }) => {
   const homepagePath = app.configs.homepage;
   const route = app?.findRoute("app", homepagePath);
 
-  console.log("Home", homepagePath);
-
   if (route && !Array.isArray(route)) {
     const routeData = route.loader && (await route.loader({ app, params }));
 

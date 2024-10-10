@@ -4,6 +4,7 @@ import { match } from "path-to-regexp";
 import NotFound from "./not-found";
 import React, { Suspense, useEffect } from "react";
 import { withContext } from "~/utils/context-loader";
+import { renderToString } from "react-dom/server";
 
 const NOT_FOUND_PATH = "not-found";
 
@@ -25,18 +26,18 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
 
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data =
-          route.loader &&
-          (await route.loader({params}));
-          
-        const MyComponent = require(`~/app/${route.path}`).default;
-  
+        const data = route.loader && (await route.loader({ params }));
+
+        const MyComponent = (
+          await import(/* @vite-ignore */ `/app/${route.path}`)
+        ).default;
+
         return json({
           data: data,
           params,
           pathname: route.path,
           //componentPath: route.component,
-          componentPath: renderToString(<MyComponent {...data} />)
+          componentPath: renderToString(<MyComponent {...data} />),
         });
       }
     }
@@ -51,8 +52,12 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
 export default function CatchAll() {
   const { pathname, data, params, componentPath } =
     useLoaderData<typeof loader>();
-    
-    return <div  />
+
+  useEffect(() => {
+    alert(componentPath);
+  }, []);
+
+  return <div dangerouslySetInnerHTML={{ __html: componentPath }} />;
   if (componentPath && pathname !== NOT_FOUND_PATH) {
     // Use React.lazy to dynamically import the component
     const DynamicComponent = React.lazy(

@@ -37,6 +37,7 @@ import {
 } from "../utils/constants";
 import PluginSetting from "../components/plugin-settings";
 import { Route } from "~/app";
+import { renderToString } from "react-dom/server";
 
 export const handle = {
   pageName: "Settings",
@@ -47,13 +48,15 @@ export const handle = {
   },
 };
 
-
 const settings: Route[] = [
   {
     path: "account",
-    component:"admin/components/account-settings.tsx",
+    component: "admin/components/account-settings.tsx",
   },
-   {path: "notifications", component:"admin/components/notification-settings.tsx"},
+  {
+    path: "notifications",
+    component: "admin/components/notification-settings.tsx",
+  },
   //display: DisplaySettings,
   //privacy: PrivacySettings,
   //order: OrderSettings,
@@ -61,9 +64,9 @@ const settings: Route[] = [
   //payment: PaymentSettings,
   {
     path: "",
-    component:""
+    component: "",
   },
-]
+];
 
 export default function Settings() {
   const { tab, component, data } = useLoaderData<typeof loader>();
@@ -78,10 +81,10 @@ export default function Settings() {
     navigate(`/administration/settings/${newSetting}`);
   };
 
-  const Tag = lazy(() => import(`/app/${component}`));
+  const Tag = lazy(() => import(/* @vite-ignore */ `/app/${component}`));
 
   return (
-    <Tabs defaultValue={setting} onValueChange={onSettingChange}>
+    <Tabs defaultValue={tab} onValueChange={onSettingChange}>
       <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
         {Object.keys(settings).map((key, index) => (
           <TabsTrigger key={key} value={key} className="capitalize">
@@ -89,7 +92,7 @@ export default function Settings() {
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent key={setting} value={setting} className="h-fit">
+      <TabsContent key={tab} value={tab} className="h-fit">
         {<Tag user={user as IHydratedUser} />}
       </TabsContent>
     </Tabs>
@@ -144,15 +147,24 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  
   const settingTab = params.setting || "account";
-  
-  const route = settings.find((route)=>route.path === settingTab);
-  
-  // Todo use the settingTab to fetch appropriate data to be modified
-  const data = route.loader && route.loader() || null;
-  
-  let session = await getSession(request);
 
-  return json({ tab: settingTab, component: route.component, data: data });
+  const route = settings.find((route) => route.path === settingTab);
+
+  // Todo use the settingTab to fetch appropriate data to be modified
+  if (route) {
+    const data = (route.loader && route.loader({})) || null;
+    const DynamicComponent = (
+      await import(/* @vite-ignore */ `~/${route.component}`)
+    ).default;
+
+    return json({
+      tab: settingTab,
+      component: renderToString(<DynamicComponent {...data} />),
+      data: data,
+    });
+  }
+
+  let session = await getSession(request);
+  return json({ tab: settingTab, component: null, data: null });
 };

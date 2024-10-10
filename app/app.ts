@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 
 export type PluginLoaderFunction = (
   app: AppContext
-) => (args: any) => Promise<any>|any; // Adjust the return type as necessary
+) => (args: any) => Promise<any> | any; // Adjust the return type as necessary
 
 export type PluginActionFunction = (
   app: AppContext
@@ -16,7 +16,7 @@ export type PluginActionFunction = (
 
 export type RouteType = "app" | "admin";
 export type Route = {
-  id?:string;
+  id?: string;
   path: string;
   component: string;
   loader?: ReturnType<PluginLoaderFunction>;
@@ -32,14 +32,14 @@ export type Menu = {
 };
 
 export type SettingsTab = {
-  id?: string,
-  label: string,
+  id?: string;
+  label: string;
   path: string;
   component: string;
   loader?: ReturnType<PluginLoaderFunction>;
   action?: ReturnType<PluginActionFunction>;
-  icon?:string;
-}
+  icon?: string;
+};
 
 export default class AppContext {
   private readonly _config: Config;
@@ -115,6 +115,7 @@ export default class AppContext {
       });
 
       const pluginsConfig = this._config.plugins;
+      console.log(pluginsConfig);
 
       // Loop through only enabled plugins in the config
       for (const pluginConfig of pluginsConfig) {
@@ -181,13 +182,11 @@ export default class AppContext {
       return plugins;
     }
   }
-  
-  plugin(name: string){
-    return Object.entries(this.plugins.a).find(
-      ([key, value]) => key === name
-    );
+
+  plugin(name: string) {
+    return Object.entries(this.plugins.a).find(([key, value]) => key === name);
   }
-  
+
   addRoute(type: RouteType, route: Route) {
     const mRoutes = this.routes;
     if (mRoutes) {
