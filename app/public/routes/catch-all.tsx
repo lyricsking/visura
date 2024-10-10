@@ -28,12 +28,15 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
         const data =
           route.loader &&
           (await route.loader({params}));
-
+          
+        const MyComponent = require(`~/app/${route.path}`).default;
+  
         return json({
           data: data,
           params,
           pathname: route.path,
-          componentPath: route.component,
+          //componentPath: route.component,
+          componentPath: renderToString(<MyComponent {...data} />)
         });
       }
     }
@@ -48,7 +51,8 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
 export default function CatchAll() {
   const { pathname, data, params, componentPath } =
     useLoaderData<typeof loader>();
-
+    
+    return <div  />
   if (componentPath && pathname !== NOT_FOUND_PATH) {
     // Use React.lazy to dynamically import the component
     const DynamicComponent = React.lazy(
