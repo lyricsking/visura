@@ -29,7 +29,7 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
         const data = route.loader && (await route.loader({ params }));
 
         const MyComponent = (
-          await import(/* @vite-ignore */ `/app/${route.path}`)
+          await import(/* @vite-ignore */ `/app/${route.component}`)
         ).default;
 
         return json({

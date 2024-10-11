@@ -8,7 +8,8 @@ import { loader as editPostLoader } from "./server/edit.server";
 import { Route, RouteType } from "~/app";
 
 const blogPlugin: IPlugin = {
-  id: "blog",name: "Blog Plugin",
+  id: "blog",
+  name: "Blog Plugin",
   description: "",
   version: "0.0.1",
   onInit(app) {
@@ -28,20 +29,19 @@ const blogPlugin: IPlugin = {
       path: "/tips/:slug",
       component: "plugins/blog/routes/tip.tsx",
       loader: tipLoader(app),
-    }); 
+    });
 
-    app.addRoute(
-      "admin",      {
-        path: "/administration/blog",
-        component: "plugins/blog/routes/admin/posts.tsx",
-        loader: adminBlogLoader(app),
-      }    );
+    app.addRoute("admin", {
+      path: "/administration/blog",
+      component: "plugins/blog/routes/admin/posts.tsx",
+      loader: adminBlogLoader(app),
+    });
     app.addRoute("admin", {
       path: "/administration/blog/edit",
       component: "plugins/blog/routes/admin/edit.tsx",
       loader: editPostLoader(app),
     });
-    
+
     app.addMenu("admin", {
       id: "blog",
       path: "/administration/blog",
@@ -60,7 +60,6 @@ const blogPlugin: IPlugin = {
 };
 
 export default blogPlugin;
-
 
 /*defineRoute(pluginConfig.path, "layouts/Default.tsx", () => {
       defineRoute("", "plugins/blog/routes/index.tsx", { index: true });

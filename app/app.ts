@@ -115,14 +115,12 @@ export default class AppContext {
       });
 
       const pluginsConfig = this._config.plugins;
-      console.log(pluginsConfig);
 
       // Loop through only enabled plugins in the config
       for (const pluginConfig of pluginsConfig) {
         if (pluginConfig.isActive) {
           const pluginFolder = pluginFolders.find(
-            (folder) =>
-              folder.isDirectory() && folder.name === pluginConfig.name
+            (folder) => folder.isDirectory() && folder.name === pluginConfig.id
           );
 
           if (pluginFolder) {
