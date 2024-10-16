@@ -92,9 +92,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { config } = useLoaderData() as LoaderData;
+  const data = useLoaderData() as LoaderData;
 
-  return <Outlet context={{ config }} />;
+  return <Outlet context={{ config: data?.config }} />;
 }
 
 export function ErrorBoundary() {

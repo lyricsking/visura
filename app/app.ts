@@ -59,6 +59,8 @@ export default class AppContext {
 
   private readonly _settingsTabs: SettingsTab[] = [];
 
+  public isInitialized: boolean = false;
+
   constructor() {
     this._config = this.loadConfig();
     this.plugins = {};
@@ -99,6 +101,7 @@ export default class AppContext {
   async init() {
     // Load plugins asynchronousllllly
     this.plugins = await this.loadPlugins();
+    this.isInitialized = true;
   }
 
   private async loadPlugins() {
