@@ -1,3 +1,5 @@
+import { Block, BlockTypes } from "~/blocks/types/block";
+import { TextBlock } from "./blocks/text";
 import { Config, configSchema } from "./config";
 import appConfig from "./config/app.config.json";
 import pluginsConfig from "./config/plugin.config.json";
@@ -236,4 +238,10 @@ export default class AppContext {
       ([path, menuItem]) => path === routePath
     )?.[1];
   }
+
+  configure(fn: (app: AppContext) => any) {
+    fn(this);
+  }
+
+  addBlockType(name: keyof BlockTypes, block: BlockTypes) {}
 }

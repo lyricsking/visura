@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 // app/types/blockTypes.ts
 export interface Block {
-  type: string; // Type of the block (e.g., 'text', 'image')
+  //type: string; // Type of the block (e.g., 'text', 'image')
   id: string; // Unique identifier for the block
   render: () => ReactNode;
 }

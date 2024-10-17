@@ -1,10 +1,11 @@
+import AppContext from "~/app";
 import { Block } from "./types/block";
 
 export class TextBlock implements Block {
   id: string;
-  type = "text";
+  //type = "text";
   content: string;
-  
+
   constructor() {
     this.content = "";
     this.id = "";
@@ -13,6 +14,10 @@ export class TextBlock implements Block {
   render() {
     return <div>{this.content}</div>;
   }
+}
+
+export default function text(app: AppContext) {
+  app.addBlockType("text", TextBlock);
 }
 
 declare module "~/blocks/types/block" {
