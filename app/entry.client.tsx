@@ -7,8 +7,17 @@
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
+import AppContext from "./app";
+import { singleton } from "./utils/singleton";
 
 startTransition(() => {
+  singleton<AppContext>("app", async () => {
+    const app = new AppContext();
+    //await app.init();
+    if (app) await app.init();
+    return app;
+  });
+
   hydrateRoot(
     document,
     <StrictMode>

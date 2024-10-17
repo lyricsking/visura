@@ -1,5 +1,3 @@
-import { Block, BlockTypes } from "~/blocks/types/block";
-import { TextBlock } from "./blocks/text";
 import { Config, configSchema } from "./config";
 import appConfig from "./config/app.config.json";
 import pluginsConfig from "./config/plugin.config.json";
@@ -7,6 +5,7 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import Block from "~/blocks";
 
 export type PluginLoaderFunction = (
   app: AppContext
@@ -46,6 +45,7 @@ export type SettingsTab = {
 export default class AppContext {
   private readonly _config: Config;
   private plugins: Record<string, IPlugin>;
+  private isInitialized = false;
   private routes: Record<RouteType, Route[]> = {
     app: [],
     admin: [],
@@ -102,8 +102,11 @@ export default class AppContext {
 
   // Async initialization logic for loading plugins
   async init() {
-    // Load plugins asynchronousllllly
-    this.plugins = await this.loadPlugins();
+    if (!this.isInitialized || Object.entries(this.plugins).length === 0) {
+      // Load plugins asynchronously
+      this.plugins = await this.loadPlugins();
+      this.isInitialized = true;
+    }
   }
 
   private async loadPlugins() {
@@ -242,14 +245,14 @@ export default class AppContext {
   configure(fn: (app: AppContext) => any) {
     fn(this);
   }
-  
+
   // Function to register blocks
   registerBlock<T>(block: Block<T>): void {
-    blockRegistry[block.type] = block;
+    this.blockRegistry[block.type] = block;
   }
-  
+
   // Function to get a block by type
   getBlock(type: string): Block<any> | undefined {
-    return blockRegistry[type];
+    return this.blockRegistry[type];
   }
 }

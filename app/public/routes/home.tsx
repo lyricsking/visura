@@ -1,10 +1,10 @@
 import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import DefaultHome from "./default-home";
-import React, { Suspense, createElement, useEffect } from "react";
 import { withContext } from "~/utils/context-loader";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
+import { useApp } from "~/hooks/use-app";
 
 export const loader: LoaderFunction = withContext(
   async ({ app, params, request }) => {
@@ -14,38 +14,27 @@ export const loader: LoaderFunction = withContext(
 
     console.log(homepagePath);
 
+    const data = { data: null, params, pathname: "default" };
+
     if (route && !Array.isArray(route)) {
       const routeData = route.loader && (await route.loader({ app, params }));
-
-      const MyComponent = (
-        await import(/* @vite-ignore */ `/app/${route.component}`)
-      ).default;
-
-      return json({
-        data: routeData,
-        params,
-        pathname: route.path,
-        //componentPath: route.component,
-        componentPath: renderToString(
-          <StaticRouter location={url.pathname}>
-            <MyComponent {...routeData} />
-          </StaticRouter>
-        ),
-      });
+      data["data"] = routeData;
+      data["pathname"] = route.path;
     }
 
-    return json({ data: null, pathname: "default" });
+    return json(data);
   }
 );
 
 export default function Home() {
-  const { pathname, data, params, componentPath } =
-    useLoaderData<typeof loader>();
-  console.log(componentPath);
+  const { pathname, data, params } = useLoaderData<typeof loader>();
 
-  return componentPath ? (
-    <div dangerouslySetInnerHTML={{ __html: componentPath }} />
-  ) : (
-    <DefaultHome />
-  );
+  const { app } = useApp();
+  const route = app?.findRoute("app", pathname);
+
+  if (route && !Array.isArray(route)) {
+    const Component = route.component;
+    return <Component {...data} />;
+  }
+  return <DefaultHome />;
 }

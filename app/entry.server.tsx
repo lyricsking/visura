@@ -32,7 +32,7 @@ export default function handleRequest(
   singleton<AppContext>("app", async () => {
     const app = new AppContext();
     //await app.init();
-    //if (app) await app.init();
+    if (app) await app.init();
     return app;
   });
 

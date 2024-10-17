@@ -1,28 +1,18 @@
 import AppContext from "~/app";
-import { Block } from "./types/block";
+import Block from ".";
 
-export class TextBlock implements Block {
-  id: string;
-  //type = "text";
+interface TextBlockProps {
   content: string;
-
-  constructor() {
-    this.content = "";
-    this.id = "";
-  }
-
-  render() {
-    return <div>{this.content}</div>;
-  }
 }
+
+const TextBlock: Block<TextBlockProps> = {
+  type: "",
+  props: { content: "" },
+  render(props) {
+    return <div>{props.content}</div>;
+  },
+};
 
 export default function text(app: AppContext) {
-  app.addBlockType("text", TextBlock);
-}
-
-declare module "~/blocks/types/block" {
-  interface BlockTypes {
-    // You can dynamically add more block types here if needed
-    text: TextBlock;
-  }
+  app.registerBlock(TextBlock);
 }

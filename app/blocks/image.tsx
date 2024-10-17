@@ -1,25 +1,17 @@
-import { Block } from "~/blocks/types/block";
+import Block from ".";
 
-export class ImageBlock implements Block {
-  id: string;
-  type: string = "image";
+interface ImageBlockProps {
   src: string;
   alt: string;
-
-  constructor(id: string, src: string, alt: string) {
-    this.id = id;
-    this.src = src;
-    this.alt = alt;
-  }
-
-  render() {
-    return <img src={this.src} alt={this.alt} />;
-  }
 }
 
-declare module "~/blocks/types/block" {
-  interface BlockTypes {
-    // You can dynamically add more block types here if needed
-    image: ImageBlock;
-  }
-}
+export const ImageBlock: Block<ImageBlockProps> = {
+  type: "image",
+  props: {
+    src: "",
+    alt: "",
+  },
+  render(props) {
+    return <img src={props.src} alt={props.alt} />;
+  },
+};
