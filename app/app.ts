@@ -61,7 +61,8 @@ export default class AppContext {
 
   private readonly _settingsTabs: SettingsTab[] = [];
 
-  public isInitialized: boolean = false;
+  // Registry for holding blocks
+  private blockRegistry: Record<string, Block<any>> = {};
 
   constructor() {
     this._config = this.loadConfig();
@@ -103,7 +104,6 @@ export default class AppContext {
   async init() {
     // Load plugins asynchronousllllly
     this.plugins = await this.loadPlugins();
-    this.isInitialized = true;
   }
 
   private async loadPlugins() {
@@ -242,6 +242,14 @@ export default class AppContext {
   configure(fn: (app: AppContext) => any) {
     fn(this);
   }
-
-  addBlockType(name: keyof BlockTypes, block: BlockTypes) {}
+  
+  // Function to register blocks
+  registerBlock<T>(block: Block<T>): void {
+    blockRegistry[block.type] = block;
+  }
+  
+  // Function to get a block by type
+  getBlock(type: string): Block<any> | undefined {
+    return blockRegistry[type];
+  }
 }
