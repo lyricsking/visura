@@ -2,8 +2,6 @@ import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import DefaultHome from "./default-home";
 import { withContext } from "~/utils/context-loader";
-import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router-dom/server";
 import { useApp } from "~/hooks/use-app";
 
 export const loader: LoaderFunction = withContext(
@@ -31,6 +29,7 @@ export default function Home() {
 
   const { app } = useApp();
   const route = app?.findRoute("app", pathname);
+  console.log(app);
 
   if (route && !Array.isArray(route)) {
     const Component = route.component;
