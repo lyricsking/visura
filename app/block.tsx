@@ -15,7 +15,7 @@ const renderBlock = (block: BlockMetadata): JSX.Element | null => {
   };
 
   return (
-    <Component key={1} {...newProps}>
+    <Component key={newProps.id} {...newProps}>
       {children
         ? children
         : blocks && blocks.map((child, index) => renderBlock(child))}
