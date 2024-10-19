@@ -1,7 +1,7 @@
 import { ElementType, HTMLAttributes, JSX } from "react";
 import Button from "~/components/button";
 
-export const Blocks: Record<string, ElementType> = {
+export const Blocks = {
   div: "div",
   header: "header",
   main: "main",
@@ -16,19 +16,19 @@ export const Blocks: Record<string, ElementType> = {
 export type BlockType = keyof typeof Blocks;
 
 export interface OnClickEvent {
-  type: "navigation" | "toggle" | "submit";
+  type: "alert" | "navigation" | "submit" | "toggle";
   data: {
     path?: string;
   };
 }
 
 export interface BlockProps
-  extends Omit<HTMLAttributes<HTMLElement>, "onClick" | "children"> {
+  extends Omit<HTMLAttributes<HTMLElement>, "onClick"> {
   onClick?: OnClickEvent;
 }
 
 export interface BlockMetadata {
   type: BlockType;
   props: BlockProps;
-  children: BlockMetadata[];
+  blocks?: BlockMetadata[];
 }

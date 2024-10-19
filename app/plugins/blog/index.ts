@@ -1,11 +1,5 @@
 import { IPlugin } from "~/plugin";
-import { blogLoader as blogLoader } from "./loaders/index.loader";
-import { loader as postLoader } from "./loaders/post.loader";
-import { loader as tipLoader } from "./loaders/tip.loader";
-import { AppWindow, ListIcon, LucideLayoutDashboard } from "lucide-react";
-import { loader as adminBlogLoader } from "./server/blog.server";
-import { loader as editPostLoader } from "./server/edit.server";
-import { Route, RouteType } from "~/app";
+import blogBlock from "./blocks/blog";
 
 const blogPlugin: IPlugin = {
   id: "blog",
@@ -15,31 +9,27 @@ const blogPlugin: IPlugin = {
   onInit(app) {
     app.addRoute("app", {
       path: "blog",
-      component: "plugins/blog/routes/blog.tsx",
-      loader: blogLoader(app),
+      getBlock: blogBlock,
     });
 
     app.addRoute("app", {
       path: "news/:slug",
-      component: "plugins/blog/routes/post.tsx",
-      loader: postLoader(app),
+      getBlock: () => ({} as any),
     });
 
     app.addRoute("app", {
       path: "tips/:slug",
-      component: "plugins/blog/routes/tip.tsx",
-      loader: tipLoader(app),
+      getBlock: () => ({} as any),
     });
 
     app.addRoute("admin", {
       path: "blog",
-      component: "plugins/blog/routes/admin/posts.tsx",
-      loader: adminBlogLoader(app),
+      getBlock: () => ({} as any),
     });
+
     app.addRoute("admin", {
       path: "blog/edit",
-      component: "plugins/blog/routes/admin/edit.tsx",
-      loader: editPostLoader(app),
+      getBlock: () => ({} as any),
     });
 
     app.addMenu("admin", {

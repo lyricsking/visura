@@ -1,17 +1,26 @@
-import { BlockMetadata, Blocks } from "./blocks";
+import { useNavigate } from "@remix-run/react";
+import { BlockMetadata, Blocks, OnClickEvent } from "./blocks";
 
 const renderBlock = (block: BlockMetadata): JSX.Element | null => {
-  const { type, props, children } = block;
+  const { type, props, blocks } = block;
   const Component = Blocks[type];
 
   if (!Component) return null;
 
+  const { children, ...otherProps } = props;
+
+  const newProps = {
+    ...otherProps,
+    onClick: () => otherProps.onClick && handleOnClick(otherProps.onClick),
+  };
+
   return (
-    <Component {...props}>
-      {children && children.map((child, index) => renderBlock(child))}
+    <Component key={1} {...newProps}>
+      {children
+        ? children
+        : blocks && blocks.map((child, index) => renderBlock(child))}
     </Component>
   );
-
   // switch (type) {
   //   case "div":
   //   case "header":
@@ -31,6 +40,19 @@ const renderBlock = (block: BlockMetadata): JSX.Element | null => {
   //   default:
   //     return null;
   // }
+};
+
+// Function to handle dynamic onClick actions
+const handleOnClick = ({ type, data }: OnClickEvent) => {
+  const navigate = useNavigate();
+  switch (type) {
+    case "navigation":
+      return () => navigate("");
+    case "alert":
+      return () => alert("");
+    default:
+      return undefined;
+  }
 };
 
 // export interface Page {
