@@ -28,18 +28,6 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  singleton("mongoose", createDBConnection);
-
-  // const app = new AppContext();
-  // app.init();
-
-  singleton<AppContext>("app", async () => {
-    const app = new AppContext();
-    //await app.init();
-    if (app) await app.init();
-    return app;
-  });
-
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
