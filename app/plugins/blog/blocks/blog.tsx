@@ -11,7 +11,7 @@ export default async function blogBlock(): Promise<BlockMetadata> {
   const blogBlock: BlockMetadata = {
     blockId: "main",
     type: "div",
-    props: { className: "" },
+    props: { className: "flex flex-col items-start" },
     blocks: [
       {
         blockId: "main2",
