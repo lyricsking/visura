@@ -1,23 +1,21 @@
-import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
+import { LoaderFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import DefaultHome from "./default-home";
 import { withContext } from "~/utils/context-loader";
-import { useApp } from "~/hooks/use-app";
+import renderBlock from "~/block";
 
 export const loader: LoaderFunction = withContext(
   async ({ app, params, request }) => {
-    const url = new URL(request.url);
     const homepagePath = app.configs.homepage;
     const route = app?.findRoute("app", homepagePath);
 
     console.log(homepagePath);
 
-    const data = { data: null, params, pathname: "default" };
+    const defaultBlock = {};
+    const data: any = { block: defaultBlock };
 
     if (route && !Array.isArray(route)) {
-      const routeData = route.loader && (await route.loader({ app, params }));
-      data["data"] = routeData;
-      data["pathname"] = route.path;
+      const routeBlock = route.getBlock();
+      data["block"] = routeBlock;
     }
 
     return json(data);
@@ -25,15 +23,6 @@ export const loader: LoaderFunction = withContext(
 );
 
 export default function Home() {
-  const { pathname, data, params } = useLoaderData<typeof loader>();
-
-  const { app } = useApp();
-  const route = app?.findRoute("app", pathname);
-  console.log(app);
-
-  if (route && !Array.isArray(route)) {
-    const Component = route.component;
-    return <Component {...data} />;
-  }
-  return <DefaultHome />;
+  const { block } = useLoaderData<typeof loader>();
+  return renderBlock(block);
 }

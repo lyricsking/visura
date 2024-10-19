@@ -1,3 +1,4 @@
+import { BlockMetadata } from "./blocks";
 import { Config, configSchema } from "./config";
 import appConfig from "./config/app.config.json";
 import pluginsConfig from "./config/plugin.config.json";
@@ -5,7 +6,6 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import Block from "~/blocks";
 
 export type PluginLoaderFunction = (
   app: AppContext
@@ -19,9 +19,7 @@ export type RouteType = "app" | "admin";
 export type Route = {
   id?: string;
   path: string;
-  component: string;
-  loader?: ReturnType<PluginLoaderFunction>;
-  action?: ReturnType<PluginActionFunction>;
+  getBlock: () => BlockMetadata;
 };
 
 export type MenuType = "app" | "admin";
@@ -45,11 +43,17 @@ export type SettingsTab = {
 export default class AppContext {
   private readonly _config: Config;
   private plugins: Record<string, IPlugin>;
+
   private isInitialized = false;
+
+  /**
+   * Registry to hold routes
+   */
   private routes: Record<RouteType, Route[]> = {
     app: [],
     admin: [],
   };
+
   private homePaths: Record<string, string> = {};
 
   private readonly _menus: Record<MenuType, Menu[]> = {
@@ -60,9 +64,6 @@ export default class AppContext {
   private readonly _routeMenus: Record<string, Menu[]> = {};
 
   private readonly _settingsTabs: SettingsTab[] = [];
-
-  // Registry for holding blocks
-  private blockRegistry: Record<string, Block<any>> = {};
 
   constructor() {
     this._config = this.loadConfig();
@@ -244,15 +245,5 @@ export default class AppContext {
 
   configure(fn: (app: AppContext) => any) {
     fn(this);
-  }
-
-  // Function to register blocks
-  registerBlock<T>(block: Block<T>): void {
-    this.blockRegistry[block.type] = block;
-  }
-
-  // Function to get a block by type
-  getBlock(type: string): Block<any> | undefined {
-    return this.blockRegistry[type];
   }
 }

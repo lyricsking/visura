@@ -1,27 +1,34 @@
-import AppContext from "~/app";
-import text from "./text";
+import { ElementType, HTMLAttributes, JSX } from "react";
+import Button from "~/components/button";
 
-export interface Page {
-  blocks: { id: string; type: string; props: any }[];
+export const Blocks: Record<string, ElementType> = {
+  div: "div",
+  header: "header",
+  main: "main",
+  section: "section",
+  footer: "footer",
+  h1: "h1",
+  h2: "h2",
+  p: "p",
+  button: Button,
+} as const;
+
+export type BlockType = keyof typeof Blocks;
+
+export interface OnClickEvent {
+  type: "navigation" | "toggle" | "submit";
+  data: {
+    path?: string;
+  };
 }
 
-export default interface Block<T> {
-  type: string; // Unique type identifier for the block
-  props: T; // Props specific to the block
-  render: (props: T) => JSX.Element; // Function to render the block
-  version: number; // Version number for consistency
+export interface BlockProps
+  extends Omit<HTMLAttributes<HTMLElement>, "onClick" | "children"> {
+  onClick?: OnClickEvent;
 }
 
-const c: Page = {
-  blocks: [
-    {
-      id: "",
-      type: "t",
-      props: undefined,
-    },
-  ],
-};
-
-export const blocks = (app: AppContext) => {
-  app.configure(text);
-};
+export interface BlockMetadata {
+  type: BlockType;
+  props: BlockProps;
+  children: BlockMetadata[];
+}
