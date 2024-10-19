@@ -2,12 +2,13 @@ import { useNavigate } from "@remix-run/react";
 import { BlockMetadata, Blocks, OnClickEvent } from "./blocks";
 
 const renderBlock = (block: BlockMetadata): JSX.Element | null => {
-  const { type, props, blocks } = block;
+  const { blockId, type, props, blocks } = block;
   const Component = Blocks[type];
 
   if (!Component) return null;
 
-  const { children, ...otherProps } = props;
+  const attr = props || {};
+  const { children, ...otherProps } = attr;
 
   const newProps = {
     ...otherProps,
@@ -15,7 +16,7 @@ const renderBlock = (block: BlockMetadata): JSX.Element | null => {
   };
 
   return (
-    <Component key={newProps.id} {...newProps}>
+    <Component key={blockId} {...newProps}>
       {children
         ? children
         : blocks && blocks.map((child, index) => renderBlock(child))}

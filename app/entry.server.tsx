@@ -29,6 +29,10 @@ export default function handleRequest(
   loadContext: AppLoadContext
 ) {
   singleton("mongoose", createDBConnection);
+
+  // const app = new AppContext();
+  // app.init();
+
   singleton<AppContext>("app", async () => {
     const app = new AppContext();
     //await app.init();

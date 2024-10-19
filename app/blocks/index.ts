@@ -28,8 +28,8 @@ export interface BlockProps
 }
 
 export interface BlockMetadata {
-  id: string;
+  blockId: string;
   type: BlockType;
-  props: BlockProps;
+  props?: BlockProps;
   blocks?: BlockMetadata[];
 }

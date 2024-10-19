@@ -6,6 +6,7 @@ import { IPlugin } from "./plugin";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { MaybeAsyncFunction } from "./utils/maybe-async-fn";
 
 export type PluginLoaderFunction = (
   app: AppContext
@@ -16,10 +17,13 @@ export type PluginActionFunction = (
 ) => (args: any) => Promise<Response | any>; // Adjust the return type as necessary
 
 export type RouteType = "app" | "admin";
+
+export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
+
 export type Route = {
   id?: string;
   path: string;
-  getBlock: () => BlockMetadata;
+  getBlock: BlockMetadataFunction;
 };
 
 export type MenuType = "app" | "admin";

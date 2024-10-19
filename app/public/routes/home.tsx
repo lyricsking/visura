@@ -14,7 +14,7 @@ export const loader: LoaderFunction = withContext(
     const data: any = { block: defaultBlock };
 
     if (route && !Array.isArray(route)) {
-      const routeBlock = route.getBlock();
+      const routeBlock = await route.getBlock();
       data["block"] = routeBlock;
     }
 
