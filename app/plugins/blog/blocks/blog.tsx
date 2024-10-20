@@ -11,18 +11,33 @@ export default async function blogBlock(): Promise<BlockMetadata> {
   const blogBlock: BlockMetadata = {
     blockId: "main",
     type: "div",
-    props: { className: "" },
+    props: { className: "flex flex-col items-start" },
     blocks: [
       {
         blockId: "main2",
         type: "div",
-        blocks:
-          tips &&
-          tips.map((tip) => ({
+        props: { 
+          className:"w-full bg-cover bg-center",
+          style:{ backgroundImage: `url('/images/soccer-pitch.jpg')` }
+        },
+        blocks:[
+          {
             blockId: "",
             type: "div",
-            props: { children: tip.slug },
-          })),
+            props: {
+              className: "bg-gray-700/20"
+            },
+            blocks: [
+              {
+                blockId: "",
+                type: "div",
+                props:{
+                  className: "mx-auto max-w-3xl text-center px-6 py-16 sm:py-20 lg:px-8 lg:py-24"
+                },
+              }
+            ]
+          }
+        ]
       },
     ],
   };
