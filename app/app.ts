@@ -124,7 +124,7 @@ export class AppContext {
       // Loop through only enabled plugins in the config
       for (const pluginConfig of pluginsConfig) {
         if (pluginConfig.isActive) {
-          const pluginUrl = `/plugins/${pluginConfig.id}/index.ts`;
+          const pluginUrl = `../public/plugins/${pluginConfig.id}/index.ts`;
 
           try {
             // Dynamically load the plugin only if it is enabled
@@ -158,7 +158,7 @@ export class AppContext {
             console.log(`${plugin.name} plugin loaded.`);
           } catch (err) {
             console.error(
-              `Error loading plugin from ${pluginConfig.name}:`,
+              `Error loading plugin "${pluginConfig.name}":\n`,
               err
             );
           }
