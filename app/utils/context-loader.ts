@@ -1,4 +1,4 @@
-import AppContext from "~/app";
+import { appContext, AppContext } from "~/app";
 import { singleton } from "./singleton";
 import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Config } from "~/config";
@@ -13,17 +13,11 @@ export function withContext(
   callback: (params: ContextLoaderFunctionArgs) => Promise<Response> | Response
 ): LoaderFunction {
   return async (args: LoaderFunctionArgs) => {
-    singleton("mongoose", createDBConnection);
-    const appContext = await singleton<AppContext>("app", async () => {
-      const app = new AppContext();
-      //await app.init();
-      if (app) await app.init();
-      return app;
-    });
-
-    if (!appContext) return null;
+    // singleton("mongoose", createDBConnection);
+    const context = await appContext;
+    if (!context) return null;
 
     // Pass the config to the callback and return the final response
-    return callback({ ...args, app: appContext });
+    return callback({ ...args, app: context });
   };
 }

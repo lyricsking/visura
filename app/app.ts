@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { MaybeAsyncFunction } from "./utils/maybe-async-fn";
+import { singleton } from "./utils/singleton";
 
 export type PluginLoaderFunction = (
   app: AppContext
@@ -44,7 +45,7 @@ export type SettingsTab = {
   icon?: string;
 };
 
-export default class AppContext {
+export class AppContext {
   private readonly _config: Config;
   private plugins: Record<string, IPlugin>;
 
@@ -118,67 +119,48 @@ export default class AppContext {
     const plugins: Record<string, IPlugin> = {};
 
     try {
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
-      const pluginDir = path.join(__dirname, "plugins");
-
-      // Asynchronously read the plugins directory
-      const pluginFolders = await fs.promises.readdir(pluginDir, {
-        withFileTypes: true,
-      });
-
       const pluginsConfig = this._config.plugins;
 
       // Loop through only enabled plugins in the config
       for (const pluginConfig of pluginsConfig) {
         if (pluginConfig.isActive) {
-          const pluginFolder = pluginFolders.find(
-            (folder) => folder.isDirectory() && folder.name === pluginConfig.id
-          );
+          const pluginUrl = `/plugins/${pluginConfig.id}/index.ts`;
 
-          if (pluginFolder) {
-            const pluginPath = path.join(
-              pluginDir,
-              pluginFolder.name,
-              "index.ts"
-            );
+          try {
+            // Dynamically load the plugin only if it is enabled
+            const plugin: IPlugin = (await import(/* @vite-ignore */ pluginUrl))
+              .default;
 
-            try {
-              // Dynamically load the plugin only if it is enabled
-              const plugin: IPlugin = (
-                await import(/* @vite-ignore */ pluginPath)
-              ).default;
+            console.log(`Loading plugin "${plugin.name}".`);
 
-              console.log(`Loading plugin "${plugin.name}".`);
-
-              if (
-                !plugin.name ||
-                !plugin.version ||
-                typeof plugin.onInit !== "function"
-              ) {
-                throw new Error(
-                  `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
-                );
-              }
-
-              // Ensure plugin names are unique
-              if (plugins[plugin.name]) {
-                throw new Error(
-                  `Duplicate plugin name detected: ${plugin.name}`
-                );
-              }
-
-              // Initialize the plugin
-              plugin.onInit(this);
-              console.log(`${plugin.name} initialized`);
-
-              // Cache the plugin in memory
-              plugins[plugin.name] = plugin;
-
-              console.log(`${plugin.name} plugin loaded.`);
-            } catch (err) {
-              console.error(`Error loading plugin from ${pluginPath}:`, err);
+            if (
+              !plugin.name ||
+              !plugin.version ||
+              typeof plugin.onInit !== "function"
+            ) {
+              throw new Error(
+                `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
+              );
             }
+
+            // Ensure plugin names are unique
+            if (plugins[plugin.name]) {
+              throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
+            }
+
+            // Initialize the plugin
+            plugin.onInit(this);
+            console.log(`${plugin.name} initialized`);
+
+            // Cache the plugin in memory
+            plugins[plugin.name] = plugin;
+
+            console.log(`${plugin.name} plugin loaded.`);
+          } catch (err) {
+            console.error(
+              `Error loading plugin from ${pluginConfig.name}:`,
+              err
+            );
           }
         } else {
           console.log(
@@ -251,3 +233,10 @@ export default class AppContext {
     fn(this);
   }
 }
+
+export const appContext = singleton<AppContext>("app", async () => {
+  const app = new AppContext();
+  //await app.init();
+  if (app) await app.init();
+  return app;
+});
