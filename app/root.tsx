@@ -35,15 +35,16 @@ export type LoaderData = {
 };
 
 // read the state from the cookie
-export const loader = withContext(({ app }) => {
+export const loader = async () => {
+  const app = await withContext();
   //const themeSession = await getThemeSession(request);
 
   const data: LoaderData = {
-    config: app.configs.app,
+    config: app!.configs.app,
   };
 
   return json(data);
-});
+};
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   // Access the appConfig from the loader's returned data

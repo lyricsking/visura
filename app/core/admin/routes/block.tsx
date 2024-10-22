@@ -1,9 +1,8 @@
 import { json, useFetcher, useLoaderData } from "@remix-run/react";
 import Button from "~/core/components/button";
-import { withContext } from "~/core/utils/context-loader";
 
-const loader = withContext(({ app }) => {
-  const page: Page = {
+const loader = ({}) => {
+  const page = {
     blocks: [
       {
         id: "",
@@ -13,8 +12,8 @@ const loader = withContext(({ app }) => {
     ],
   };
 
-  return json({ blocks: page });
-});
+  return json({ page: page });
+};
 
 export default function CreatePage() {
   const { page } = useLoaderData<typeof loader>();
@@ -34,7 +33,7 @@ export default function CreatePage() {
         <Button onClick={() => addBlock("video")}>Add Video</Button>
       </div>
 
-      <div>{page.blocks.map((block, index) => {})}</div>
+      {/* <div>{page.blocks.map((block, index) => {})}</div> */}
     </div>
   );
 }

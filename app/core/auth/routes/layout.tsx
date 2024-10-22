@@ -8,9 +8,10 @@ import {
 } from "~/core/components/ui/page.layout";
 import { withContext } from "~/core/utils/context-loader";
 
-export const loader = withContext(({ app }) => {
+export const loader = async () => {
+  const app = await withContext();
   return json({ appName: app?.configs.app.appName });
-});
+};
 
 export default function Layout() {
   const { appName } = useLoaderData<typeof loader>();

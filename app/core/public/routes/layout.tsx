@@ -1,10 +1,16 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import { LoaderFunction, json } from "@remix-run/node";
+import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { getUserFromSession } from "~/core/auth/server/auth.server";
 import { withContext } from "~/core/utils/context-loader";
 import AccountMenuButton from "~/core/components/ui/account-menu-button";
 import Footer from "~/core/components/ui/footer";
-import { PageLayout, PageLayoutHeader, PageLayoutHeaderItem, PageLayoutContent, PageLayoutFooter } from "~/core/components/ui/page.layout";
+import {
+  PageLayout,
+  PageLayoutHeader,
+  PageLayoutHeaderItem,
+  PageLayoutContent,
+  PageLayoutFooter,
+} from "~/core/components/ui/page.layout";
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
@@ -21,7 +27,7 @@ export default function Default() {
         >
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
-              {config.appName}
+              {config?.appName}
             </h1>
           </Link>
 
@@ -45,8 +51,9 @@ export default function Default() {
   );
 }
 
-export const loader: LoaderFunction = withContext(async ({ app, request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const app = await withContext();
   const user = await getUserFromSession(request);
 
-  return json({ config: app.configs.app, user: user });
-});
+  return json({ config: app?.configs.app, user: user });
+};

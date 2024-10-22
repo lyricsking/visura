@@ -16,11 +16,11 @@ export const handle = {
   },
 };
 
-export const loader: LoaderFunction = withContext(async ({ app, request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
-
+  const app = await withContext();
   const pluginRoutes = app?.findRoute("admin");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
@@ -32,19 +32,19 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
       if (matchResult) {
         const { path, params } = matchResult;
 
-        const routeMenu = app.getRouteMenu(route.path);
+        const routeMenu = app?.getRouteMenu(route.path);
 
         // Do something with the matched params
         // e.g., load the post based on postId
         const data =
           route.loader &&
-          (await route.loader({ app: app!, params: params as Params }));
+          (await route.loader());
 
         return json({
           data: data,
           params,
           pathname: route.path,
-          componentPath: route.component,
+          
           routeMenu: routeMenu,
         });
       }
@@ -55,7 +55,7 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
   //throw new Response("Not Found", { status: 404 });
   // Return default path
   return json({ pathname: NOT_FOUND_PATH, data: {} });
-});
+};
 
 export default function CatchAll() {
   const { pathname, data, params, componentPath } =

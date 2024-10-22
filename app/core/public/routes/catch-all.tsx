@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from "@remix-run/node";
+import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { Params, useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import NotFound from "./not-found";
@@ -8,11 +8,12 @@ import { renderToString } from "react-dom/server";
 
 const NOT_FOUND_PATH = "not-found";
 
-export const loader: LoaderFunction = withContext(async ({ app, request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
+  const app = await withContext();
   const pluginRoutes = app?.findRoute("app");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
@@ -26,18 +27,13 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
 
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data = route.loader && (await route.loader({ params }));
-
-        const MyComponent = (
-          await import(/* @vite-ignore */ `/app/${route.component}`)
-        ).default;
+        const data = route.loader && (await route.loader());
 
         return json({
           data: data,
           params,
           pathname: route.path,
           //componentPath: route.component,
-          componentPath: renderToString(<MyComponent {...data} />),
         });
       }
     }
@@ -47,29 +43,28 @@ export const loader: LoaderFunction = withContext(async ({ app, request }) => {
   //throw new Response("Not Found", { status: 404 });
   // Return default path
   return json({ pathname: NOT_FOUND_PATH, data: {} });
-});
+};
 
 export default function CatchAll() {
-  const { pathname, data, params, componentPath } =
-    useLoaderData<typeof loader>();
+  const { pathname } = useLoaderData<typeof loader>();
 
-  useEffect(() => {
-    alert(componentPath);
-  }, []);
+  // useEffect(() => {
+  //   alert(componentPath);
+  // }, []);
 
-  return <div dangerouslySetInnerHTML={{ __html: componentPath }} />;
-  if (componentPath && pathname !== NOT_FOUND_PATH) {
-    // Use React.lazy to dynamically import the component
-    const DynamicComponent = React.lazy(
-      () => import(/* @vite-ignore */ `/app/${componentPath}`)
-    );
+  // return <div dangerouslySetInnerHTML={{ __html: componentPath }} />;
+  // if (componentPath && pathname !== NOT_FOUND_PATH) {
+  //   // Use React.lazy to dynamically import the component
+  //   const DynamicComponent = React.lazy(
+  //     () => import(/* @vite-ignore */ `/app/${componentPath}`)
+  //   );
 
-    return (
-      <Suspense fallback={<div>Loading component...</div>}>
-        <DynamicComponent {...data} pathname={pathname} />
-      </Suspense>
-    );
-  }
+  //   return (
+  //     <Suspense fallback={<div>Loading component...</div>}>
+  //       <DynamicComponent {...data} pathname={pathname} />
+  //     </Suspense>
+  //   );
+  // }
 
   return <NotFound />;
 }
