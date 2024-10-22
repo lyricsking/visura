@@ -2,7 +2,6 @@ import { appContext, AppContext } from "~/app";
 import { singleton } from "./singleton";
 import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Config } from "~/core/config";
-import createDBConnection from "~/database/db.server";
 
 type ContextLoaderFunctionArgs = LoaderFunctionArgs & {
   app: AppContext;

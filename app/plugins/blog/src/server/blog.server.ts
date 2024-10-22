@@ -15,10 +15,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const loader:PluginLoaderFunction = (app: AppContext) => {
+export const loader: PluginLoaderFunction = (app: AppContext) => {
   return async () => {
     const posts = await findPosts({});
 
-    return posts ;
-  }
-}
+    return posts;
+  };
+};

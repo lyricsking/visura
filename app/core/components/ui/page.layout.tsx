@@ -1,9 +1,9 @@
-import ScrollToTop from "~/components/ui/scroll.to.top";
 import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 import { Slot } from "@radix-ui/react-slot";
 import clsx from "clsx";
+import ScrollToTop from "./scroll.to.top";
 
 interface PageLayoutProps extends React.ComponentPropsWithRef<"div"> {
   asChild?: boolean;

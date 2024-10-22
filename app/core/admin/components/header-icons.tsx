@@ -1,6 +1,6 @@
 import { BellIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import AccountMenuButton from "~/components/ui/account-menu-button";
-import { IHydratedUser } from "~/user/models/user.model";
+import AccountMenuButton from "~/core/components/ui/account-menu-button";
+import { IHydratedUser } from "~/core/User/models/user.model";
 
 type HeaderSearchProps = {
   user: IHydratedUser;

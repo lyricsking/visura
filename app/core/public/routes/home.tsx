@@ -1,17 +1,17 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { useEffect, useState } from "react";
+import { AppContext, appContext } from "~/app";
+import renderBlock from "~/core/block";
+import { useApp } from "~/core/hooks/use-app";
 import { withContext } from "~/core/utils/context-loader";
-import renderBlock from "~/block";
-import { useEffect } from "react";
-import { appContext } from "~/app";
-import { useApp } from "~/hooks/use-app";
 
 export const loader: LoaderFunction = withContext(
   async ({ app, params, request }) => {
-    const homepagePath = app.configs.homepage;
+    const homepagePath = app.configs.app.homepage;
     const route = app?.findRoute("app", homepagePath);
 
-    console.log(app);
+    console.log(route);
 
     const defaultBlock = {};
     const data: any = { block: defaultBlock };
@@ -27,10 +27,8 @@ export const loader: LoaderFunction = withContext(
 );
 
 export default function Home() {
-  const app = useApp();
-
-  return <>{JSON.stringify(app)}</>;
-
   const { block } = useLoaderData<typeof loader>();
+  const { app } = useApp();
+
   return renderBlock(block);
 }

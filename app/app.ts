@@ -2,6 +2,8 @@ import { BlockMetadata } from "./core/blocks";
 import { Config, configSchema } from "./core/config";
 import appConfig from "./core/config/app.config.json";
 import pluginsConfig from "./core/config/plugin.config.json";
+import { Menu, MenuType } from "./core/types/menu";
+import { Page, PageType } from "./core/types/page";
 import { IPlugin } from "./core/types/plugin";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { singleton } from "./core/utils/singleton";
@@ -15,23 +17,13 @@ export type PluginActionFunction = (
   app: AppContext
 ) => (args: any) => Promise<Response | any>; // Adjust the return type as necessary
 
-export type RouteType = "app" | "admin";
-
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
-export type Route = {
-  id?: string;
-  path: string;
-  getBlock: BlockMetadataFunction;
-};
-
-export type MenuType = "app" | "admin";
-export type Menu = {
-  id: number | string;
-  label: string;
-  path: string;
-  icon?: string;
-};
+// export type Route = {
+//   id?: string;
+//   path: string;
+//   getBlock: BlockMetadataFunction;
+// };
 
 export type SettingsTab = {
   id?: string;
@@ -52,7 +44,7 @@ export class AppContext {
   /**
    * Registry to hold routes
    */
-  private routes: Record<RouteType, Route[]> = {
+  private routes: Record<PageType, Page[]> = {
     app: [],
     admin: [],
   };
@@ -119,14 +111,14 @@ export class AppContext {
     return Object.entries(this.plugins.a).find(([key, value]) => key === name);
   }
 
-  addRoute(type: RouteType, route: Route) {
+  addRoute(type: PageType, route: Page) {
     const mRoutes = this.routes;
     if (mRoutes) {
       mRoutes[type] = [...mRoutes[type], route];
     }
   }
 
-  findRoute(type: RouteType, path?: string): undefined | Route | Route[] {
+  findRoute(type: PageType, path?: string): undefined | Page | Page[] {
     const mRoutes = this.routes;
     if (mRoutes) {
       const typeRoutes = mRoutes[type];
@@ -175,7 +167,11 @@ export class AppContext {
 
 export const appContext = singleton<AppContext>("app", async () => {
   const app = new AppContext();
-  //await app.init();
-  if (app) await app.init();
+
+  if (app) {
+    //await app.init();
+    await app.init();
+  }
+
   return app;
 });

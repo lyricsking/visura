@@ -4,26 +4,26 @@ import {
   ArrowUpRight,
   CreditCard,
   DollarSign,
+  Table,
   Users,
 } from "lucide-react";
-import Avatar from "~/components/avatar";
-import { Badge } from "~/components/badge";
-import Button from "~/components/button";
+import Avatar from "~/core/components/avatar";
+import { Badge } from "~/core/components/badge";
+import Button from "~/core/components/button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardDescription,
-} from "~/components/card";
+} from "~/core/components/card";
 import {
-  Table,
   TableHeader,
   TableRow,
   TableHead,
   TableBody,
   TableCell,
-} from "~/components/table";
+} from "~/core/components/table";
 
 export const handle = {
   pageName: "Overview",

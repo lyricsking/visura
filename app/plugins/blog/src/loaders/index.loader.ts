@@ -1,10 +1,8 @@
-import {
-  PluginLoaderFunction,
-} from "~/app";
+import { PluginLoaderFunction } from "~/app";
 import { findPosts } from "../server/post.server";
 import { findTips } from "../server/tips.server";
 
-export const blogLoader:PluginLoaderFunction= () => {
+export const blogLoader: PluginLoaderFunction = () => {
   return async () => {
     const [tips, posts] = await Promise.all([
       findTips(),
@@ -12,5 +10,5 @@ export const blogLoader:PluginLoaderFunction= () => {
     ]);
 
     return { tips, posts };
-  }
-}
+  };
+};

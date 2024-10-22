@@ -2,7 +2,7 @@ export async function singleton<Value>(
   name: string,
   initializer?: Value | (() => Value) | (() => Promise<Value>)
 ) {
-  const yolo = global as any;
+  const yolo = globalThis as any;
   yolo.__singletons ??= {};
 
   // Initialize the value if it doesn't exist yet

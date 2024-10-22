@@ -12,5 +12,5 @@ export const loader: PluginLoaderFunction = () => {
     if (!post) throw Error("No post was found.");
 
     return { post };
-  }
-}
+  };
+};

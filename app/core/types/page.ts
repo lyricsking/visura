@@ -8,10 +8,11 @@ export interface PageContent {
   value: any;
 }
 
+export type PageType = "app" | "admin";
 export interface Page {
   id: string;
   title: string;
   metadata: Metadata[];
-  slug: string;
+  path: string;
   content: PageContent[];
 }

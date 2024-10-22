@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { appContext, AppContext } from "~/app";
 
-export const useApp = async () => {
+export const useApp = () => {
   const [app, setApp] = useState<AppContext>();
 
-  let newAppContext = await appContext;
-  if (newAppContext) {
-    setApp(newAppContext);
-  }
-  
-  return app;
+  useEffect(() => {
+    appContext.then((cApp) => {
+      if (cApp) setApp(cApp);
+    });
+  }, [appContext]);
+
+  return { app };
 };

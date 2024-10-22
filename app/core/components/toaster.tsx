@@ -1,6 +1,5 @@
 "use client";
 
-import { useToast } from "~/hooks/use-toast";
 import {
   Toast,
   ToastClose,
@@ -8,10 +7,10 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-  toastViewportVariants,
-} from "~/components/toast";
-import { ToastViewportProps } from "@radix-ui/react-toast";
+} from "~/core/components/toast";
 import { VariantProps } from "class-variance-authority";
+import { useToast } from "../hooks/use-toast";
+import { toastViewportVariants } from "./toast";
 
 export function Toaster() {
   const { toasts } = useToast();

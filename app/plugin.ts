@@ -10,7 +10,7 @@ export async function loadPlugins(app: AppContext) {
     // Loop through only enabled plugins in the config
     for (const pluginConfig of pluginsConfig) {
       if (pluginConfig.isActive) {
-        const pluginUrl = `../public/plugins/${pluginConfig.id}/index.ts`;
+        const pluginUrl = `/app/plugins/${pluginConfig.id}/src/index.ts`;
 
         try {
           // Dynamically load the plugin only if it is enabled
@@ -56,5 +56,3 @@ export async function loadPlugins(app: AppContext) {
     return plugins;
   }
 }
-export { IPlugin };
-

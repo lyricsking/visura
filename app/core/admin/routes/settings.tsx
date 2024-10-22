@@ -6,29 +6,6 @@ import {
   useParams,
 } from "@remix-run/react";
 import { ElementType, lazy, ReactElement, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
-
-import ProfileSettings from "../components/profile-settings";
-import NotificationSettings from "../components/notification-settings";
-import DisplaySettings from "../components/display-settings";
-import { commitSession, getSession } from "~/core/utils/session";
-import {
-  getUserFromSession,
-  logout,
-  invalidateCacheUser,
-} from "~/core/auth/server/auth.server";
-import OrderSettings from "~/core/tempPlugins/SubscriptionBox/Order/components/order-settings";
-import { IHydratedUser } from "~/user/models/user.model";
-import {
-  updateUserProfile,
-  updateUserPreference,
-} from "~/core/user/server/user-profile.server";
-import {
-  updateUserPassword,
-  disableUser,~/core/utils/form-data-to-object
-} from "~/core/user/server/user.server";
-import { IUserProfile } from "~/user/types/user-profile.type";
-import formDataToObject from "~/utils/form-data-to-object";
 import { SettingsType } from "../type/settings.type";
 import {
   PROFILE_UPDATE_ACTION,
@@ -39,8 +16,16 @@ import {
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
 import PluginSetting from "../components/plugin-settings";
-import { Route } from "~/app";
 import { renderToString } from "react-dom/server";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
+import { getUserFromSession, logout, invalidateCacheUser } from "~/core/auth/server/auth.server";
+import { Page } from "~/core/types/page";
+import { IHydratedUser } from "~/core/User/models/user.model";
+import { updateUserProfile, updateUserPreference } from "~/core/user/server/user-profile.server";
+import { updateUserPassword, disableUser } from "~/core/user/server/user.server";
+import { IUserProfile } from "~/core/User/types/user-profile.type";
+import formDataToObject from "~/core/utils/form-data-to-object";
+import { getSession, commitSession } from "~/core/utils/session";
 
 export const handle = {
   pageName: "Settings",
@@ -51,7 +36,7 @@ export const handle = {
   },
 };
 
-const settings: Route[] = [
+const settings: any[] = [
   {
     path: "account",
     component: "admin/components/account-settings.tsx",

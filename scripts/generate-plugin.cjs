@@ -30,7 +30,7 @@ fs.mkdirSync(assetsDir, { recursive: true });
 
 // Boilerplate content for src/index.ts
 const indexTsContent = `
-import { IPlugin } from "~/plugin";
+import { IPlugin } from "~/core/types/plugin";
 
 const ${pluginName}Plugin: IPlugin = {
   id: "${pluginName}",

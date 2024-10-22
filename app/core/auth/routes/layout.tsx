@@ -1,16 +1,17 @@
 import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
+import Button from "~/core/components/button";
 import {
   PageLayout,
-  PageLayoutContent,
   PageLayoutHeader,
   PageLayoutHeaderItem,
-} from "~/components/ui/page.layout";
-
-import Button from "~/components/button";
+  PageLayoutContent,
+} from "~/core/components/ui/page.layout";
 import { withContext } from "~/core/utils/context-loader";
+
 export const loader = withContext(({ app }) => {
-  return json({ appName: app?.configs.appName });
+  return json({ appName: app?.configs.app.appName });
 });
+
 export default function Layout() {
   const { appName } = useLoaderData<typeof loader>();
   return (

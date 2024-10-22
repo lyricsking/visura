@@ -2,16 +2,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/dropdown.menu";
+} from "~/core/components/dropdown.menu";
 import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
-import { UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
-import { Menu } from "~/utils/menu";
-import { ReceiptRefundIcon } from "@heroicons/react/20/solid";
-import { IHydratedUser } from "~/user/models/user.model";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { renderIcon } from "./icon-loader";
+import { Menu } from "~/core/types/menu";
+import { IHydratedUser } from "~/core/User/models/user.model";
 
 //type Props = ButtonProps;
 type Props = {

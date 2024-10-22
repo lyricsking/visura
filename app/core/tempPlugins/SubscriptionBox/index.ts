@@ -1,5 +1,5 @@
 import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
-import { AppContext } from "~/core/app";
+import { AppContext } from "~/app";
 import { IPlugin } from "~/core/declarations";
 
 export const pluginName = "subscriptionBox";

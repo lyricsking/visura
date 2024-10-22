@@ -1,5 +1,5 @@
-import { ElementType, HTMLAttributes, JSX } from "react";
-import Button from "~/components/button";
+import { HTMLAttributes } from "react";
+import Button from "~/core/components/button";
 
 export const Blocks = {
   div: "div",
