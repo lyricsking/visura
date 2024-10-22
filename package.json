@@ -10,7 +10,7 @@
     "seed": "npx tsx ./app/database/seed/seed.ts",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
-    "generate:plugin": "node scripts/generate-plugin.js"
+    "generate:plugin": "node scripts/generate-plugin.cjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.3",

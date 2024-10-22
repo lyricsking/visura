@@ -90,5 +90,5 @@ fs.writeFileSync(path.join(srcDir, "index.ts"), indexTsContent, "utf8");
 fs.writeFileSync(path.join(pluginDir, "README.md"), readmeMdContent, "utf8");
 
 console.log(
-  `Plugin "${pluginName}" has been successfully cretade at ${pluginDir}`
+  `Plugin "${pluginName}" has been successfully created at ${pluginDir}`
 );
