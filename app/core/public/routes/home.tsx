@@ -11,18 +11,15 @@ export const loader: LoaderFunction = withContext(
     const homepagePath = app.configs.app.homepage;
     const route = app?.findRoute("app", homepagePath);
 
-    console.log(route);
-
     const defaultBlock = {};
     const data: any = { block: defaultBlock };
+
+    if (route && !Array.isArray(route)) {
+      const routeBlock = await route.getBlock();
+       data["block"] = routeBlock;
+    }
+
     return json(data);
-
-    // if (route && !Array.isArray(route)) {
-    //   const routeBlock = await route.getBlock();
-    //   data["block"] = routeBlock;
-    // }
-
-    // return json(data);
   }
 );
 

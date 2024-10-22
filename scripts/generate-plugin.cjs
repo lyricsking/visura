@@ -28,7 +28,7 @@ if (fs.existsSync(pluginDir)) {
 fs.mkdirSync(srcDir, { recursive: true });
 fs.mkdirSync(assetsDir, { recursive: true });
 
-// Boilerplate content for src/index.ts
+// Boilerplate content for index.ts
 const indexTsContent = `
 import { IPlugin } from "~/core/types/plugin";
 
@@ -60,9 +60,9 @@ This plugin adds ${capitalize(
 
 ## Structure
 
-- **src/index.ts**: The main entry point for plugin. It is expected to have 
-a default export that extends from the IPlugin interface. 
+- **src**: The source folder, this folder will house plugin source codes, e.g. components, routes, types, models, etc depending on the complexity of the plugin.
 - **assets/**: Place your plugin's static assets (e.g., images, icons) here
+- **index.ts**: The main entry point for the plugin. It is expected to have a default export that extends from the IPlugin interface. 
 
 ## Usage
 
@@ -85,8 +85,8 @@ settings and menu hooks should called in the onInit function.
 MIT
 `;
 
-// Write src/index.ts and README.md files
-fs.writeFileSync(path.join(srcDir, "index.ts"), indexTsContent, "utf8");
+// Write index.ts and README.md files
+fs.writeFileSync(path.join(pluginDir, "index.ts"), indexTsContent, "utf8");
 fs.writeFileSync(path.join(pluginDir, "README.md"), readmeMdContent, "utf8");
 
 console.log(

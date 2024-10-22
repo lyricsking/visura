@@ -1,6 +1,6 @@
 export interface Metadata {
-  name: string;
-  value: any;
+  title: string,
+  [key: string]: any;
 }
 
 export interface PageContent {
@@ -8,11 +8,8 @@ export interface PageContent {
   value: any;
 }
 
-export type PageType = "app" | "admin";
 export interface Page {
   id: string;
-  title: string;
-  metadata: Metadata[];
-  path: string;
+  metadata: Metadata;
   content: PageContent[];
 }

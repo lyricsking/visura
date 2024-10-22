@@ -1,16 +1,16 @@
 import { IPlugin } from "~/core/types/plugin";
-import blogBlock from "./blocks/blog";
+import blogBlock from "./src/blocks/blog";
 
 const blogPlugin: IPlugin = {
   id: "blog",
-  name: "Blog Plugin",
+  name: "Blog",
   description: "",
   version: "0.0.1",
   onInit(app) {
-    // app.addRoute("app", {
-    //   path: "blog",
-    //   getBlock: blogBlock,
-    // });
+    app.addRoute("app", {
+       path: "blog",
+       getBlock: blogBlock,
+     });
     // app.addRoute("app", {
     //   path: "news/:slug",
     //   getBlock: () => ({} as any),

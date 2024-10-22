@@ -3,19 +3,11 @@ import { Config, configSchema } from "./core/config";
 import appConfig from "./core/config/app.config.json";
 import pluginsConfig from "./core/config/plugin.config.json";
 import { Menu, MenuType } from "./core/types/menu";
-import { Page, PageType } from "./core/types/page";
+import { Route, RouteType } from "./core/types/page";
 import { IPlugin } from "./core/types/plugin";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { singleton } from "./core/utils/singleton";
 import { loadPlugins } from "./plugin";
-
-export type PluginLoaderFunction = (
-  app: AppContext
-) => (args: any) => Promise<any> | any; // Adjust the return type as necessary
-
-export type PluginActionFunction = (
-  app: AppContext
-) => (args: any) => Promise<Response | any>; // Adjust the return type as necessary
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
@@ -44,7 +36,7 @@ export class AppContext {
   /**
    * Registry to hold routes
    */
-  private routes: Record<PageType, Page[]> = {
+  private routes: Record<RouteType, Route[]> = {
     app: [],
     admin: [],
   };
@@ -101,6 +93,7 @@ export class AppContext {
   // Async initialization logic for loading plugins
   async init() {
     if (!this.isInitialized || Object.entries(this.plugins).length === 0) {
+      // Setup debounce here to prevent multiple calls.
       // Load plugins asynchronously
       this.plugins = await loadPlugins(this);
       this.isInitialized = true;
@@ -111,14 +104,29 @@ export class AppContext {
     return Object.entries(this.plugins.a).find(([key, value]) => key === name);
   }
 
-  addRoute(type: PageType, route: Page) {
-    const mRoutes = this.routes;
-    if (mRoutes) {
-      mRoutes[type] = [...mRoutes[type], route];
+  addRoute(type: RouteType, route: Route) {
+    try {
+      
+    const typeRoutes = this.routes[type];
+    const existTypeRoute = typeRoutes.find((typeRoute)=> typeRoute.path === route.path);
+    
+    if(existTypeRoute){
+      throw new Error(`Cannot register duplicate route. A route already exists for "${existTypeRoute.path}.`);
+    }
+    
+    if(typeof document === "undefined") {
+      typeRoutes.push(route);
+    } else{
+      const { loader, action, ...clientRouteData } = route;
+      typeRoutes.push(clientRouteData);
+    }
+    this.routes[type] = typeRoutes;
+    } catch (e) {
+      console.log("Cannot register route: ", e);
     }
   }
 
-  findRoute(type: PageType, path?: string): undefined | Page | Page[] {
+  findRoute(type: RouteType, path?: string): undefined | Route | Route[] {
     const mRoutes = this.routes;
     if (mRoutes) {
       const typeRoutes = mRoutes[type];
