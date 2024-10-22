@@ -7,16 +7,9 @@ type ContextLoaderFunctionArgs = LoaderFunctionArgs & {
   app: AppContext;
 };
 
-// Higher-order function to wrap the loader and pass app context
-export function withContext(
-  callback: (params: ContextLoaderFunctionArgs) => Promise<Response> | Response
-): LoaderFunction {
-  return async (args: LoaderFunctionArgs) => {
-    // singleton("mongoose", createDBConnection);
-    const context = await appContext;
-    if (!context) return null;
-
-    // Pass the config to the callback and return the final response
-    return callback({ ...args, app: context });
-  };
+export async function withContext(): Promise<AppContext | undefined> {
+  // singleton("mongoose", createDBConnection);
+  const context = await appContext;
+  if (!context) return undefined;
+  return context;
 }

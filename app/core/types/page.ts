@@ -1,15 +1,19 @@
-export interface Metadata {
-  title: string,
+export interface PageMetadata {
+  title: string;
   [key: string]: any;
 }
 
 export interface PageContent {
-  type: "block" | "text" | "image" | "markdown" | "component";
+  type:
+    | "block"
+    /*  |  "text" | "image" */
+    | "markdown"
+    | "component";
   value: any;
 }
 
 export interface Page {
   id: string;
-  metadata: Metadata;
+  metadata: PageMetadata;
   content: PageContent[];
 }

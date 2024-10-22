@@ -10,7 +10,7 @@ export async function loadPlugins(app: AppContext) {
     // Loop through only enabled plugins in the config
     for (const pluginConfig of pluginsConfig) {
       if (pluginConfig.isActive) {
-        const pluginUrl = `/app/plugins/${pluginConfig.id}/src/index.ts`;
+        const pluginUrl = `/app/plugins/${pluginConfig.id}/index.ts`;
 
         try {
           // Dynamically load the plugin only if it is enabled

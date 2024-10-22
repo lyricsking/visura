@@ -1,4 +1,4 @@
-import { Carousel, CarouselContent, CarouselItem } from "~/components/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "~/core/components/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
 const images = [

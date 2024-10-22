@@ -1,5 +1,5 @@
 import { IPlugin } from "~/core/types/plugin";
-import blogBlock from "./src/blocks/blog";
+import Blog from "./src/routes/blog";
 
 const blogPlugin: IPlugin = {
   id: "blog",
@@ -8,9 +8,18 @@ const blogPlugin: IPlugin = {
   version: "0.0.1",
   onInit(app) {
     app.addRoute("app", {
-       path: "blog",
-       getBlock: blogBlock,
-     });
+      path: "blog",
+      page: {
+        id: "blog",
+        metadata: { title: "Blog", description: "" },
+        content: [
+          {
+            type: "component",
+            value: Blog,
+          },
+        ],
+      },
+    });
     // app.addRoute("app", {
     //   path: "news/:slug",
     //   getBlock: () => ({} as any),

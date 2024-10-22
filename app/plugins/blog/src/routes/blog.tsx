@@ -1,22 +1,26 @@
-import { LinksFunction, json, type MetaFunction } from "@remix-run/node";
+import { LinksFunction, type MetaFunction } from "@remix-run/node";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
-import Button from "~/components/button";
-import { Card, CardContent, CardFooter, CardHeader } from "~/components/card";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/select";
-import { SelectItem } from "@radix-ui/react-select";
-import { TipSummary } from "../components/tip-summary";
-import { ITips } from "../types/tips.type";
-import { ScrollArea } from "~/components/scrollable.area";
 import { PostSummary } from "../components/post-summary";
 import { findFontByName } from "~/core/utils/fonts";
 import { blogLoader } from "../loaders/index.loader";
-import { useEffect } from "react";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@radix-ui/react-select";
+import Button from "~/core/components/button";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "~/core/components/card";
+import { TipSummary } from "../components/tip-card";
+import { ITips } from "../types/tips.type";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");
