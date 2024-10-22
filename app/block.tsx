@@ -1,5 +1,5 @@
 import { useNavigate } from "@remix-run/react";
-import { BlockMetadata, Blocks, OnClickEvent } from "./blocks";
+import { BlockMetadata, Blocks, OnClickEvent } from "./core/blocks";
 
 const renderBlock = (block: BlockMetadata): JSX.Element | null => {
   const { blockId, type, props, blocks } = block;

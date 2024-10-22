@@ -19,13 +19,12 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 
-import { cn } from "./utils/util";
-import { Toaster } from "./components/toaster";
+import { cn } from "./core/utils/util";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { withContext } from "./utils/context-loader";
-import AppContext from "./app";
-import { applyDiscount } from "./tempPlugins/SubscriptionBox/Order/server/cart.server";
-import { Config } from "./config";
+import { withContext } from "./core/utils/context-loader";
+import { applyDiscount } from "./core/tempPlugins/SubscriptionBox/Order/server/cart.server";
+import { Config } from "./core/config";
+import { Toaster } from "./core/components/toaster";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -40,7 +39,7 @@ export const loader = withContext(({ app }) => {
   //const themeSession = await getThemeSession(request);
 
   const data: LoaderData = {
-    config: app.configs,
+    config: app.configs.app,
   };
 
   return json(data);

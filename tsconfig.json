@@ -3,8 +3,9 @@
     "env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/plugins/Home/developer.jsx"
-, "server.js"  ],
+    "app/plugins/Home/developer.jsx",
+    "server.js"
+, "scripts/generate-plugin.js"  ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,

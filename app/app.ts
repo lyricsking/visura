@@ -1,13 +1,11 @@
-import { BlockMetadata } from "./blocks";
-import { Config, configSchema } from "./config";
-import appConfig from "./config/app.config.json";
-import pluginsConfig from "./config/plugin.config.json";
-import { IPlugin } from "./plugin";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { MaybeAsyncFunction } from "./utils/maybe-async-fn";
-import { singleton } from "./utils/singleton";
+import { BlockMetadata } from "./core/blocks";
+import { Config, configSchema } from "./core/config";
+import appConfig from "./core/config/app.config.json";
+import pluginsConfig from "./core/config/plugin.config.json";
+import { IPlugin } from "./core/types/plugin";
+import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
+import { singleton } from "./core/utils/singleton";
+import { loadPlugins } from "./plugin";
 
 export type PluginLoaderFunction = (
   app: AppContext
@@ -103,76 +101,17 @@ export class AppContext {
   }
 
   get configs() {
-    return this._config.app;
+    // return this._config.app;
+
+    return this._config;
   }
 
   // Async initialization logic for loading plugins
   async init() {
     if (!this.isInitialized || Object.entries(this.plugins).length === 0) {
       // Load plugins asynchronously
-      this.plugins = await this.loadPlugins();
+      this.plugins = await loadPlugins(this);
       this.isInitialized = true;
-    }
-  }
-
-  private async loadPlugins() {
-    const plugins: Record<string, IPlugin> = {};
-
-    try {
-      const pluginsConfig = this._config.plugins;
-
-      // Loop through only enabled plugins in the config
-      for (const pluginConfig of pluginsConfig) {
-        if (pluginConfig.isActive) {
-          const pluginUrl = `../public/plugins/${pluginConfig.id}/index.ts`;
-
-          try {
-            // Dynamically load the plugin only if it is enabled
-            const plugin: IPlugin = (await import(/* @vite-ignore */ pluginUrl))
-              .default;
-
-            console.log(`Loading plugin "${plugin.name}".`);
-
-            if (
-              !plugin.name ||
-              !plugin.version ||
-              typeof plugin.onInit !== "function"
-            ) {
-              throw new Error(
-                `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
-              );
-            }
-
-            // Ensure plugin names are unique
-            if (plugins[plugin.name]) {
-              throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
-            }
-
-            // Initialize the plugin
-            plugin.onInit(this);
-            console.log(`${plugin.name} initialized`);
-
-            // Cache the plugin in memory
-            plugins[plugin.name] = plugin;
-
-            console.log(`${plugin.name} plugin loaded.`);
-          } catch (err) {
-            console.error(
-              `Error loading plugin "${pluginConfig.name}":\n`,
-              err
-            );
-          }
-        } else {
-          console.log(
-            `${pluginConfig.name} is disabled and will not be loaded.`
-          );
-        }
-      }
-    } catch (err) {
-      console.error("Error loading plugins:", err);
-    } finally {
-      console.log(`Loaded ${Object.keys(plugins).length} plugins.`);
-      return plugins;
     }
   }
 

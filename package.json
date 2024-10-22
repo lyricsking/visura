@@ -9,7 +9,8 @@
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "seed": "npx tsx ./app/database/seed/seed.ts",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "generate:plugin": "node scripts/generate-plugin.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.3",
