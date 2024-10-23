@@ -22,7 +22,7 @@ const blogPlugin: IPlugin = {
       },
     });
 
-    if (typeof document === "undefined") {
+    if (typeof document === 'undefined') {
       blogLoader;
     }
 
