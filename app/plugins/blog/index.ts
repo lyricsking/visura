@@ -10,6 +10,7 @@ const blogPlugin: IPlugin = {
   onInit(app) {
     app.addRoute("app", {
       path: "blog",
+      loader: blogLoader,
       page: {
         id: "blog",
         metadata: { title: "Blog", description: "" },
@@ -21,10 +22,6 @@ const blogPlugin: IPlugin = {
         ],
       },
     });
-
-    if (typeof document === 'undefined') {
-      blogLoader;
-    }
 
     // app.addRoute("app", {
     //   path: "news/:slug",
