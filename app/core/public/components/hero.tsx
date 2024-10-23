@@ -1,4 +1,4 @@
-import Button from "~/core/components/button";
+import Button, { buttonVariants } from "~/core/components/button";
 import { findFontByName } from "~/core/utils/fonts";
 import { cn } from "~/core/utils/util";
 

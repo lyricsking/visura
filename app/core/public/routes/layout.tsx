@@ -1,7 +1,6 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
 import { getUserFromSession } from "~/core/auth/server/auth.server";
-import { withContext } from "~/core/utils/context-loader";
 import AccountMenuButton from "~/core/components/ui/account-menu-button";
 import Footer from "~/core/components/ui/footer";
 import {
@@ -11,6 +10,7 @@ import {
   PageLayoutContent,
   PageLayoutFooter,
 } from "~/core/components/ui/page.layout";
+import { app } from "~/entry.server";
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
@@ -52,7 +52,6 @@ export default function Default() {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const app = await withContext();
   const user = await getUserFromSession(request);
 
   return json({ config: app?.configs.app, user: user });

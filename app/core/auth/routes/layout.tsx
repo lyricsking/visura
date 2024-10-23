@@ -6,11 +6,10 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/core/components/ui/page.layout";
-import { withContext } from "~/core/utils/context-loader";
+import { app } from "~/entry.server";
 
 export const loader = async () => {
-  const app = await withContext();
-  return json({ appName: app?.configs.app.appName });
+  return json({ appName: app.configs.app.appName });
 };
 
 export default function Layout() {

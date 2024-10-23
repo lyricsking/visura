@@ -12,10 +12,14 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
+import { AppContext } from "./app";
+import { createConnection } from "mongoose";
+import { loadPlugins } from "./plugin";
 
 const ABORT_DELAY = 5_000;
+let app: AppContext;
 
-export default function handleRequest(
+export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
@@ -25,6 +29,19 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  // Initialize mongose database connection
+  createConnection();
+
+  // Init app context
+  app = new AppContext();
+
+  console.log(app);
+
+  // Load plugins
+  // app.init(loadPlugins);
+  await loadPlugins(app);
+  console.log("After loading plugins");
+
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
@@ -139,3 +156,5 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
+
+export { app };

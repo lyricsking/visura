@@ -1,9 +1,9 @@
 import { LoaderFunction, json } from "@remix-run/node";
-import { Params, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import NotFound from "~/core/public/routes/not-found";
-import { withContext } from "~/core/utils/context-loader";
+import { app } from "~/entry.server";
 
 const NOT_FOUND_PATH = "not-found";
 
@@ -20,7 +20,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
-  const app = await withContext();
   const pluginRoutes = app?.findRoute("admin");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
@@ -36,15 +35,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data =
-          route.loader &&
-          (await route.loader());
+        const data = route.loader && (await route.loader());
 
         return json({
           data: data,
           params,
           pathname: route.path,
-          
+
           routeMenu: routeMenu,
         });
       }

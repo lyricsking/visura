@@ -3,8 +3,8 @@ import { Params, useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import NotFound from "./not-found";
 import React, { Suspense, useEffect } from "react";
-import { withContext } from "~/core/utils/context-loader";
 import { renderToString } from "react-dom/server";
+import { app } from "~/entry.server";
 
 const NOT_FOUND_PATH = "not-found";
 
@@ -13,7 +13,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
-  const app = await withContext();
   const pluginRoutes = app?.findRoute("app");
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {

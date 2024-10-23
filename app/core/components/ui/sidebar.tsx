@@ -1,14 +1,14 @@
 import { NavLink } from "@remix-run/react";
 import React from "react";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/sheet";
-import { Menu } from "lucide-react";
-import Button from "~/components/button";
-import { Menu as MenuType } from "~/utils/menu";
+import { Sheet, SheetContent, SheetTrigger } from "~/core/components/sheet";
+import Button from "~/core/components/button";
 import { renderIcon } from "./icon-loader";
+import { Menu } from "~/core/types/menu";
+import { Menu as MenuIcon } from "lucide-react";
 
 export type SidebarContentProps = {
   appName: string;
-  menu: MenuType[];
+  menu: Menu[];
   side?: "top" | "bottom" | "left" | "right";
 };
 
@@ -17,7 +17,7 @@ export function Sidebar({ appName, menu, side = "left" }: SidebarContentProps) {
     <Sheet>
       <SheetTrigger>
         <Button size="sm" variant="ghost" className="px-0">
-          <Menu className="h-5 w-5" />
+          <MenuIcon className="h-5 w-5" />
           <span className="sr-only">Toggle navigation menu</span>
         </Button>
       </SheetTrigger>

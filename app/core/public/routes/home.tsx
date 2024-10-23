@@ -1,16 +1,11 @@
-import { LoaderFunction, json } from "@remix-run/node";
+import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import { AppContext, appContext } from "~/app";
-import renderBlock from "~/core/block";
-import { useApp } from "~/core/hooks/use-app";
-import { withContext } from "~/core/utils/context-loader";
 import DefaultHome from "./default-home";
-import { PageMetadata, Page } from "~/core/types/page";
-import { Route } from "~/core/types/route";
+import { PageMetadata } from "~/core/types/page";
+import { app } from "~/entry.server";
 
-export const loader = async () => {
-  const app = await withContext();
+export const loader = async ({}: LoaderFunctionArgs) => {
+  console.log(app);
 
   const homepagePath = app?.configs.app.homepage || "/";
   const route = app?.findRoute("app", homepagePath);
@@ -26,32 +21,26 @@ export const loader = async () => {
     // data.data = route.loader && route.loader();
     data.metadata = route.page.metadata;
   }
+  console.log(data.path);
 
   return json(data);
 };
 
 export default function Home() {
   const { data, path } = useLoaderData<typeof loader>();
-  const { app } = useApp();
 
-  const route = app?.findRoute("app", path) as Route | undefined;
+  // const route = app?.findRoute("app", path) as Route | undefined;
 
-  const pageContents = route?.page.content;
-  if (route && pageContents) {
-    for (const content of pageContents) {
-      switch (content.type) {
-        case "block":
-          return renderBlock(content.value);
-        case "markdown":
-          return "Not yet implemented";
-        case "component":
-          const Tag = content.value;
-          return <Tag {...data} />;
-        default:
-          break;
-      }
-    }
-  }
+  // useEffect(() => {
+  //   alert(JSON.stringify({ path, route, pageContents }, null, 2));
+  // }, []);
+
+  // const pageContents = route?.page.content;
+  // if (route && pageContents) {
+  //   for (const content of pageContents) {
+  //     return renderPage(content, data);
+  //   }
+  // }
 
   return <DefaultHome />;
 }

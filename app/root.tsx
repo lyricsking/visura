@@ -1,11 +1,6 @@
 import stylesheet from "tailwind.css?url";
 
-import {
-  LoaderFunction,
-  json,
-  LinksFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import { json, LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   useRouteLoaderData,
   Meta,
@@ -17,14 +12,10 @@ import {
   isRouteErrorResponse,
   useLoaderData,
 } from "@remix-run/react";
-import { useEffect } from "react";
 
-import { cn } from "./core/utils/util";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { withContext } from "./core/utils/context-loader";
-import { applyDiscount } from "./core/tempPlugins/SubscriptionBox/Order/server/cart.server";
 import { Config } from "./core/config";
 import { Toaster } from "./core/components/toaster";
+import { app } from "./entry.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -36,7 +27,6 @@ export type LoaderData = {
 
 // read the state from the cookie
 export const loader = async () => {
-  const app = await withContext();
   //const themeSession = await getThemeSession(request);
 
   const data: LoaderData = {

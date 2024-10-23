@@ -7,12 +7,27 @@
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
+import { AppContext } from "./app";
+import { loadPlugins } from "./plugin";
+import AppContextProvider from "./core/utils/app-context-provider.client";
 
-startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <RemixBrowser />
-    </StrictMode>
-  );
+async function initializeAppContext(): Promise<AppContext> {
+  // Init app context
+  const app = new AppContext();
+  await loadPlugins(app);
+
+  return app;
+}
+
+initializeAppContext().then((app) => {
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <AppContextProvider appContext={app}>
+        <StrictMode>
+          <RemixBrowser />
+        </StrictMode>
+      </AppContextProvider>
+    );
+  });
 });
