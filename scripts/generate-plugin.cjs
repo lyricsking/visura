@@ -29,7 +29,26 @@ fs.mkdirSync(srcDir, { recursive: true });
 fs.mkdirSync(assetsDir, { recursive: true });
 
 // Boilerplate content for index.ts
-const indexTsContent = `
+const indexContent = `
+import { IPlugin } from "~/core/types/plugin";
+
+const ${pluginName}Plugin: IPlugin = {
+  id: "${pluginName}",
+  name: "${capitalize(pluginName)}",
+  description: "A custom plugin for ${capitalize(pluginName)}",
+  version: "0.0.1",
+  onInit(app) {
+    // Plugin initialization logic
+    // Register route, menu etc
+  },
+  onDestroy() {},
+};
+
+export default ${pluginName}Plugin;
+`;
+
+// Boilerplate content for index.ts
+const indexServerContent = `
 import { IPlugin } from "~/core/types/plugin";
 
 const ${pluginName}Plugin: IPlugin = {

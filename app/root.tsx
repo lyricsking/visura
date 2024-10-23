@@ -15,7 +15,7 @@ import {
 
 import { Config } from "./core/config";
 import { Toaster } from "./core/components/toaster";
-import { app } from "./entry.server";
+import { getAppContext } from "./core/utils/app-context.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -28,7 +28,7 @@ export type LoaderData = {
 // read the state from the cookie
 export const loader = async () => {
   //const themeSession = await getThemeSession(request);
-
+  const app = await getAppContext();
   const data: LoaderData = {
     config: app!.configs.app,
   };

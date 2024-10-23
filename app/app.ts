@@ -9,6 +9,7 @@ import {
   PluginActionFunction,
   RouteType,
   Route,
+  ServerFn,
 } from "./core/types/route";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 
@@ -35,6 +36,8 @@ export class AppContext {
   //   getBlock: BlockMetadataFunction;
   // };
   private readonly _config: Config;
+
+  isInitialized: boolean = false;
   private plugins: Record<string, IPlugin>;
 
   /**
@@ -46,6 +49,14 @@ export class AppContext {
   };
 
   private homePaths: Record<string, string> = {};
+
+  /**
+   * Registry to hold routes
+   */
+  private serverFns: Record<RouteType, ServerFn[]> = {
+    app: [],
+    admin: [],
+  };
 
   private readonly _menus: Record<MenuType, Menu[]> = {
     app: [],
@@ -95,27 +106,30 @@ export class AppContext {
   }
 
   // Async initialization logic for loading plugins
-  init(callbackFn: (app: AppContext) => Promise<void>) {
+  async init(callbackFn: (app: AppContext) => Promise<void>) {
     if (callbackFn) {
-      callbackFn(this);
+      await callbackFn(this);
     }
   }
 
   async loadPlugin(plugin: IPlugin) {
     try {
       if (
+        !plugin.id ||
         !plugin.name ||
         !plugin.version ||
         typeof plugin.onInit !== "function"
       ) {
         throw new Error(
-          `Invalid plugin: ${plugin.name}. Must have a name, version, and init function.`
+          `Invalid plugin: ${plugin.name}. Must have an id, name, version, and onInit function.`
         );
       }
 
       // Ensure plugin names are unique
-      if (this.plugins[plugin.name]) {
-        throw new Error(`Duplicate plugin name detected: ${plugin.name}`);
+      if (this.plugins[plugin.id]) {
+        throw new Error(
+          `Cannot register duplicate plugin. Plugin already with id: ${plugin.id}`
+        );
       }
 
       // Initialize the plugin
@@ -123,7 +137,7 @@ export class AppContext {
       console.log(`${plugin.name} initialized`);
 
       // Cache the plugin in memory
-      this.plugins[plugin.name] = plugin;
+      this.plugins[plugin.id] = plugin;
 
       console.log(`${plugin.name} plugin loaded.`);
     } catch (err) {
@@ -134,7 +148,7 @@ export class AppContext {
   }
 
   plugin(name: string) {
-    return Object.entries(this.plugins.a).find(([key, value]) => key === name);
+    return Object.entries(this.plugins).find(([key, value]) => key === name);
   }
 
   addRoute(type: RouteType, route: Route) {
@@ -150,12 +164,8 @@ export class AppContext {
         );
       }
 
-      if (typeof document === "undefined") {
-        typeRoutes.push(route);
-      } else {
-        const { loader, action, ...clientRouteData } = route;
-        typeRoutes.push(clientRouteData);
-      }
+      typeRoutes.push(route);
+
       this.routes[type] = typeRoutes;
     } catch (e) {
       console.log("Cannot register route: ", e);
@@ -172,6 +182,45 @@ export class AppContext {
       if (!path) return typeRoutes;
 
       return typeRoutes.find((route) => route.path === path);
+    }
+
+    return undefined;
+  }
+
+  addServerFn(type: RouteType, serverFn: ServerFn) {
+    try {
+      const serverFns = this.serverFns[type];
+      const existingServerFn = serverFns.find(
+        (serverFn) => serverFn.path === serverFn.path
+      );
+
+      if (existingServerFn) {
+        throw new Error(
+          `Cannot register duplicate server funtion. A route already exists for "${existingServerFn.path}.`
+        );
+      }
+
+      serverFns.push(serverFn);
+
+      this.serverFns[type] = serverFns;
+    } catch (e) {
+      console.log("Cannot register server function: ", e);
+    }
+  }
+
+  findServerFn(
+    type: RouteType,
+    path?: string
+  ): undefined | ServerFn | ServerFn[] {
+    const serverFns = this.serverFns;
+    if (serverFns) {
+      const typeServerFns = serverFns[type];
+
+      if (!typeServerFns) return undefined;
+
+      if (!path) return typeServerFns;
+
+      return typeServerFns.find((typeServerFn) => typeServerFn.path === path);
     }
 
     return undefined;

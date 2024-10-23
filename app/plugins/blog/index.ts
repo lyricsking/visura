@@ -1,5 +1,6 @@
 import { IPlugin } from "~/core/types/plugin";
 import Blog from "./src/routes/blog";
+import { blogLoader } from "./src/loaders/index.loader";
 
 const blogPlugin: IPlugin = {
   id: "blog",
@@ -20,6 +21,11 @@ const blogPlugin: IPlugin = {
         ],
       },
     });
+
+    if (typeof document === "undefined") {
+      blogLoader;
+    }
+
     // app.addRoute("app", {
     //   path: "news/:slug",
     //   getBlock: () => ({} as any),

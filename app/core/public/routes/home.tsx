@@ -2,10 +2,13 @@ import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import DefaultHome from "./default-home";
 import { PageMetadata } from "~/core/types/page";
-import { app } from "~/entry.server";
+import { getAppContext } from "~/core/utils/app-context.server";
+import { useAppContext } from "~/core/utils/app-context-provider.client";
+import { renderPage } from "~/core/components/ui/render-page";
+import { Route } from "~/core/types/route";
 
-export const loader = async ({}: LoaderFunctionArgs) => {
-  console.log(app);
+export const loader = async (args: LoaderFunctionArgs) => {
+  const app = await getAppContext();
 
   const homepagePath = app?.configs.app.homepage || "/";
   const route = app?.findRoute("app", homepagePath);
@@ -18,10 +21,9 @@ export const loader = async ({}: LoaderFunctionArgs) => {
 
   if (route && !Array.isArray(route)) {
     data.path = route.path;
-    // data.data = route.loader && route.loader();
+    data.data = route.loader && route.loader({ ...args, app });
     data.metadata = route.page.metadata;
   }
-  console.log(data.path);
 
   return json(data);
 };
@@ -29,11 +31,9 @@ export const loader = async ({}: LoaderFunctionArgs) => {
 export default function Home() {
   const { data, path } = useLoaderData<typeof loader>();
 
-  // const route = app?.findRoute("app", path) as Route | undefined;
+  // const app = useAppContext();
 
-  // useEffect(() => {
-  //   alert(JSON.stringify({ path, route, pageContents }, null, 2));
-  // }, []);
+  // const route = app?.findRoute("app", path) as Route | undefined;
 
   // const pageContents = route?.page.content;
   // if (route && pageContents) {

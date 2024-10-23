@@ -2,6 +2,8 @@ import { AppContext } from "./app";
 import { IPlugin } from "./core/types/plugin";
 
 export async function loadPlugins(app: AppContext) {
+  if (app.isInitialized) return;
+
   const pluginsConfig = app.configs.plugins;
 
   // Loop through only enabled plugins in the config
