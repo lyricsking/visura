@@ -15,7 +15,7 @@ import _default from "node_modules/vite-tsconfig-paths/dist";
 import { AppContext } from "./app";
 import { createConnection } from "mongoose";
 import { loadPlugins } from "./plugin";
-import AppContextProvider from "./core/utils/app-context";
+import AppContextProvider, { getAppContext } from "./core/utils/app-context";
 import { singleton } from "./core/utils/singleton";
 
 const ABORT_DELAY = 5_000;
@@ -31,13 +31,7 @@ export default async function handleRequest(
   loadContext: AppLoadContext
 ) {
   // Todo Implement debounce
-  const app = await singleton("app", async () => {
-    const app = new AppContext();
-    // Load plugins
-    await app.init(loadPlugins);
-
-    return app;
-  });
+  const app: AppContext = await getAppContext();
 
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(

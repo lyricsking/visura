@@ -6,9 +6,11 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/core/components/ui/page.layout";
-import { app } from "~/entry.server";
+import { getAppContext } from "~/core/utils/app-context";
 
 export const loader = async () => {
+  const app = await getAppContext();
+
   return json({ appName: app.configs.app.appName });
 };
 

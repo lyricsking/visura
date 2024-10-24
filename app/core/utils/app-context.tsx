@@ -1,5 +1,8 @@
 import { createContext, ReactNode, useContext } from "react";
+import { serverOnly$ } from "vite-env-only/macros";
 import { AppContext } from "~/app";
+import { loadPlugins } from "~/plugin";
+import { singleton } from "./singleton";
 
 const ClientAppContext = createContext<AppContext | undefined>(undefined);
 
@@ -28,3 +31,16 @@ export function useAppContext() {
 
   return context;
 }
+
+export const getAppContext = async () => {
+  // Todo Implement debounce
+  const app = singleton("app", () => {
+    const app = new AppContext();
+    // Load plugins
+    app.init(loadPlugins);
+
+    return app;
+  });
+
+  return app;
+};

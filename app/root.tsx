@@ -15,7 +15,7 @@ import {
 
 import { Config } from "./core/config";
 import { Toaster } from "./core/components/toaster";
-import { getAppContext } from "./core/utils/app-context.server";
+import { getAppContext } from "./core/utils/app-context";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
