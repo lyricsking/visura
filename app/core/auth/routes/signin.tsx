@@ -1,14 +1,34 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import { LoaderFunction, json, redirect } from "@remix-run/node";
-import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
-import { REDIRECT_URL, isAuthenticated } from "../server/auth.server";
+import {
+  ActionFunctionArgs,
+  LoaderFunction,
+  json,
+  redirect,
+} from "@remix-run/node";
+import {
+  Form,
+  Link,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
+import {
+  REDIRECT_URL,
+  authenticate,
+  isAuthenticated,
+} from "../server/auth.server";
 import { getSession } from "~/core/utils/session";
 import { isAuthUser } from "../utils/helper";
 import { Input } from "~/core/components/input";
+import Button from "~/core/components/button";
+import { NumberModule } from "@faker-js/faker";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
   const { appname }: { appname: string } = useOutletContext();
+
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state !== "idle";
 
   return (
     <div className="flex flex-col w-full bg-white py-8 px-6 ">
@@ -57,7 +77,7 @@ export default function Signin() {
               <div className=" bg-white p-1 rounded-full">
                 <svg className=" w-6" viewBox="0 0 32 32">
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M16 4C9.371 4 4 9.371 4 16c0 5.3 3.438 9.8 8.207 11.387.602.11.82-.258.82-.578 0-.286-.011-1.04-.015-2.04-3.34.723-4.043-1.609-4.043-1.609-.547-1.387-1.332-1.758-1.332-1.758-1.09-.742.082-.726.082-.726 1.203.086 1.836 1.234 1.836 1.234 1.07 1.836 2.808 1.305 3.492 1 .11-.777.422-1.305.762-1.605-2.664-.301-5.465-1.332-5.465-5.93 0-1.313.469-2.383 1.234-3.223-.121-.3-.535-1.523.117-3.175 0 0 1.008-.32 3.301 1.23A11.487 11.487 0 0116 9.805c1.02.004 2.047.136 3.004.402 2.293-1.55 3.297-1.23 3.297-1.23.656 1.652.246 2.875.12 3.175.77.84 1.231 1.91 1.231 3.223 0 4.61-2.804 5.621-5.476 5.922.43.367.812 1.101.812 2.219 0 1.605-.011 2.898-.011 3.293 0 .32.214.695.824.578C24.566 25.797 28 21.3 28 16c0-6.629-5.371-12-12-12z"
                   />
                 </svg>
@@ -73,39 +93,51 @@ export default function Signin() {
           </div>
 
           <div className="mx-auto">
-            <Input
-              className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-              name="userId"
-              type="text"
-              placeholder="Email"
-            />
-            <input
-              className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-              name="password"
-              type="password"
-              placeholder="Password"
-            />
-            <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-              <ArrowLeftEndOnRectangleIcon className="w-6 h-6 -ml-3" />
-              <span className="ml-3">Sign In</span>
-            </button>
-            <p className="mt-6 text-xs text-gray-600 text-center">
-              By continuing, you agree to have read, understood and accepted{" "}
-              {appname}'s{" "}
-              <a href="#" className="border-b border-gray-500 border-dotted">
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="#" className="border-b border-gray-500 border-dotted">
-                Privacy Policy
-              </a>
-            </p>
+            <fetcher.Form method="post">
+              <Input
+                className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                name="userId"
+                type="text"
+                placeholder="Email"
+              />
+              <Input
+                className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                name="password"
+                type="password"
+                placeholder="Password"
+              />
+              <Button
+                type="submit"
+                className="mt-5 h-12 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                disabled={isSubmitting}
+              >
+                <ArrowLeftEndOnRectangleIcon className="w-6 h-6 -ml-3" />
+                <span className="ml-3">
+                  {isSubmitting ? "Signing in" : "Sign In"}
+                </span>
+              </Button>
+              <p className="mt-6 text-xs text-gray-600 text-center">
+                By continuing, you agree to have read, understood and accepted{" "}
+                {appname}'s{" "}
+                <a href="#" className="border-b border-gray-500 border-dotted">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="border-b border-gray-500 border-dotted">
+                  Privacy Policy
+                </a>
+              </p>
+            </fetcher.Form>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  return await authenticate("form", request);
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request);

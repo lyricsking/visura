@@ -15,6 +15,9 @@ import { redirect, Session } from "@remix-run/node";
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
 
+const StrategyType = ["google", "form"] as const;
+type StrategyType = (typeof StrategyType)[number];
+
 const authenticator = new Authenticator<AuthUser>(sessionStorage);
 
 authenticator.use(formStrategy);
@@ -28,8 +31,11 @@ authenticator.use(googleStrategy);
  *
  * @param request Request
  */
-export const authenticate = async (request: Request) => {
-  const user = await authenticator.authenticate("google", request, {
+export const authenticate = async (
+  strategy: StrategyType,
+  request: Request
+) => {
+  const user = await authenticator.authenticate(strategy, request, {
     failureRedirect: "/auth",
   });
 
