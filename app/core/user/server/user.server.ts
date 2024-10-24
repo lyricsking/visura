@@ -1,14 +1,14 @@
 import { HydratedDocument, PopulateOptions, Types } from "mongoose";
+import { getStaffByUserId } from "./staff.server";
+import { createUserProfile } from "./user-profile.server";
+import { IUser, UserType } from "../types/user.types";
+import { IUserProfile } from "../types/user-profile.type";
 import User, {
   IHydratedUser,
   IUserMethods,
   IUserVirtuals,
 } from "../models/user.model";
-import { IUser, UserType } from "../types/user.types";
-import { Session } from "@remix-run/node";
-import { IUserProfile } from "../types/user-profile.type";
-import { getStaffByUserId } from "./staff.server";
-import { createUserProfile } from "./user-profile.server";
+import invariant from "tiny-invariant";
 
 export type CreateUserProps = {
   email: string;
@@ -39,21 +39,30 @@ export const findOrCreateUserProfiles = async ({
   firstName,
   lastName,
   email,
+  password,
   photo,
   type = "customer",
-}: Pick<IUser, "email"> &
+}: Pick<IUser, "email" | "password"> &
   Partial<Pick<IUser, "type">> &
   Partial<
     Pick<IUserProfile, "firstName" | "lastName" | "photo">
   >): Promise<IHydratedUser> => {
   // Attempt to retrieve user with the email and updatuing the user as active.
   let user = await updateUser(email, { isActive: true }, { path: "profile" });
-
-  // if there is no user, then it means we do have user with that email, ensure we create one.
+  // if there is no user, then it means we do not have a user with that email, ensure we create one.
   if (!user) {
-    user = await createUser({ email, type: type || UserType.customer });
+    user = await createUser({
+      email,
+      password: password,
+      type: type || UserType.customer,
+    });
     console.log("Created user %s", user);
   }
+
+  invariant(
+    user && password && !(await user.isValidPassword(password)),
+    "Invalid signin detail provided."
+  );
 
   // If we have user but no profile, it means there is no profile info for the user yet,
   // we create a profile using the default preferences then.

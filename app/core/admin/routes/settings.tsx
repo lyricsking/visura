@@ -5,8 +5,7 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { ElementType, lazy, ReactElement, useEffect } from "react";
-import { SettingsType } from "../type/settings.type";
+import { lazy } from "react";
 import {
   PROFILE_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
@@ -15,15 +14,23 @@ import {
   DISPLAY_UPDATE_ACTION,
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
-import PluginSetting from "../components/plugin-settings";
 import { renderToString } from "react-dom/server";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import { getUserFromSession, logout, invalidateCacheUser } from "~/core/auth/server/auth.server";
-import { Page } from "~/core/types/page";
+import {
+  getUserFromSession,
+  logout,
+  invalidateCacheUser,
+} from "~/core/auth/server/auth.server";
 import { IHydratedUser } from "~/core/User/models/user.model";
-import { updateUserProfile, updateUserPreference } from "~/core/user/server/user-profile.server";
-import { updateUserPassword, disableUser } from "~/core/user/server/user.server";
-import { IUserProfile } from "~/core/User/types/user-profile.type";
+import {
+  updateUserProfile,
+  updateUserPreference,
+} from "~/core/user/server/user-profile.server";
+import {
+  updateUserPassword,
+  disableUser,
+} from "~/core/user/server/user.server";
+import { IUserProfile } from "~/core/user/types/user-profile.type";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { getSession, commitSession } from "~/core/utils/session";
 

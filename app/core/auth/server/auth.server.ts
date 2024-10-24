@@ -6,17 +6,20 @@ import {
   USER_SESSION_KEY,
 } from "~/core/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
+import { formStrategy } from "../strategy/form-strategy";
 import { AuthUser } from "../types/auth-user.type";
-import { Session, redirect } from "@remix-run/node";
 import { isRequest } from "~/core/utils/is-request";
-import { IHydratedUser } from "~/user/models/user.model";
+import { IHydratedUser } from "~/core/user/models/user.model";
+import { redirect, Session } from "@remix-run/node";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
 
 const authenticator = new Authenticator<AuthUser>(sessionStorage);
 
+authenticator.use(formStrategy);
 authenticator.use(googleStrategy);
+
 //export { authenticator };
 
 /**

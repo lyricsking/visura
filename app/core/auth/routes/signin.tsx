@@ -1,15 +1,10 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { LoaderFunction, isSession, json, redirect } from "@remix-run/node";
+import { LoaderFunction, json, redirect } from "@remix-run/node";
 import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
-import {
-  REDIRECT_SEARCH_PARAM,
-  REDIRECT_URL,
-  isAuthenticated,
-} from "../server/auth.server";
-import { i } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
-import { commitSession, getSession } from "~/core/utils/session";
-import { isAuthUser, isSessionInstance } from "../utils/helper";
+import { REDIRECT_URL, isAuthenticated } from "../server/auth.server";
+import { getSession } from "~/core/utils/session";
+import { isAuthUser } from "../utils/helper";
+import { Input } from "~/core/components/input";
 
 export default function Signin() {
   const data = useLoaderData<typeof loader>();
@@ -78,13 +73,15 @@ export default function Signin() {
           </div>
 
           <div className="mx-auto">
-            <input
+            <Input
               className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-              type="email"
+              name="userId"
+              type="text"
               placeholder="Email"
             />
             <input
               className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+              name="password"
               type="password"
               placeholder="Password"
             />
