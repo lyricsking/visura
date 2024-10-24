@@ -3,9 +3,10 @@ import { useLoaderData } from "@remix-run/react";
 import DefaultHome from "./default-home";
 import { PageMetadata } from "~/core/types/page";
 import { getAppContext } from "~/core/utils/app-context.server";
-import { useAppContext } from "~/core/utils/app-context-provider.client";
 import { renderPage } from "~/core/components/ui/render-page";
 import { Route } from "~/core/types/route";
+import { useAppContext } from "~/core/utils/app-context";
+import Loading from "~/core/components/loading";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const app = await getAppContext();
@@ -21,7 +22,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   if (route && !Array.isArray(route)) {
     data.path = route.path;
-    data.data = route.loader && route.loader({ ...args, app });
+    // data.data = route.loader && route.loader({ ...args, app });
     data.metadata = route.page.metadata;
   }
 
@@ -31,16 +32,16 @@ export const loader = async (args: LoaderFunctionArgs) => {
 export default function Home() {
   const { data, path } = useLoaderData<typeof loader>();
 
-  // const app = useAppContext();
+  const app = useAppContext();
 
-  // const route = app?.findRoute("app", path) as Route | undefined;
+  const route = app?.findRoute("app", path) as Route | undefined;
 
-  // const pageContents = route?.page.content;
-  // if (route && pageContents) {
-  //   for (const content of pageContents) {
-  //     return renderPage(content, data);
-  //   }
-  // }
+  const pageContents = route?.page.content;
+  if (route && pageContents) {
+    for (const content of pageContents) {
+      return renderPage(content, data);
+    }
+  }
 
-  return <DefaultHome />;
+  return <Loading />;
 }

@@ -47,25 +47,6 @@ const ${pluginName}Plugin: IPlugin = {
 export default ${pluginName}Plugin;
 `;
 
-// Boilerplate content for index.ts
-const indexServerContent = `
-import { IPlugin } from "~/core/types/plugin";
-
-const ${pluginName}Plugin: IPlugin = {
-  id: "${pluginName}",
-  name: "${capitalize(pluginName)}",
-  description: "A custom plugin for ${capitalize(pluginName)}",
-  version: "0.0.1",
-  onInit(app) {
-    // Plugin initialization logic
-    // Register route, menu etc
-  },
-  onDestroy() {},
-};
-
-export default ${pluginName}Plugin;
-`;
-
 // BoilerPlate content for README.md
 const readmeMdContent = `
 # ${capitalize(pluginName)} Plugin
@@ -105,7 +86,7 @@ MIT
 `;
 
 // Write index.ts and README.md files
-fs.writeFileSync(path.join(pluginDir, "index.ts"), indexTsContent, "utf8");
+fs.writeFileSync(path.join(pluginDir, "index.ts"), indexContent, "utf8");
 fs.writeFileSync(path.join(pluginDir, "README.md"), readmeMdContent, "utf8");
 
 console.log(

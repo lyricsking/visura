@@ -3,7 +3,6 @@ import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import { PostSummary } from "../components/post-summary";
 import { findFontByName } from "~/core/utils/fonts";
-import { blogLoader } from "../loaders/index.loader";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Select,
@@ -19,8 +18,23 @@ import {
   CardContent,
   CardFooter,
 } from "~/core/components/card";
+import { serverOnly$ } from "vite-env-only/macros";
 import { TipSummary } from "../components/tip-card";
 import { ITips } from "../types/tips.type";
+import { PluginLoaderFunction } from "~/core/types/route";
+import { findPosts } from "../server/post.server";
+import { findTips } from "../server/tips.server";
+
+export const blogLoader: PluginLoaderFunction | undefined = serverOnly$(
+  async () => {
+    const [tips, posts] = await Promise.all([
+      findTips(),
+      findPosts({ published: true }),
+    ]);
+
+    return { tips, posts };
+  }
+);
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");

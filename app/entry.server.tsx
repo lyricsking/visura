@@ -15,6 +15,8 @@ import _default from "node_modules/vite-tsconfig-paths/dist";
 import { AppContext } from "./app";
 import { createConnection } from "mongoose";
 import { loadPlugins } from "./plugin";
+import AppContextProvider from "./core/utils/app-context";
+import { singleton } from "./core/utils/singleton";
 
 const ABORT_DELAY = 5_000;
 
@@ -28,18 +30,29 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  // Todo Implement debounce
+  const app = await singleton("app", async () => {
+    const app = new AppContext();
+    // Load plugins
+    await app.init(loadPlugins);
+
+    return app;
+  });
+
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext
+        remixContext,
+        app
       )
     : handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext
+        remixContext,
+        app
       );
 }
 
@@ -47,16 +60,19 @@ function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  remixContext: EntryContext,
+  app: AppContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <AppContextProvider appContext={app}>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </AppContextProvider>,
       {
         onAllReady() {
           shellRendered = true;
@@ -97,16 +113,19 @@ function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  remixContext: EntryContext,
+  app: AppContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <AppContextProvider appContext={app}>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </AppContextProvider>,
       {
         onShellReady() {
           shellRendered = true;

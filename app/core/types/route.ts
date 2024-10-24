@@ -20,10 +20,6 @@ export type RouteType = "app" | "admin";
 export interface Route {
   path: string;
   page: Page;
-}
-
-export interface ServerFn {
-  path: string;
-  action: PluginActionFunction;
-  loader: PluginLoaderFunction;
+  action?: PluginActionFunction;
+  loader?: PluginLoaderFunction;
 }

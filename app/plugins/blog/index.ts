@@ -1,6 +1,5 @@
 import { IPlugin } from "~/core/types/plugin";
-import Blog from "./src/routes/blog";
-import { blogLoader } from "./src/loaders/index.loader";
+import Blog, { blogLoader } from "./src/routes/blog";
 
 const blogPlugin: IPlugin = {
   id: "blog",

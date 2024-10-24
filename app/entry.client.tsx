@@ -9,7 +9,7 @@ import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { AppContext } from "./app";
 import { loadPlugins } from "./plugin";
-import AppContextProvider from "./core/utils/app-context-provider.client";
+import AppContextProvider from "./core/utils/app-context";
 
 async function initializeAppContext(): Promise<AppContext> {
   // Init app context

@@ -3,6 +3,7 @@ import { installGlobals } from "@remix-run/node";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import routes from "./app/routes";
+import { envOnlyMacros } from "vite-env-only";
 
 installGlobals();
 
@@ -25,6 +26,7 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
+    envOnlyMacros(),
   ],
   optimizeDeps: {
     exclude: ["@mapbox"], // Mapbox lib causing error during build time.
