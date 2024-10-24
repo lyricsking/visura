@@ -14,6 +14,7 @@ import { toastViewportVariants } from "./toast";
 
 export function Toaster() {
   const { toasts } = useToast();
+
   let viewportPosition: VariantProps<typeof toastViewportVariants>["position"];
 
   return (
@@ -30,7 +31,7 @@ export function Toaster() {
 
         return (
           <Toast key={id} {...props}>
-            <div className="grid gap-1">
+            <div className="bg-white grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
                 <ToastDescription>{description}</ToastDescription>

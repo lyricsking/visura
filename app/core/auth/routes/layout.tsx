@@ -17,9 +17,9 @@ export const loader = async () => {
 export default function Layout() {
   const { appName } = useLoaderData<typeof loader>();
   return (
-    <PageLayout className="bg-gray-100 max-h-screen overflow-y-auto no-scrollbar">
+    <PageLayout className="bg-white max-h-screen overflow-y-auto no-scrollbar">
       <PageLayoutHeader>
-        <PageLayoutHeaderItem className="border">
+        <PageLayoutHeaderItem spacing="compact" className="border">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">{appName}</h1>
           </Link>

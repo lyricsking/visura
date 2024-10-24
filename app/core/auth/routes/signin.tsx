@@ -6,7 +6,6 @@ import {
   redirect,
 } from "@remix-run/node";
 import {
-  Form,
   Link,
   useFetcher,
   useLoaderData,
@@ -16,23 +15,32 @@ import {
   REDIRECT_URL,
   authenticate,
   isAuthenticated,
+  getAuthErrorKey,
 } from "../server/auth.server";
-import { getSession } from "~/core/utils/session";
+import { commitSession, getSession } from "~/core/utils/session";
 import { isAuthUser } from "../utils/helper";
 import { Input } from "~/core/components/input";
 import Button from "~/core/components/button";
-import { NumberModule } from "@faker-js/faker";
+import { useEffect } from "react";
+import { useToast } from "~/core/hooks/use-toast";
 
 export default function Signin() {
-  const data = useLoaderData<typeof loader>();
+  const { error } = useLoaderData<typeof loader>();
   const { appname }: { appname: string } = useOutletContext();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({ description: error, position: "topRight" });
+    }
+  }, [error]);
 
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state !== "idle";
 
   return (
-    <div className="flex flex-col w-full bg-white py-8 px-6 ">
-      <div className="max-w-sm md:max-w-lg mx-auto p-6 sm:p-12 md:border md:shadow-md">
+    <div className="flex flex-col w-full bg-gray-100 py-8 px-6 ">
+      <div className="max-w-sm md:max-w-lg mx-auto bg-white p-6 sm:p-12 md:border md:shadow-md">
         <div className="mt-0 flex flex-col items-center">
           <img
             className="h-12 w-12 hidden"
@@ -136,16 +144,29 @@ export default function Signin() {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return await authenticate("form", request);
+  const c = await authenticate("form", request);
+  console.log(c);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const session = await getSession(request);
-
   const isAuth = await isAuthenticated(request);
+
+  const session = await getSession(request);
   if (isAuth && typeof isAuth !== "string" && isAuthUser(isAuth)) {
     return redirect(session.get(REDIRECT_URL) || "/");
   }
 
-  return json(null);
+  const error = session.get(getAuthErrorKey());
+  console.log(error);
+
+  if (error) {
+    return json(
+      { error },
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      }
+    );
+  } else return json({});
 };

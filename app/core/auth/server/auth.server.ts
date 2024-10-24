@@ -14,14 +14,19 @@ import { redirect, Session } from "@remix-run/node";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
+export const authErrorKey = "auth-error";
 
 const StrategyType = ["google", "form"] as const;
 type StrategyType = (typeof StrategyType)[number];
 
-const authenticator = new Authenticator<AuthUser>(sessionStorage);
+const authenticator = new Authenticator<AuthUser>(sessionStorage, {
+  sessionErrorKey: authErrorKey,
+});
 
 authenticator.use(formStrategy);
 authenticator.use(googleStrategy);
+
+export const getAuthErrorKey = () => authenticator.sessionErrorKey;
 
 //export { authenticator };
 
