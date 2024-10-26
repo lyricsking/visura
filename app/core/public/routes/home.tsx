@@ -1,11 +1,11 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import DefaultHome from "./default-home";
 import { PageMetadata } from "~/core/types/page";
 import { renderPage } from "~/core/components/ui/render-page";
 import { Route } from "~/core/types/route";
-import { getAppContext, useAppContext } from "~/core/utils/app-context";
 import Loading from "~/core/components/loading";
+import { getAppContext } from "~/app";
+import { useAppContext } from "~/core/utils/app-context";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const app = await getAppContext();

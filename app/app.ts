@@ -1,40 +1,23 @@
+import mongoose, { model, Model, models, Schema, Types } from "mongoose";
 import { BlockMetadata } from "./core/blocks";
 import { Config, configSchema } from "./core/config";
 import appConfig from "./core/config/app.config.json";
 import pluginsConfig from "./core/config/plugin.config.json";
-import { Menu, MenuType } from "./core/types/menu";
-import { IPlugin } from "./core/types/plugin";
+import { Menu, MenuType, SettingsTab } from "./core/types/menu";
 import {
   PluginLoaderFunction,
   PluginActionFunction,
   RouteType,
   Route,
-  ServerFn,
 } from "./core/types/route";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
+import { singleton } from "./core/utils/singleton";
+import { IPlugin } from "./core/types/plugin";
+import { Plugin } from "./core/models/plugin.model";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
-// export type Route = {
-//   id?: string;
-//   path: string;
-//   getBlock: BlockMetadataFunction;
-// };
-
-export type SettingsTab = {
-  id?: string;
-  label: string;
-  path: string;
-  component: string;
-  loader?: ReturnType<PluginLoaderFunction>;
-  action?: ReturnType<PluginActionFunction>;
-  icon?: string;
-};
-
-export class AppContext {
-  //   path: string;
-  //   getBlock: BlockMetadataFunction;
-  // };
+class AppContext {
   private readonly _config: Config;
 
   isInitialized: boolean = false;
@@ -49,14 +32,6 @@ export class AppContext {
   };
 
   private homePaths: Record<string, string> = {};
-
-  /**
-   * Registry to hold routes
-   */
-  private serverFns: Record<RouteType, ServerFn[]> = {
-    app: [],
-    admin: [],
-  };
 
   private readonly _menus: Record<MenuType, Menu[]> = {
     app: [],
@@ -106,46 +81,51 @@ export class AppContext {
   }
 
   // Async initialization logic for loading plugins
-  async init(callbackFn: (app: AppContext) => Promise<void>) {
+  async loadPlugins() {
+    await pluginManager.loadActivePlugins();
+  }
+
+  // Async initialization logic for loading plugins
+  async use(callbackFn: (app: AppContext) => Promise<void>) {
     if (callbackFn) {
       await callbackFn(this);
     }
   }
 
-  async loadPlugin(plugin: IPlugin) {
-    try {
-      if (
-        !plugin.id ||
-        !plugin.name ||
-        !plugin.version ||
-        typeof plugin.onInit !== "function"
-      ) {
-        throw new Error(
-          `Invalid plugin: ${plugin.name}. Must have an id, name, version, and onInit function.`
-        );
-      }
+  // async loadPlugin(plugin: IPlugin) {
+  //   try {
+  //     if (
+  //       !plugin.id ||
+  //       !plugin.name ||
+  //       !plugin.version ||
+  //       typeof plugin.onInit !== "function"
+  //     ) {
+  //       throw new Error(
+  //         `Invalid plugin: ${plugin.name}. Must have an id, name, version, and onInit function.`
+  //       );
+  //     }
 
-      // Ensure plugin names are unique
-      if (this.plugins[plugin.id]) {
-        throw new Error(
-          `Cannot register duplicate plugin. Plugin already with id: ${plugin.id}`
-        );
-      }
+  //     // Ensure plugin names are unique
+  //     if (this.plugins[plugin.id]) {
+  //       throw new Error(
+  //         `Cannot register duplicate plugin. Plugin already with id: ${plugin.id}`
+  //       );
+  //     }
 
-      // Initialize the plugin
-      plugin.onInit(this);
-      console.log(`${plugin.name} initialized`);
+  //     // Initialize the plugin
+  //     plugin.onInit(this);
+  //     console.log(`${plugin.name} initialized`);
 
-      // Cache the plugin in memory
-      this.plugins[plugin.id] = plugin;
+  //     // Cache the plugin in memory
+  //     this.plugins[plugin.id] = plugin;
 
-      console.log(`${plugin.name} plugin loaded.`);
-    } catch (err) {
-      console.error("Error loading plugins:", err);
-    } finally {
-      console.log(`Loaded ${Object.keys(this.plugins).length} plugins.`);
-    }
-  }
+  //     console.log(`${plugin.name} plugin loaded.`);
+  //   } catch (err) {
+  //     console.error("Error loading plugins:", err);
+  //   } finally {
+  //     console.log(`Loaded ${Object.keys(this.plugins).length} plugins.`);
+  //   }
+  // }
 
   plugin(name: string) {
     return Object.entries(this.plugins).find(([key, value]) => key === name);
@@ -187,45 +167,6 @@ export class AppContext {
     return undefined;
   }
 
-  addServerFn(type: RouteType, serverFn: ServerFn) {
-    try {
-      const serverFns = this.serverFns[type];
-      const existingServerFn = serverFns.find(
-        (serverFn) => serverFn.path === serverFn.path
-      );
-
-      if (existingServerFn) {
-        throw new Error(
-          `Cannot register duplicate server funtion. A route already exists for "${existingServerFn.path}.`
-        );
-      }
-
-      serverFns.push(serverFn);
-
-      this.serverFns[type] = serverFns;
-    } catch (e) {
-      console.log("Cannot register server function: ", e);
-    }
-  }
-
-  findServerFn(
-    type: RouteType,
-    path?: string
-  ): undefined | ServerFn | ServerFn[] {
-    const serverFns = this.serverFns;
-    if (serverFns) {
-      const typeServerFns = serverFns[type];
-
-      if (!typeServerFns) return undefined;
-
-      if (!path) return typeServerFns;
-
-      return typeServerFns.find((typeServerFn) => typeServerFn.path === path);
-    }
-
-    return undefined;
-  }
-
   addHomepagePath(name: string, path: string) {
     if (!this.homePaths[name]) {
       this.homePaths[name] = path;
@@ -257,3 +198,62 @@ export class AppContext {
     fn(this);
   }
 }
+
+export const getAppContext = async () => {
+  // Todo Implement debounce
+  const app = singleton("app", async () => {
+    const app = new AppContext();
+    // Load plugins
+    app.loadPlugins();
+    return app;
+  });
+
+  return app;
+};
+
+export type { AppContext };
+
+class PluginManager {
+  activePlugins: any[] = [];
+
+  async loadActivePlugins() {
+    const activePlugins = await Plugin.find({ isActive: true });
+
+    for (const plugin of activePlugins) {
+      // Dynamically import and initialize active plugins
+      const pluginModule = await import(plugin.path);
+      if (pluginModule.default) {
+        this.activePlugins.push({
+          name: plugin.name,
+          module: pluginModule.default,
+          settings: plugin.settings,
+          version: plugin.version,
+        });
+      }
+    }
+    // const pluginsConfig = app.configs.plugins;
+
+    // // Loop through only enabled plugins in the config
+    // for (const pluginConfig of pluginsConfig) {
+    //   if (pluginConfig.isActive) {
+    //     const pluginUrl = `/app/plugins/${pluginConfig.id}/index.ts`;
+
+    //     try {
+    //       // Dynamically load the plugin only if it is enabled
+    //       const plugin: IPlugin = (await import(/* @vite-ignore */ pluginUrl))
+    //         .default;
+
+    //       console.log(`Loading plugin "${plugin.name}".`);
+    //       await app.loadPlugin(plugin);
+    //     } catch (err) {
+    //       console.error(`Error loading plugin "${pluginConfig.name}":\n`, err);
+    //     }
+    //   } else {
+    //     console.log(`${pluginConfig.name} is disabled and will not be loaded.`);
+    //   }
+    // }
+  }
+}
+
+export const pluginManager = new PluginManager();
+export type { PluginManager };

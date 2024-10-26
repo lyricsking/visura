@@ -14,7 +14,7 @@ import AppContextProvider from "./core/utils/app-context";
 async function initializeAppContext(): Promise<AppContext> {
   // Init app context
   const app = new AppContext();
-  await app.init(loadPlugins);
+  await app.loadPlugins(loadPlugins);
 
   return app;
 }

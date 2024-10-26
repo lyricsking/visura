@@ -1,14 +1,18 @@
+import { Types } from "mongoose";
 import { AppContext } from "~/app";
 
 export const PLUGIN_KEY = "plugins";
 
+interface PluginSetting {
+  routes?: [];
+  [key: string]: any;
+}
+
 export interface IPlugin {
-  id: string;
+  id: Types.ObjectId;
   name: string;
-  description: string;
+  path: string;
+  isActive: boolean;
+  settings: PluginSetting;
   version: string;
-  settings?: Record<string, any>;
-  onInit: (app: AppContext) => void;
-  onDestroy: () => void;
-  layoutComponent?: React.ComponentType;
 }

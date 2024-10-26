@@ -12,11 +12,8 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
-import { AppContext } from "./app";
-import { createConnection } from "mongoose";
-import { loadPlugins } from "./plugin";
-import AppContextProvider, { getAppContext } from "./core/utils/app-context";
-import { singleton } from "./core/utils/singleton";
+import AppContextProvider from "./core/utils/app-context";
+import { AppContext, getAppContext } from "./app";
 
 const ABORT_DELAY = 5_000;
 
