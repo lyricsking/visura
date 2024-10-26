@@ -1,7 +1,6 @@
 import { BlockMetadata } from "./core/blocks";
 import { Config } from "./core/config";
 import { Menu, MenuType, SettingsTab } from "./core/types/menu";
-import { RouteType, Route } from "./core/types/route";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { singleton } from "./core/utils/singleton";
 import { IBasePlugin, IPlugin } from "./core/types/plugin";
@@ -14,15 +13,6 @@ export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
 class AppContext {
   private _config: IOption[] = [];
-  /**
-   * Registry to hold routes
-   */
-  private routes: Record<RouteType, Route[]> = {
-    app: [],
-    admin: [],
-  };
-
-  private homePaths: Record<string, string> = {};
 
   private readonly _menus: Record<MenuType, Menu[]> = {
     app: [],
@@ -32,6 +22,24 @@ class AppContext {
   private readonly _routeMenus: Record<string, Menu[]> = {};
 
   private readonly _settingsTabs: SettingsTab[] = [];
+
+  // Async initialization logic for loading plugins
+  async initAppEnv() {
+    // Determine the current environment
+    this._config = await OptionModel.find();
+    await pluginManager.loadActivePlugins();
+    // Init plugin module
+    for (const activePlugin of pluginManager.activePlugins) {
+      activePlugin.module(this);
+    }
+  }
+
+  // Async initialization logic for loading plugins
+  async use(callbackFn: (app: AppContext) => Promise<void>) {
+    if (callbackFn) {
+      await callbackFn(this);
+    }
+  }
 
   configs(key: string) {
     // return this._config.app;
@@ -46,20 +54,6 @@ class AppContext {
   } {
     const option = this._config.find((option) => option.name === "homepagPath");
     return option?.value;
-  }
-
-  // Async initialization logic for loading plugins
-  async initAppEnv() {
-    // Determine the current environment
-    this._config = await OptionModel.find();
-    await pluginManager.loadActivePlugins();
-  }
-
-  // Async initialization logic for loading plugins
-  async use(callbackFn: (app: AppContext) => Promise<void>) {
-    if (callbackFn) {
-      await callbackFn(this);
-    }
   }
 
   // async loadPlugin(plugin: IPlugin) {
@@ -103,28 +97,7 @@ class AppContext {
     );
   }
 
-  addRoute(type: RouteType, route: Route) {
-    try {
-      const typeRoutes = this.routes[type];
-      const existTypeRoute = typeRoutes.find(
-        (typeRoute) => typeRoute.path === route.path
-      );
-
-      if (existTypeRoute) {
-        throw new Error(
-          `Cannot register duplicate route. A route already exists for "${existTypeRoute.path}.`
-        );
-      }
-
-      typeRoutes.push(route);
-
-      this.routes[type] = typeRoutes;
-    } catch (e) {
-      console.log("Cannot register route: ", e);
-    }
-  }
-
-  findRoute(type: RouteType, path: string): IPage {
+  findRoute(path: string): IPage {
     const plugins = pluginManager.activePlugins;
     for (const plugin of plugins) {
       const routes = plugin.settings?.routes;
@@ -135,12 +108,6 @@ class AppContext {
       }
     }
     return {} as IPage;
-  }
-
-  addHomepagePath(name: string, path: string) {
-    if (!this.homePaths[name]) {
-      this.homePaths[name] = path;
-    }
   }
 
   addMenu(menuType: MenuType, menuItem: Menu) {
@@ -162,10 +129,6 @@ class AppContext {
     return Object.entries(this._routeMenus).find(
       ([path, menuItem]) => path === routePath
     )?.[1];
-  }
-
-  configure(fn: (app: AppContext) => any) {
-    fn(this);
   }
 }
 
@@ -198,6 +161,8 @@ class PluginManager {
           path: plugin.path,
           module: pluginModule.default,
           version: plugin.version,
+          displayName: plugin.d,
+          description: ""
         });
       }
     }

@@ -1,16 +1,26 @@
 import renderBlock from "~/core/components/ui/block";
 import { PageContentType } from "~/core/types/page";
+import { useAppContext } from "~/core/utils/app-context";
+import Loading from "../loading";
 
-export const renderPage = (content: PageContentType, data?: any) => {
+export const renderPage = (
+  path: string,
+  content: PageContentType,
+  data?: any
+) => {
   switch (content.type) {
     case "block":
       return renderBlock(content.value);
     case "markdown":
       return "Not yet implemented";
     case "component":
-      const Tag = content.value;
-      return <Tag {...data} />;
+      const app = useAppContext();
+      const route = app.findRoute(path);
+      if (route) {
+        const Tag = route.content.value;
+        return <Tag {...data} />;
+      }
     default:
-      break;
+      return <Loading />;
   }
 };

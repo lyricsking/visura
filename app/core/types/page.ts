@@ -13,10 +13,27 @@ export interface PageContentType {
     | "component";
   value: any;
 }
+import { AppContext } from "~/app";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+
+interface PluginLoaderFunctionArgs extends LoaderFunctionArgs {
+  app: AppContext;
+}
+export type PluginLoaderFunction = (
+  args: PluginLoaderFunctionArgs
+) => Promise<Response> | any; // Adjust the return type as necessary
+
+interface PluginActionFunctionArgs extends ActionFunctionArgs {
+  app: AppContext;
+}
+export type PluginActionFunction = (
+  args: PluginActionFunctionArgs
+) => Promise<Response | any>; // Adjust the return type as necessary
 
 export interface IPage {
-  id: Types.ObjectId;
   path: string;
   metadata: PageMetadata;
-  content: PageContentType[];
+  content: PageContentType;
+  action?: PluginActionFunction;
+  loader?: PluginLoaderFunction;
 }

@@ -1,4 +1,4 @@
-import { PluginActionFunction, PluginLoaderFunction } from "./route";
+import { PluginLoaderFunction, PluginActionFunction } from "./page";
 
 export type SettingsTab = {
   id?: string;

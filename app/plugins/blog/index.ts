@@ -1,27 +1,36 @@
-import { IPlugin } from "~/core/types/plugin";
+import { IBasePlugin, IPlugin, PluginSetting } from "~/core/types/plugin";
 import Blog, { blogLoader } from "./src/routes/blog";
+import { AppContext } from "~/app";
 
-const blogPlugin: IPlugin = {
-  id: "blog",
-  name: "Blog",
-  description: "",
-  version: "0.0.1",
-  onInit(app) {
-    app.addRoute("app", {
-      path: "blog",
-      loader: blogLoader,
-      page: {
-        id: "blog",
+export default class BlogPlugin implements IBasePlugin {
+  readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
+  readonly name = "Blog";
+  readonly displayName = "Blog";
+  readonly description = "";
+  readonly version = "0.0.1";
+  readonly settings: PluginSetting = {
+    routes: [
+      {
+        path: "blog",
+        loader: blogLoader,
         metadata: { title: "Blog", description: "" },
-        content: [
-          {
-            type: "component",
-            value: Blog,
-          },
-        ],
+        content: {
+          type: "component",
+          value: Blog,
+        },
       },
-    });
+    ],
+  };
 
+  constructor({ version, settings }: any) {
+    this.version = version;
+    this.settings = {
+      ...settings,
+      routes: this.settings.routes,
+    };
+  }
+
+  module(app: AppContext) {
     // app.addRoute("app", {
     //   path: "news/:slug",
     //   getBlock: () => ({} as any),
@@ -50,31 +59,5 @@ const blogPlugin: IPlugin = {
     //   path: "blog/edit",
     //   label: "Create Post",
     // });
-  },
-  onDestroy() {},
-};
-
-export default blogPlugin;
-
-/*defineRoute(pluginConfig.path, "layouts/Default.tsx", () => {
-      defineRoute("", "plugins/blog/routes/index.tsx", { index: true });
-      defineRoute("news/:slug", "plugins/blog/routes/post.tsx");
-      defineRoute("tips/:slug", "plugins/blog/routes/tip.tsx");
-      //defineRoute("upload", "Dashboard/routes/upload.tsx", {
-      //  id: "upload-blog",
-      //});
-    });
-    defineRoute(
-      config.plugins["dashboard"].settings.path,
-      "plugins/dashboard/layouts/Main.tsx",
-      { id: "blogAdmin" },
-      () => {
-        defineRoute("blog", "plugins/dashboard/layouts/Admin.tsx", () => {
-          defineRoute("", "plugins/blog/routes/posts.admin.tsx", {
-            index: true,
-          });
-          defineRoute("edit", "plugins/blog/routes/edit.tsx");
-        });
-      }
-    );
-    */
+  }
+}
