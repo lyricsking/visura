@@ -4,11 +4,11 @@ import { Menu, MenuType, SettingsTab } from "./core/types/menu";
 import { RouteType, Route } from "./core/types/route";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { singleton } from "./core/utils/singleton";
-import { IPlugin } from "./core/types/plugin";
+import { IBasePlugin, IPlugin } from "./core/types/plugin";
 import { PluginModel } from "./core/models/plugin.model";
 import { OptionModel } from "./core/models/option.model";
 import { IOption } from "./core/types/option.type";
-import { PageContentType } from "./core/types/page";
+import { IPage, PageContentType } from "./core/types/page";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
@@ -39,7 +39,7 @@ class AppContext {
     return option?.value;
   }
 
-  get homepagePath(): {
+  get homepage(): {
     type: "custom" | "plugin";
     pageId?: PageContentType;
     path?: string;
@@ -124,19 +124,17 @@ class AppContext {
     }
   }
 
-  findRoute(type: RouteType, path?: string): undefined | Route | Route[] {
-    const mRoutes = this.routes;
-    if (mRoutes) {
-      const typeRoutes = mRoutes[type];
-
-      if (!typeRoutes) return undefined;
-
-      if (!path) return typeRoutes;
-
-      return typeRoutes.find((route) => route.path === path);
+  findRoute(type: RouteType, path: string): IPage {
+    const plugins = pluginManager.activePlugins;
+    for (const plugin of plugins) {
+      const routes = plugin.settings?.routes;
+      if (routes) {
+        Object.entries(routes).forEach(([key, route]) => {
+          route.path === path;
+        });
+      }
     }
-
-    return undefined;
+    return {} as IPage;
   }
 
   addHomepagePath(name: string, path: string) {
@@ -186,7 +184,7 @@ export const getAppContext = async () => {
 export type { AppContext };
 
 class PluginManager {
-  activePlugins: any[] = [];
+  activePlugins: IBasePlugin[] = [];
 
   async loadActivePlugins() {
     const activePlugins = await PluginModel.find({ isActive: true });
@@ -197,8 +195,8 @@ class PluginManager {
       if (pluginModule.default) {
         this.activePlugins.push({
           name: plugin.name,
+          path: plugin.path,
           module: pluginModule.default,
-          settings: plugin.settings,
           version: plugin.version,
         });
       }

@@ -8,4 +8,4 @@ const pageSchema = new Schema<IPage, IPageModel>({
 });
 
 export const PageModel: IPageModel =
-  mongoose.models.Page || model<IPageModel>("Page", pageSchema);
+  mongoose.models.Page || model<IPage, IPageModel>("Page", pageSchema);

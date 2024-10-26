@@ -1,34 +1,43 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { PageMetadata } from "~/core/types/page";
+import { IPage, PageContentType, PageMetadata } from "~/core/types/page";
 import { renderPage } from "~/core/components/ui/render-page";
 import { Route } from "~/core/types/route";
 import Loading from "~/core/components/loading";
 import { getAppContext } from "~/app";
 import { useAppContext } from "~/core/utils/app-context";
+import { PageModel } from "~/core/models/page.model";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const app = await getAppContext();
 
-  const homepagePath = app.homepagePath;
-  if (homepagePath.type === "custom") {
-    Page
+  let page: IPage;
+  const homepage = app.homepage;
+  if (homepage.type === "custom" && homepage.pageId) {
+    page = (await PageModel.findOne(homepage.pageId)) as IPage;
+  } else if (homepage.type === "plugin" && homepage.path) {
+    page = app.findRoute("app", homepage.path);
   } else {
-    const route = app?.findRoute("app", homepagePath);
+    throw new Error("Homepage improperly configured.");
   }
-  let data: { path: string; data: any; metadata: PageMetadata | undefined } = {
-    path: homepagePath,
+
+  let data: {
+    path: string;
+    data: any;
+    metadata: PageMetadata | undefined;
+    content: PageContentType[];
+  } = {
+    path: page.path,
     data: undefined,
-    metadata: undefined,
+    metadata: page.metadata,
+    content: page.content,
   };
 
-  if (route && !Array.isArray(route)) {
-    data.path = route.path;
-    // data.data = route.loader && route.loader({ ...args, app });
-    data.metadata = route.page.metadata;
-  }
-
-  return json(data);
+  // if (route && !Array.isArray(route)) {
+  //   data.path = route.path;
+  //   // data.data = route.loader && route.loader({ ...args, app });
+  //   data.metadata = route.page.metadata;
+  // }
 };
 
 export default function Home() {
@@ -36,9 +45,9 @@ export default function Home() {
 
   const app = useAppContext();
 
-  const route = app?.findRoute("app", path) as Route | undefined;
+  const route = app.findRoute("app", path);
 
-  const pageContents = route?.page.content;
+  const pageContents = route.content;
   if (route && pageContents) {
     for (const content of pageContents) {
       return renderPage(content, data);

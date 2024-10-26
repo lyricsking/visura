@@ -16,6 +16,7 @@ export interface PageContentType {
 
 export interface IPage {
   id: Types.ObjectId;
+  path: string;
   metadata: PageMetadata;
   content: PageContentType[];
 }

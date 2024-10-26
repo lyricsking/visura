@@ -1,18 +1,29 @@
 import { Types } from "mongoose";
+import { IPage } from "./page";
 import { AppContext } from "~/app";
 
 export const PLUGIN_KEY = "plugins";
 
-interface PluginSetting {
-  routes?: [];
+export interface PluginSetting {
+  routes: Record<string, IPage>;
   [key: string]: any;
 }
 
-export interface IPlugin {
-  id: Types.ObjectId;
+type PluginModule = (app: AppContext) => void;
+
+export interface IBasePlugin {
   name: string;
   path: string;
-  isActive: boolean;
-  settings: PluginSetting;
+  module: PluginModule;
+  settings?: PluginSetting;
   version: string;
+}
+
+export interface IPlugin
+  extends Pick<IBasePlugin, "name" | "path" | "version"> {
+  id: Types.ObjectId;
+  isActive: boolean;
+  settings: Omit<PluginSetting, "routes"> & {
+    routes: string[];
+  };
 }
