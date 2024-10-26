@@ -1,9 +1,11 @@
+import { Types } from "mongoose";
+
 export interface PageMetadata {
   title: string;
   [key: string]: any;
 }
 
-export interface PageContent {
+export interface PageContentType {
   type:
     | "block"
     /*  |  "text" | "image" */
@@ -12,8 +14,8 @@ export interface PageContent {
   value: any;
 }
 
-export interface Page {
-  id: string;
+export interface IPage {
+  id: Types.ObjectId;
   metadata: PageMetadata;
-  content: PageContent[];
+  content: PageContentType[];
 }

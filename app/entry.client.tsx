@@ -7,16 +7,12 @@
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
-import { AppContext } from "./app";
-import { loadPlugins } from "./plugin";
+import { AppContext, getAppContext } from "./app";
 import AppContextProvider from "./core/utils/app-context";
 
 async function initializeAppContext(): Promise<AppContext> {
   // Init app context
-  const app = new AppContext();
-  await app.loadPlugins(loadPlugins);
-
-  return app;
+  return getAppContext();
 }
 
 initializeAppContext().then((app) => {

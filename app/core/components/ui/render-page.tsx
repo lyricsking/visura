@@ -1,7 +1,7 @@
 import renderBlock from "~/core/components/ui/block";
-import { PageContent } from "~/core/types/page";
+import { PageContentType } from "~/core/types/page";
 
-export const renderPage = (content: PageContent, data?: any) => {
+export const renderPage = (content: PageContentType, data?: any) => {
   switch (content.type) {
     case "block":
       return renderBlock(content.value);

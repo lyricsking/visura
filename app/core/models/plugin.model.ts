@@ -9,6 +9,6 @@ const pluginSchema = new Schema<IPlugin, IPluginModel>({
   settings: { type: Schema.Types.Mixed, default: {} },
   version: { type: String, required: true },
 });
-export const Plugin: IPluginModel =
+export const PluginModel: IPluginModel =
   mongoose.models.Plugin ||
   model<IPlugin, IPluginModel>("Plugin", pluginSchema);

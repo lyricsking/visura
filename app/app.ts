@@ -1,28 +1,19 @@
-import mongoose, { model, Model, models, Schema, Types } from "mongoose";
 import { BlockMetadata } from "./core/blocks";
-import { Config, configSchema } from "./core/config";
-import appConfig from "./core/config/app.config.json";
-import pluginsConfig from "./core/config/plugin.config.json";
+import { Config } from "./core/config";
 import { Menu, MenuType, SettingsTab } from "./core/types/menu";
-import {
-  PluginLoaderFunction,
-  PluginActionFunction,
-  RouteType,
-  Route,
-} from "./core/types/route";
+import { RouteType, Route } from "./core/types/route";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { singleton } from "./core/utils/singleton";
 import { IPlugin } from "./core/types/plugin";
-import { Plugin } from "./core/models/plugin.model";
+import { PluginModel } from "./core/models/plugin.model";
+import { OptionModel } from "./core/models/option.model";
+import { IOption } from "./core/types/option.type";
+import { PageContentType } from "./core/types/page";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
 class AppContext {
-  private readonly _config: Config;
-
-  isInitialized: boolean = false;
-  private plugins: Record<string, IPlugin>;
-
+  private _config: IOption[] = [];
   /**
    * Registry to hold routes
    */
@@ -42,46 +33,25 @@ class AppContext {
 
   private readonly _settingsTabs: SettingsTab[] = [];
 
-  constructor() {
-    this._config = this.loadConfig();
-    this.plugins = {};
-  }
-
-  private loadConfig() {
-    // Determine the current environment
-    const env =
-      process.env.NODE_ENV === "production" ? "production" : "development";
-
-    const envConfig: Partial<Config> = {
-      app: {
-        ...appConfig["default"],
-        ...appConfig[env],
-      },
-      plugins: [...pluginsConfig["default"], ...pluginsConfig[env]],
-    };
-
-    const configParse = configSchema.safeParse(envConfig);
-    if (configParse.error) {
-      throw configParse.error;
-    }
-
-    return configParse.data;
-  }
-
-  get(name: string) {
-    return Object.entries(this._config.app).find(
-      ([key, value]) => key === name
-    );
-  }
-
-  get configs() {
+  configs(key: string) {
     // return this._config.app;
+    const option = this._config.find((option) => option.name === key);
+    return option?.value;
+  }
 
-    return this._config;
+  get homepagePath(): {
+    type: "custom" | "plugin";
+    pageId?: PageContentType;
+    path?: string;
+  } {
+    const option = this._config.find((option) => option.name === "homepagPath");
+    return option?.value;
   }
 
   // Async initialization logic for loading plugins
-  async loadPlugins() {
+  async initAppEnv() {
+    // Determine the current environment
+    this._config = await OptionModel.find();
     await pluginManager.loadActivePlugins();
   }
 
@@ -128,7 +98,9 @@ class AppContext {
   // }
 
   plugin(name: string) {
-    return Object.entries(this.plugins).find(([key, value]) => key === name);
+    return Object.entries(pluginManager.activePlugins).find(
+      ([key, value]) => key === name
+    );
   }
 
   addRoute(type: RouteType, route: Route) {
@@ -204,7 +176,7 @@ export const getAppContext = async () => {
   const app = singleton("app", async () => {
     const app = new AppContext();
     // Load plugins
-    app.loadPlugins();
+    app.initAppEnv();
     return app;
   });
 
@@ -217,7 +189,7 @@ class PluginManager {
   activePlugins: any[] = [];
 
   async loadActivePlugins() {
-    const activePlugins = await Plugin.find({ isActive: true });
+    const activePlugins = await PluginModel.find({ isActive: true });
 
     for (const plugin of activePlugins) {
       // Dynamically import and initialize active plugins

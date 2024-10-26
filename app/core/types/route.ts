@@ -1,5 +1,5 @@
 import { AppContext } from "~/app";
-import { Page } from "./page";
+import { IPage } from "./page";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 
 interface PluginLoaderFunctionArgs extends LoaderFunctionArgs {
@@ -19,7 +19,7 @@ export type PluginActionFunction = (
 export type RouteType = "app" | "admin";
 export interface Route {
   path: string;
-  page: Page;
+  page: IPage;
   action?: PluginActionFunction;
   loader?: PluginLoaderFunction;
 }

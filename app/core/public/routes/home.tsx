@@ -10,9 +10,12 @@ import { useAppContext } from "~/core/utils/app-context";
 export const loader = async (args: LoaderFunctionArgs) => {
   const app = await getAppContext();
 
-  const homepagePath = app?.configs.app.homepage || "/";
-  const route = app?.findRoute("app", homepagePath);
-
+  const homepagePath = app.homepagePath;
+  if (homepagePath.type === "custom") {
+    homepagePath.type
+  } else {
+    const route = app?.findRoute("app", homepagePath);
+  }
   let data: { path: string; data: any; metadata: PageMetadata | undefined } = {
     path: homepagePath,
     data: undefined,
