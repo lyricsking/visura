@@ -12,7 +12,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   const homepagePath = app.homepagePath;
   if (homepagePath.type === "custom") {
-    homepagePath.type
+    Page
   } else {
     const route = app?.findRoute("app", homepagePath);
   }
