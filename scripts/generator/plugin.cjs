@@ -13,7 +13,7 @@ if (!pluginName) {
 }
 
 // Define paths
-const pluginsDir = path.join(__dirname, "..", "app", "plugins");
+const pluginsDir = path.join(__dirname, "..", "..", "app", "plugins");
 const pluginDir = path.join(pluginsDir, pluginName);
 const srcDir = path.join(pluginDir, "src");
 const assetsDir = path.join(pluginDir, "assets");
@@ -30,21 +30,31 @@ fs.mkdirSync(assetsDir, { recursive: true });
 
 // Boilerplate content for index.ts
 const indexContent = `
-import { IPlugin } from "~/core/types/plugin";
+import { IBasePlugin, IPlugin, PluginSetting } from "~/core/types/plugin";
+import { AppContext } from "~/app";
 
-const ${pluginName}Plugin: IPlugin = {
-  id: "${pluginName}",
-  name: "${capitalize(pluginName)}",
-  description: "A custom plugin for ${capitalize(pluginName)}",
-  version: "0.0.1",
-  onInit(app) {
-    // Plugin initialization logic
-    // Register route, menu etc
-  },
-  onDestroy() {},
-};
+export default class ${capitalize(pluginName)}Plugin implements IBasePlugin {
+  readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
+  readonly name = "${pluginName}";
+  readonly displayName = "${capitalize(pluginName)}";
+  readonly description = "A custom plugin for ${capitalize(pluginName)}";
+  readonly version = "0.0.1";
+  readonly settings: PluginSetting = {
+    routes: [
+      
+    ],
+  };
 
-export default ${pluginName}Plugin;
+  constructor({ version, settings }: any) {
+    this.version = version;
+    this.settings = {
+      ...settings,
+      routes: this.settings.routes,
+    };
+  }
+
+  module(app: AppContext) {}
+}
 `;
 
 // BoilerPlate content for README.md

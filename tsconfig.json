@@ -5,7 +5,7 @@
     "**/*.tsx",
     "app/plugins/Home/developer.jsx",
     "server.js"
-, "scripts/generate-plugin.cjs"  ],
+, "scripts/generator/plugin.cjs"  ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
