@@ -57,7 +57,6 @@ class AppContext {
 
   get homepage(): {
     type: "custom" | "plugin";
-    pageId?: PageContentType;
     path?: string;
   } {
     const option = this._config.find((option) => option.name === HOMEPATH_NAME);

@@ -11,8 +11,8 @@ export const loader = async (args: LoaderFunctionArgs) => {
   let page: IPage | undefined;
   let loaderData: any;
   const homepage = app.homepage;
-  if (homepage.type === "custom" && homepage.pageId) {
-    page = (await PageModel.findOne(homepage.pageId)) as IPage;
+  if (homepage.type === "custom" && homepage.path) {
+    page = (await PageModel.findOne({ path: homepage.path })) as IPage;
   } else if (homepage.type === "plugin" && homepage.path) {
     page = app.findRoute(homepage.path);
     loaderData = page?.loader && page.loader({ ...args, app });
@@ -21,7 +21,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
   }
 
   return json({
-    path: homepage.path!,
+    path: homepage.path,
     data: loaderData,
     content: page?.content,
   });

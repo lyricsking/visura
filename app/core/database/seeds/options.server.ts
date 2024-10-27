@@ -7,9 +7,8 @@ export const seedOptions = async () => {
       { name: HOMEPATH_NAME },
       {
         value: {
-          type: "plugin",
-          pageId: "",
-          path: "blog",
+          type: "custom",
+          path: "",
         },
       },
       { upsert: true }
