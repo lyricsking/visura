@@ -1,8 +1,7 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { match } from "path-to-regexp";
+import { match, MatchResult } from "path-to-regexp";
 import { getAppContext } from "~/app";
-import { MatchResult } from "path-to-regexp";
 import { PageContentType } from "~/core/types/page";
 import { renderPage } from "~/core/components/ui/render-page";
 
