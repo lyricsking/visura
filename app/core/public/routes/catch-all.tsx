@@ -1,19 +1,21 @@
-import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
-import { Params, useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { match } from "path-to-regexp";
 import NotFound from "./not-found";
-import React, { Suspense, useEffect } from "react";
-import { renderToString } from "react-dom/server";
-import { app } from "~/entry.server";
+import { getAppContext } from "~/app";
 
 const NOT_FOUND_PATH = "not-found";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async (args: LoaderFunctionArgs) => {
+  const { request } = args;
+
   const url = new URL(request.url);
 
   const path = url.pathname; // e.g., "/blog/posts/first-post"
 
-  const pluginRoutes = app?.findRoute("app");
+  const app = await getAppContext();
+
+  const pluginRoutes = app.routes;
 
   if (pluginRoutes && Array.isArray(pluginRoutes)) {
     // Try matching the URL with the registered plugin paths
@@ -26,13 +28,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
         // Do something with the matched params
         // e.g., load the post based on postId
-        const data = route.loader && (await route.loader());
+        const data = route.loader && (await route.loader({ ...args, app }));
 
         return json({
-          data: data,
+          path: route.path,
           params,
-          pathname: route.path,
-          //componentPath: route.component,
+          data: data,
+          content: route?.content,
         });
       }
     }
@@ -41,11 +43,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // If no route matched, return 404
   //throw new Response("Not Found", { status: 404 });
   // Return default path
-  return json({ pathname: NOT_FOUND_PATH, data: {} });
+  return json({ path: NOT_FOUND_PATH, data: {} });
 };
 
 export default function CatchAll() {
-  const { pathname } = useLoaderData<typeof loader>();
+  const { path } = useLoaderData<typeof loader>();
 
   // useEffect(() => {
   //   alert(componentPath);

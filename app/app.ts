@@ -97,17 +97,14 @@ class AppContext {
     );
   }
 
-  findRoute(path: string): IPage {
-    const plugins = pluginManager.activePlugins;
-    for (const plugin of plugins) {
-      const routes = plugin.settings?.routes;
-      if (routes) {
-        Object.entries(routes).forEach(([key, route]) => {
-          route.path === path;
-        });
-      }
-    }
-    return {} as IPage;
+  get routes() {
+    return pluginManager.activePlugins.flatMap((plugin) =>
+      plugin.settings?.routes ? Object.values(plugin.settings.routes) : []
+    );
+  }
+
+  findRoute(path: string): IPage | undefined {
+    return this.routes.find((route) => route.path === path);
   }
 
   addMenu(menuType: MenuType, menuItem: Menu) {
@@ -161,8 +158,8 @@ class PluginManager {
           path: plugin.path,
           module: pluginModule.default,
           version: plugin.version,
-          displayName: plugin.d,
-          description: ""
+          displayName: plugin.name,
+          description: "",
         });
       }
     }
