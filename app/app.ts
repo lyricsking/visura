@@ -11,6 +11,8 @@ import { IPage, PageContentType } from "./core/types/page";
 import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 
+export const HOMEPATH_NAME = "homepath";
+
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
 class AppContext {
@@ -58,7 +60,7 @@ class AppContext {
     pageId?: PageContentType;
     path?: string;
   } {
-    const option = this._config.find((option) => option.name === "homepagPath");
+    const option = this._config.find((option) => option.name === HOMEPATH_NAME);
     return option?.value;
   }
 
