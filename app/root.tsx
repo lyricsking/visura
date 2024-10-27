@@ -15,14 +15,14 @@ import {
 
 import { Config } from "./core/config";
 import { Toaster } from "./core/components/toaster";
-import { getAppContext } from "./core/utils/app-context";
+import { getAppContext } from "./app";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 export type LoaderData = {
   //theme: Theme | null;
-  config: Config["app"];
+  config: any;
 };
 
 // read the state from the cookie
@@ -30,7 +30,7 @@ export const loader = async () => {
   //const themeSession = await getThemeSession(request);
   const app = await getAppContext();
   const data: LoaderData = {
-    config: app!.configs.app,
+    config: {},
   };
 
   return json(data);

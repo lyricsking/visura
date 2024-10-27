@@ -8,6 +8,8 @@ import { PluginModel } from "./core/models/plugin.model";
 import { OptionModel } from "./core/models/option.model";
 import { IOption } from "./core/types/option.type";
 import { IPage, PageContentType } from "./core/types/page";
+import createDBConnection from "./core/database/db.server";
+import { serverOnly$ } from "vite-env-only/macros";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
@@ -25,6 +27,10 @@ class AppContext {
 
   // Async initialization logic for loading plugins
   async initAppEnv() {
+    if (typeof document === "undefined") {
+      serverOnly$(await createDBConnection());
+      // singleton("mongoose", createDBConnection);
+    }
     // Determine the current environment
     this._config = await OptionModel.find();
     await pluginManager.loadActivePlugins();
@@ -131,10 +137,10 @@ class AppContext {
 
 export const getAppContext = async () => {
   // Todo Implement debounce
-  const app = singleton("app", async () => {
+  const app = await singleton("app", async () => {
     const app = new AppContext();
     // Load plugins
-    app.initAppEnv();
+    await app.initAppEnv();
     return app;
   });
 
@@ -151,7 +157,7 @@ class PluginManager {
 
     for (const plugin of activePlugins) {
       // Dynamically import and initialize active plugins
-      const pluginModule = await import(plugin.path);
+      const pluginModule = await import(/* @vite-ignore*/ plugin.path);
       if (pluginModule.default) {
         this.activePlugins.push({
           name: plugin.name,

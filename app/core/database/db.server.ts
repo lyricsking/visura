@@ -26,6 +26,6 @@ export default async function createDBConnection() {
     await mongoose.connection.close();
     process.exit(0);
   });
-  
+
   return mongoose;
 }
