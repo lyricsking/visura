@@ -1,4 +1,5 @@
 import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
+import { getAppContext } from "~/app";
 import Button from "~/core/components/button";
 import {
   PageLayout,
@@ -6,12 +7,11 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/core/components/ui/page.layout";
-import { getAppContext } from "~/core/utils/app-context";
 
 export const loader = async () => {
   const app = await getAppContext();
 
-  return json({ appName: app.configs.app.appName });
+  return json({ appName: "" });
 };
 
 export default function Layout() {

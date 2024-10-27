@@ -162,11 +162,11 @@ class PluginManager {
       if (pluginModule.default) {
         this.activePlugins.push({
           name: plugin.name,
+          description: plugin.description,
           path: plugin.path,
           module: pluginModule.default,
           version: plugin.version,
-          displayName: plugin.name,
-          description: "",
+          // displayName: plugin.name,
         });
       }
     }

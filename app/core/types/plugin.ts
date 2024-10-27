@@ -13,16 +13,16 @@ type PluginModule = (app: AppContext) => void;
 
 export interface IBasePlugin {
   name: string;
-  path: string;
-  displayName: string;
   description: string;
+  path: string;
+  // displayName: string;
   module: PluginModule;
   settings?: PluginSetting;
   version: string;
 }
 
 export interface IPlugin
-  extends Pick<IBasePlugin, "name" | "path" | "version"> {
+  extends Pick<IBasePlugin, "name" | "description" | "path" | "version"> {
   id: Types.ObjectId;
   isActive: boolean;
   settings: Omit<PluginSetting, "routes"> & {

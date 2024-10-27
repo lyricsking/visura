@@ -1,15 +1,13 @@
-import { PluginLoaderFunction } from "~/app";
+import { PluginLoaderFunction } from "~/core/types/page";
 import { findTipBySlug } from "../server/tips.server";
 
-export const loader: PluginLoaderFunction = () => {
-  return async ({ params }) => {
-    let slug = params["slug"];
-    if (!slug) throw Error("Tip id must be provided.");
+export const loader: PluginLoaderFunction = async ({ params }) => {
+  let slug = params["slug"];
+  if (!slug) throw Error("Tip id must be provided.");
 
-    let tip = await findTipBySlug({ slug });
+  let tip = await findTipBySlug({ slug });
 
-    if (!tip.data) throw Error("No tip was found with such.");
+  if (!tip.data) throw Error("No tip was found with such.");
 
-    return { tip: tip.data };
-  };
+  return { tip: tip.data };
 };

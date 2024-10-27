@@ -31,7 +31,7 @@ import { cn } from "~/core/utils/util";
 import HeaderIcons from "../components/header-icons";
 import { Sidebar } from "~/core/components/ui/sidebar";
 import { Menu } from "~/core/types/menu";
-import { getAppContext } from "~/core/utils/app-context";
+import { getAppContext } from "~/app";
 
 export const handle = {
   breadcrumb: {
@@ -175,7 +175,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const adminMenu = app?.dashboardMenu;
   // Return user object if provided.
   return json({
-    appName: app?.configs.app.appName,
+    appName: "",
     menu: adminMenu,
     ...(user && { user }),
   });

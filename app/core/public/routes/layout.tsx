@@ -10,7 +10,7 @@ import {
   PageLayoutContent,
   PageLayoutFooter,
 } from "~/core/components/ui/page.layout";
-import { app } from "~/entry.server";
+import { getAppContext } from "~/app";
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
@@ -54,5 +54,6 @@ export default function Default() {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserFromSession(request);
 
-  return json({ config: app?.configs.app, user: user });
+  const app = await getAppContext();
+  return json({ config: { appName: "" }, user: user });
 };
