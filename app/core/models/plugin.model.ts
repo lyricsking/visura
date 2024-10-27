@@ -1,4 +1,4 @@
-import mongoose, { model, Model, Schema } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 import { IPlugin } from "../types/plugin";
 
 type IPluginModel = Model<IPlugin>;
@@ -10,6 +10,7 @@ const pluginSchema = new Schema<IPlugin, IPluginModel>({
   settings: { type: Schema.Types.Mixed, default: {} },
   version: { type: String, required: true },
 });
+
 export const PluginModel: IPluginModel =
   mongoose.models.Plugin ||
-  model<IPlugin, IPluginModel>("Plugin", pluginSchema);
+  mongoose.model<IPlugin, IPluginModel>("Plugin", pluginSchema);

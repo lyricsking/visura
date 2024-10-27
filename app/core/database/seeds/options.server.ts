@@ -1,4 +1,4 @@
-import { HOMEPATH_NAME } from "~/app";
+import { APP_NAME, HOMEPATH_NAME } from "~/app";
 import { OptionModel } from "~/core/models/option.model";
 
 export const seedOptions = async () => {
@@ -11,6 +11,12 @@ export const seedOptions = async () => {
           path: "",
         },
       },
+      { upsert: true }
+    );
+
+    await OptionModel.updateOne(
+      { name: APP_NAME },
+      { value: "App Name" },
       { upsert: true }
     );
     console.log("Homepath updated successfully");

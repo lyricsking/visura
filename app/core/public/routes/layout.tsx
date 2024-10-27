@@ -10,7 +10,7 @@ import {
   PageLayoutContent,
   PageLayoutFooter,
 } from "~/core/components/ui/page.layout";
-import { getAppContext } from "~/app";
+import { APP_NAME, getAppContext } from "~/app";
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
@@ -27,7 +27,7 @@ export default function Default() {
         >
           <Link to={"/"} replace>
             <h1 className="text-2xl font-bold tracking-tight px-4 py-auto bg-blue">
-              {config?.appName}
+              {config.appName}
             </h1>
           </Link>
 
@@ -55,5 +55,5 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserFromSession(request);
 
   const app = await getAppContext();
-  return json({ config: { appName: "" }, user: user });
+  return json({ config: { appName: app.configs(APP_NAME) }, user: user });
 };

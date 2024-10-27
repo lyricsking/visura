@@ -9,14 +9,11 @@ export interface PluginSetting {
   [key: string]: any;
 }
 
-type PluginModule = (app: AppContext) => void;
-
 export interface IBasePlugin {
   name: string;
   description: string;
   path: string;
   // displayName: string;
-  module: PluginModule;
   settings?: PluginSetting;
   version: string;
 }

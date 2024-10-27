@@ -8,10 +8,11 @@ import { PluginModel } from "./core/models/plugin.model";
 import { OptionModel } from "./core/models/option.model";
 import { IOption } from "./core/types/option.type";
 import { IPage, PageContentType } from "./core/types/page";
-import createDBConnection from "./core/database/db.server";
+import createDBConnection from "./core/database/db";
 import { serverOnly$ } from "vite-env-only/macros";
 
 export const HOMEPATH_NAME = "homepath";
+export const APP_NAME = "app_name";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
@@ -30,16 +31,14 @@ class AppContext {
   // Async initialization logic for loading plugins
   async initAppEnv() {
     if (typeof document === "undefined") {
-      serverOnly$(await createDBConnection());
+      // serverOnly$(await createDBConnection());
       // singleton("mongoose", createDBConnection);
+      await createDBConnection();
     }
     // Determine the current environment
-    this._config = await OptionModel.find();
+    this._config = await OptionModel.find({});
+
     await pluginManager.loadActivePlugins();
-    // Init plugin module
-    for (const activePlugin of pluginManager.activePlugins) {
-      activePlugin.module(this);
-    }
   }
 
   // Async initialization logic for loading plugins
@@ -51,6 +50,7 @@ class AppContext {
 
   configs(key: string) {
     // return this._config.app;
+
     const option = this._config.find((option) => option.name === key);
     return option?.value;
   }
@@ -106,7 +106,9 @@ class AppContext {
 
   get routes() {
     return pluginManager.activePlugins.flatMap((plugin) =>
-      plugin.settings?.routes ? Object.values(plugin.settings.routes) : []
+      plugin.instance.settings?.routes
+        ? Object.values(plugin.instance.settings.routes)
+        : []
     );
   }
 
@@ -151,7 +153,7 @@ export const getAppContext = async () => {
 export type { AppContext };
 
 class PluginManager {
-  activePlugins: IBasePlugin[] = [];
+  activePlugins: (IPlugin & { instance: IBasePlugin })[] = [];
 
   async loadActivePlugins() {
     const activePlugins = await PluginModel.find({ isActive: true });
@@ -161,12 +163,15 @@ class PluginManager {
       const pluginModule = await import(/* @vite-ignore*/ plugin.path);
       if (pluginModule.default) {
         this.activePlugins.push({
+          id: plugin.id,
           name: plugin.name,
           description: plugin.description,
           path: plugin.path,
-          module: pluginModule.default,
+          isActive: plugin.isActive,
+          settings: plugin.settings,
           version: plugin.version,
           // displayName: plugin.name,
+          instance: new pluginModule.default(plugin),
         });
       }
     }
