@@ -1,4 +1,7 @@
-# Welcome to Remix!
+# Welcome to RemixWP! 
+A RemixJs app inspired by WordPress.
+
+## Remix
 
 - [Remix Docs](https://remix.run/docs)
 
