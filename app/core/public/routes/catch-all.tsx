@@ -6,45 +6,55 @@ import { getAppContext } from "~/app";
 
 const NOT_FOUND_PATH = "not-found";
 
-export const loader = async (args: LoaderFunctionArgs) => {
-  const { request } = args;
-
-  const url = new URL(request.url);
-
-  const path = url.pathname; // e.g., "/blog/posts/first-post"
-
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const path = new URL(request.url).pathname;
   const app = await getAppContext();
 
-  const pluginRoutes = app.routes;
+  const matchedRoute = app.routes?.find(route => {
+    const matchRoute = match(route.path, { decode: decodeURIComponent });
+    return matchRoute(path);
+  });
 
-  if (pluginRoutes && Array.isArray(pluginRoutes)) {
-    // Try matching the URL with the registered plugin paths
-    for (let route of pluginRoutes) {
-      const matchRoute = match(route.path, { decode: decodeURIComponent });
-      const matchResult = matchRoute(path);
+  if (matchedRoute) {
+    const matchResult = match(matchedRoute.path, { decode: decodeURIComponent })(path);
+    const data = matchedRoute.loader ? await matchedRoute.loader({ request, app }) : null;
 
-      if (matchResult) {
-        const { path, params } = matchResult;
-
-        // Do something with the matched params
-        // e.g., load the post based on postId
-        const data = route.loader && (await route.loader({ ...args, app }));
-
-        return json({
-          path: route.path,
-          params,
-          data: data,
-          content: route?.content,
-        });
-      }
-    }
+    return json({
+      path: matchedRoute.path,
+      params: matchResult.params,
+      data,
+      content: matchedRoute.content,
+    });
   }
 
-  // If no route matched, return 404
-  //throw new Response("Not Found", { status: 404 });
-  // Return default path
+  // If no route matched, return default not-found response
   return json({ path: NOT_FOUND_PATH, data: {} });
 };
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const path = new URL(request.url).pathname;
+  const app = await getAppContext();
+
+  const matchedRoute = app.routes?.find(route => {
+    const matchRoute = match(route.path, { decode: decodeURIComponent });
+    return matchRoute(path);
+  });
+
+  if (matchedRoute) {
+    const matchResult = match(matchedRoute.path, { decode: decodeURIComponent })(path);
+    const data = matchedRoute.loader ? await matchedRoute.loader({ request, app }) : null;
+
+    return json({
+      path: matchedRoute.path,
+      params: matchResult.params,
+      data,
+      content: matchedRoute.content,
+    });
+  }
+
+  // If no route matched, return default not-found response
+  return json({ path: NOT_FOUND_PATH, data: {} });
+};
+
 
 export default function CatchAll() {
   const { path } = useLoaderData<typeof loader>();
