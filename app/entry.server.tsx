@@ -15,7 +15,7 @@ import _default from "node_modules/vite-tsconfig-paths/dist";
 import AppContextProvider from "./core/utils/app-context";
 import { AppContext, getAppContext } from "./app";
 import { singleton } from "./core/utils/singleton";
-import createDBConnection from "./core/database/db";
+import createDBConnection from "./core/database/db.server";
 
 const ABORT_DELAY = 5_000;
 

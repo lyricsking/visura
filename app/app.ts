@@ -8,7 +8,7 @@ import { PluginModel } from "./core/models/plugin.model";
 import { OptionModel } from "./core/models/option.model";
 import { IOption } from "./core/types/option.type";
 import { IPage, PageContentType } from "./core/types/page";
-import createDBConnection from "./core/database/db";
+import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 
 export const HOMEPATH_NAME = "homepath";
@@ -16,8 +16,11 @@ export const APP_NAME = "app_name";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
+type PluginInstance = IPlugin & { instance: IBasePlugin };
+
 class AppContext {
-  private _config: IOption[] = [];
+  private static instance: AppContext | null = null;
+  private static queue: Array<(instance: AppContext) => void> = [];
 
   private readonly _menus: Record<MenuType, Menu[]> = {
     app: [],
@@ -28,17 +31,73 @@ class AppContext {
 
   private readonly _settingsTabs: SettingsTab[] = [];
 
-  // Async initialization logic for loading plugins
-  async initAppEnv() {
-    if (typeof document === "undefined") {
-      // serverOnly$(await createDBConnection());
-      // singleton("mongoose", createDBConnection);
-      await createDBConnection();
-    }
-    // Determine the current environment
-    this._config = await OptionModel.find({});
+  private constructor(
+    private _configs: IOption[],
+    private activePlugins: PluginInstance[]
+  ) {}
 
-    await pluginManager.loadActivePlugins();
+  static async getInstance(): Promise<AppContext> {
+    if (AppContext.instance) return AppContext.instance;
+
+    return new Promise<AppContext>((resolve) => {
+      AppContext.queue.push(resolve);
+
+      if (AppContext.queue.length === 1) {
+        AppContext.init();
+      }
+    });
+  }
+
+  private static async init() {
+    if (typeof document === "undefined") {
+      serverOnly$(await createDBConnection());
+    }
+
+    const configs = await AppContext.loadOptions();
+    let plugins = await AppContext.loadActivePlugins();
+
+    AppContext.instance = new AppContext(configs, plugins);
+
+    // Resolve all queued promises with the initialized instance
+    while (AppContext.queue.length > 0) {
+      const resolve = AppContext.queue.shift();
+      if (resolve) resolve(AppContext.instance);
+    }
+  }
+
+  static async loadActivePlugins(): Promise<PluginInstance[]> {
+    const pluginReq = await fetch("/api/plugins");
+    const pluginRes = await pluginReq.json();
+    const plugins = pluginRes.plugins;
+
+    const pluginsInstance: PluginInstance[] = [];
+
+    for (const plugin of plugins) {
+      // Dynamically import and initialize active plugins
+      const pluginModule = await import(/* @vite-ignore*/ plugin.path);
+      if (pluginModule.default) {
+        pluginsInstance.push({
+          id: plugin.id,
+          name: plugin.name,
+          description: plugin.description,
+          path: plugin.path,
+          isActive: plugin.isActive,
+          settings: plugin.settings,
+          version: plugin.version,
+          // displayName: plugin.name,
+          instance: new pluginModule.default(plugin),
+        });
+      }
+    }
+
+    return pluginsInstance;
+  }
+
+  static async loadOptions(): Promise<any> {
+    let configs;
+    const configReq = await fetch("/api/plugins");
+    const configRes = await configReq.json();
+    return configRes.plugins;
   }
 
   // Async initialization logic for loading plugins
@@ -51,7 +110,7 @@ class AppContext {
   configs(key: string) {
     // return this._config.app;
 
-    const option = this._config.find((option) => option.name === key);
+    const option = this._configs.find((option) => option.name === key);
     return option?.value;
   }
 
@@ -59,53 +118,20 @@ class AppContext {
     type: "custom" | "plugin";
     path?: string;
   } {
-    const option = this._config.find((option) => option.name === HOMEPATH_NAME);
+    const option = this._configs.find(
+      (option) => option.name === HOMEPATH_NAME
+    );
     return option?.value;
   }
 
-  // async loadPlugin(plugin: IPlugin) {
-  //   try {
-  //     if (
-  //       !plugin.id ||
-  //       !plugin.name ||
-  //       !plugin.version ||
-  //       typeof plugin.onInit !== "function"
-  //     ) {
-  //       throw new Error(
-  //         `Invalid plugin: ${plugin.name}. Must have an id, name, version, and onInit function.`
-  //       );
-  //     }
-
-  //     // Ensure plugin names are unique
-  //     if (this.plugins[plugin.id]) {
-  //       throw new Error(
-  //         `Cannot register duplicate plugin. Plugin already with id: ${plugin.id}`
-  //       );
-  //     }
-
-  //     // Initialize the plugin
-  //     plugin.onInit(this);
-  //     console.log(`${plugin.name} initialized`);
-
-  //     // Cache the plugin in memory
-  //     this.plugins[plugin.id] = plugin;
-
-  //     console.log(`${plugin.name} plugin loaded.`);
-  //   } catch (err) {
-  //     console.error("Error loading plugins:", err);
-  //   } finally {
-  //     console.log(`Loaded ${Object.keys(this.plugins).length} plugins.`);
-  //   }
-  // }
-
   plugin(name: string) {
-    return Object.entries(pluginManager.activePlugins).find(
+    return Object.entries(this.activePlugins).find(
       ([key, value]) => key === name
     );
   }
 
   get routes() {
-    return pluginManager.activePlugins.flatMap((plugin) =>
+    return this.activePlugins.flatMap((plugin) =>
       plugin.instance.settings?.routes
         ? Object.values(plugin.instance.settings.routes)
         : []
@@ -138,66 +164,8 @@ class AppContext {
   }
 }
 
-export const getAppContext = async () => {
-  // Todo Implement debounce
-  const app = await singleton("app", async () => {
-    const app = new AppContext();
-    // Load plugins
-    await app.initAppEnv();
-    return app;
-  });
-
-  return app;
+export const getAppContext = (): Promise<AppContext> => {
+  return AppContext.getInstance();
 };
 
 export type { AppContext };
-
-class PluginManager {
-  activePlugins: (IPlugin & { instance: IBasePlugin })[] = [];
-
-  async loadActivePlugins() {
-    const activePlugins = await PluginModel.find({ isActive: true });
-
-    for (const plugin of activePlugins) {
-      // Dynamically import and initialize active plugins
-      const pluginModule = await import(/* @vite-ignore*/ plugin.path);
-      if (pluginModule.default) {
-        this.activePlugins.push({
-          id: plugin.id,
-          name: plugin.name,
-          description: plugin.description,
-          path: plugin.path,
-          isActive: plugin.isActive,
-          settings: plugin.settings,
-          version: plugin.version,
-          // displayName: plugin.name,
-          instance: new pluginModule.default(plugin),
-        });
-      }
-    }
-    // const pluginsConfig = app.configs.plugins;
-
-    // // Loop through only enabled plugins in the config
-    // for (const pluginConfig of pluginsConfig) {
-    //   if (pluginConfig.isActive) {
-    //     const pluginUrl = `/app/plugins/${pluginConfig.id}/index.ts`;
-
-    //     try {
-    //       // Dynamically load the plugin only if it is enabled
-    //       const plugin: IPlugin = (await import(/* @vite-ignore */ pluginUrl))
-    //         .default;
-
-    //       console.log(`Loading plugin "${plugin.name}".`);
-    //       await app.loadPlugin(plugin);
-    //     } catch (err) {
-    //       console.error(`Error loading plugin "${pluginConfig.name}":\n`, err);
-    //     }
-    //   } else {
-    //     console.log(`${pluginConfig.name} is disabled and will not be loaded.`);
-    //   }
-    // }
-  }
-}
-
-export const pluginManager = new PluginManager();
-export type { PluginManager };

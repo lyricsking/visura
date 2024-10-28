@@ -25,6 +25,10 @@ export default function routes(route: DefineRouteFunction) {
     route("", "core/public/routes/home.tsx", { index: true });
     route("*", "core/public/routes/catch-all.tsx");
   });
+
+  // Api routes
+  route("api/options", "core/api/options.tsx");
+  route("api/plugins", "core/api/plugins.tsx");
 }
 
 const defaultRoutes = () => {

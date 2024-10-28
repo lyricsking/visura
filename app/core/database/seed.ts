@@ -1,4 +1,4 @@
-import connectToDatabase from "./db";
+import connectToDatabase from "./db.server";
 import { seedOptions } from "./seeds/options.server";
 import { seedPages } from "./seeds/page.server";
 import { seedPlugins } from "./seeds/plugin.server";
