@@ -4,6 +4,9 @@ import {
   ShouldRevalidateFunction,
   useMatches,
 } from "@remix-run/react";
+import { config } from "dotenv";
+import { APP_NAME } from "~/app";
+import Button from "~/components/button";
 import Footer from "~/components/ui/footer";
 import {
   PageLayout,
@@ -12,10 +15,8 @@ import {
   PageLayoutHeader,
   PageLayoutHeaderItem,
 } from "~/components/ui/page.layout";
-import pkg from "../../../../../package.json";
-import { useQuiz } from "~/plugins/SubscriptionBox/Quiz/utils/quiz.utils";
-import Button from "~/components/button";
-import { config } from "@/config";
+import { useQuiz } from "~/temp/SubscriptionBox/Quiz/utils/quiz.utils";
+import { useAppContext } from "~/utils/app-context";
 
 export type ChildHeaderObject = {
   title: string;
@@ -30,6 +31,8 @@ export type HandleObjectType = {
 
 export default function Layout() {
   const { startQuiz } = useQuiz();
+
+  const app = useAppContext();
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
@@ -49,7 +52,7 @@ export default function Layout() {
         <PageLayoutHeaderItem className="border bg-white">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">
-              {config.appName}
+              {app.configs(APP_NAME)}
             </h1>
           </Link>
           <Button
