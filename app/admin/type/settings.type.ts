@@ -1,4 +1,4 @@
-import { IHydratedUser } from "~/user/models/user.model";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 export type SettingsType = {
   user: IHydratedUser;

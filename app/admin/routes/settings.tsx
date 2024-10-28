@@ -20,14 +20,14 @@ import {
   getUserFromSession,
   logout,
   invalidateCacheUser,
-} from "~/auth/server/auth.server";
-import { IHydratedUser } from "~/user/models/user.model";
+} from "~/core/auth/server/auth.server";
+import { IHydratedUser } from "~/core/user/models/user.model";
 import {
   updateUserProfile,
   updateUserPreference,
-} from "~/user/server/user-profile.server";
-import { updateUserPassword, disableUser } from "~/user/server/user.server";
-import { IUserProfile } from "~/user/types/user-profile.type";
+} from "~/core/user/server/user-profile.server";
+import { updateUserPassword, disableUser } from "~/core/user/server/user.server";
+import { IUserProfile } from "~/core/user/types/user-profile.type";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { getSession, commitSession } from "~/core/utils/session";
 

@@ -14,7 +14,7 @@ import Button from "~/components/button";
 import { useRef } from "react";
 import { applyDiscount } from "../server/cart.server";
 import type { IOrder } from "../types/order.type";
-import { getAuthUser } from "~/auth/server/auth.server";
+import { getAuthUser } from "~/core/auth/server/auth.server";
 import EmptyCart from "../components/empty-cart";
 import Cart from "./cart";
 import {

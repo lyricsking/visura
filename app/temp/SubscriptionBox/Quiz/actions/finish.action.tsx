@@ -12,7 +12,7 @@ import {
   getAuthUser,
   getUserFromSession,
   setAuthUser,
-} from "~/auth/server/auth.server";
+} from "~/core/auth/server/auth.server";
 
 export const action: ActionFunction = async ({ request }) => {
   //  Converts the request url to instance of URL for easy manipulation

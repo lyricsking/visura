@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
-import { StaffRole } from "~/user/types/staff.type";
+import { StaffRole } from "~/core/user/types/staff.type";
 
 /**
  * Gets the subdomain string of the current url

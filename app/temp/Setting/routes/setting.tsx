@@ -13,11 +13,11 @@ import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
 import OrderSettings from "~/plugins/SubscriptionBox/Order/components/order-settings";
 import { commitSession, getSession } from "~/utils/session";
-import { disableUser, updateUserPassword } from "~/user/server/user.server";
+import { disableUser, updateUserPassword } from "~/core/user/server/user.server";
 import {
   updateUserPreference,
   updateUserProfile,
-} from "~/user/server/user-profile.server";
+} from "~/core/user/server/user-profile.server";
 import { SettingsType } from "../../Dashboard/type/settings.type";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import {
@@ -28,13 +28,13 @@ import {
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
 } from "../../Dashboard/utils/constants";
-import { IUserProfile } from "~/user/types/user-profile.type";
+import { IUserProfile } from "~/core/user/types/user-profile.type";
 import {
   getUserFromSession,
   invalidateCacheUser,
   logout,
-} from "~/auth/server/auth.server";
-import { IHydratedUser } from "~/user/models/user.model";
+} from "~/core/auth/server/auth.server";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 export const handle = {
   pageName: "Settings",

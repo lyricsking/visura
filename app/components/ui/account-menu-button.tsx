@@ -9,7 +9,7 @@ import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { renderIcon } from "./icon-loader";
 import { Menu } from "~/types/menu";
-import { IHydratedUser } from "~/user/models/user.model";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 //type Props = ButtonProps;
 type Props = {

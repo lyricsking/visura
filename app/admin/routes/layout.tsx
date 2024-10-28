@@ -14,8 +14,8 @@ import {
   isAuthenticated,
   getUserFromSession,
   setUserToSession,
-} from "~/auth/server/auth.server";
-import { isAuthUser } from "~/auth/utils/helper";
+} from "~/core/auth/server/auth.server";
+import { isAuthUser } from "~/core/auth/utils/helper";
 import Breadcrumb from "~/components/breadcrumb";
 import { ScrollBar } from "~/components/scrollable.area";
 import { Navbar } from "~/components/ui/navbar";
@@ -25,7 +25,7 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-import { findOrCreateUserProfiles } from "~/user/server/user.server";
+import { findOrCreateUserProfiles } from "~/core/user/server/user.server";
 import { getSubdomain } from "~/utils/domain";
 import { cn } from "~/utils/util";
 import HeaderIcons from "../components/header-icons";

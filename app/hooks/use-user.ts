@@ -1,8 +1,8 @@
 import { useFetcher } from "@remix-run/react";
 import { HydratedDocument } from "mongoose";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { IUserMethods, IUserVirtuals } from "~/user/models/user.model";
-import { IUser } from "~/user/types/user.types";
+import { IUserMethods, IUserVirtuals } from "~/core/user/models/user.model";
+import { IUser } from "~/core/user/types/user.types";
 
 export const useUser = ():
   | HydratedDocument<IUser, IUserMethods & IUserVirtuals>

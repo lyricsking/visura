@@ -22,7 +22,10 @@ import { useEffect } from "react";
 import { updateCartAddress } from "../server/cart.server";
 import { getSession } from "~/utils/session";
 import { IAddress, IAddressRegion } from "../types/address.type";
-import { getAuthUser, getUserFromSession } from "~/auth/server/auth.server";
+import {
+  getAuthUser,
+  getUserFromSession,
+} from "~/core/auth/server/auth.server";
 
 export const ADD_ADDRESS_ACTION = "create-address";
 export const EDIT_ADDRESS_ACTION = "update-address";

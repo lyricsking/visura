@@ -9,7 +9,7 @@ import { googleStrategy } from "../strategy/google-strategy";
 import { formStrategy } from "../strategy/form-strategy";
 import { AuthUser } from "../types/auth-user.type";
 import { isRequest } from "~/utils/is-request";
-import { IHydratedUser } from "~/user/models/user.model";
+import { IHydratedUser } from "~/core/user/models/user.model";
 import { redirect, Session } from "@remix-run/node";
 
 export const REDIRECT_URL = "redirect-url";

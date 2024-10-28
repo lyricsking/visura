@@ -1,8 +1,8 @@
 import mongoose, { Schema, Model, HydratedDocument } from "mongoose";
 import bcrypt from "bcrypt";
-import { IStaff } from "~/user/types/staff.type";
-import { IUserProfile } from "~/user/types/user-profile.type";
-import { IUser, UserType } from "~/user/types/user.types";
+import { IStaff } from "~/core/user/types/staff.type";
+import { IUserProfile } from "~/core/user/types/user-profile.type";
+import { IUser, UserType } from "~/core/user/types/user.types";
 
 export interface IUserMethods {
   isValidPassword(password: string): Promise<boolean>;

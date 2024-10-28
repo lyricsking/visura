@@ -1,6 +1,6 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { LoaderFunction, LoaderFunctionArgs, json } from "@remix-run/node";
-import { getUserFromSession } from "~/auth/server/auth.server";
+import { getUserFromSession } from "~/core/auth/server/auth.server";
 import AccountMenuButton from "~/components/ui/account-menu-button";
 import Footer from "~/components/ui/footer";
 import {

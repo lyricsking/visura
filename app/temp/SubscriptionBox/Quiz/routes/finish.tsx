@@ -13,8 +13,8 @@ import formDataToObject from "~/utils/form-data-to-object";
 import { action } from "../actions/finish.action";
 import { Checkbox } from "~/components/checkbox";
 import { loader } from "../loader/finish.loader";
-import { AuthUser } from "~/auth/types/auth-user.type";
-import { IHydratedUser } from "~/user/models/user.model";
+import { AuthUser } from "~/core/auth/types/auth-user.type";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 export { action };
 export { loader };

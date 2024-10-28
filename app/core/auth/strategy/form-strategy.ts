@@ -1,5 +1,5 @@
 import { FormStrategy } from "remix-auth-form";
-import { findOrCreateUserProfiles } from "~/user/server/user.server";
+import { findOrCreateUserProfiles } from "~/core/user/server/user.server";
 import { setUserToSession } from "../server/auth.server";
 import { AuthUser } from "../types/auth-user.type";
 import invariant from "tiny-invariant";

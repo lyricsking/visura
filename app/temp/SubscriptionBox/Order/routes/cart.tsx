@@ -5,7 +5,7 @@ import { IOrder } from "../types/order.type";
 import CartItem from "../components/cart-item";
 import { useEffect } from "react";
 import { DELETE_ACTION_KEY, UPDATE_ACTION_KEY } from "../utils/constants";
-import { getAuthUser } from "~/auth/server/auth.server";
+import { getAuthUser } from "~/core/auth/server/auth.server";
 
 export const action = async ({ request }: any) => {
   const session = await getSession(request.headers.get("Cookie"));

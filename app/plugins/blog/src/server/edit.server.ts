@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { getAuthUser } from "~/auth/server/auth.server";
+import { getAuthUser } from "~/core/auth/server/auth.server";
 import formDataToObject from "~/utils/form-data-to-object";
 import { createPost } from "./post.server";
 import { Types } from "mongoose";

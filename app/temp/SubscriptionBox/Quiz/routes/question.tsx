@@ -17,7 +17,7 @@ import { action } from "../actions/question.action";
 import { loader } from "../loader/question.loader";
 import { useEffect } from "react";
 import { ACTION_KEY } from "../utils/constants";
-import { IHydratedUser } from "~/user/models/user.model";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 export { action };
 export { loader };

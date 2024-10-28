@@ -10,7 +10,7 @@ import {
   LifeBuoy,
   NewspaperIcon,
 } from "lucide-react";
-import { UserType } from "~/user/types/user.types";
+import { UserType } from "~/core/user/types/user.types";
 
 const userDashboardMenuItems = [
   {

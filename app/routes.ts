@@ -12,23 +12,24 @@ export default function routes(route: DefineRouteFunction) {
   });
 
   // Admin routes
-  route("administration", "core/admin/routes/layout.tsx", () => {
-    route("", "core/admin/routes/overview.tsx", { index: true });
-    route("settings/:setting?", "core/admin/routes/settings.tsx");
-    //route("subscriptions", "core/Subscription/routes/subscription.tsx");
-    //route("transactions", "core/Transaction/routes/transaction.tsx");
-    route("*", "core/admin/routes/catch-all.tsx");
+  route("administration", "admin/routes/layout.tsx", () => {
+    route("", "admin/routes/overview.tsx", { index: true });
+    route("settings/:setting?", "admin/routes/settings.tsx");
+    //route("subscriptions", "Subscription/routes/subscription.tsx");
+    //route("transactions", "Transaction/routes/transaction.tsx");
+    route("*", "admin/routes/catch-all.tsx");
   });
 
   // Public pages, registered last so that catch all route would match non handle routes only.
-  route("/", "core/public/routes/layout.tsx", () => {
-    route("", "core/public/routes/home.tsx", { index: true });
-    route("*", "core/public/routes/catch-all.tsx");
+  route("/", "public/routes/layout.tsx", () => {
+    route("", "public/routes/home.tsx", { index: true });
+    route("*", "public/routes/catch-all.tsx");
   });
 
   // Api routes
-  route("api/options", "core/api/options.server.ts");
-  route("api/plugins", "core/api/plugins.server.ts");
+  route("api/options", "core/options/routes/find-options.server.ts");
+  route("api/plugins", "core/plugins/routes/find-plugins.server.ts");
+  route("api/pages", "core/pages/routes/find-pages.server.ts");
 }
 
 const defaultRoutes = () => {
