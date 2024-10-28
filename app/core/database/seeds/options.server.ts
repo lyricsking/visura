@@ -1,5 +1,5 @@
 import { APP_NAME, HOMEPATH_NAME } from "~/app";
-import { OptionModel } from "~/core/options/models/option.model";
+import { OptionModel } from "~/core/option/models/option.model";
 
 export const seedOptions = async () => {
   try {

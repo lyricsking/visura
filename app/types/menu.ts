@@ -1,7 +1,7 @@
 import {
   PluginLoaderFunction,
   PluginActionFunction,
-} from "../core/pages/types/page/page";
+} from "../core/page/types/page/page";
 
 export type SettingsTab = {
   id?: string;

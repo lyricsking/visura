@@ -1,10 +1,6 @@
-import {
-  IBasePlugin,
-  IPlugin,~/core/app
-  PluginSetting,
-} from "~/core/plugin/types/plugin";
-import Blog, { blogLoader } from "./src/routes/blog";
 import { AppContext } from "~/app";
+import { IBasePlugin, PluginSetting } from "~/core/plugin/types/plugin";
+import Blog, { blogLoader } from "./src/routes/blog";
 
 export default class BlogPlugin implements IBasePlugin {
   readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host

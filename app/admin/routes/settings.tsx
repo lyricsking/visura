@@ -26,13 +26,16 @@ import {
   updateUserProfile,
   updateUserPreference,
 } from "~/core/user/server/user-profile.server";
-import { updateUserPassword, disableUser } from "~/core/user/server/user.server";
+import {
+  updateUserPassword,
+  disableUser,
+} from "~/core/user/server/user.server";
 import { IUserProfile } from "~/core/user/types/user-profile.type";
-import formDataToObject from "~/core/utils/form-data-to-object";
-import { getSession, commitSession } from "~/core/utils/session";
+import formDataToObject from "~/utils/form-data-to-object";
+import { getSession, commitSession } from "~/utils/session";
 
-export const handle = {~/utils/form-data-to-object
-  pageName: "Settings",~/utils/session
+export const handle = {
+  pageName: "Settings",
   breadcrumb: {
     id: "settings",
     label: "Settings",

@@ -1,9 +1,9 @@
 import { json, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { IPage, PageContentType } from "~/core/pages/types/page";
+import { IPage, PageContentType } from "~/core/page/types/page";
 import { renderPage } from "~/components/ui/render-page";
 import { getAppContext } from "~/app";
-import { PageModel } from "~/core/pages/models/page.model";
+import { PageModel } from "~/core/page/models/page.model";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const app = await getAppContext();

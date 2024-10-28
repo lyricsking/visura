@@ -1,4 +1,4 @@
-import Block from ".";
+
 
 interface ImageBlockProps {
   src: string;

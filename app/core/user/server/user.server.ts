@@ -51,11 +51,8 @@ export const findOrCreateUserProfiles = async ({
   let user = await updateUser(email, { isActive: true }, { path: "profile" });
 
   // Verify that the password is valid
-  if (user && password) {
-    invariant(
-      await user.isValidPassword(password),
-      "Invalid signin detail provided."
-    );
+  if (user && password && !(await user.isValidPassword(password))) {
+    throw new Error("Invalid signin detail provided.");
   }
 
   // if there is no user, then it means we do not have a user with that email, ensure we create one.

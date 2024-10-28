@@ -1,11 +1,11 @@
 import { Types } from "mongoose";
-import { IPage } from "../../pages/types/page";
+import { IPage } from "../../page/types/page";
 import { AppContext } from "~/app";
 
 export const PLUGIN_KEY = "plugins";
 
 export interface PluginSetting {
-  routes: IPage[];
+  routes: Omit<IPage, "id">[];
   [key: string]: any;
 }
 

@@ -16,9 +16,9 @@ import { Card, CardHeader, CardContent, CardFooter } from "~/components/card";
 import { serverOnly$ } from "vite-env-only/macros";
 import { TipSummary } from "../components/tip-card";
 import { ITips } from "../types/tips.type";
-import { PluginLoaderFunction } from "~/core/types/route";
 import { findPosts } from "../server/post.server";
 import { findTips } from "../server/tips.server";
+import { PluginLoaderFunction } from "~/core/page/types/page";
 
 export const blogLoader: PluginLoaderFunction | undefined = serverOnly$(
   async () => {

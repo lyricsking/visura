@@ -24,6 +24,33 @@ import Button from "~/components/button";
 import { useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
 
+export const action = async ({ request }: ActionFunctionArgs) => {
+  return await authenticate("form", request);
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const isAuth = await isAuthenticated(request);
+
+  const session = await getSession(request);
+  if (isAuth && typeof isAuth !== "string" && isAuthUser(isAuth)) {
+    return redirect(session.get(REDIRECT_URL) || "/");
+  }
+
+  const error = session.get(getAuthErrorKey());
+  console.log(error);
+
+  if (error) {
+    return json(
+      { error },
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      }
+    );
+  } else return json({});
+};
+
 export default function Signin() {
   const { error } = useLoaderData<typeof loader>();
   const { appname }: { appname: string } = useOutletContext();
@@ -142,30 +169,3 @@ export default function Signin() {
     </div>
   );
 }
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  return await authenticate("form", request);
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const isAuth = await isAuthenticated(request);
-
-  const session = await getSession(request);
-  if (isAuth && typeof isAuth !== "string" && isAuthUser(isAuth)) {
-    return redirect(session.get(REDIRECT_URL) || "/");
-  }
-
-  const error = session.get(getAuthErrorKey());
-  console.log(error);
-
-  if (error) {
-    return json(
-      { error },
-      {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      }
-    );
-  } else return json({});
-};
