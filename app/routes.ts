@@ -28,8 +28,8 @@ export default function routes(route: DefineRouteFunction) {
 
   // Api routes
   route("api/options", "core/options/routes/find-options.server.ts");
-  route("api/plugins", "core/plugins/routes/find-plugins.server.ts");
   route("api/pages", "core/pages/routes/find-pages.server.ts");
+  route("api/plugins", "core/plugins/routes/find-plugins.server.ts");
 }
 
 const defaultRoutes = () => {

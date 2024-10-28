@@ -1,4 +1,4 @@
-import { BlockMetadata } from "./blocks";
+import { BlockMetadata } from "./core/blocks";
 import { Menu, MenuType, SettingsTab } from "./types/menu";
 import { MaybeAsyncFunction } from "./utils/maybe-async-fn";
 import { IBasePlugin, IPlugin } from "./core/plugin/types/plugin";
