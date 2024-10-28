@@ -1,9 +1,9 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { getAuthUser } from "~/core/auth/server/auth.server";
-import formDataToObject from "~/core/utils/form-data-to-object";
+import { getAuthUser } from "~/auth/server/auth.server";
+import formDataToObject from "~/utils/form-data-to-object";
 import { createPost } from "./post.server";
 import { Types } from "mongoose";
-import { parseError } from "~/core/utils/mongoose";
+import { parseError } from "~/utils/mongoose";
 import { PluginLoaderFunction } from "~/app";
 
 export const action = async ({ request }: ActionFunctionArgs) => {

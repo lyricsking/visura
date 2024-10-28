@@ -14,7 +14,7 @@ import {
 } from "@remix-run/react";
 
 import { Config } from "./core/config";
-import { Toaster } from "./core/components/toaster";
+import { Toaster } from "./components/toaster";
 import { getAppContext } from "./app";
 
 export const links: LinksFunction = () => [

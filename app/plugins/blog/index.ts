@@ -1,6 +1,6 @@
 import {
   IBasePlugin,
-  IPlugin,
+  IPlugin,~/core/app
   PluginSetting,
 } from "~/core/plugin/types/plugin";
 import Blog, { blogLoader } from "./src/routes/blog";

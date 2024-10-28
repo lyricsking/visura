@@ -20,8 +20,8 @@ import {
   Trash2Icon,
   File,
 } from "lucide-react";
-import { Badge } from "~/core/components/badge";
-import Button, { buttonVariants } from "~/core/components/button";
+import { Badge } from "~/components/badge";
+import Button, { buttonVariants } from "~/components/button";
 import {
   Card,
   CardHeader,
@@ -29,16 +29,16 @@ import {
   CardDescription,
   CardFooter,
   CardContent,
-} from "~/core/components/card";
+} from "~/components/card";
 import {
   TableHeader,
   TableRow,
   TableHead,
   TableBody,
   TableCell,
-} from "~/core/components/table";
-import { formatDateByParts } from "~/core/utils/date";
-import { cn } from "~/core/utils/util";
+} from "~/components/table";
+import { formatDateByParts } from "~/utils/date";
+import { cn } from "~/utils/util";
 export const handle = {
   breadcrumb: {
     id: "post-list",

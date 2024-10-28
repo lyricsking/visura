@@ -1,13 +1,9 @@
-import { BlockMetadata } from "./core/blocks";
-import { Config } from "./core/config";
-import { Menu, MenuType, SettingsTab } from "./core/types/menu";
-import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
-import { singleton } from "./core/utils/singleton";
+import { BlockMetadata } from "./blocks";
+import { Menu, MenuType, SettingsTab } from "./types/menu";
+import { MaybeAsyncFunction } from "./utils/maybe-async-fn";
 import { IBasePlugin, IPlugin } from "./core/plugin/types/plugin";
-import { PluginModel } from "./core/plugin/models/plugin.model";
-import { OptionModel } from "./core/options/models/option.model";
 import { IOption } from "./core/options/types/option.type";
-import { IPage, PageContentType } from "./core/pages/types/page";
+import { IPage } from "./core/pages/types/page";
 import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 

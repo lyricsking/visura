@@ -1,9 +1,6 @@
 import { Types } from "mongoose";
-import Supplement from "~/core/tempPlugins/SubscriptionBox/Product/models/supplement.model";
-import {
-  ISupplement,
-  Gender,
-} from "~/core/tempPlugins/SubscriptionBox/Product/types/supplement.type";
+import Supplement from "~/temp/SubscriptionBox/Product/models/supplement.model";
+import { ISupplement, Gender } from "~/temp/SubscriptionBox/Product/types/supplement.type";
 
 export const seedSupplement = async () => {
   try {

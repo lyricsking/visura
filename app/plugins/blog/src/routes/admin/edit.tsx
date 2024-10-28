@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useFetcher } from "@remix-run/react";
-import Button from "~/core/components/button";
-import { ImagePreview } from "~/core/components/image-preview";
-import { Input } from "~/core/components/input";
-import { MarkdownEditor } from "~/core/components/markdown-editor";
-import { Textarea } from "~/core/components/textarea";
-import { ValidationMessage } from "~/core/components/ui/validation-message";
-import { useFileUpload } from "~/core/hooks/use-upload";
-import { cn } from "~/core/utils/util";
-import { useToast } from "~/core/hooks/use-toast";
+import Button from "~/components/button";
+import { ImagePreview } from "~/components/image-preview";
+import { Input } from "~/components/input";
+import { MarkdownEditor } from "~/components/markdown-editor";
+import { Textarea } from "~/components/textarea";
+import { ValidationMessage } from "~/components/ui/validation-message";
+import { useFileUpload } from "~/hooks/use-upload";
+import { cn } from "~/utils/util";
+import { useToast } from "~/hooks/use-toast";
 
 export default function PostForm() {
   // const loaderData = useLoaderData<typeof loader>();
