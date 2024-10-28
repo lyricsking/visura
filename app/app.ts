@@ -34,7 +34,9 @@ class AppContext {
   private constructor(
     private _configs: IOption[],
     private activePlugins: PluginInstance[]
-  ) {}
+  ) {
+    console.log("App initialized");
+  }
 
   static async getInstance(): Promise<AppContext> {
     if (AppContext.instance) return AppContext.instance;
@@ -53,8 +55,8 @@ class AppContext {
       serverOnly$(await createDBConnection());
     }
 
-    const configs = await AppContext.loadOptions();
-    let plugins = await AppContext.loadActivePlugins();
+    const configs = await AppContext.loadConfigOptions();
+    const plugins = await AppContext.loadActivePlugins();
 
     AppContext.instance = new AppContext(configs, plugins);
 
@@ -65,8 +67,15 @@ class AppContext {
     }
   }
 
+  static async loadConfigOptions(): Promise<any> {
+    let configs;
+    const configReq = await fetch("api/options");
+    const configRes = await configReq.json();
+    return configRes.plugins;
+  }
+
   static async loadActivePlugins(): Promise<PluginInstance[]> {
-    const pluginReq = await fetch("/api/plugins");
+    const pluginReq = await fetch("api/plugins");
     const pluginRes = await pluginReq.json();
     const plugins = pluginRes.plugins;
 
@@ -91,13 +100,6 @@ class AppContext {
     }
 
     return pluginsInstance;
-  }
-
-  static async loadOptions(): Promise<any> {
-    let configs;
-    const configReq = await fetch("/api/plugins");
-    const configRes = await configReq.json();
-    return configRes.plugins;
   }
 
   // Async initialization logic for loading plugins

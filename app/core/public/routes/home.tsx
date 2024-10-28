@@ -1,4 +1,4 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { json, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { IPage, PageContentType } from "~/core/types/page";
 import { renderPage } from "~/core/components/ui/render-page";
@@ -24,9 +24,24 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   return json({
     path: homepage.path,
+    metadata: page?.metadata,
     data: loaderData,
     content: page?.content,
   });
+};
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  // Access the appConfig from the loader's returned data
+  if (data) {
+    const { metadata } = data;
+
+    return [
+      { title: metadata?.title },
+      { name: "description", content: metadata?.["description"] },
+    ];
+  }
+
+  return [];
 };
 
 export default function Home() {

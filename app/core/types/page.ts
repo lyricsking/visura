@@ -31,6 +31,7 @@ export type PluginActionFunction = (
 ) => Promise<Response | any>; // Adjust the return type as necessary
 
 export interface IPage {
+  id: Types.ObjectId;
   path: string;
   metadata: PageMetadata;
   content: PageContentType;
