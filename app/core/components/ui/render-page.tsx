@@ -1,5 +1,5 @@
 import renderBlock from "~/core/components/ui/block";
-import { PageContentType } from "~/core/types/page";
+import { PageContentType } from "~/core/pages/types/page";
 import { useAppContext } from "~/core/utils/app-context";
 import Loading from "../loading";
 import ReactMarkdown from "react-markdown";

@@ -1,4 +1,4 @@
-import { PluginLoaderFunction } from "~/core/types/page";
+import { PluginLoaderFunction } from "~/core/pages/types/page";
 import { findTipBySlug } from "../server/tips.server";
 
 export const loader: PluginLoaderFunction = async ({ params }) => {

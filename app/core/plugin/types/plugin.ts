@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IPage } from "./page";
+import { IPage } from "../../pages/types/page";
 import { AppContext } from "~/app";
 
 export const PLUGIN_KEY = "plugins";

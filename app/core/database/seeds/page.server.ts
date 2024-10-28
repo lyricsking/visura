@@ -1,4 +1,4 @@
-import { PageModel } from "~/core/models/page.model";
+import { PageModel } from "~/core/pages/models/page.model";
 
 export const seedPages = async () => {
   try {

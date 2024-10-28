@@ -144,8 +144,7 @@ export default function Signin() {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const c = await authenticate("form", request);
-  console.log(c);
+  return await authenticate("form", request);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {

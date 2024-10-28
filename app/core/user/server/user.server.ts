@@ -47,8 +47,17 @@ export const findOrCreateUserProfiles = async ({
   Partial<
     Pick<IUserProfile, "firstName" | "lastName" | "photo">
   >): Promise<IHydratedUser> => {
-  // Attempt to retrieve user with the email and updatuing the user as active.
+  // Attempt to retrieve user with the email and updating the user as active.
   let user = await updateUser(email, { isActive: true }, { path: "profile" });
+
+  // Verify that the password is valid
+  if (user && password) {
+    invariant(
+      await user.isValidPassword(password),
+      "Invalid signin detail provided."
+    );
+  }
+
   // if there is no user, then it means we do not have a user with that email, ensure we create one.
   if (!user) {
     user = await createUser({
@@ -58,11 +67,6 @@ export const findOrCreateUserProfiles = async ({
     });
     console.log("Created user %s", user);
   }
-
-  invariant(
-    user && password && !(await user.isValidPassword(password)),
-    "Invalid signin detail provided."
-  );
 
   // If we have user but no profile, it means there is no profile info for the user yet,
   // we create a profile using the default preferences then.

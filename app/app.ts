@@ -3,11 +3,11 @@ import { Config } from "./core/config";
 import { Menu, MenuType, SettingsTab } from "./core/types/menu";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { singleton } from "./core/utils/singleton";
-import { IBasePlugin, IPlugin } from "./core/types/plugin";
-import { PluginModel } from "./core/models/plugin.model";
-import { OptionModel } from "./core/models/option.model";
-import { IOption } from "./core/types/option.type";
-import { IPage, PageContentType } from "./core/types/page";
+import { IBasePlugin, IPlugin } from "./core/plugin/types/plugin";
+import { PluginModel } from "./core/plugin/models/plugin.model";
+import { OptionModel } from "./core/options/models/option.model";
+import { IOption } from "./core/options/types/option.type";
+import { IPage, PageContentType } from "./core/pages/types/page";
 import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 
@@ -68,14 +68,13 @@ class AppContext {
   }
 
   static async loadConfigOptions(): Promise<any> {
-    let configs;
-    const configReq = await fetch("api/options");
+    const configReq = await fetch("http://localhost:3000/api/options");
     const configRes = await configReq.json();
-    return configRes.plugins;
+    return configRes.options;
   }
 
   static async loadActivePlugins(): Promise<PluginInstance[]> {
-    const pluginReq = await fetch("api/plugins");
+    const pluginReq = await fetch("http://localhost:3000/api/plugins");
     const pluginRes = await pluginReq.json();
     const plugins = pluginRes.plugins;
 
@@ -111,14 +110,13 @@ class AppContext {
 
   configs(key: string) {
     // return this._config.app;
-
     const option = this._configs.find((option) => option.name === key);
     return option?.value;
   }
 
   get homepage(): {
     type: "custom" | "plugin";
-    path?: string;
+    path: string;
   } {
     const option = this._configs.find(
       (option) => option.name === HOMEPATH_NAME
@@ -141,7 +139,11 @@ class AppContext {
   }
 
   findRoute(path: string): IPage | undefined {
-    return this.routes.find((route) => route.path === path);
+    return this.routes.find((route) => {
+      console.log(route);
+
+      return route.path === path;
+    });
   }
 
   addMenu(menuType: MenuType, menuItem: Menu) {

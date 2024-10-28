@@ -9,7 +9,7 @@ import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { renderIcon } from "./icon-loader";
 import { Menu } from "~/core/types/menu";
-import { IHydratedUser } from "~/core/User/models/user.model";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 //type Props = ButtonProps;
 type Props = {
@@ -20,6 +20,8 @@ export default function AccountMenuButton({ menu, user }: Props) {
   const submit = useSubmit();
   const location = useLocation();
   const navigate = useNavigate();
+
+  console.log(user);
 
   let profile = user?.profile;
   let profilePhoto = profile?.photo;
@@ -65,9 +67,9 @@ export default function AccountMenuButton({ menu, user }: Props) {
         >
           Support
         </DropdownMenuItem>
-  */}{" "}
+  */}
         {/* Sign out */}
-        {profile ? (
+        {user ? (
           <DropdownMenuItem
             onSelect={() => {
               submit(null, { method: "POST", action: "/auth/signout" });

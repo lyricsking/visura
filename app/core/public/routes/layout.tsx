@@ -14,6 +14,9 @@ import { APP_NAME, getAppContext } from "~/app";
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
+
+  console.log(user);
+
   // const headerIcons = plugins
   //   .filter((plugin) => plugin.headerIcon)
   //   .map((plugin) => plugin.headerIcon);

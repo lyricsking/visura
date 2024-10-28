@@ -1,4 +1,8 @@
-import { IBasePlugin, IPlugin, PluginSetting } from "~/core/types/plugin";
+import {
+  IBasePlugin,
+  IPlugin,
+  PluginSetting,
+} from "~/core/plugin/types/plugin";
 import Blog, { blogLoader } from "./src/routes/blog";
 import { AppContext } from "~/app";
 

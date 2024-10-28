@@ -1,4 +1,7 @@
-import { PluginLoaderFunction, PluginActionFunction } from "./page";
+import {
+  PluginLoaderFunction,
+  PluginActionFunction,
+} from "../pages/types/page";
 
 export type SettingsTab = {
   id?: string;

@@ -1,5 +1,5 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { PluginModel } from "../models/plugin.model";
+import { PluginModel } from "../plugin/models/plugin.model";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
