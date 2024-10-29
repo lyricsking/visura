@@ -43,7 +43,7 @@ export default function NotificationSettings({ user }: SettingsType) {
     isPromotionalChecked
   );
   return (
-    <div className="mt-6 px-4 py-5 sm:p-6 space-y-6">
+    <div className="mt-6 px-4 py-5 sm:p-6 space-y-6 bg-white shadow sm:rounded-b-lg">
       <h2 className="text-lg font-medium mb-4">Notification Settings</h2>
       <fetcher.Form method="post">
         <input

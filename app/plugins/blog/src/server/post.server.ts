@@ -2,7 +2,7 @@ import mongoose, { ObjectId, ValidatorFunction } from "mongoose";
 import PostModel, { PostModelType } from "../models/post.model";
 import { IPost } from "../types/post.type";
 import { faker } from "@faker-js/faker";
-import { DBReponseType } from "~/utils/mongoose";
+import { DBReponse } from "~/utils/mongoose";
 
 export const createPost = async function (
   data: Pick<
@@ -15,8 +15,8 @@ export const createPost = async function (
     | "published"
     | "tags"
   >
-): Promise<DBReponseType<IPost>> {
-  let response: DBReponseType<IPost> = {};
+): Promise<DBReponse<IPost>> {
+  let response: DBReponse<IPost> = {};
 
   try {
     response.data = await PostModel.create(data);
@@ -54,8 +54,8 @@ export const findPosts = async (fields: Partial<IPost>): Promise<IPost[]> => {
 
 export const publishPost = async (
   id: string | ObjectId
-): Promise<DBReponseType<IPost>> => {
-  let response: DBReponseType<IPost> = {};
+): Promise<DBReponse<IPost>> => {
+  let response: DBReponse<IPost> = {};
   try {
     response.data = await PostModel.findById(id)
       .exec()

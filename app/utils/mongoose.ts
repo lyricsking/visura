@@ -1,8 +1,22 @@
 import mongoose from "mongoose";
 
-export interface DBReponseType<T> {
+export interface DBReponse<T> {
   data?: T | null;
-  error?: mongoose.Error;
+  error?: Record<string, any>;
+}
+
+export async function handleDbResult<T>(asyncFn: Promise<T>): Promise<DBReponse<T>> {
+  try {
+    const data = await asyncFn;
+    return { data };
+  } catch (err: mongoose.Error.ValidationError | any) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      return { error: parseError(err) };
+    } else {
+      console.log(err);
+      throw err;
+    }
+  }
 }
 
 export const parseError = (errorObject: mongoose.Error) => {
@@ -13,9 +27,8 @@ export const parseError = (errorObject: mongoose.Error) => {
     }
     return error;
   } else if (errorObject instanceof mongoose.Error.CastError) {
-    errorObject.message;
+    return { [errorObject.path]: errorObject.message };
   } else if (errorObject instanceof mongoose.Error) {
-    errorObject.message;
-  } else {
+    return { message: errorObject.message };
   }
 };

@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "grow py-5  bg-white rounded-b-md outline-none",
+      "grow py-5 rounded-b-md outline-none",
       "ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}

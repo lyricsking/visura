@@ -4,7 +4,7 @@ import formDataToObject from "~/utils/form-data-to-object";
 import { createPost } from "./post.server";
 import { Types } from "mongoose";
 import { parseError } from "~/utils/mongoose";
-import { PluginLoaderFunction } from "~/app";
+import { PluginLoaderFunction } from "~/core/page/types/page";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   let authUser = await getAuthUser(request);

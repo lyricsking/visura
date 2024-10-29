@@ -44,70 +44,6 @@ export const handle = {
   },
 };
 
-const settings: any[] = [
-  {
-    path: "account",
-    component: "admin/components/account-settings.tsx",
-  },
-  {
-    path: "notifications",
-    component: "admin/components/notification-settings.tsx",
-  },
-  //display: DisplaySettings,
-  //privacy: PrivacySettings,
-  //order: OrderSettings,
-  //health: HealthSettings,
-  //payment: PaymentSettings,
-  {
-    path: "",
-    component: "",
-  },
-];
-
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const settingTab = params.setting || "account";
-
-  let session = await getSession(request);
-  return json({ tab: settingTab, component: null, data: null });
-};
-
-export default function Settings() {
-  const { tab, component, data } = useLoaderData<typeof loader>();
-  const { user }: { user: IHydratedUser } = useOutletContext();
-
-  const navigate = useNavigate();
-  const params = useParams();
-
-  const onSettingChange = (newSetting: string) => {
-    // alert(JSON.stringify(newSetting, null, 2));
-    navigate(`/administration/settings/${newSetting}`);
-  };
-
-  return (
-    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
-      <Tabs defaultValue={tab} onValueChange={onSettingChange}>
-        <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
-          <TabsTrigger value="account" className="capitalize">
-            Account
-          </TabsTrigger>
-
-          <TabsTrigger value="notifications" className="capitalize">
-            Notification
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="account" className="h-fit">
-          <ProfileSettings user={user} />
-        </TabsContent>
-
-        <TabsContent value="notifications" className="h-fit">
-          <NotificationSettings user={user} />
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-
 export const action: ActionFunction = async ({ request }) => {
   const user = await getUserFromSession(request);
 
@@ -128,7 +64,6 @@ export const action: ActionFunction = async ({ request }) => {
       otherData["newPassword"]
     );
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
-    let user = await disableUser(userId);
     await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
     let notification: IUserProfile["preferences"]["notifications"] = {
@@ -154,3 +89,45 @@ export const action: ActionFunction = async ({ request }) => {
 
   return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
 };
+
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const settingTab = params.setting || "account";
+
+  return json({ tab: settingTab, component: null, data: null });
+};
+
+export default function Settings() {
+  const { tab } = useLoaderData<typeof loader>();
+  const { user }: { user: IHydratedUser } = useOutletContext();
+
+  const navigate = useNavigate();
+
+  const onSettingChange = (newSetting: string) => {
+    // alert(JSON.stringify(newSetting, null, 2));
+    navigate(`/administration/settings/${newSetting}`);
+  };
+
+  return (
+    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
+      <Tabs defaultValue={tab} onValueChange={onSettingChange}>
+        <TabsList className="bg-white border-violet-400 rounded-t-md overflow-x-auto no-scrollbar">
+          <TabsTrigger value="account" className="capitalize">
+            Account
+          </TabsTrigger>
+
+          <TabsTrigger value="notifications" className="capitalize">
+            Notification
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="account" className="h-fit">
+          <ProfileSettings user={user} />
+        </TabsContent>
+
+        <TabsContent value="notifications" className="h-fit">
+          <NotificationSettings user={user} />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}

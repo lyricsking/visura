@@ -1,4 +1,4 @@
-import { Authenticator } from "remix-auth";
+import { Authenticator, AuthorizationError } from "remix-auth";
 import {
   commitSession,
   getSession,
@@ -11,6 +11,12 @@ import { AuthUser } from "../types/auth-user.type";
 import { isRequest } from "~/utils/is-request";
 import { IHydratedUser } from "~/core/user/models/user.model";
 import { redirect, Session } from "@remix-run/node";
+import {
+  isApiRequest,
+  unauthorizedBrowserResponse,
+  unauthorizedResponse,
+} from "~/utils/helpers";
+import { json } from "react-router";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
@@ -19,7 +25,7 @@ export const authErrorKey = "auth-error";
 const StrategyType = ["google", "form"] as const;
 type StrategyType = (typeof StrategyType)[number];
 
-const authenticator = new Authenticator<AuthUser>(sessionStorage, {
+export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   sessionErrorKey: authErrorKey,
 });
 
@@ -63,35 +69,46 @@ export const authenticate = async (
  * authenticated and properly handles redirection, ensuring user can go back
  * to initial page that failed authentication.
  *
- * @param requestOrSession Request Request object of the current page
+ * @param request `Request` Request object of the current page
  * @param options Optional options to pass to authenticator
  */
-export const isAuthenticated = async (requestOrSession: Request | Session) => {
-  const isAuthenticated = await authenticator.isAuthenticated(requestOrSession);
+export const isAuthenticated = async (request: Request) => {
+  const authRes = await authenticator.isAuthenticated(request);
 
-  const session = await getSession(requestOrSession);
-  console.log("Redirect Url", session.get(REDIRECT_URL));
+  const currentUrl = new URL(request.url);
 
-  const currentUrl = new URL(
-    isRequest(requestOrSession) ? requestOrSession.url : "/"
-  );
+  if (!authRes) {
+    if (isApiRequest(request)) {
+      return unauthorizedResponse();
+    }
 
-  if (isAuthenticated) {
-    return isAuthenticated;
+    return unauthorizedBrowserResponse(currentUrl);
   }
 
-  if (currentUrl.pathname.includes("auth")) {
-    const rdrPath = currentUrl.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
+  return { authRes };
+  // const session = await getSession(requestOrSession);
+  // console.log("Redirect Url", session.get(REDIRECT_URL));
 
-    session.set(REDIRECT_URL, rdrPath);
-    await commitSession(session);
-    return;
-  } else {
-    // This does not provide successRedirect, since it expects
-    // isAuthenticated to be successful,
-    // We will redirect to authenticate and the redirect back to this current url after Authentication
-    return `/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`;
-  }
+  // const currentUrl = new URL(
+  //   isRequest(requestOrSession) ? requestOrSession.url : "/"
+  // );
+
+  // if (isAuthenticated) {
+  //   return isAuthenticated;
+  // }
+
+  // if (currentUrl.pathname.includes("auth")) {
+  //   const rdrPath = currentUrl.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
+
+  //   session.set(REDIRECT_URL, rdrPath);
+  //   await commitSession(session);
+  //   return;
+  // } else {
+  //   // This does not provide successRedirect, since it expects
+  //   // isAuthenticated to be successful,
+  //   // We will redirect to authenticate and the redirect back to this current url after Authentication
+  //   return `/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`;
+  // }
 };
 
 export const getAuthUser = async (

@@ -1,5 +1,4 @@
-import { LoaderFunction } from "@remix-run/node";
-import { Form, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { cn } from "~/utils/util";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
@@ -21,6 +20,7 @@ export default function ProfileSettings({ user }: SettingsType) {
     profile?.firstName && profile?.lastName
       ? profile.firstName + " " + profile.lastName
       : "";
+
   return (
     <div>
       <accountFetcher.Form method="post" className="mt-6 space-y-6">

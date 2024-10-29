@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import TipsModel, { HydratedTips } from "../models/tips.model";
-import { DBReponseType } from "~/utils/mongoose";
+import { DBReponse } from "~/utils/mongoose";
 import { faker } from "@faker-js/faker";
 import { ITips } from "../types/tips.type";
 
@@ -38,8 +38,8 @@ export const findTips = async (): Promise<HydratedTips[]> => {
 
 export const findTipBySlug = async ({
   slug,
-}: any): Promise<DBReponseType<ITips>> => {
-  let response: DBReponseType<ITips> = {};
+}: any): Promise<DBReponse<ITips>> => {
+  let response: DBReponse<ITips> = {};
   try {
     response.data = await TipsModel.findOne({ slug }).exec();
     //response.data = generateTips()[0];

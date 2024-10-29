@@ -37,6 +37,8 @@ import { Menu } from "~/types/menu";
 import { APP_NAME, getAppContext } from "~/app";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/components/ui/admin-sidebar";
+import { DBReponse, handleDbResult } from "~/utils/mongoose";
+import User, { IHydratedUser } from "~/core/user/models/user.model";
 
 export const handle = {
   breadcrumb: {
@@ -48,42 +50,25 @@ export const handle = {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Get the authenticated user or redirects to auth page
-  const auth = await isAuthenticated(request);
+  const authRes = await isAuthenticated(request);
 
-  if (auth && typeof auth === "string") {
-    return redirect(auth);
+  if (!isAuthUser(authRes)) {
+    return authRes;
   }
 
   // check the subdomain we are accessing the page from, useed to manage staff users access.
   let subdomain = getSubdomain(request);
   // if the user has role access to the subdomain
   // Get the cache user object from session, could be undefined or IHydrated user.
-  let user = await getUserFromSession(request);
-  // If the authUser object returned from authentication is of type AuthUser
-  // (i.e user is authenticated) but the the cache user is null or undefined,
-  // it means the cached user is invalidated, so we fetch a new object
-  // from server and cache.
-  if (isAuthUser(auth) && !user) {
-    // Cache invalidated, we fetch a new user object
-    user = (await findUser({ email: auth.email }))!;
+  let user: DBReponse<IHydratedUser | null> = await handleDbResult(
+    User.findOne({ email: authRes.email }).populate({ path: "profile" })
+  );
 
-    await setUserToSession(request, user);
-  }
-
-  const app = await getAppContext();
-
-  // If additional admin menu is provided
-  const adminMenu = app?.dashboardMenu;
-  // Return user object if provided.
-  return json({
-    appName: app.configs(APP_NAME),
-    menu: adminMenu,
-    ...(user && { user }),
-  });
+  return json({user});
 };
 
 export default function Layout() {
-  const data = useLoaderData<typeof loader>();
+  const {user} = useLoaderData<typeof loader>();
   let location = useLocation();
 
   const matches = useMatches();
@@ -110,7 +95,7 @@ export default function Layout() {
     );
   }
 
-  const menu: Menu[] = data.menu;
+  const menu: Menu[] = [];
   const routeMenu: Menu[] = currentRoute.data?.routeMenu;
 
   return (
