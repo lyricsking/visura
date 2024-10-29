@@ -84,25 +84,27 @@ export default function Settings() {
   };
 
   return (
-    <Tabs defaultValue={tab} onValueChange={onSettingChange}>
-      <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
-        <TabsTrigger value="account" className="capitalize">
-          Account
-        </TabsTrigger>
+    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
+      <Tabs defaultValue={tab} onValueChange={onSettingChange}>
+        <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
+          <TabsTrigger value="account" className="capitalize">
+            Account
+          </TabsTrigger>
 
-        <TabsTrigger value="notifications" className="capitalize">
-          Notification
-        </TabsTrigger>
-      </TabsList>
+          <TabsTrigger value="notifications" className="capitalize">
+            Notification
+          </TabsTrigger>
+        </TabsList>
 
-      <TabsContent value="account" className="h-fit">
-        <ProfileSettings user={user} />
-      </TabsContent>
+        <TabsContent value="account" className="h-fit">
+          <ProfileSettings user={user} />
+        </TabsContent>
 
-      <TabsContent value="notifications" className="h-fit">
-        <NotificationSettings user={user} />
-      </TabsContent>
-    </Tabs>
+        <TabsContent value="notifications" className="h-fit">
+          <NotificationSettings user={user} />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
 

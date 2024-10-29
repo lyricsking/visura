@@ -34,7 +34,7 @@ import { cn } from "~/utils/util";
 import HeaderIcons from "../components/header-icons";
 import { Sidebar } from "~/components/ui/sidebar";
 import { Menu } from "~/types/menu";
-import { getAppContext } from "~/app";
+import { APP_NAME, getAppContext } from "~/app";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/components/ui/admin-sidebar";
 
@@ -76,7 +76,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const adminMenu = app?.dashboardMenu;
   // Return user object if provided.
   return json({
-    appName: "",
+    appName: app.configs(APP_NAME),
     menu: adminMenu,
     ...(user && { user }),
   });
@@ -122,11 +122,7 @@ export default function Layout() {
             <div className="flex w-full items-center justify-between space-x-2">
               <div className="flex flex-row items-center gap-2 text-lg text-center font-medium sm:text-sm md:gap-6">
                 <SidebarTrigger />
-                {/* <Sidebar
-                  appName={data.appName}
-                  menu={menu}
-                  side={data.user.type === "customer" ? "right" : "left"}
-                /> */}
+
                 <Link to="">
                   <h1 className="text-[24px] font-bold tracking-tight">
                     {data.appName}
@@ -145,50 +141,11 @@ export default function Layout() {
         </PageLayoutHeader>
 
         <PageLayoutContent>
-          <h1 className="text-3xl font-bold text-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-gray-900 p-4">
             {currentpage || "Dashboard"}
           </h1>
 
-          <div className="w-full mx-auto sm:w-full grid px-4 sm:px-8">
-            <Outlet context={{ user: data.user }} />{" "}
-            <div className=" grid sm:border sm:rounded-md py-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr] hidden">
-              {routeMenu ? (
-                <div className="grid bg-white rounded-md">
-                  <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
-                    <ScrollArea className="whitespace-nowrap" type="scroll">
-                      <div className="grid grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto items-center gap-4 divide-x md:divide-x-0">
-                        {routeMenu.map((item) => (
-                          <NavLink
-                            key={item.id}
-                            to={item.path}
-                            end
-                            className={({ isActive }) =>
-                              cn("w-full text-center", {
-                                "font-semibold text-primary bg-slate-200 p-2 rounded-md":
-                                  isActive,
-                              })
-                            }
-                          >
-                            {item.label}
-                          </NavLink>
-                        ))}
-                      </div>
-                      <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                  </nav>
-                </div>
-              ) : (
-                <div />
-              )}
-
-              <ScrollArea className="h-96 w-full hidden" type="auto">
-                <div className="w-full py-8 px-4 md:py-12 md:px-6 bg-white rounded-md">
-                  <Outlet context={{ user: data.user }} />
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </div>
-          </div>
+          <Outlet context={{ user: data.user }} />
         </PageLayoutContent>
       </PageLayout>
     </SidebarProvider>

@@ -72,7 +72,7 @@ export const handle = {
 
 export default function Overview() {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8 sm:p-8">
+    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
         <Card x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
