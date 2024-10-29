@@ -15,7 +15,7 @@ import { cn } from "~/utils/util";
 import Button from "./button";
 import { Input } from "./input";
 import { Sheet, SheetContent } from "./sheet";
-import { PanelLeft } from "lucide-react";
+import { PanelLeft, Menu as MenuIcon } from "lucide-react";
 import { Skeleton } from "./skeleton";
 import { useIsMobile } from "~/hooks/use-mobile";
 
@@ -279,7 +279,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      <MenuIcon />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
