@@ -109,13 +109,10 @@ export const findUserById = async (
 };
 
 // Read User
-export const findUser = async ({
-  fields,
-  populate,
-}: {
-  fields: Partial<IUser>;
-  populate?: PopulateOptions | PopulateOptions[];
-}): Promise<HydratedDocument<IUser, IUserMethods & IUserVirtuals> | null> => {
+export const findUser = async (
+  fields: Partial<IUser>,
+  populate?: PopulateOptions | PopulateOptions[]
+): Promise<HydratedDocument<IUser, IUserMethods & IUserVirtuals> | null> => {
   try {
     const query = User.findOne(fields);
     if (populate) {

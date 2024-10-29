@@ -21,8 +21,6 @@ export default function AccountMenuButton({ menu, user }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log(user);
-
   let profile = user?.profile;
   let profilePhoto = profile?.photo;
 

@@ -13,7 +13,6 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { Config } from "./core/config";
 import { Toaster } from "./components/toaster";
 import { getAppContext } from "./app";
 

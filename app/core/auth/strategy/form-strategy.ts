@@ -11,6 +11,7 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
   if (typeof userId !== "string") {
     throw new Error("UserId must be a valid string.");
   }
+
   if (userId.length === 0) {
     throw new Error("UserId cannot be empty.");
   }
@@ -18,6 +19,7 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
   if (typeof password !== "string") {
     throw new Error("Password cannot be empty.");
   }
+
   if (password.length === 0) {
     throw new Error("Password must be longer than 6 characters.");
   }

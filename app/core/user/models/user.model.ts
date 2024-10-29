@@ -9,7 +9,7 @@ export interface IUserMethods {
 }
 
 export interface IUserVirtuals {
-  profile: IUserProfile;
+  profile?: IUserProfile;
   staff: IStaff;
 }
 

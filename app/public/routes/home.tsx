@@ -15,7 +15,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
   if (homepage.type === "custom") {
     page = (await PageModel.findOne({ path: homepage.path })) as IPage;
   } else if (homepage.type === "plugin") {
-    page = app.findRoute(homepage.path!);
+    page = app.findRoute(homepage.path!) as IPage;
     loaderData = page?.loader && (await page.loader({ ...args, app }));
   } else {
     throw new Error("Homepage improperly configured.");

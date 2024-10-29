@@ -1,3 +1,4 @@
+import { Input } from "~/components/input";
 import { SettingsType } from "../type/settings.type";
 
 export default function AccountSettings(props: Partial<SettingsType>) {
@@ -12,7 +13,7 @@ export default function AccountSettings(props: Partial<SettingsType>) {
           >
             Name
           </label>
-          <input
+          <Input
             type="text"
             name="name"
             id="name"
@@ -26,11 +27,11 @@ export default function AccountSettings(props: Partial<SettingsType>) {
           >
             Email
           </label>
-          <input
+          <Input
             type="email"
             name="email"
             id="email"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
         </div>
         <div className="mb-4">
@@ -40,7 +41,7 @@ export default function AccountSettings(props: Partial<SettingsType>) {
           >
             Phone Number
           </label>
-          <input
+          <Input
             type="tel"
             name="phone"
             id="phone"
@@ -54,7 +55,7 @@ export default function AccountSettings(props: Partial<SettingsType>) {
           >
             Shipping Address
           </label>
-          <input
+          <Input
             type="text"
             name="address"
             id="address"
@@ -68,7 +69,7 @@ export default function AccountSettings(props: Partial<SettingsType>) {
           >
             Billing Address
           </label>
-          <input
+          <Input
             type="text"
             name="billingAddress"
             id="billingAddress"

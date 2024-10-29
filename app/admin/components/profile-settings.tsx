@@ -11,19 +11,18 @@ import {
 } from "../utils/constants";
 
 export default function ProfileSettings({ user }: SettingsType) {
-  const {
-    id,
-    email,
-    profile: { firstName, lastName },
-  } = user;
+  const { id, email, profile } = user;
 
   const accountFetcher = useFetcher();
   const passwordsFetcher = useFetcher();
   const accountStatusFetcher = useFetcher();
 
-  const name = firstName && lastName ? firstName + " " + lastName : "";
+  const name =
+    profile?.firstName && profile?.lastName
+      ? profile.firstName + " " + profile.lastName
+      : "";
   return (
-    <>
+    <div>
       <accountFetcher.Form method="post" className="mt-6 space-y-6">
         <input type="hidden" name="_action" value={PROFILE_UPDATE_ACTION} />
         <div className="bg-white shadow sm:rounded-lg">
@@ -133,6 +132,6 @@ export default function ProfileSettings({ user }: SettingsType) {
           </div>
         </div>
       </accountStatusFetcher.Form>
-    </>
+    </div>
   );
 }

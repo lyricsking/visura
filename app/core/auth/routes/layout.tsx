@@ -1,5 +1,5 @@
-import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
-import { getAppContext } from "~/app";
+import { Link, Outlet } from "@remix-run/react";
+import { APP_NAME } from "~/app";
 import Button from "~/components/button";
 import {
   PageLayout,
@@ -7,15 +7,12 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-
-export const loader = async () => {
-  const app = await getAppContext();
-
-  return json({ appName: "" });
-};
+import { useAppContext } from "~/utils/app-context";
 
 export default function Layout() {
-  const { appName } = useLoaderData<typeof loader>();
+  const app = useAppContext();
+  const appName = app.configs(APP_NAME);
+
   return (
     <PageLayout className="bg-white max-h-screen overflow-y-auto no-scrollbar">
       <PageLayoutHeader>

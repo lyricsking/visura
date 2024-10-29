@@ -42,7 +42,8 @@ export interface IUserProfile {
     notifications: INotification;
     display: IDisplay;
     //privacy: IPrivacy;
-    order: IOrder;
-    health?: IHealth;
+    // order: IOrder;
+    // health?: IHealth;
+    [key: string]: any;
   };
 }

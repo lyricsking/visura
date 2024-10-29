@@ -5,7 +5,6 @@ import {
   useOutletContext,
   useParams,
 } from "@remix-run/react";
-import { lazy } from "react";
 import {
   PROFILE_UPDATE_ACTION,
   PASSWORD_UPDATE_ACTION,
@@ -14,8 +13,6 @@ import {
   DISPLAY_UPDATE_ACTION,
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
-import { renderToString } from "react-dom/server";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
 import {
   getUserFromSession,
   logout,
@@ -33,6 +30,10 @@ import {
 import { IUserProfile } from "~/core/user/types/user-profile.type";
 import formDataToObject from "~/utils/form-data-to-object";
 import { getSession, commitSession } from "~/utils/session";
+import AccountSettings from "../components/account-settings";
+import NotificationSettings from "../components/notification-settings";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
+import ProfileSettings from "../components/profile-settings";
 
 export const handle = {
   pageName: "Settings",
@@ -63,6 +64,13 @@ const settings: any[] = [
   },
 ];
 
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const settingTab = params.setting || "account";
+
+  let session = await getSession(request);
+  return json({ tab: settingTab, component: null, data: null });
+};
+
 export default function Settings() {
   const { tab, component, data } = useLoaderData<typeof loader>();
   const { user }: { user: IHydratedUser } = useOutletContext();
@@ -71,24 +79,28 @@ export default function Settings() {
   const params = useParams();
 
   const onSettingChange = (newSetting: string) => {
-    alert(JSON.stringify(newSetting, null, 2));
-
+    // alert(JSON.stringify(newSetting, null, 2));
     navigate(`/administration/settings/${newSetting}`);
   };
-
-  const Tag = lazy(() => import(/* @vite-ignore */ `/app/${component}`));
 
   return (
     <Tabs defaultValue={tab} onValueChange={onSettingChange}>
       <TabsList className="border-violet-400 overflow-x-auto no-scrollbar">
-        {Object.keys(settings).map((key, index) => (
-          <TabsTrigger key={key} value={key} className="capitalize">
-            {key}
-          </TabsTrigger>
-        ))}
+        <TabsTrigger value="account" className="capitalize">
+          Account
+        </TabsTrigger>
+
+        <TabsTrigger value="notifications" className="capitalize">
+          Notification
+        </TabsTrigger>
       </TabsList>
-      <TabsContent key={tab} value={tab} className="h-fit">
-        {<Tag user={user as IHydratedUser} />}
+
+      <TabsContent value="account" className="h-fit">
+        <ProfileSettings user={user} />
+      </TabsContent>
+
+      <TabsContent value="notifications" className="h-fit">
+        <NotificationSettings user={user} />
       </TabsContent>
     </Tabs>
   );
@@ -139,27 +151,4 @@ export const action: ActionFunction = async ({ request }) => {
   await invalidateCacheUser(session);
 
   return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
-};
-
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const settingTab = params.setting || "account";
-
-  const route = settings.find((route) => route.path === settingTab);
-
-  // Todo use the settingTab to fetch appropriate data to be modified
-  if (route) {
-    const data = (route.loader && route.loader({})) || null;
-    const DynamicComponent = (
-      await import(/* @vite-ignore */ `~/${route.component}`)
-    ).default;
-
-    return json({
-      tab: settingTab,
-      component: renderToString(<DynamicComponent {...data} />),
-      data: data,
-    });
-  }
-
-  let session = await getSession(request);
-  return json({ tab: settingTab, component: null, data: null });
 };

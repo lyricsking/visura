@@ -25,7 +25,10 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-import { findOrCreateUserProfiles } from "~/core/user/server/user.server";
+import {
+  findOrCreateUserProfiles,
+  findUser,
+} from "~/core/user/server/user.server";
 import { getSubdomain } from "~/utils/domain";
 import { cn } from "~/utils/util";
 import HeaderIcons from "../components/header-icons";
@@ -39,6 +42,42 @@ export const handle = {
     label: "Dashboard",
     path: "/dashboard",
   },
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  // Get the authenticated user or redirects to auth page
+  const auth = await isAuthenticated(request);
+
+  if (auth && typeof auth === "string") {
+    return redirect(auth);
+  }
+
+  // check the subdomain we are accessing the page from, useed to manage staff users access.
+  let subdomain = getSubdomain(request);
+  // if the user has role access to the subdomain
+  // Get the cache user object from session, could be undefined or IHydrated user.
+  let user = await getUserFromSession(request);
+  // If the authUser object returned from authentication is of type AuthUser
+  // (i.e user is authenticated) but the the cache user is null or undefined,
+  // it means the cached user is invalidated, so we fetch a new object
+  // from server and cache.
+  if (isAuthUser(auth) && !user) {
+    // Cache invalidated, we fetch a new user object
+    user = (await findUser({ email: auth.email }))!;
+
+    await setUserToSession(request, user);
+  }
+
+  const app = await getAppContext();
+
+  // If additional admin menu is provided
+  const adminMenu = app?.dashboardMenu;
+  // Return user object if provided.
+  return json({
+    appName: "",
+    menu: adminMenu,
+    ...(user && { user }),
+  });
 };
 
 export default function Layout() {
@@ -107,7 +146,7 @@ export default function Layout() {
 
         <div className="w-full mx-auto sm:w-full grid px-4 sm:px-8">
           <div className="grid sm:border sm:rounded-md py-4 md:p-8 gap-4 md:grid-cols-[150px_1fr] md:gap-6 lg:grid-cols-[280px_1fr]">
-            {routeMenu && (
+            {routeMenu ? (
               <div className="grid bg-white rounded-md">
                 <nav className="max-w-xl h-min grid items-center grid-flow-col auto-cols-auto md:grid-flow-row md:auto-rows-auto gap-4 py-2 px-4 md:py-12 md:px-6 text-sm">
                   <ScrollArea className="whitespace-nowrap" type="scroll">
@@ -132,8 +171,11 @@ export default function Layout() {
                   </ScrollArea>
                 </nav>
               </div>
+            ) : (
+              <div />
             )}
-            <ScrollArea className="h-screen w-full" type="auto">
+            
+            <ScrollArea className="h-96 w-full" type="auto">
               <div className="w-full py-8 px-4 md:py-12 md:px-6 bg-white rounded-md">
                 <Outlet context={{ user: data.user }} />
               </div>
@@ -145,41 +187,6 @@ export default function Layout() {
     </PageLayout>
   );
 }
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  // Get the authenticated user or redirects to auth page
-  const auth = await isAuthenticated(request);
-
-  if (auth && typeof auth === "string") {
-    return redirect(auth);
-  }
-  // check the subdomain we are accessing the page from, useed to manage staff users access.
-  let subdomain = getSubdomain(request);
-  // if the user has role access to the subdomain
-  // Get the cache user object from session, could be undefined or IHydrated user.
-  let user = await getUserFromSession(request);
-  // If the authUser object returned from authentication is of type AuthUser
-  // (i.e user is authenticated) but the the cache user is null or undefined,
-  // it means the cached user is invalidated, so we fetch a new object
-  // from server and cache.
-  if (isAuthUser(auth) && !user) {
-    // Cache invalidated, we fetch a new user object
-    user = await findOrCreateUserProfiles({ email: auth.email });
-
-    await setUserToSession(request, user);
-  }
-
-  const app = await getAppContext();
-
-  // If additional admin menu is provided
-  const adminMenu = app?.dashboardMenu;
-  // Return user object if provided.
-  return json({
-    appName: "",
-    menu: adminMenu,
-    ...(user && { user }),
-  });
-};
 
 // export const shouldRevalidate: ShouldRevalidateFunction = (props) => {
 //   let { defaultShouldRevalidate, formAction } = props;

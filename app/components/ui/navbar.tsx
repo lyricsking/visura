@@ -1,5 +1,5 @@
 import { NavLink } from "@remix-run/react";
-import { Menu } from "~/utils/menu";
+import { Menu } from "~/types/menu";
 
 export type NavbarProps = {
   menu: Menu[];

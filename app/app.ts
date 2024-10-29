@@ -134,10 +134,8 @@ class AppContext {
     );
   }
 
-  findRoute(path: string): IPage | undefined {
+  findRoute(path: string): Omit<IPage, "id"> | undefined {
     return this.routes.find((route) => {
-      console.log(route);
-
       return route.path === path;
     });
   }

@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const error = session.get(getAuthErrorKey());
-  console.log(error);
+  console.log("error", error);
 
   if (error) {
     return json(
@@ -58,7 +58,7 @@ export default function Signin() {
 
   useEffect(() => {
     if (error) {
-      toast({ description: error, position: "topRight" });
+      toast({ description: error.message, position: "topRight" });
     }
   }, [error]);
 
@@ -66,7 +66,7 @@ export default function Signin() {
   const isSubmitting = fetcher.state !== "idle";
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 py-8 px-6 ">
+    <div className="flex flex-col w-full bg-gray-100 py-8 px-6">
       <div className="max-w-sm md:max-w-lg mx-auto bg-white p-6 sm:p-12 md:border md:shadow-md">
         <div className="mt-0 flex flex-col items-center">
           <img
