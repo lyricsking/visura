@@ -14,7 +14,10 @@ export default function routes(route: DefineRouteFunction) {
   // Admin routes
   route("administration", "admin/routes/layout.tsx", () => {
     route("", "admin/routes/overview.tsx", { index: true });
-    route("settings/:setting?", "admin/routes/settings.tsx");
+    route("settings", "admin/routes/settings.tsx", { id: "setting" }, () => {
+      route("", "admin/routes/profile-settings.tsx", { index: true });
+      route("plugins", "admin/routes/plugin-settings.tsx");
+    });
     //route("subscriptions", "Subscription/routes/subscription.tsx");
     //route("transactions", "Transaction/routes/transaction.tsx");
     route("*", "admin/routes/catch-all.tsx");

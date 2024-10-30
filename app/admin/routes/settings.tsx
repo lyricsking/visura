@@ -1,5 +1,6 @@
 import { ActionFunction, json, LoaderFunctionArgs } from "@remix-run/node";
 import {
+  Outlet,
   useLoaderData,
   useNavigate,
   useOutletContext,
@@ -27,7 +28,7 @@ import formDataToObject from "~/core/utils/form-data-to-object";
 import { getSession, commitSession } from "~/core/utils/session";
 import NotificationSettings from "../components/notification-settings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
-import ProfileSettings from "../components/profile-settings";
+import ProfileSettings from "./profile-settings";
 
 export const handle = {
   pageName: "Settings",
@@ -84,10 +85,11 @@ export const action: ActionFunction = async ({ request }) => {
   return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const settingTab = params.setting || "account";
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const [_, __, ___, tab] = new URL(request.url).pathname.split("/");
+  console.log(tab);
 
-  return json({ tab: settingTab });
+  return json({ tab: tab || "" });
 };
 
 export default function Settings() {
@@ -105,21 +107,19 @@ export default function Settings() {
     <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
       <Tabs defaultValue={tab} onValueChange={onSettingChange}>
         <TabsList className="bg-white border-violet-400 rounded-t-md overflow-x-auto no-scrollbar">
-          <TabsTrigger value="account" className="capitalize">
+          <TabsTrigger value="" className="capitalize">
             Account
           </TabsTrigger>
-
           <TabsTrigger value="notifications" className="capitalize">
             Notification
           </TabsTrigger>
+          <TabsTrigger value="plugins" className="capitalize">
+            Plugins
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="account" className="h-fit">
-          <ProfileSettings user={user} />
-        </TabsContent>
-
-        <TabsContent value="notifications" className="h-fit">
-          <NotificationSettings user={user} />
+        <TabsContent value={tab} className="h-fit">
+          <Outlet />
         </TabsContent>
       </Tabs>
     </div>

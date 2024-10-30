@@ -1,10 +1,48 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import { cn } from "~/core/utils/util";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 import { SettingsType } from "../type/settings.type";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { PluginModel } from "~/core/plugin/models/plugin.model";
+import { IPlugin } from "~/core/plugin/types/plugin";
+import { handleResponse } from "~/core/utils/helpers";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
+import { isAuthenticated } from "~/core/auth/server/auth.server";
+import { isAuthUser } from "~/core/auth/utils/helper";
+import { IHydratedUser } from "~/core/user/models/user.model";
+import { getUserOrFetch } from "~/core/user/server/user.server";
 
-export default function ProfileSettings({ user }: SettingsType) {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  // Get the authenticated user or redirects to auth page
+  const authRes = await isAuthenticated(request);
+
+  if (!isAuthUser(authRes)) {
+    return authRes;
+  }
+
+  // check the subdomain we are accessing the page from, useed to manage staff users access.
+  // let subdomain = getSubdomain(request);
+  // if the user has role access to the subdomain
+  // Get the cache user object from session, could be undefined or IHydrated user.
+  let userResponse: DBReponse<IHydratedUser | undefined> = await handleDbResult(
+    getUserOrFetch(request, authRes.email)
+  );
+
+  return handleResponse<IHydratedUser | null>({
+    ...userResponse,
+    statusCode: 200,
+  });
+};
+
+export default function ProfileSettings() {
+  const data = useLoaderData<typeof loader>();
+
+  let user: IHydratedUser = {} as IHydratedUser;
+  if (data.success) {
+    user = data.data as IHydratedUser;
+  }
+
   const { id: userId, email, firstName, lastName, meta } = user;
 
   const accountFetcher = useFetcher();

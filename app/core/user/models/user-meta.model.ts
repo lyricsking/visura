@@ -131,7 +131,7 @@ const userMetaSchema = new Schema<IUserMeta, UserMetaModel>(
 );
 
 const UserMeta: UserMetaModel =
-  mongoose.models.UserProfile ||
+  mongoose.models.UserMeta ||
   mongoose.model<IUserMeta, UserMetaModel>("UserMeta", userMetaSchema);
 
 export default UserMeta;
