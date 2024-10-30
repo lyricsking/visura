@@ -1,5 +1,5 @@
 import { json, useNavigate, useOutletContext } from "@remix-run/react";
-import { getSession } from "~/utils/session";
+import { getSession } from "~/core/utils/session";
 import { deleteCart, updateCartItem } from "../server/cart.server";
 import { IOrder } from "../types/order.type";
 import CartItem from "../components/cart-item";

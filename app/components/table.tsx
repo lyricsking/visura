@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { twMerge } from "tailwind-merge";
 import { clsx, type ClassValue } from "clsx";
-import { cn } from "~/utils/util";
+import { cn } from "~/core/utils/util";
 
 const Table = React.forwardRef<
   HTMLTableElement,

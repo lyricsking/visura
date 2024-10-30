@@ -1,43 +1,29 @@
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import {
   json,
   Link,
-  NavLink,
   Outlet,
-  redirect,
   useLoaderData,
   useLocation,
   useMatches,
 } from "@remix-run/react";
 import {
   isAuthenticated,
-  getUserFromSession,
-  setUserToSession,
 } from "~/core/auth/server/auth.server";
 import { isAuthUser } from "~/core/auth/utils/helper";
 import Breadcrumb from "~/components/breadcrumb";
-import { ScrollBar } from "~/components/scrollable.area";
-import { Navbar } from "~/components/ui/navbar";
 import {
   PageLayout,
   PageLayoutHeader,
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-import {
-  findOrCreateUserProfiles,
-  findUser,
-} from "~/core/user/server/user.server";
-import { getSubdomain } from "~/utils/domain";
-import { cn } from "~/utils/util";
+import { getSubdomain } from "~/core/utils/domain";
 import HeaderIcons from "../components/header-icons";
-import { Sidebar } from "~/components/ui/sidebar";
 import { Menu } from "~/types/menu";
-import { APP_NAME, getAppContext } from "~/app";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/components/ui/admin-sidebar";
-import { DBReponse, handleDbResult } from "~/utils/mongoose";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import User, { IHydratedUser } from "~/core/user/models/user.model";
 
 export const handle = {
@@ -64,11 +50,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     User.findOne({ email: authRes.email }).populate({ path: "profile" })
   );
 
-  return json({user});
+  return json({ user });
 };
 
 export default function Layout() {
-  const {user} = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<typeof loader>();
   let location = useLocation();
 
   const matches = useMatches();

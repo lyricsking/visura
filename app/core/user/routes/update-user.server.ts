@@ -1,9 +1,9 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { getUserFromSession } from "~/core/auth/server/auth.server";
-import formDataToObject from "~/utils/form-data-to-object";
-import { DBReponse, handleDbResult } from "~/utils/mongoose";
-import UserProfile from "../models/user-profile.model";
-import { IUserProfile } from "../types/user-profile.type";
+import formDataToObject from "~/core/utils/form-data-to-object";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
+import UserMeta from "../models/user-meta.model";
+import { IUserMeta } from "../types/user-meta.type";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUserFromSession(request);
@@ -15,8 +15,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const [firstName, lastName] = formObject["name"].split(" ");
 
-  let response: DBReponse<IUserProfile | null> = await handleDbResult(
-    UserProfile.findOneAndUpdate(
+  let response: DBReponse<IUserMeta | null> = await handleDbResult(
+    UserMeta.findOneAndUpdate(
       { userId },
       { firstName, lastName },
       {

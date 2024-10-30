@@ -6,7 +6,21 @@ import mongoose, {
   Model,
   models,
 } from "mongoose";
-import { IStaff, StaffRole } from "../types/staff.type";
+
+export const StaffRole = {
+  support: "support",
+  technical: "technical",
+  admin: "admin",
+} as const;
+export type StaffRole = (typeof StaffRole)[keyof typeof StaffRole];
+
+export interface IStaff {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  role: StaffRole;
+  isAvailable: boolean; // Availability status
+  assignedTickets: Types.ObjectId[];
+}
 
 export type StaffModel = Model<IStaff>;
 const staffSchema = new Schema<IStaff, StaffModel>({

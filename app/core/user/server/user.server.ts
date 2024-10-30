@@ -1,23 +1,25 @@
 import { HydratedDocument, PopulateOptions, Types } from "mongoose";
 import { getStaffByUserId } from "./staff.server";
 import { createUserProfile } from "./user-profile.server";
-import { IUser, UserType } from "../types/user.types";
-import { IUserProfile } from "../types/user-profile.type";
 import User, {
   IHydratedUser,
+  IUser,
   IUserMethods,
   IUserVirtuals,
+  UserType,
 } from "../models/user.model";
 import invariant from "tiny-invariant";
+import { IUserMeta } from "../models/user-meta.model";
 
 export type CreateUserProps = {
   email: string;
+
   password?: string;
   type: UserType;
 };
 
 // Create User
-export const createUser = async (props: CreateUserProps) => {
+export const createUser = async (props: Partial<IUser>) => {
   const { email, password, type } = props;
 
   console.log("Creating user");
@@ -33,64 +35,6 @@ export const createUser = async (props: CreateUserProps) => {
   } catch (error) {
     throw new Error("User could not be created");
   }
-};
-
-export const findOrCreateUserProfiles = async ({
-  firstName,
-  lastName,
-  email,
-  password,
-  photo,
-  type = "customer",
-}: Pick<IUser, "email" | "password"> &
-  Partial<Pick<IUser, "type">> &
-  Partial<
-    Pick<IUserProfile, "firstName" | "lastName" | "photo">
-  >): Promise<IHydratedUser> => {
-  // Attempt to retrieve user with the email and updating the user as active.
-  let user = await updateUser(email, { isActive: true }, { path: "profile" });
-
-  // Verify that the password is valid
-  if (user && password && !(await user.isValidPassword(password))) {
-    throw new Error("Invalid signin detail provided.");
-  }
-
-  // if there is no user, then it means we do not have a user with that email, ensure we create one.
-  if (!user) {
-    user = await createUser({
-      email,
-      password: password,
-      type: type || UserType.customer,
-    });
-    console.log("Created user %s", user);
-  }
-
-  // If we have user but no profile, it means there is no profile info for the user yet,
-  // we create a profile using the default preferences then.
-  if (!user.profile && firstName && lastName) {
-    let profileData: Omit<IUserProfile, "_id"> = {
-      userId: user._id,
-      firstName,
-      lastName,
-      photo: photo,
-      preferences: defaultPreferences,
-    };
-
-    const userProfile = await createUserProfile(profileData);
-    console.log("Created user profile", userProfile);
-
-    user.profile = userProfile;
-  }
-
-  // if user type is "staff", we will find the staff object and assign
-  if (user.type === UserType.staff) {
-    let staff = await getStaffByUserId(user.id);
-    if (staff) {
-      user.staff = staff;
-    }
-  }
-
-  return user;
 };
 
 // Read User by Id
@@ -212,7 +156,7 @@ export const disableUser = async (userId: Types.ObjectId) => {
   return disabledUser;
 };
 
-const defaultPreferences: IUserProfile["preferences"] = {
+const defaultPreferences: IUserMeta["preferences"] = {
   notifications: {
     preferredSupportChannel: "whatsapp",
     orderUpdates: true,

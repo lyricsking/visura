@@ -1,6 +1,6 @@
 import Button, { buttonVariants } from "~/components/button";
-import { findFontByName } from "~/utils/fonts";
-import { cn } from "~/utils/util";
+import { findFontByName } from "~/core/utils/fonts";
+import { cn } from "~/core/utils/util";
 
 export default function Hero() {
   const font = findFontByName("Playfair Display");

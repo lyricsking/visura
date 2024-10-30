@@ -1,8 +1,12 @@
 import { FormStrategy } from "remix-auth-form";
-import { findOrCreateUserProfiles } from "~/core/user/server/user.server";
+import {
+  createUser,
+} from "~/core/user/server/user.server";
 import { setUserToSession } from "../server/auth.server";
 import { AuthUser } from "../types/auth-user.type";
-import invariant from "tiny-invariant";
+import { AuthorizationError } from "remix-auth";
+import { getAppContext } from "~/app";
+import User, { UserType } from "~/core/user/models/user.model";
 
 export const formStrategy = new FormStrategy(async ({ form, request }) => {
   let userId = form.get("userId") as string;
@@ -16,6 +20,8 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
     throw new Error("UserId cannot be empty.");
   }
 
+  // Determine userId type with regex
+
   if (typeof password !== "string") {
     throw new Error("Password cannot be empty.");
   }
@@ -24,17 +30,41 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
     throw new Error("Password must be longer than 6 characters.");
   }
 
-  let hydratedUser = await findOrCreateUserProfiles({
-    email: userId,
-    password: password,
-    // type: 'customer'
-  });
+  // Attempt to retrieve user with the email.
+  let user = await User.findOne({ $or: [{ email: userId, phone: userId }] });
 
-  await setUserToSession(request, hydratedUser);
+  const app = await getAppContext();
+
+  if (!user) {
+    const signupEnabled = app.configs("signupEnabled");
+    const autoSignupEnabled = app.configs("autoSignupEnabled");
+
+    if (!signupEnabled || !autoSignupEnabled) {
+      throw new AuthorizationError(
+        "You are not allowed to access this resource."
+      );
+    }
+
+    console.log("No user exists with the userId: %s", userId);
+
+    const userData = {
+      email: userId,
+      password: password,
+      type: UserType.customer,
+    };
+
+    console.log("Creating new user with: %s", userData);
+
+    user = await createUser(userData);
+
+    console.log("Created user %s", user);
+  }
+
+  await setUserToSession(request, user);
 
   let authUser: AuthUser = {
-    id: hydratedUser._id.toString(),
-    email: hydratedUser.email,
+    id: user._id.toString(),
+    email: user.email,
   };
 
   return authUser;

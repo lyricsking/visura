@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import TipsModel, { HydratedTips } from "../models/tips.model";
-import { DBReponse } from "~/utils/mongoose";
+import { DBReponse } from "~/core/utils/mongoose";
 import { faker } from "@faker-js/faker";
 import { ITips } from "../types/tips.type";
 

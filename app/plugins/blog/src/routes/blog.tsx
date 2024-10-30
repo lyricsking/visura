@@ -2,7 +2,7 @@ import { LinksFunction, type MetaFunction } from "@remix-run/node";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import { PostSummary } from "../components/post-summary";
-import { findFontByName } from "~/utils/fonts";
+import { findFontByName } from "~/core/utils/fonts";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Select,

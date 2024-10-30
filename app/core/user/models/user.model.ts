@@ -1,22 +1,41 @@
-import mongoose, { Schema, Model, HydratedDocument } from "mongoose";
+import mongoose, { Schema, Model, HydratedDocument, Types } from "mongoose";
 import bcrypt from "bcrypt";
-import { IStaff } from "~/core/user/types/staff.type";
-import { IUserProfile } from "~/core/user/types/user-profile.type";
-import { IUser, UserType } from "~/core/user/types/user.types";
+import { IUserMeta } from "./user-meta.model";
+import { IStaff } from "./staff.model";
+
+export const UserType = {
+  customer: "customer",
+  staff: "staff",
+} as const;
+export type UserType = (typeof UserType)[keyof typeof UserType];
+
+export interface IUser {
+  _id: Types.ObjectId;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  photo?: string;
+  password?: string;
+  type: UserType;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export interface IUserMethods {
   isValidPassword(password: string): Promise<boolean>;
 }
 
 export interface IUserVirtuals {
-  profile?: IUserProfile;
+  meta?: IUserMeta;
   staff: IStaff;
 }
 
 export type UserModel = Model<IUser, {}, IUserMethods, IUserVirtuals>;
 
 // Create the Mongoose schema
-const UserSchema = new Schema<
+const userSchema = new Schema<
   IUser,
   UserModel,
   IUserMethods,
@@ -24,6 +43,8 @@ const UserSchema = new Schema<
   IUserVirtuals
 >(
   {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: {
       type: String,
       required: true,
@@ -32,10 +53,8 @@ const UserSchema = new Schema<
       lowercase: true,
       match: [/.+@.+\..+/, "Please enter a valid email address"],
     },
-    hasPassword: {
-      type: Boolean,
-      default: false,
-    },
+    phone: { type: String },
+    photo: { type: String },
     password: {
       type: String,
       minlength: 6,
@@ -66,31 +85,30 @@ const UserSchema = new Schema<
 );
 
 // Middleware to hash password before saving user document
-UserSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {
   if (this.password && this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    this.hasPassword = true;
   }
   next();
 });
 
 // Middleware to update the `updatedAt` field on every save
-UserSchema.pre("save", function (next) {
+userSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();
 });
 
 // Instance method to check password validity
-UserSchema.method(
+userSchema.method(
   "isValidPassword",
   async function isValidPassword(password: string): Promise<boolean> {
     return (this.password && bcrypt.compare(password, this.password)) || false;
   }
 );
 
-// Virtual for user's profile
-UserSchema.virtual("profile", {
+// Virtual for user's metadata
+userSchema.virtual("metadata", {
   ref: "UserProfile",
   localField: "_id",
   foreignField: "userId",
@@ -98,7 +116,7 @@ UserSchema.virtual("profile", {
 });
 
 // Virtual for user's staff
-UserSchema.virtual("staff", {
+userSchema.virtual("staff", {
   ref: "Staff",
   localField: "_id",
   foreignField: "userId",
@@ -111,5 +129,5 @@ export type IHydratedUser = HydratedDocument<
 >;
 // Create and export the User model
 const User: UserModel =
-  mongoose.models.User || mongoose.model<IUser, UserModel>("User", UserSchema);
+  mongoose.models.User || mongoose.model<IUser, UserModel>("User", userSchema);
 export default User;

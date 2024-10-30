@@ -17,7 +17,7 @@ import {
   isAuthenticated,
   getAuthErrorKey,
 } from "../server/auth.server";
-import { commitSession, getSession } from "~/utils/session";
+import { commitSession, getSession } from "~/core/utils/session";
 import { isAuthUser } from "../utils/helper";
 import { Input } from "~/components/input";
 import Button from "~/components/button";

@@ -19,7 +19,7 @@ import {
   StrikethroughIcon,
   Undo2Icon,
 } from "lucide-react";
-import { customMarkdownParser } from "~/utils/markdown-utils";
+import { customMarkdownParser } from "~/core/utils/markdown-utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ScrollArea, ScrollBar } from "./scrollable.area";

@@ -7,7 +7,7 @@ import { MarkdownEditor } from "~/components/markdown-editor";
 import { Textarea } from "~/components/textarea";
 import { ValidationMessage } from "~/components/ui/validation-message";
 import { useFileUpload } from "~/hooks/use-upload";
-import { cn } from "~/utils/util";
+import { cn } from "~/core/utils/util";
 import { useToast } from "~/hooks/use-toast";
 
 export default function PostForm() {

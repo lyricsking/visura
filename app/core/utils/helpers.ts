@@ -1,5 +1,6 @@
-import { json, redirect } from "@remix-run/node";
+import { json, redirect, Session } from "@remix-run/node";
 import { REDIRECT_SEARCH_PARAM } from "~/core/auth/server/auth.server";
+import { commitSession, getSession } from "./session";
 
 export function isApiRequest(request: Request): boolean {
   // Check if the `Accept` header is set to JSON
@@ -21,7 +22,20 @@ export function unauthorizedResponse() {
   );
 }
 
-export function unauthorizedBrowserResponse(currentUrl: URL) {
+export function apiSuccessResponse(data: any, status= 200) {
+  return json(
+    {
+      success: true,
+      data,
+    },
+    { status }
+  );
+}
+
+export async function unauthorizedBrowserResponse(
+  currentUrl: URL,
+  session: Session
+) {
   const loginRoute = new URL("/auth", currentUrl.origin);
   loginRoute.searchParams.set(
     REDIRECT_SEARCH_PARAM,
@@ -29,5 +43,8 @@ export function unauthorizedBrowserResponse(currentUrl: URL) {
   );
   return redirect(loginRoute.toString(), {
     status: 302,
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
   });
 }

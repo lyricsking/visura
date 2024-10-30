@@ -1,5 +1,42 @@
 import mongoose, { Schema, Model, Types, Document } from "mongoose";
-import { IUserProfile } from "../types/user-profile.type";
+
+interface INotification {
+  preferredSupportChannel: "whatsapp";
+  orderUpdates: boolean;
+  promotional: boolean;
+  subscriptionReminders: boolean;
+  supportNotification: boolean;
+}
+
+interface IDisplay {
+  theme: "light" | "dark";
+  language: string;
+  currency: string;
+}
+
+interface IPrivacy {
+  dataSharing: boolean;
+  activityTracking: boolean;
+  accountVisibility: boolean;
+}
+
+interface IOrder {
+  deliveryInstructions: string;
+  packaging: "standard";
+}
+
+interface IHealth {
+  supplementPreferences?: string[];
+  healthGoals?: string;
+  allergies?: string[];
+}
+
+export interface IUserMeta {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId; // Reference to the IUser
+  metaKey: string;
+  metaValue: any;
+}
 
 // Define sub-schemas for each preference type
 const NotificationSchema = new Schema(
@@ -75,39 +112,26 @@ const PaymentSchema = new Schema(
   { _id: false }
 );
 
-export type UserProfileModel = Model<IUserProfile>;
+export type UserMetaModel = Model<IUserMeta>;
 // Define the main user profile schema
-const UserProfileSchema = new Schema<IUserProfile, UserProfileModel>(
+const userMetaSchema = new Schema<IUserMeta, UserMetaModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      unique: true,
       required: true,
     },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    phone: { type: String },
-    photo: { type: String },
-    preferences: {
-      notifications: { type: NotificationSchema, required: true },
-      display: { type: DisplaySchema, required: true },
-      //privacy: { type: PrivacySchema, required: true },
-      order: { type: OrderSchema, required: true },
-      health: { type: HealthSchema },
-      //payment: { type: PaymentSchema, required: true },
-    },
+
+    metaKey: { type: String, required: true },
+    metaValue: { type: Schema.Types.Mixed, required: true },
   },
   {
     timestamps: true, // Automatically manage createdAt and updatedAt fields
   }
 );
 
-const UserProfile: UserProfileModel =
+const UserMeta: UserMetaModel =
   mongoose.models.UserProfile ||
-  mongoose.model<IUserProfile, UserProfileModel>(
-    "UserProfile",
-    UserProfileSchema
-  );
+  mongoose.model<IUserMeta, UserMetaModel>("UserMeta", userMetaSchema);
 
-export default UserProfile;
+export default UserMeta;

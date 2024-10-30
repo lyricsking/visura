@@ -1,5 +1,5 @@
 import { LoaderFunction, redirect, json } from "@remix-run/node";
-import { getSession } from "~/utils/session";
+import { getSession } from "~/core/utils/session";
 import { getQuestion } from "../server/quiz.server";
 
 export const loader: LoaderFunction = async ({ params, request }) => {

@@ -1,6 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
 import ReactMarkdown from "react-markdown";
-import { formatDateOrTime } from "~/utils/date";
+import { formatDateOrTime } from "~/core/utils/date";
 import { loader } from "../loaders/post.loader";
 
 export default function Post({ post }: ReturnType<typeof loader>) {

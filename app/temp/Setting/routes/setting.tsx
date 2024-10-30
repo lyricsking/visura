@@ -12,7 +12,7 @@ import ProfileSettings from "../components/profile-settings";
 import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
 import OrderSettings from "~/plugins/SubscriptionBox/Order/components/order-settings";
-import { commitSession, getSession } from "~/utils/session";
+import { commitSession, getSession } from "~/core/utils/session";
 import { disableUser, updateUserPassword } from "~/core/user/server/user.server";
 import {
   updateUserPreference,
@@ -28,7 +28,7 @@ import {
   PASSWORD_UPDATE_ACTION,
   PROFILE_UPDATE_ACTION,
 } from "../../Dashboard/utils/constants";
-import { IUserProfile } from "~/core/user/types/user-profile.type";
+import { IUserMeta } from "~/core/user/types/user-meta.type";
 import {
   getUserFromSession,
   invalidateCacheUser,
@@ -107,7 +107,7 @@ export const action: ActionFunction = async ({ request }) => {
     let user = await disableUser(userId);
     await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
-    let notification: IUserProfile["preferences"]["notifications"] = {
+    let notification: IUserMeta["preferences"]["notifications"] = {
       orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
       subscriptionReminders:
         otherData["subscriptionReminders"] === "true" ? true : false,

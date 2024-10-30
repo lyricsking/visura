@@ -27,9 +27,9 @@ import {
   updateUserPassword,
   disableUser,
 } from "~/core/user/server/user.server";
-import { IUserProfile } from "~/core/user/types/user-profile.type";
-import formDataToObject from "~/utils/form-data-to-object";
-import { getSession, commitSession } from "~/utils/session";
+import { IUserMeta } from "~/core/user/types/user-meta.type";
+import formDataToObject from "~/core/utils/form-data-to-object";
+import { getSession, commitSession } from "~/core/utils/session";
 import AccountSettings from "../components/account-settings";
 import NotificationSettings from "../components/notification-settings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
@@ -66,7 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
     await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
-    let notification: IUserProfile["preferences"]["notifications"] = {
+    let notification: IUserMeta["preferences"]["notifications"] = {
       orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
       subscriptionReminders:
         otherData["subscriptionReminders"] === "true" ? true : false,

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { CheckboxGroupFormType } from "../types/quiz.type";
-import { cn } from "~/utils/util";
+import { cn } from "~/core/utils/util";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 

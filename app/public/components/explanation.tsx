@@ -7,7 +7,7 @@ import {
   Features,
   FeaturesParams,
 } from "~/components/ui/features";
-import { findFontByName } from "~/utils/fonts";
+import { findFontByName } from "~/core/utils/fonts";
 
 const feature: FeaturesParams = {
   id: "explanation",

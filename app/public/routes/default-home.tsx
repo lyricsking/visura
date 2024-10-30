@@ -7,7 +7,7 @@ import Hero from "../components/hero";
 import HomeCarousel from "../components/home-carousel";
 import Explanation from "../components/explanation";
 import Button from "~/components/button";
-import { findFontByName } from "~/utils/fonts";
+import { findFontByName } from "~/core/utils/fonts";
 
 export const links: LinksFunction = () => {
   const merriweather = findFontByName("Playfair Display");

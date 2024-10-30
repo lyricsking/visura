@@ -1,7 +1,13 @@
 import { GoogleStrategy } from "remix-auth-google";
-import { findOrCreateUserProfiles } from "~/core/user/server/user.server";
+import {
+  createUser,
+  findUser,
+} from "~/core/user/server/user.server";
 import { setUserToSession } from "../server/auth.server";
 import { AuthUser } from "../types/auth-user.type";
+import { getAppContext } from "~/app";
+import { UserType } from "~/core/user/models/user.model";
+import { AuthorizationError } from "remix-auth";
 
 export const googleStrategy = new GoogleStrategy(
   {
@@ -12,19 +18,47 @@ export const googleStrategy = new GoogleStrategy(
     //callbackURL: "https://2tjwdf-3000.csb.app/auth/google/callback",
   },
   async ({ accessToken, refreshToken, extraParams, profile, request }) => {
-    let hydratedUser = await findOrCreateUserProfiles({
-      email: profile.emails[0].value,
-      firstName: profile.name.givenName,
-      lastName: profile.name.familyName,
-      photo: profile.photos[0].value,
-      // type: 'customer'
-    });
+    const email = profile.emails[0].value;
+    const firstName = profile.name.givenName;
+    const lastName = profile.name.familyName;
+    const photo = profile.photos[0].value;
 
-    await setUserToSession(request, hydratedUser);
+    // Attempt to retrieve user with the email.
+    let user = await findUser({ email: email });
+
+    const app = await getAppContext();
+
+    if (!user) {
+      const signupEnabled = app.configs("signupEnabled");
+      const autoSignupEnabled = app.configs("autoSignupEnabled");
+
+      if (!signupEnabled || !autoSignupEnabled) {
+        throw new AuthorizationError(
+          "You are not allowed to access this resource."
+        );
+      }
+
+      console.log("No user exists with the email: %s", email);
+
+      const userData = {
+        email,
+        firstName,
+        lastName,
+        type: UserType.customer,
+      };
+
+      console.log("Creating new user with: %s", userData);
+
+      user = await createUser(userData);
+
+      console.log("Created user %s", user);
+    }
+
+    await setUserToSession(request, user);
 
     let authUser: AuthUser = {
-      id: hydratedUser._id.toString(),
-      email: hydratedUser.email,
+      id: user._id.toString(),
+      email: user.email,
     };
 
     return authUser;

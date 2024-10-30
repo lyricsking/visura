@@ -4,18 +4,19 @@ import {
   getSession,
   sessionStorage,
   USER_SESSION_KEY,
-} from "~/utils/session";
+} from "~/core/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { formStrategy } from "../strategy/form-strategy";
 import { AuthUser } from "../types/auth-user.type";
-import { isRequest } from "~/utils/is-request";
+import { isRequest } from "~/core/utils/is-request";
 import { IHydratedUser } from "~/core/user/models/user.model";
 import { redirect, Session } from "@remix-run/node";
 import {
+  apiSuccessResponse,
   isApiRequest,
   unauthorizedBrowserResponse,
   unauthorizedResponse,
-} from "~/utils/helpers";
+} from "~/core/utils/helpers";
 import { json } from "react-router";
 
 export const REDIRECT_URL = "redirect-url";
@@ -46,13 +47,14 @@ export const authenticate = async (
   strategy: StrategyType,
   request: Request
 ) => {
-  const user = await authenticator.authenticate(strategy, request, {
-    failureRedirect: "/auth",
-  });
+  const authUser = await authenticator.authenticate(strategy, request);
 
   const session = await getSession(request);
 
-  await setAuthUser(session, user);
+  await setAuthUser(session, authUser);
+  if (isApiRequest(request)) {
+    return apiSuccessResponse(authUser);
+  }
 
   const successRedirect = (await session.get(REDIRECT_URL)) || "/";
   session.unset(REDIRECT_URL);
@@ -81,8 +83,10 @@ export const isAuthenticated = async (request: Request) => {
     if (isApiRequest(request)) {
       return unauthorizedResponse();
     }
+    const session = await getSession(request);
+    session.set(REDIRECT_URL, currentUrl);
 
-    return unauthorizedBrowserResponse(currentUrl);
+    return unauthorizedBrowserResponse(currentUrl, session);
   }
 
   return { authRes };

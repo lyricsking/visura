@@ -1,18 +1,18 @@
 import { Types } from "mongoose";
-import UserProfile from "../models/user-profile.model";
-import { IUserProfile } from "../types/user-profile.type";
+import UserMeta from "../models/user-meta.model";
+import { IUserMeta } from "../types/user-meta.type";
 import { HydratedDocument } from "mongoose";
 
-type PreferencesKeys = keyof IUserProfile["preferences"];
+type PreferencesKeys = keyof IUserMeta["preferences"];
 
 // Create User Profile
 export const createUserProfile = async (
-  props: Partial<IUserProfile>
-): Promise<IUserProfile> => {
+  props: Partial<IUserMeta>
+): Promise<IUserMeta> => {
   const { userId, firstName, lastName, phone, photo, preferences } = props;
   console.log("Creating profile");
 
-  const newUserProfile = new UserProfile({
+  const newUserProfile = new UserMeta({
     userId,
     firstName,
     lastName,
@@ -26,11 +26,9 @@ export const createUserProfile = async (
 // Read User Profile
 export const getProfileByUserId = async (
   userId: Types.ObjectId
-): Promise<HydratedDocument<IUserProfile> | null> => {
+): Promise<HydratedDocument<IUserMeta> | null> => {
   try {
-    
-
-    return await UserProfile.findOne({ userId }).exec();
+    return await UserMeta.findOne({ userId }).exec();
   } catch (error) {
     throw error;
   }
@@ -39,9 +37,9 @@ export const getProfileByUserId = async (
 // Update User
 export const updateUserProfile = async (
   userId: Types.ObjectId,
-  updateData: Partial<IUserProfile>
+  updateData: Partial<IUserMeta>
 ) => {
-  return await UserProfile.findOneAndUpdate({ userId }, updateData, {
+  return await UserMeta.findOneAndUpdate({ userId }, updateData, {
     new: true,
   }).exec();
 };
@@ -50,12 +48,12 @@ export const updateUserProfile = async (
 export const updateUserPreference = async <T extends PreferencesKeys>(
   userId: Types.ObjectId,
   preferenceKey: T,
-  updateData: IUserProfile["preferences"][T]
+  updateData: IUserMeta["preferences"][T]
 ) => {
   // Use dynamic path to update the specific field in preferences
   const update = { [`preferences.${preferenceKey}`]: updateData };
 
-  return await UserProfile.findOneAndUpdate(
+  return await UserMeta.findOneAndUpdate(
     { userId },
     update,
     { new: true } // Return the updated document
@@ -64,5 +62,5 @@ export const updateUserPreference = async <T extends PreferencesKeys>(
 
 // Delete User Profile
 export const deleteUserProfile = async (userId: Types.ObjectId) => {
-  return await UserProfile.findOneAndDelete({ userId }).exec();
+  return await UserMeta.findOneAndDelete({ userId }).exec();
 };

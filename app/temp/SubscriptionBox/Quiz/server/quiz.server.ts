@@ -13,7 +13,7 @@ import {
   ISupplement,
   Gender,
 } from "~/plugins/SubscriptionBox/Product/types/supplement.type";
-import { getNanoid } from "~/utils/util";
+import { getNanoid } from "~/core/utils/util";
 import { Question, Answers } from "../types/quiz.type";
 import { QIDS_MAP_KEY, ANSWER_KEY } from "../utils/constants";
 import { questions, filterQuestions } from "../utils/quiz.utils";

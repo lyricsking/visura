@@ -1,4 +1,4 @@
-import { formatDateOrTime } from "~/utils/date";
+import { formatDateOrTime } from "~/core/utils/date";
 import { Link } from "@remix-run/react";
 
 type PostSummaryProps = {

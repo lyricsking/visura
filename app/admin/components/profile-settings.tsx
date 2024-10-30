@@ -1,5 +1,5 @@
 import { useFetcher } from "@remix-run/react";
-import { cn } from "~/utils/util";
+import { cn } from "~/core/utils/util";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 import { SettingsType } from "../type/settings.type";
