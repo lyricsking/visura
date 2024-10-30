@@ -1,6 +1,40 @@
-import { json, redirect, Session } from "@remix-run/node";
+import { json, redirect, Session, TypedResponse } from "@remix-run/node";
 import { REDIRECT_SEARCH_PARAM } from "~/core/auth/server/auth.server";
 import { commitSession, getSession } from "./session";
+
+type ApiResponse<T> = {
+  data?: T;
+  error?: string | string[] | { [key: string]: any };
+  success: boolean;
+  statusCode: number;
+};
+
+type ApiFunctionArgs<T> = {
+  data?: T | null;
+  error?: { [key: string]: any };
+  statusCode: number;
+  statusText?: string;
+};
+
+export function handleResponse<T>({
+  data,
+  error,
+  statusCode,
+  statusText,
+}: ApiFunctionArgs<T>): TypedResponse<ApiResponse<T>> {
+  const responsePayload: ApiResponse<T> = {
+    data: data || undefined,
+    error: error || undefined,
+    success: statusCode >= 200 && statusCode < 300,
+    statusCode,
+  };
+
+  // Return JSON for API requests
+  return json<ApiResponse<T>>(responsePayload, {
+    status: statusCode,
+    statusText,
+  });
+}
 
 export function isApiRequest(request: Request): boolean {
   // Check if the `Accept` header is set to JSON
@@ -22,7 +56,7 @@ export function unauthorizedResponse() {
   );
 }
 
-export function apiSuccessResponse(data: any, status= 200) {
+export function apiSuccessResponse(data: any, status = 200) {
   return json(
     {
       success: true,

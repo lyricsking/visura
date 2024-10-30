@@ -3,7 +3,6 @@ import {
   useLoaderData,
   useNavigate,
   useOutletContext,
-  useParams,
 } from "@remix-run/react";
 import {
   PROFILE_UPDATE_ACTION,
@@ -13,11 +12,7 @@ import {
   DISPLAY_UPDATE_ACTION,
   ORDER_UPDATE_ACTION,
 } from "../utils/constants";
-import {
-  getUserFromSession,
-  logout,
-  invalidateCacheUser,
-} from "~/core/auth/server/auth.server";
+import { logout } from "~/core/auth/server/auth.server";
 import { IHydratedUser } from "~/core/user/models/user.model";
 import {
   updateUserProfile,
@@ -25,12 +20,11 @@ import {
 } from "~/core/user/server/user-profile.server";
 import {
   updateUserPassword,
-  disableUser,
+  getUserFromSession,
+  invalidateCacheUser,
 } from "~/core/user/server/user.server";
-import { IUserMeta } from "~/core/user/types/user-meta.type";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { getSession, commitSession } from "~/core/utils/session";
-import AccountSettings from "../components/account-settings";
 import NotificationSettings from "../components/notification-settings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import ProfileSettings from "../components/profile-settings";
@@ -66,16 +60,16 @@ export const action: ActionFunction = async ({ request }) => {
   } else if (_action === ACCOUNT_UPDATE_ACTION) {
     await logout(request, { redirectTo: "/" });
   } else if (_action === NOTIFICATION_UPDATE_ACTION) {
-    let notification: IUserMeta["preferences"]["notifications"] = {
-      orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
-      subscriptionReminders:
-        otherData["subscriptionReminders"] === "true" ? true : false,
-      promotional: otherData["promotional"] === "true" ? true : false,
-      supportNotification:
-        otherData["supportNotification"] === "true" ? true : false,
-      preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
-    };
-    await updateUserPreference(userId, "notifications", notification);
+    // let notification: IUserMeta[""]["notifications"] = {
+    //   orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
+    //   subscriptionReminders:
+    //     otherData["subscriptionReminders"] === "true" ? true : false,
+    //   promotional: otherData["promotional"] === "true" ? true : false,
+    //   supportNotification:
+    //     otherData["supportNotification"] === "true" ? true : false,
+    //   preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
+    // };
+    // await updateUserPreference(userId, "notifications", notification);
   } else if (_action === DISPLAY_UPDATE_ACTION) {
     await updateUserPreference(userId, "display", otherData);
   } else if (_action === ORDER_UPDATE_ACTION) {
@@ -93,7 +87,7 @@ export const action: ActionFunction = async ({ request }) => {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const settingTab = params.setting || "account";
 
-  return json({ tab: settingTab, component: null, data: null });
+  return json({ tab: settingTab });
 };
 
 export default function Settings() {

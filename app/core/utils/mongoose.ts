@@ -5,7 +5,9 @@ export interface DBReponse<T> {
   error?: Record<string, any>;
 }
 
-export async function handleDbResult<T>(asyncFn: Promise<T>): Promise<DBReponse<T>> {
+export async function handleDbResult<T>(
+  asyncFn: Promise<T>
+): Promise<DBReponse<T>> {
   try {
     const data = await asyncFn;
     return { data };
@@ -13,8 +15,7 @@ export async function handleDbResult<T>(asyncFn: Promise<T>): Promise<DBReponse<
     if (err instanceof mongoose.Error.ValidationError) {
       return { error: parseError(err) };
     } else {
-      console.log(err);
-      throw err;
+      return { error: err };
     }
   }
 }

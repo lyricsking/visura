@@ -1,6 +1,4 @@
 import { HydratedDocument, PopulateOptions, Types } from "mongoose";
-import { getStaffByUserId } from "./staff.server";
-import { createUserProfile } from "./user-profile.server";
 import User, {
   IHydratedUser,
   IUser,
@@ -8,8 +6,13 @@ import User, {
   IUserVirtuals,
   UserType,
 } from "../models/user.model";
-import invariant from "tiny-invariant";
 import { IUserMeta } from "../models/user-meta.model";
+import { Session } from "@remix-run/node";
+import {
+  getSession,
+  USER_SESSION_KEY,
+  commitSession,
+} from "~/core/utils/session";
 
 export type CreateUserProps = {
   email: string;
@@ -37,6 +40,43 @@ export const createUser = async (props: Partial<IUser>) => {
   }
 };
 
+export const getUserFromSession = async (
+  requestOrSession: Request | Session
+): Promise<IHydratedUser | undefined> => {
+  const session: Session = await getSession(requestOrSession);
+
+  return session.get(USER_SESSION_KEY);
+};
+
+export const setUserToSession = async (
+  requestOrSession: Request | Session,
+  newUser: IHydratedUser
+): Promise<void> => {
+  const session = await getSession(requestOrSession);
+
+  session.set(USER_SESSION_KEY, newUser);
+  await commitSession(session);
+};
+
+export const invalidateCacheUser = async (
+  requestOrSession: Request | Session
+) => {
+  const session = await getSession(requestOrSession);
+
+  return session.unset(USER_SESSION_KEY);
+};
+
+export const getUserOrFetch = (request: Request, email: string) => {
+  return (
+    getUserFromSession(request) ||
+    User.findOne({ email })
+      .populate({ path: "meta" })
+      .exec()
+      .then((user) => {
+        if (user) setUserToSession(request, user);
+      })
+  );
+};
 // Read User by Id
 export const findUserById = async (
   userId: Types.ObjectId,
@@ -156,26 +196,41 @@ export const disableUser = async (userId: Types.ObjectId) => {
   return disabledUser;
 };
 
-const defaultPreferences: IUserMeta["preferences"] = {
-  notifications: {
-    preferredSupportChannel: "whatsapp",
-    orderUpdates: true,
-    promotional: true,
-    subscriptionReminders: true,
-    supportNotification: true,
+const defaultPreferences: IUserMeta[] = [
+  {
+    _id: new Types.ObjectId(),
+    userId: new Types.ObjectId(),
+    metaKey: "notifications",
+    metaValue: {
+      preferredSupportChannel: "whatsapp",
+      orderUpdates: true,
+      promotional: true,
+      subscriptionReminders: true,
+      supportNotification: true,
+    },
   },
-  display: {
-    theme: "light",
-    language: "en",
-    currency: "NGN",
+  {
+    _id: new Types.ObjectId(),
+    userId: new Types.ObjectId(),
+    metaKey: "display",
+    metaValue: {
+      theme: "light",
+      language: "en",
+      currency: "NGN",
+    },
   },
   //privacy: {
   //  dataSharing: true,
   //  activityTracking: true,
   //  accountVisibility: true,
   //},
-  order: {
-    deliveryInstructions: "Leave at door",
-    packaging: "standard",
+  {
+    _id: new Types.ObjectId(),
+    userId: new Types.ObjectId(),
+    metaKey: "order",
+    metaValue: {
+      deliveryInstructions: "Leave at door",
+      packaging: "standard",
+    },
   },
-};
+];

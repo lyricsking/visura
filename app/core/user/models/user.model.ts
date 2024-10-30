@@ -25,6 +25,7 @@ export interface IUser {
 
 export interface IUserMethods {
   isValidPassword(password: string): Promise<boolean>;
+  hasPassword(): boolean;
 }
 
 export interface IUserVirtuals {
@@ -106,6 +107,11 @@ userSchema.method(
     return (this.password && bcrypt.compare(password, this.password)) || false;
   }
 );
+
+// Instance method to check password validity
+userSchema.method("hasPassword", function hasPassword(): boolean {
+  return !!this.password;
+});
 
 // Virtual for user's metadata
 userSchema.virtual("metadata", {

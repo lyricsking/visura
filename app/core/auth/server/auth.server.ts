@@ -13,6 +13,7 @@ import { IHydratedUser } from "~/core/user/models/user.model";
 import { redirect, Session } from "@remix-run/node";
 import {
   apiSuccessResponse,
+  handleResponse,
   isApiRequest,
   unauthorizedBrowserResponse,
   unauthorizedResponse,
@@ -80,16 +81,19 @@ export const isAuthenticated = async (request: Request) => {
   const currentUrl = new URL(request.url);
 
   if (!authRes) {
-    if (isApiRequest(request)) {
-      return unauthorizedResponse();
-    }
     const session = await getSession(request);
     session.set(REDIRECT_URL, currentUrl);
-
-    return unauthorizedBrowserResponse(currentUrl, session);
+    return handleResponse({
+      error: {
+        message:
+          "You are not authorized to access this resource. Please log in and try again.",
+      },
+      statusCode: 401,
+      statusText: "Unauthorized",
+    });
   }
 
-  return { authRes };
+  return authRes;
   // const session = await getSession(requestOrSession);
   // console.log("Redirect Url", session.get(REDIRECT_URL));
 
@@ -131,32 +135,6 @@ export const setAuthUser = async (
   session.set(authenticator.sessionKey, newAuthUser);
 
   await commitSession(session);
-};
-
-export const getUserFromSession = async (
-  requestOrSession: Request | Session
-): Promise<IHydratedUser | undefined> => {
-  const session: Session = await getSession(requestOrSession);
-
-  return session.get(USER_SESSION_KEY);
-};
-
-export const setUserToSession = async (
-  requestOrSession: Request | Session,
-  newUser: IHydratedUser
-): Promise<void> => {
-  const session = await getSession(requestOrSession);
-
-  session.set(USER_SESSION_KEY, newUser);
-  await commitSession(session);
-};
-
-export const invalidateCacheUser = async (
-  requestOrSession: Request | Session
-) => {
-  const session = await getSession(requestOrSession);
-
-  return session.unset(USER_SESSION_KEY);
 };
 
 export const logout = (

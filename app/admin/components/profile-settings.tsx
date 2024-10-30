@@ -10,21 +10,22 @@ import {
 } from "../utils/constants";
 
 export default function ProfileSettings({ user }: SettingsType) {
-  const { id, email, profile } = user;
+  const { id: userId, email, firstName, lastName, meta } = user;
 
   const accountFetcher = useFetcher();
   const passwordsFetcher = useFetcher();
   const accountStatusFetcher = useFetcher();
 
-  const name =
-    profile?.firstName && profile?.lastName
-      ? profile.firstName + " " + profile.lastName
-      : "";
+  const userFullname = firstName && lastName ? firstName + " " + lastName : "";
 
   return (
     <div>
-      <accountFetcher.Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value={PROFILE_UPDATE_ACTION} />
+      <accountFetcher.Form
+        method="post"
+        action="user/update"
+        className="mt-6 space-y-6"
+      >
+        <input type="hidden" name="_userId" value={userId} />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -37,9 +38,9 @@ export default function ProfileSettings({ user }: SettingsType) {
               <Input
                 type="text"
                 name="name"
-                defaultValue={name}
+                defaultValue={userFullname}
                 placeholder="Your full name"
-                className={cn("mt-1", !name && "italic")}
+                className={cn("mt-1", !userFullname && "italic")}
                 required
               />
             </div>
@@ -71,8 +72,12 @@ export default function ProfileSettings({ user }: SettingsType) {
         </div>
       </accountFetcher.Form>
 
-      <passwordsFetcher.Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value={PASSWORD_UPDATE_ACTION} />
+      <passwordsFetcher.Form
+        method="post"
+        action="user/password"
+        className="mt-6 space-y-6"
+      >
+        <input type="hidden" name="_userId" value={userId} />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">
@@ -106,8 +111,12 @@ export default function ProfileSettings({ user }: SettingsType) {
         </div>
       </passwordsFetcher.Form>
 
-      <accountStatusFetcher.Form method="post" className="mt-6 space-y-6">
-        <input type="hidden" name="_action" value={ACCOUNT_UPDATE_ACTION} />
+      <accountStatusFetcher.Form
+        method="post"
+        action="user/disable"
+        className="mt-6 space-y-6"
+      >
+        <input type="hidden" name="_userId" value={userId} />
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h2 className="text-lg leading-6 font-medium text-gray-900">

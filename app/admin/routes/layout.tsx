@@ -7,9 +7,7 @@ import {
   useLocation,
   useMatches,
 } from "@remix-run/react";
-import {
-  isAuthenticated,
-} from "~/core/auth/server/auth.server";
+import { isAuthenticated } from "~/core/auth/server/auth.server";
 import { isAuthUser } from "~/core/auth/utils/helper";
 import Breadcrumb from "~/components/breadcrumb";
 import {
@@ -25,6 +23,10 @@ import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/components/ui/admin-sidebar";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import User, { IHydratedUser } from "~/core/user/models/user.model";
+import { handleResponse } from "~/core/utils/helpers";
+import { APP_NAME, getAppContext } from "~/app";
+import { useAppContext } from "~/core/utils/app-context";
+import { getUserOrFetch } from "~/core/user/server/user.server";
 
 export const handle = {
   breadcrumb: {
@@ -43,19 +45,28 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   // check the subdomain we are accessing the page from, useed to manage staff users access.
-  let subdomain = getSubdomain(request);
+  // let subdomain = getSubdomain(request);
   // if the user has role access to the subdomain
   // Get the cache user object from session, could be undefined or IHydrated user.
-  let user: DBReponse<IHydratedUser | null> = await handleDbResult(
-    User.findOne({ email: authRes.email }).populate({ path: "profile" })
+  let userResponse: DBReponse<IHydratedUser | undefined> = await handleDbResult(
+    getUserOrFetch(request, authRes.email)
   );
 
-  return json({ user });
+  return handleResponse<IHydratedUser | null>({
+    ...userResponse,
+    statusCode: 200,
+  });
 };
 
 export default function Layout() {
-  const { user } = useLoaderData<typeof loader>();
-  let location = useLocation();
+  const data = useLoaderData<typeof loader>();
+
+  let user: IHydratedUser = {} as IHydratedUser;
+  if (data.success) {
+    user = data.data as IHydratedUser;
+  }
+
+  const appName = useAppContext().configs(APP_NAME);
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
@@ -81,9 +92,6 @@ export default function Layout() {
     );
   }
 
-  const menu: Menu[] = [];
-  const routeMenu: Menu[] = currentRoute.data?.routeMenu;
-
   return (
     <SidebarProvider>
       <AdminSidebar />
@@ -96,13 +104,13 @@ export default function Layout() {
 
                 <Link to="">
                   <h1 className="text-[24px] font-bold tracking-tight">
-                    {data.appName}
+                    {appName}
                   </h1>
                 </Link>
                 {/* <Navbar menu={menu} /> */}
               </div>
 
-              <HeaderIcons user={data.user} />
+              <HeaderIcons user={user} />
             </div>
           </PageLayoutHeaderItem>
 
@@ -116,7 +124,7 @@ export default function Layout() {
             {currentpage || "Dashboard"}
           </h1>
 
-          <Outlet context={{ user: data.user }} />
+          <Outlet context={{ user: user }} />
         </PageLayoutContent>
       </PageLayout>
     </SidebarProvider>
