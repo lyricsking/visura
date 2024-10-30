@@ -3,7 +3,8 @@ import formDataToObject from "~/core/utils/form-data-to-object";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import UserMeta, { IUserMeta } from "../models/user-meta.model";
 import { getUserFromSession } from "../server/user.server";
-import User from "../models/user.model";
+import User, { IHydratedUser, IUser } from "../models/user.model";
+import { handleResponse } from "~/core/utils/helpers";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUserFromSession(request);
@@ -15,21 +16,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { _userId, currentPassword, newPassword } = formObject;
 
-  let response: DBReponse<IUserMeta | null> = await handleDbResult(
+  let response: DBReponse<IHydratedUser | undefined> = await handleDbResult(
     User.findById(userId).then((user) => {
-      if (user && user.hasPassword()) {
-        return user
-          .isValidPassword(currentPassword)
-          .then((isValidPassword) => {
+      if (user) {
+        const hasPassword = user.hasPassword();
+
+        if (hasPassword) {
+          user.isValidPassword(currentPassword).then((isValidPassword) => {
             if (!isValidPassword) {
-              throw new
+              throw new Error("Invalid password");
             }
           });
-      } else {
-        
+        }
+
+        user.password = newPassword;
+        return user.save();
       }
     })
   );
-
-  return json(response);
+  
+  return handleResponse<IHydratedUser | null>({ ...response, statusCode: 200 });
 };

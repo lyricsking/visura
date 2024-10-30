@@ -3,11 +3,6 @@ import { cn } from "~/core/utils/util";
 import { Input } from "~/components/input";
 import Button from "~/components/button";
 import { SettingsType } from "../type/settings.type";
-import {
-  PROFILE_UPDATE_ACTION,
-  PASSWORD_UPDATE_ACTION,
-  ACCOUNT_UPDATE_ACTION,
-} from "../utils/constants";
 
 export default function ProfileSettings({ user }: SettingsType) {
   const { id: userId, email, firstName, lastName, meta } = user;
@@ -125,7 +120,6 @@ export default function ProfileSettings({ user }: SettingsType) {
             <p className="mt-1 text-sm text-gray-600">
               Info: Your account can be activated again when you sign in.
             </p>
-            <input type="hidden" name="userId" value={user.id} />
             <div className="mt-4">
               <Button
                 type="submit"
