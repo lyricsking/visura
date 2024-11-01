@@ -1,8 +1,9 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
-import UserMeta, { IUserMeta } from "../models/user-meta.model";
-import { getUserFromSession } from "../server/user.server";
+import { getUserFromSession } from "../../server/user.server";
+import { handleResponse } from "~/core/utils/helpers";
+import User, { IHydratedUser } from "../../models/user.model";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUserFromSession(request);
@@ -12,17 +13,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
-  const [firstName, lastName] = formObject["name"].split(" ");
+  const { _userId } = formObject;
 
-  let response: DBReponse<IUserMeta | null> = await handleDbResult(
-    UserMeta.findOneAndUpdate(
-      { userId },
-      { firstName, lastName },
-      {
-        new: true,
-      }
-    ).exec()
+  let response: DBReponse<IHydratedUser | null> = await handleDbResult(
+    User.findByIdAndUpdate(userId, { isActive: false })
   );
 
-  return json(response);
+  return handleResponse<IHydratedUser | null>({ ...response, statusCode: 200 });
 };

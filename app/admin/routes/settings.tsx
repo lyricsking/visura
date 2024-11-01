@@ -1,6 +1,13 @@
-import { ActionFunction, json, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunction,
+  json,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
 import {
   Outlet,
+  ShouldRevalidateFunction,
+  ShouldRevalidateFunctionArgs,
   useLoaderData,
   useNavigate,
   useOutletContext,
@@ -86,10 +93,34 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const [_, __, ___, tab] = new URL(request.url).pathname.split("/");
+  const tab = new URL(request.url).pathname.split("/")[3];
   console.log(tab);
+  // if (!tab) {
+  //   return redirect("/administration/settings/general");
+  // }
 
-  return json({ tab: tab || "" });
+  return json({ tab: tab });
+};
+
+/**
+ * By default settings layout route will not revalidate when
+ * switching tab, this is RemixJs optimization which prevents
+ * leaf route (Outlet) content from updating.
+ *
+ * @param args `ShouldRevalidateFunctionArgs`
+ * @returns `boolean` if the routes should revalidate
+ */
+export const shouldRevalidate = ({
+  currentUrl,
+  defaultShouldRevalidate,
+  nextUrl,
+}: ShouldRevalidateFunctionArgs) => {
+  const currentTab = currentUrl.pathname.split("/")[3];
+  const nextTab = nextUrl.pathname.split("/")[3];
+
+  if (currentTab !== nextTab) return true;
+
+  return defaultShouldRevalidate;
 };
 
 export default function Settings() {
@@ -108,13 +139,13 @@ export default function Settings() {
       <Tabs defaultValue={tab} onValueChange={onSettingChange}>
         <TabsList className="bg-white border-violet-400 rounded-t-md overflow-x-auto no-scrollbar">
           <TabsTrigger value="" className="capitalize">
-            Account
+            General
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="capitalize">
-            Notification
+          <TabsTrigger value="display" className="capitalize">
+            Display
           </TabsTrigger>
-          <TabsTrigger value="plugins" className="capitalize">
-            Plugins
+          <TabsTrigger value="policy" className="capitalize">
+            Policy
           </TabsTrigger>
         </TabsList>
 

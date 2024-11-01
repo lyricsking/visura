@@ -14,12 +14,13 @@ export default function routes(route: DefineRouteFunction) {
   // Admin routes
   route("administration", "admin/routes/layout.tsx", () => {
     route("", "admin/routes/overview.tsx", { index: true });
+    route("pages", "admin/routes/pages.tsx");
+    route("users", "admin/routes/users.tsx");
     route("settings", "admin/routes/settings.tsx", { id: "setting" }, () => {
-      route("", "admin/routes/profile-settings.tsx", { index: true });
-      route("plugins", "admin/routes/plugin-settings.tsx");
+      route("general", "admin/routes/general-settings.tsx", { index: true });
+      route("display", "admin/routes/display-settings.tsx");
+      route("privacy", "admin/routes/privacy-settings.tsx");
     });
-    //route("subscriptions", "Subscription/routes/subscription.tsx");
-    //route("transactions", "Transaction/routes/transaction.tsx");
     route("*", "admin/routes/catch-all.tsx");
   });
 
@@ -30,9 +31,10 @@ export default function routes(route: DefineRouteFunction) {
   });
 
   // Api routes
-  route("api/options", "core/option/routes/find-options.server.ts");
-  route("api/pages", "core/page/routes/find-pages.server.ts");
-  route("api/plugins", "core/plugin/routes/find-plugins.server.ts");
+  route("api/find-options", "core/option/routes/api/find-options.server.ts");
+  route("api/save-options", "core/option/routes/api/save-option.server.ts");
+  route("api/pages", "core/page/routes/api/find-pages.server.ts");
+  route("api/plugins", "core/plugin/routes/api/find-plugins.server.ts");
 }
 
 const defaultRoutes = () => {

@@ -1,9 +1,9 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
-import UserMeta, { IUserMeta } from "../models/user-meta.model";
-import { getUserFromSession } from "../server/user.server";
-import User, { IHydratedUser, IUser } from "../models/user.model";
+import UserMeta, { IUserMeta } from "../../models/user-meta.model";
+import { getUserFromSession } from "../../server/user.server";
+import User, { IHydratedUser, IUser } from "../../models/user.model";
 import { handleResponse } from "~/core/utils/helpers";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -34,6 +34,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
     })
   );
-  
+
   return handleResponse<IHydratedUser | null>({ ...response, statusCode: 200 });
 };

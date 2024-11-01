@@ -9,7 +9,7 @@ A RemixJs app inspired by WordPress.
 ## Development
 
 1. Copy .sample.env to .env file and fillout the environmental variables
-2. From your terminal:
+2. From your terminal, run:
 
 ```sh
 yarn seed

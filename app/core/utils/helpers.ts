@@ -2,14 +2,14 @@ import { json, redirect, Session, TypedResponse } from "@remix-run/node";
 import { REDIRECT_SEARCH_PARAM } from "~/core/auth/server/auth.server";
 import { commitSession, getSession } from "./session";
 
-type ApiResponse<T> = {
+export type ApiResponse<T> = {
   data?: T;
   error?: string | string[] | { [key: string]: any };
   success: boolean;
   statusCode: number;
 };
 
-type ApiFunctionArgs<T> = {
+export type ApiFunctionArgs<T> = {
   data?: T | null;
   error?: { [key: string]: any };
   statusCode: number;

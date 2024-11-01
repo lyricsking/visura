@@ -2,12 +2,12 @@ import { BlockMetadata } from "./core/blocks";
 import { Menu, MenuType, SettingsTab } from "./types/menu";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { IBasePlugin, IPlugin } from "./core/plugin/types/plugin";
-import { IOption } from "./core/option/types/option.type";
 import { IPage } from "./core/page/types/page";
 import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
+import { DisplayOptions } from "./admin/type/options";
+import { DISPLAY_OPTION_KEY, IOption } from "./core/option/models/option.model";
 
-export const HOMEPATH_NAME = "homepath";
 export const APP_NAME = "app_name";
 
 export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
@@ -66,6 +66,9 @@ class AppContext {
   static async loadConfigOptions(): Promise<any> {
     const configReq = await fetch("http://localhost:3000/api/options");
     const configRes = await configReq.json();
+
+    console.log(configRes);
+
     return configRes.options;
   }
 
@@ -73,6 +76,8 @@ class AppContext {
     const pluginReq = await fetch("http://localhost:3000/api/plugins");
     const pluginRes = await pluginReq.json();
     const plugins = pluginRes.plugins;
+
+    console.log(pluginRes);
 
     const pluginsInstance: PluginInstance[] = [];
 
@@ -110,12 +115,9 @@ class AppContext {
     return option?.value;
   }
 
-  get homepage(): {
-    type: "custom" | "plugin";
-    path: string;
-  } {
+  get homepageConfig(): DisplayOptions["homepageDisplay"] {
     const option = this._configs.find(
-      (option) => option.name === HOMEPATH_NAME
+      (option) => option.name === DISPLAY_OPTION_KEY
     );
     return option?.value;
   }

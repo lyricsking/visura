@@ -10,9 +10,9 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   let page: IPage | undefined;
   let loaderData: any;
-  const homepage = app.homepage;
+  const homepage = app.homepageConfig;
 
-  if (homepage.type === "custom") {
+  if (homepage.type === "static") {
     page = (await PageModel.findOne({ path: homepage.path })) as IPage;
   } else if (homepage.type === "plugin") {
     page = app.findRoute(homepage.path!) as IPage;

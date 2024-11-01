@@ -1,10 +1,10 @@
-import { APP_NAME, HOMEPATH_NAME } from "~/app";
+import { APP_NAME, DISPLAY_KEY } from "~/app";
 import { OptionModel } from "~/core/option/models/option.model";
 
 export const seedOptions = async () => {
   try {
     await OptionModel.updateOne(
-      { name: HOMEPATH_NAME },
+      { name: DISPLAY_KEY },
       {
         value: {
           type: "custom",
