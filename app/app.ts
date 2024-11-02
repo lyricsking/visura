@@ -6,7 +6,10 @@ import { IPage } from "./core/page/types/page";
 import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 import { DisplayOptions } from "./admin/type/options";
-import { DISPLAY_OPTION_KEY, IOption } from "./core/option/models/option.model";
+import {
+  DISPLAY_OPTION_KEY,
+  IOption,
+} from "./core/option/models/option.server";
 
 export const APP_NAME = "app_name";
 
@@ -112,16 +115,16 @@ class AppContext {
   }
 
   configs(key: string) {
-    // return this._config.app;
     const option = this._configs.find((option) => option.name === key);
     return option?.value;
   }
 
-  get homepageConfig(): DisplayOptions["homepageDisplay"] {
+  get homepageConfig(): DisplayOptions["homepage"] {
     const option = this._configs.find(
       (option) => option.name === DISPLAY_OPTION_KEY
     );
-    return option?.value;
+
+    return option?.value["homepage"];
   }
 
   plugin(name: string) {

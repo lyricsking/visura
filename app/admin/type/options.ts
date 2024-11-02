@@ -9,7 +9,7 @@ export const homepageDisplayType = ["static", "plugin"] as const;
 export type HomepageType = (typeof homepageDisplayType)[number];
 
 export type DisplayOptions = {
-  homepageDisplay: {
+  homepage: {
     type: HomepageType;
     path: string;
   };

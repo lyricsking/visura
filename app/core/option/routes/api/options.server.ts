@@ -1,6 +1,5 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import { OptionModel } from "../../models/option.model";
-import UserMeta, { IUserMeta } from "~/core/user/models/user-meta.model";
+import { OptionModel } from "../../models/option.server";
 import { getUserFromSession } from "~/core/user/server/user.server";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";

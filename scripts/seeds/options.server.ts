@@ -3,12 +3,12 @@ import { APP_NAME } from "~/app";
 import {
   DISPLAY_OPTION_KEY,
   OptionModel,
-} from "~/core/option/models/option.model";
+} from "~/core/option/models/option.server";
 
 export const seedOptions = async () => {
   try {
     const displayOptionValue: DisplayOptions = {
-      homepageDisplay: {
+      homepage: {
         type: "static",
         path: "",
       },
@@ -16,13 +16,13 @@ export const seedOptions = async () => {
 
     await OptionModel.updateOne(
       { name: DISPLAY_OPTION_KEY },
-      { value: displayOptionValue },
+      { value: displayOptionValue, autoload: true },
       { upsert: true }
     );
 
     await OptionModel.updateOne(
       { name: APP_NAME },
-      { value: "App Name" },
+      { value: "RemixWP" },
       { upsert: true }
     );
     console.log("Homepath updated successfully");
