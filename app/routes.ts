@@ -31,10 +31,9 @@ export default function routes(route: DefineRouteFunction) {
   });
 
   // Api routes
-  route("api/find-options", "core/option/routes/api/find-options.server.ts");
-  route("api/save-options", "core/option/routes/api/save-option.server.ts");
-  route("api/pages", "core/page/routes/api/find-pages.server.ts");
-  route("api/plugins", "core/plugin/routes/api/find-plugins.server.ts");
+  route("api/options", "core/option/routes/api/options.server.ts");
+  route("api/pages", "core/page/routes/api/pages.server.ts");
+  route("api/plugins", "core/plugin/routes/api/plugins.server.ts");
 }
 
 const defaultRoutes = () => {

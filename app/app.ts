@@ -51,8 +51,10 @@ class AppContext {
       serverOnly$(await createDBConnection());
     }
 
-    const configs = await AppContext.loadConfigOptions();
-    const plugins = await AppContext.loadActivePlugins();
+    const [configs, plugins] = await Promise.all([
+      AppContext.loadConfigOptions(),
+      AppContext.loadActivePlugins(),
+    ]);
 
     AppContext.instance = new AppContext(configs, plugins);
 
@@ -67,17 +69,17 @@ class AppContext {
     const configReq = await fetch("http://localhost:3000/api/options");
     const configRes = await configReq.json();
 
-    console.log(configRes);
+    console.log("Fetched configurations");
 
-    return configRes.options;
+    return configRes.data;
   }
 
   static async loadActivePlugins(): Promise<PluginInstance[]> {
     const pluginReq = await fetch("http://localhost:3000/api/plugins");
     const pluginRes = await pluginReq.json();
-    const plugins = pluginRes.plugins;
+    const plugins = pluginRes.data;
 
-    console.log(pluginRes);
+    console.log("Fetched plugins");
 
     const pluginsInstance: PluginInstance[] = [];
 

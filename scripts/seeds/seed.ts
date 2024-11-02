@@ -1,11 +1,11 @@
-import connectToDatabase from "./db.server";
-import { seedOptions } from "./seeds/options.server";
-import { seedPages } from "./seeds/page.server";
-import { seedPlugins } from "./seeds/plugin.server";
+import createDBConnection from "~/core/database/db.server";
+import { seedOptions } from "./options.server";
+import { seedPages } from "./page.server";
+import { seedPlugins } from "./plugin.server";
 
 const seedDatabase = async () => {
   try {
-    await connectToDatabase();
+    await createDBConnection();
 
     await seedOptions();
     await seedPages();

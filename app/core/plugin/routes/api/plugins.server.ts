@@ -1,4 +1,4 @@
-import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "../../models/plugin.model";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { IPlugin } from "../../types/plugin";
@@ -22,3 +22,5 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     statusCode: 200,
   });
 };
+
+export const action = ({}: ActionFunctionArgs) => {};
