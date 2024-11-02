@@ -53,9 +53,6 @@ export const authenticate = async (
   const session = await getSession(request);
 
   await setAuthUser(session, authUser);
-  if (isApiRequest(request)) {
-    return apiSuccessResponse(authUser);
-  }
 
   const successRedirect = (await session.get(REDIRECT_URL)) || "/";
   session.unset(REDIRECT_URL);
@@ -63,7 +60,8 @@ export const authenticate = async (
   const headers = {
     "Set-Cookie": await commitSession(session),
   };
-
+  return;
+  return authUser;
   return redirect(successRedirect, { headers });
 };
 

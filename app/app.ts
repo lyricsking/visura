@@ -6,10 +6,7 @@ import { IPage } from "./core/page/types/page";
 import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 import { DisplayOptions } from "./admin/type/options";
-import {
-  DISPLAY_OPTION_KEY,
-  IOption,
-} from "./core/option/models/option.server";
+import { DISPLAY_OPTION_KEY, IOption } from "./core/option/types/option";
 
 export const APP_NAME = "app_name";
 

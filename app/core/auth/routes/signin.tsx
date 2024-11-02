@@ -58,7 +58,10 @@ export default function Signin() {
 
   useEffect(() => {
     if (error) {
-      toast({ description: error.message, position: "topRight" });
+      toast({
+        description: JSON.stringify(error.message, null, 2),
+        position: "topRight",
+      });
     }
   }, [error]);
 

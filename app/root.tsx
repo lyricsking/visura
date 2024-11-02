@@ -88,6 +88,7 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error: any = useRouteError();
+  console.log(error);
 
   if (isRouteErrorResponse(error)) {
     return (
