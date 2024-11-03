@@ -2,8 +2,9 @@ import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { match, MatchResult } from "path-to-regexp";
 import { getAppContext } from "~/app";
-import { PageContentType } from "~/core/page/types/page";
+import { IPage, PageContentType } from "~/core/page/types/page";
 import { renderPage } from "~/components/ui/render-page";
+import { PageModel } from "~/core/page/models/page.model";
 
 const NOT_FOUND_PATH = "not-found";
 
@@ -12,7 +13,15 @@ export const loader = async (args: LoaderFunctionArgs) => {
   const path = new URL(request.url).pathname;
   const app = await getAppContext();
 
-  const matchedRoute = app.routes?.find((route) => {
+  let page;
+  let loaderData: any;
+
+  page = await PageModel.findOne({ path: path });
+  if (!page) {
+    page = app.findRoute(path) as IPage;
+  }
+
+  const matchedRoute = app.routes.find((route) => {
     const matchRoute = match(route.path, { decode: decodeURIComponent });
     return matchRoute(path);
   });
@@ -44,5 +53,6 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
 export default function CatchAll() {
   const { data, path, content } = useLoaderData<typeof loader>();
-  return renderPage(path, content as PageContentType, data);
+  if (content) return renderPage(path, content as PageContentType, data);
+  return <>Nothing</>;
 }

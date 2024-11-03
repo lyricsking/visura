@@ -30,7 +30,6 @@ type StrategyType = (typeof StrategyType)[number];
 
 export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   sessionErrorKey: authErrorKey,
-  throwOnError: true,
 });
 
 authenticator.use(formStrategy);
@@ -71,8 +70,8 @@ export const authenticate = async (
     if (error instanceof Response) return error;
     if (error instanceof AuthorizationError) {
       // here the error is related to the authentication process
-      session.flash(authenticator.sessionErrorKey, { message: error.message });
-      console.log(error.message);
+      // session.flash(authenticator.sessionErrorKey, { message: error.message });
+      console.log(error);
       return null;
     }
 
