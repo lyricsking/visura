@@ -44,10 +44,6 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
     const signupEnabled = app.configs("signupEnabled");
     const autoSignupEnabled = app.configs("autoSignupEnabled");
 
-    invariant(
-      signupEnabled && autoSignupEnabled,
-      "You are not allowed to access this resource."
-    );
     if (!signupEnabled || !autoSignupEnabled) {
       throw new Response("You are not allowed to access this resource.", {
         status: 401,

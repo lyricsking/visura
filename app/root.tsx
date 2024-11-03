@@ -15,6 +15,7 @@ import {
 
 import { Toaster } from "./components/toaster";
 import { getAppContext } from "./app";
+import { Error } from "mongoose";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -96,15 +97,19 @@ export function ErrorBoundary() {
         <h1>
           {error.status} {error.statusText}
         </h1>
-        <p>{error.data}</p>
+        <p>{JSON.stringify(error.data, null,2)}</p>
       </>
     );
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error!</h1>
+        <p>{error.message}</p>
+        <p>Stack trace:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
   }
-
-  return (
-    <>
-      <h1>Error!</h1>
-      <p>{error?.message ?? "Unknown error"}</p>
-    </>
-  );
 }

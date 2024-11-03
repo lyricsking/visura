@@ -29,6 +29,7 @@ type StrategyType = (typeof StrategyType)[number];
 
 export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   sessionErrorKey: authErrorKey,
+  throwOnError: true,
 });
 
 authenticator.use(formStrategy);
