@@ -1,10 +1,8 @@
 import { FormStrategy } from "remix-auth-form";
 import { createUser, setUserToSession } from "~/core/user/server/user.server";
 import { AuthUser } from "../types/auth-user.type";
-import { AuthorizationError } from "remix-auth";
 import { getAppContext } from "~/app";
 import User, { UserType } from "~/core/user/models/user.model";
-import invariant from "tiny-invariant";
 
 export const formStrategy = new FormStrategy(async ({ form, request }) => {
   let userId = form.get("userId") as string;
