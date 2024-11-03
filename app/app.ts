@@ -53,7 +53,7 @@ class AppContext {
 
     const [configs, plugins] = await Promise.all([
       AppContext.loadConfigOptions(),
-      AppContext.loadActivePlugins(),
+      // AppContext.loadActivePlugins(),
     ]);
 
     AppContext.instance = new AppContext(configs, plugins);
@@ -66,7 +66,15 @@ class AppContext {
   }
 
   static async loadConfigOptions(): Promise<any> {
-    const configReq = await fetch("http://localhost:3000/api/options");
+    let configReq;
+    if (typeof document === "undefined") {
+      configReq = await fetch("http://localhost:3000/api/options");
+    } else {
+      configReq = await fetch(
+        "/api/options"
+      );
+    }
+
     const configRes = await configReq.json();
 
     console.log("Fetched configurations");
