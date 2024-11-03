@@ -23,6 +23,7 @@ import { Input } from "~/components/input";
 import Button from "~/components/button";
 import { useEffect } from "react";
 import { useToast } from "~/hooks/use-toast";
+import { AuthorizationError } from "remix-auth";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   return await authenticate("form", request);
@@ -59,7 +60,7 @@ export default function Signin() {
   useEffect(() => {
     if (error) {
       toast({
-        description: JSON.stringify(error.message, null, 2),
+        description: error.message,
         position: "topRight",
       });
     }

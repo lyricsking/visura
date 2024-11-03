@@ -15,6 +15,8 @@ export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 type PluginInstance = IPlugin & { instance: IBasePlugin };
 
 class AppContext {
+  private static baseUrl =
+    "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
   private static instance: AppContext | null = null;
   private static queue: Array<(instance: AppContext) => void> = [];
 
@@ -53,7 +55,7 @@ class AppContext {
 
     const [configs, plugins] = await Promise.all([
       AppContext.loadConfigOptions(),
-      // AppContext.loadActivePlugins(),
+      AppContext.loadActivePlugins(),
     ]);
 
     AppContext.instance = new AppContext(configs, plugins);
@@ -70,9 +72,7 @@ class AppContext {
     if (typeof document === "undefined") {
       configReq = await fetch("http://localhost:3000/api/options");
     } else {
-      configReq = await fetch(
-        "/api/options"
-      );
+      configReq = await fetch(`${this.baseUrl}/api/options`);
     }
 
     const configRes = await configReq.json();
@@ -83,7 +83,12 @@ class AppContext {
   }
 
   static async loadActivePlugins(): Promise<PluginInstance[]> {
-    const pluginReq = await fetch("http://localhost:3000/api/plugins");
+    let pluginReq;
+    if (typeof document === "undefined") {
+      pluginReq = await fetch("http://localhost:3000/api/plugins");
+    } else {
+      pluginReq = await fetch(`${this.baseUrl}/api/plugins`);
+    }
     const pluginRes = await pluginReq.json();
     const plugins = pluginRes.data;
 

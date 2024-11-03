@@ -11,28 +11,20 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
   let password = form.get("password") as string;
 
   if (typeof userId !== "string") {
-    throw new Response("UserId must be a valid string.", {
-      status: 400,
-    });
+    throw new Error("UserId must be a valid string.");
   }
 
   if (userId.length === 0) {
-    throw new Response("UserId cannot be empty.", {
-      status: 400,
-    });
+    throw new Error("UserId cannot be empty.");
   }
 
   // Determine userId type with regex
   if (typeof password !== "string") {
-    throw new Response("Password cannot be empty.", {
-      status: 400,
-    });
+    throw new Error("Password cannot be empty.");
   }
 
   if (password.length === 0) {
-    throw new Response("Password must be longer than 6 characters.", {
-      status: 400,
-    });
+    throw new Error("Password must be longer than 6 characters.");
   }
 
   // Attempt to retrieve user with the email.
@@ -44,14 +36,8 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
     const signupEnabled = app.configs("signupEnabled");
     const autoSignupEnabled = app.configs("autoSignupEnabled");
 
-    invariant(
-      signupEnabled && autoSignupEnabled,
-      "You are not allowed to access this resource."
-    );
     if (!signupEnabled || !autoSignupEnabled) {
-      throw new Response("You are not allowed to access this resource.", {
-        status: 401,
-      });
+      throw new Error("You are not allowed to access this resource.");
     }
 
     console.log("No user exists with the userId: %s", userId);

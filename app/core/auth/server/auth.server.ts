@@ -19,6 +19,7 @@ import {
   unauthorizedResponse,
 } from "~/core/utils/helpers";
 import { json } from "react-router";
+import { isAuthUser } from "../utils/helper";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
@@ -29,6 +30,7 @@ type StrategyType = (typeof StrategyType)[number];
 
 export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   sessionErrorKey: authErrorKey,
+  throwOnError: true,
 });
 
 authenticator.use(formStrategy);
@@ -48,21 +50,36 @@ export const authenticate = async (
   strategy: StrategyType,
   request: Request
 ) => {
-  const authUser = await authenticator.authenticate(strategy, request);
-
   const session = await getSession(request);
 
-  await setAuthUser(session, authUser);
+  try {
+    const authUser = await authenticator.authenticate(strategy, request);
 
-  const successRedirect = (await session.get(REDIRECT_URL)) || "/";
-  session.unset(REDIRECT_URL);
+    await setAuthUser(session, authUser);
 
-  const headers = {
-    "Set-Cookie": await commitSession(session),
-  };
-  return;
-  return authUser;
-  return redirect(successRedirect, { headers });
+    const successRedirect = (await session.get(REDIRECT_URL)) || "/";
+    session.unset(REDIRECT_URL);
+
+    const headers = {
+      "Set-Cookie": await commitSession(session),
+    };
+
+    return authUser;
+  } catch (error) {
+    // Because redirects work by throwing a Response, you need to check if the
+    // caught error is a response and return it or throw it again
+    if (error instanceof Response) return error;
+    if (error instanceof AuthorizationError) {
+      // here the error is related to the authentication process
+      session.flash(authenticator.sessionErrorKey, { message: error.message });
+      console.log(error.message);
+      return null;
+    }
+
+    // here the error is a generic error that another reason may throw
+  } finally {
+    await commitSession(session);
+  }
 };
 
 /**
