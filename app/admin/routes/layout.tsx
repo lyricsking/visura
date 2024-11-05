@@ -45,7 +45,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     // if the user has role access to the subdomain
     // Get the cache user object from session, could be undefined or IHydrated user.
 
-    const user = getUserOrFetch(request, authRes!.email);
+    const user = await getUserOrFetch(request, authRes!.email);
     console.log(user);
 
     return json({ user });
@@ -104,7 +104,7 @@ export default function Layout() {
                 {/* <Navbar menu={menu} /> */}
               </div>
 
-              <HeaderIcons user={user as any} />
+              <HeaderIcons user={user as any } />
             </div>
           </PageLayoutHeaderItem>
 
