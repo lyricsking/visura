@@ -59,7 +59,6 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
     id: user._id.toString(),
     email: user.email,
   };
-
-  console.log(authUser);
+  
   return authUser;
 });

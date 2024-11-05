@@ -15,9 +15,9 @@ export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 type PluginInstance = IPlugin & { instance: IBasePlugin };
 
 class AppContext {
-  // private static baseUrl =
-  //   "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
-  private static baseUrl = "https://ynm7f3-3000.csb.app";
+  private static baseUrl =
+  "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
+  // "https://ynm7f3-3000.csb.app";
   private static instance: AppContext | null = null;
   private static queue: Array<(instance: AppContext) => void> = [];
 

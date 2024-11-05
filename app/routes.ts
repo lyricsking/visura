@@ -6,8 +6,8 @@ export default function routes(route: DefineRouteFunction) {
   route("auth", "core/auth/routes/layout.tsx", () => {
     route("", "core/auth/routes/signin.tsx", { index: true });
     route("signup", "core/auth/routes/signup.tsx");
+    route("google", "core/auth/routes/google-signin.tsx");
     route("google/callback", "core/auth/routes/google-callback.tsx");
-    route("google/signin", "core/auth/routes/google-signin.tsx");
     route("signout", "core/auth/routes/signout.tsx");
   });
 

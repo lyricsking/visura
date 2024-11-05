@@ -8,14 +8,16 @@ import { AuthUser } from "../types/auth-user.type";
 import { getAppContext } from "~/app";
 import { UserType } from "~/core/user/models/user.model";
 import { AuthorizationError } from "remix-auth";
+import doenv from "dotenv";
+doenv.config();
 
 export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_CLIENT_ID || "",
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    // callbackURL:
-    // "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io/auth/google/callback",
-    callbackURL: "https://ynm7f3-3000.csb.app/auth/google/callback",
+    callbackURL:
+      "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io/auth/google/callback",
+    // callbackURL: "https://ynm7f3-3000.csb.app/auth/google/callback",
     //callbackURL: "https://2tjwdf-3000.csb.app/auth/google/callback",
   },
   async ({ accessToken, refreshToken, extraParams, profile, request }) => {

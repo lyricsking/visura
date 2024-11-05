@@ -3,22 +3,12 @@ import {
   commitSession,
   getSession,
   sessionStorage,
-  USER_SESSION_KEY,
 } from "~/core/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { formStrategy } from "../strategy/form-strategy";
 import { AuthUser } from "../types/auth-user.type";
-import { isRequest } from "~/core/utils/is-request";
-import { IHydratedUser } from "~/core/user/models/user.model";
 import { redirect, Session } from "@remix-run/node";
-import {
-  apiSuccessResponse,
-  handleResponse,
-  isApiRequest,
-  unauthorizedBrowserResponse,
-  unauthorizedResponse,
-} from "~/core/utils/helpers";
-import { json } from "react-router";
+import { handleResponse } from "~/core/utils/helpers";
 import { isAuthUser } from "../utils/helper";
 
 export const REDIRECT_URL = "redirect-url";
@@ -32,7 +22,7 @@ export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   sessionErrorKey: authErrorKey,
 });
 
-authenticator.use(formStrategy);
+// authenticator.use(formStrategy);
 authenticator.use(googleStrategy);
 
 export const getAuthErrorKey = () => authenticator.sessionErrorKey;
@@ -49,36 +39,12 @@ export const authenticate = async (
   strategy: StrategyType,
   request: Request
 ) => {
+  const authUser = await authenticator.authenticate(strategy, request);
+
   const session = await getSession(request);
-
-  try {
-    const authUser = await authenticator.authenticate(strategy, request);
-
-    await setAuthUser(session, authUser);
-
-    const successRedirect = (await session.get(REDIRECT_URL)) || "/";
-    session.unset(REDIRECT_URL);
-
-    const headers = {
-      "Set-Cookie": await commitSession(session),
-    };
-
-    return authUser;
-  } catch (error) {
-    // Because redirects work by throwing a Response, you need to check if the
-    // caught error is a response and return it or throw it again
-    if (error instanceof Response) return error;
-    if (error instanceof AuthorizationError) {
-      // here the error is related to the authentication process
-      // session.flash(authenticator.sessionErrorKey, { message: error.message });
-      console.log(error);
-      return null;
-    }
-
-    // here the error is a generic error that another reason may throw
-  } finally {
-    await commitSession(session);
-  }
+  if (isAuthUser(authUser)) await setAuthUser(session, authUser);
+  
+  return authUser;
 };
 
 /**
@@ -89,15 +55,30 @@ export const authenticate = async (
  * @param request `Request` Request object of the current page
  * @param options Optional options to pass to authenticator
  */
-export const isAuthenticated = async (request: Request) => {
+export const isAuthenticated = async (request: Request, shouldRedirect:boolean=false) => {
   const authRes = await authenticator.isAuthenticated(request);
-
-  const currentUrl = new URL(request.url);
 
   if (!authRes) {
     const session = await getSession(request);
+    const currentUrl = new URL(request.url);
     session.set(REDIRECT_URL, currentUrl);
-    return handleResponse({
+          
+    session.flash(
+            authenticator.sessionErrorKey,
+            "You are not authorized to access this resource. Please log in and try again."
+          );
+
+    if (shouldRedirect) { 
+      
+      throw redirect("/auth", {
+        headers: {
+          "Set-Cookie": await commitSession(session)
+        }
+      })
+
+
+    }
+    /*return handleResponse({
       error: {
         message:
           "You are not authorized to access this resource. Please log in and try again.",
@@ -105,6 +86,7 @@ export const isAuthenticated = async (request: Request) => {
       statusCode: 401,
       statusText: "Unauthorized",
     });
+    */
   }
 
   return authRes;
