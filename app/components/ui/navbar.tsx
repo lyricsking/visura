@@ -1,11 +1,32 @@
 import { NavLink } from "@remix-run/react";
 import { Menu } from "~/types/menu";
+import { renderIcon } from "./icon-loader";
 
 export type NavbarProps = {
   menu: Menu[];
 };
 
-export function Navbar({ menu }: NavbarProps) {
+export function Navbar() {
+  const menu: Menu[] = [
+    {
+      id: "home",
+      label: "Home",
+      path: "/administration",
+      icon: "lucide-Home",
+    },
+    {
+      id: "page",
+      label: "Page",
+      path: "/administration/pages",
+      icon: "lucide-PanelLeft",
+    },
+    {
+      id: "settings",
+      label: "Settings",
+      path: "/administration/settings",
+      icon: "lucide-Settings",
+    },
+  ];
   return (
     <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
       {menu.map((menu) => {
@@ -22,6 +43,11 @@ export function Navbar({ menu }: NavbarProps) {
             }
             end={true}
           >
+            {/* {menu.icon &&
+              renderIcon({
+                icon: menu.icon,
+                className: "w-5 h-5 inline-block mr-2",
+              })} */}
             {menu.label}
           </NavLink>
         );

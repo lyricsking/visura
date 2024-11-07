@@ -27,6 +27,7 @@ import { handleResponse } from "~/core/utils/helpers";
 import { APP_NAME, getAppContext } from "~/app";
 import { useAppContext } from "~/core/utils/app-context";
 import { getUserOrFetch } from "~/core/user/server/user.server";
+import { Navbar } from "~/components/ui/navbar";
 
 export const handle = {
   breadcrumb: {
@@ -40,17 +41,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Get the authenticated user or redirects to auth page
   const authRes = await isAuthenticated(request, true);
 
-    // check the subdomain we are accessing the page from, useed to manage staff users access.
-    // let subdomain = getSubdomain(request);
-    // if the user has role access to the subdomain
-    // Get the cache user object from session, could be undefined or IHydrated user.
+  // check the subdomain we are accessing the page from, useed to manage staff users access.
+  // let subdomain = getSubdomain(request);
+  // if the user has role access to the subdomain
+  // Get the cache user object from session, could be undefined or IHydrated user.
 
-    const user = await getUserOrFetch(request, authRes!.email);
-    console.log(user);
+  const user = await getUserOrFetch(request, authRes!.email);
 
-    return json({ user });
-  
-
+  return json({ user });
 };
 
 export default function Layout() {
@@ -86,25 +84,25 @@ export default function Layout() {
 
   return (
     <SidebarProvider>
+      {/* Admin sidebar drawer */}
       <AdminSidebar />
-      { /** PageLayout */}
+      {/** PageLayout */}
       <PageLayout className="bg-gray-100">
         <PageLayoutHeader position={"sticky"} className="bg-white">
-          <PageLayoutHeaderItem spacing={"compact"} className="">
+          <PageLayoutHeaderItem spacing={"compact"}>
             <div className="flex w-full items-center justify-between space-x-2">
               <div className="flex flex-row items-center gap-2 text-lg text-center font-medium sm:text-sm md:gap-6">
-                { /** Sidebar Trigger */}
+                {/** Sidebar Trigger */}
                 <SidebarTrigger />
-
-                <Link to="">
+                <Link to="/administration">
                   <h1 className="text-[24px] font-bold tracking-tight">
                     {appName}
                   </h1>
                 </Link>
-                {/* <Navbar menu={menu} /> */}
+                {/* <Navbar /> */}
               </div>
 
-              <HeaderIcons user={user as any } />
+              <HeaderIcons user={user as any} />
             </div>
           </PageLayoutHeaderItem>
 
@@ -118,7 +116,9 @@ export default function Layout() {
             {currentpage || "Dashboard"}
           </h1>
 
-          <Outlet context={{ user: user }} />
+          <div className="px-4">
+            <Outlet context={{ user: user }} />
+          </div>
         </PageLayoutContent>
       </PageLayout>
     </SidebarProvider>

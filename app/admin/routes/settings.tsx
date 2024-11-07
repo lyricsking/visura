@@ -6,7 +6,6 @@ import {
 } from "@remix-run/node";
 import {
   Outlet,
-  ShouldRevalidateFunction,
   ShouldRevalidateFunctionArgs,
   useLoaderData,
   useNavigate,
@@ -33,9 +32,7 @@ import {
 } from "~/core/user/server/user.server";
 import formDataToObject from "~/core/utils/form-data-to-object";
 import { getSession, commitSession } from "~/core/utils/session";
-import NotificationSettings from "../components/notification-settings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
-import ProfileSettings from "./profile-settings";
 
 export const handle = {
   pageName: "Settings",
@@ -93,7 +90,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const tab = new URL(request.url).pathname.split("/")[3];
+  const tab = new URL(request.url).pathname.split("/")[3] ?? "";
   console.log(tab);
   // if (!tab) {
   //   return redirect("/administration/settings/general");
@@ -135,7 +132,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
+    <div className="flex flex-1 flex-col gap-4 sm:gap-8">
       <Tabs defaultValue={tab} onValueChange={onSettingChange}>
         <TabsList className="bg-white border-violet-400 rounded-t-md overflow-x-auto no-scrollbar">
           <TabsTrigger value="" className="capitalize">

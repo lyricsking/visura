@@ -34,13 +34,11 @@ import { ApiResponse } from "~/core/utils/helpers";
 import { useLoaderData } from "@remix-run/react";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  url.pathname = "/api/pages";
-
+  const url = "http://localhost:3000/api/pages";
   const pagesReq = await fetch(url);
+
   const pagesRes: ApiResponse<IPage[] | null> = await pagesReq.json();
 
-  console.log(pagesRes);
   const { data, error, success, statusCode } = pagesRes;
 
   return json({ data, error });

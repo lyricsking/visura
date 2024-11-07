@@ -43,7 +43,7 @@ export const authenticate = async (
 
   const session = await getSession(request);
   if (isAuthUser(authUser)) await setAuthUser(session, authUser);
-  
+
   return authUser;
 };
 
@@ -55,28 +55,28 @@ export const authenticate = async (
  * @param request `Request` Request object of the current page
  * @param options Optional options to pass to authenticator
  */
-export const isAuthenticated = async (request: Request, shouldRedirect:boolean=false) => {
+export const isAuthenticated = async (
+  request: Request,
+  shouldRedirect: boolean = false
+) => {
   const authRes = await authenticator.isAuthenticated(request);
 
   if (!authRes) {
     const session = await getSession(request);
     const currentUrl = new URL(request.url);
     session.set(REDIRECT_URL, currentUrl);
-          
-    session.flash(
-            authenticator.sessionErrorKey,
-            "You are not authorized to access this resource. Please log in and try again."
-          );
 
-    if (shouldRedirect) { 
-      
+    session.flash(
+      authenticator.sessionErrorKey,
+      "You are not authorized to access this resource. Please log in and try again."
+    );
+
+    if (shouldRedirect) {
       throw redirect("/auth", {
         headers: {
-          "Set-Cookie": await commitSession(session)
-        }
-      })
-
-
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     }
     /*return handleResponse({
       error: {

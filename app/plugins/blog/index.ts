@@ -11,7 +11,7 @@ export default class BlogPlugin implements IBasePlugin {
   readonly settings: PluginSetting = {
     routes: [
       {
-        path: "/app/plugins/blog",
+        path: "/blog",
         loader: blogLoader,
         metadata: { title: "Blog", description: "" },
         content: {

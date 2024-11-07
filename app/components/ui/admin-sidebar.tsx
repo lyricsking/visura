@@ -1,4 +1,3 @@
-import { Home, PanelLeft } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,27 +9,32 @@ import {
   SidebarMenuItem,
 } from "../sidebar";
 import { Menu } from "~/types/menu";
-import Page from "./page";
 import { renderIcon } from "./icon-loader";
-import { Link, NavLink } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
+import { Settings2 } from "lucide-react";
 
-const items: Menu[]= [
+const items: Menu[] = [
   {
     id: "home",
     label: "Home",
     path: "/administration",
-    icon: "lucide-Home",
+    // icon: "lucide-Home",
   },
   {
     id: "page",
     label: "Page",
     path: "/administration/pages",
-    icon: "lucide-PanelLeft"
-  }
+    // icon: "lucide-PanelLeft",
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    path: "/administration/settings",
+    // icon: "lucide-Settings",
+  },
 ];
 
 export function AdminSidebar() {
-  
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -42,11 +46,12 @@ export function AdminSidebar() {
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton asChild>
                     <NavLink
+                      key={item.id}
                       to={item.path}
                       className={({ isActive, isPending }) =>
-                        `flex items-center px-4 py-2 mt-5 text-gray-800 capitalize transition-colors duration-300 transform ${
+                        `py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform ${
                           isActive
-                            ? "bg-gray-200 dark:bg-gray-700"
+                            ? "bg-gray-100 dark:bg-gray-700"
                             : "hover:bg-gray-100 dark:hover:bg-gray-700"
                         } ${isPending ? "animate-none" : ""}`
                       }
@@ -57,8 +62,7 @@ export function AdminSidebar() {
                           icon: item.icon,
                           className: "w-5 h-5 inline-block mr-2",
                         })}
-
-                      <span>{item.label}</span>
+                      {item.label}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
