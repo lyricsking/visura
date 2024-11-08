@@ -23,40 +23,51 @@ import {
 import Button from "~/components/button";
 import { FormEvent, useEffect, useState } from "react";
 import { IPage } from "~/core/page/types/page";
+import { DISPLAY_OPTION_KEY } from "~/core/option/types/option";
+import lo from "lodash";
+import formDataToObject from "~/core/utils/form-data-to-object";
 
 export const loader = async ({}: LoaderFunctionArgs) => {
   const app = await getAppContext();
-  const displaySettings = app.configs("rwp_display");
 
-  const [plugnHomepages, staticPages] = await Promise.all([
-    [] as IPage[],
-    fetch("http://localhost:3000/api/pages").then((req) => {
+  const displaySettings = app.config(DISPLAY_OPTION_KEY) as DisplayOptions;
+  const pluginRoutes = app.pluginRoutes.filter(
+    (route) => route.default != false
+  );
+  const staticPages = await fetch("http://localhost:3000/api/pages").then(
+    (req) => {
       if (req) return req.json();
-    }) as Promise<any>,
-  ]);
+      return [];
+    }
+  );
 
   const data = {
-    rwp_display,
-    plugnHomepages,
+    displaySettings,
+    pluginRoutes,
     staticPages: staticPages.data as IPage[],
   };
-  console.log(data);
 
   return json(data);
 };
 
 export default function DisplaySettings() {
-  const { rwp_display, staticPages, plugnHomepages } =
+  const { displaySettings, staticPages, pluginRoutes } =
     useLoaderData<typeof loader>();
-  const { save } = useOptions();
+  const { isSubmitting, save } = useOptions();
   const navigation = useNavigation();
-  const [homeValue, setHomeValue] = useState<string>(rwp_display.homepage.type);
+  const [homepageType, setHomepageType] = useState<string>(
+    displaySettings.homepage.type
+  );
+  const [homepagePath, setHomepagePath] = useState<string>(
+    displaySettings.homepage.path
+  );
+
   const [secondSelectOptions, setOptions] = useState(() => {
-    if (homeValue === "static") {
+    if (homepageType === "static") {
       return staticPages;
     }
 
-    return plugnHomepages;
+    return pluginRoutes;
   });
 
   let formData: any = navigation.formData;
@@ -64,25 +75,36 @@ export default function DisplaySettings() {
   let title = formData?.get("title")?.toString() || "";
 
   useEffect(() => {
-    if (homeValue) {
-      if (homeValue === "static") {
+    if (homepageType) {
+      if (homepageType === "static") {
         setOptions(staticPages);
-      } else{
-        setOptions(plugnHomepages);
+      } else {
+        setOptions(pluginRoutes);
       }
     }
-  }, [homeValue]);
+  }, [homepageType]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    console.log(event.currentTarget);
+    event.preventDefault();
+
+    const formDataObj = formDataToObject(new FormData(event.currentTarget));
     // save
+
+    const values: DisplayOptions = {
+      homepage: {
+        type: formDataObj["type"],
+        path: formDataObj["path"],
+      },
+    };
+    save(DISPLAY_OPTION_KEY, values);
   }
 
   function onHomeTypeChanged(value: string): void {
-    setHomeValue(value as HomepageType);
+    setHomepageType(value as HomepageType);
   }
 
   function onPageValue(value: string): void {
+    setHomepagePath(value);
   }
 
   return (
@@ -92,14 +114,20 @@ export default function DisplaySettings() {
           <Label asChild>
             <div className="grid auto-rows-auto gap-2">
               Homepage Display:
-              <Select name="type" onValueChange={onHomeTypeChanged}>
+              <Select
+                name="type"
+                defaultValue={homepageType}
+                onValueChange={onHomeTypeChanged}
+              >
                 <SelectTrigger id="type" className="bg-white">
-                  <SelectValue placeholder={rwp_display.homepage.type} />
+                  <SelectValue
+                    placeholder={lo.capitalize(displaySettings.homepage.type)}
+                  />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   {homepageDisplayType.map((type) => (
-                    <SelectItem key={type} value={type} className="capitalize">
-                      {type}
+                    <SelectItem key={type} value={type}>
+                      {lo.capitalize(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -107,19 +135,29 @@ export default function DisplaySettings() {
             </div>
           </Label>
 
-          {homeValue && (
+          {homepageType && (
             <Label asChild>
               <div className="grid auto-rows-auto gap-2">
-                Select a {homeValue} page
-                <Select name="type" onValueChange={onPageValue}>
-                  <SelectTrigger id="type" className=" bg-white">
-                    <SelectValue placeholder={secondSelectOptions[0]?.path} />
+                Select a {homepageType} page
+                <Select
+                  name="path"
+                  defaultValue={homepagePath}
+                  onValueChange={onPageValue}
+                >
+                  <SelectTrigger id="path" className=" bg-white">
+                    <SelectValue
+                      placeholder={
+                        secondSelectOptions.find(
+                          (page) => page.path == homepagePath
+                        )?.metadata.title
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
                     {secondSelectOptions.map((page) => (
                       <SelectItem
                         key={page.path}
-                        value={"/"}
+                        value={page.path}
                         className="capitalize"
                       >
                         {page.metadata.title}
@@ -132,8 +170,8 @@ export default function DisplaySettings() {
           )}
         </div>
 
-        <Button type="submit" className="mt-2">
-          Save
+        <Button type="submit" className="mt-2" disabled={isSubmitting}>
+          {isSubmitting ? "Saving" : "Save"}
         </Button>
       </Form>
     </div>

@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserFromSession(request);
 
   const app = await getAppContext();
-  return json({ config: { appName: app.configs(APP_NAME) }, user: user! });
+  return json({ config: { appName: app.config(APP_NAME) }, user: user! });
 };
 
 export default function Default() {

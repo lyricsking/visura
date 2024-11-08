@@ -31,8 +31,8 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
   const app = await getAppContext();
 
   if (!user) {
-    const signupEnabled = app.configs("signupEnabled");
-    const autoSignupEnabled = app.configs("autoSignupEnabled");
+    const signupEnabled = app.config("signupEnabled");
+    const autoSignupEnabled = app.config("autoSignupEnabled");
 
     if (!signupEnabled || !autoSignupEnabled) {
       throw new Error("You are not allowed to access this resource.");
@@ -59,6 +59,6 @@ export const formStrategy = new FormStrategy(async ({ form, request }) => {
     id: user._id.toString(),
     email: user.email,
   };
-  
+
   return authUser;
 });

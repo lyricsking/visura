@@ -3,7 +3,7 @@ import { IOption } from "../types/option";
 
 type IOptionModel = Model<IOption>;
 const optionSchema = new Schema<IOption, IOptionModel>({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   value: { type: Schema.Types.Mixed, default: {} },
   autoload: { type: Boolean, default: false },
 });

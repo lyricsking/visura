@@ -34,6 +34,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const formObject = formDataToObject(formData);
 
+  console.log("subm", JSON.stringify({ formObject }, null, 2));
+
   const name = formObject["name"];
   const value = formObject["value"];
 

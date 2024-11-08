@@ -56,7 +56,7 @@ export default function Layout() {
 
   let user = data.user;
 
-  const appName = useAppContext().configs(APP_NAME);
+  const appName = useAppContext().config(APP_NAME);
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);

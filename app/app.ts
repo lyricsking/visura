@@ -16,7 +16,7 @@ type PluginInstance = IPlugin & { instance: IBasePlugin };
 
 class AppContext {
   private static baseUrl =
-  "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
+    "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
   // "https://ynm7f3-3000.csb.app";
   private static instance: AppContext | null = null;
   private static queue: Array<(instance: AppContext) => void> = [];
@@ -125,7 +125,7 @@ class AppContext {
     }
   }
 
-  configs(key: string) {
+  config(key: string) {
     const option = this._configs.find((option) => option.name === key);
     return option?.value;
   }
@@ -138,22 +138,20 @@ class AppContext {
     return option?.value["homepage"];
   }
 
+  get pluginRoutes() {
+    return this.activePlugins.flatMap((plugin) =>
+      plugin.instance.routes ? Object.values(plugin.instance.routes) : []
+    );
+  }
+
   plugin(name: string) {
     return Object.entries(this.activePlugins).find(
       ([key, value]) => key === name
     );
   }
 
-  get routes() {
-    return this.activePlugins.flatMap((plugin) =>
-      plugin.instance.settings?.routes
-        ? Object.values(plugin.instance.settings.routes)
-        : []
-    );
-  }
-
   findRoute(path: string): Omit<IPage, "id"> | undefined {
-    return this.routes.find((route) => {
+    return this.pluginRoutes.find((route) => {
       return route.path === path;
     });
   }

@@ -52,7 +52,7 @@ export default function Layout() {
         <PageLayoutHeaderItem className="border bg-white">
           <Link to={"/"} replace>
             <h1 className="text-[28px] font-bold tracking-tight">
-              {app.configs(APP_NAME)}
+              {app.config(APP_NAME)}
             </h1>
           </Link>
           <Button

@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { PageModel } from "../../models/page.model";
+import { PageModel } from "../../models/page.server";
 import { IPage } from "../../types/page";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { handleResponse } from "~/core/utils/helpers";

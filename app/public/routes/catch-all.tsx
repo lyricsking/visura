@@ -4,50 +4,43 @@ import { match, MatchResult } from "path-to-regexp";
 import { getAppContext } from "~/app";
 import { IPage, PageContentType } from "~/core/page/types/page";
 import { renderPage } from "~/components/ui/render-page";
-import { PageModel } from "~/core/page/models/page.model";
+import { PageModel } from "~/core/page/models/page.server";
 
 const NOT_FOUND_PATH = "not-found";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const { request } = args;
-  const path = new URL(request.url).pathname;
+  let path = new URL(request.url).pathname || NOT_FOUND_PATH;
   const app = await getAppContext();
 
   let page;
   let loaderData: any;
+  let params: any;
 
   page = await PageModel.findOne({ path: path });
   if (!page) {
-    page = app.findRoute(path) as IPage;
-  }
+    // page = app.findRoute(path) as IPage;
 
-  const matchedRoute = app.routes.find((route) => {
-    const matchRoute = match(route.path, { decode: decodeURIComponent });
-    return matchRoute(path);
-  });
-
-  if (matchedRoute) {
-    const { path: p, params } = match(matchedRoute.path, {
-      decode: decodeURIComponent,
-    })(path) as MatchResult<any>;
-    const data = matchedRoute.loader
-      ? await matchedRoute.loader({ ...args, app })
-      : null;
-
-    return json({
-      path: matchedRoute.path,
-      params: params,
-      data,
-      content: matchedRoute.content,
+    page = app.pluginRoutes.find((route) => {
+      const matchRoute = match(route.path, { decode: decodeURIComponent });
+      return matchRoute(path);
     });
+
+    if (page) {
+      const matchedData = match(page.path, {
+        decode: decodeURIComponent,
+      })(path) as MatchResult<any>;
+      params = matchedData.params;
+      path = matchedData.path;
+      loaderData = page.loader ? await page.loader({ ...args, app }) : null;
+    }
   }
 
-  // If no route matched, return default not-found response
   return json({
-    data: {},
-    path: NOT_FOUND_PATH,
-    params: undefined,
-    content: null,
+    path: path ,
+    params: params,
+    data: loaderData,
+    content: page?.content,
   });
 };
 

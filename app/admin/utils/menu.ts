@@ -1,4 +1,4 @@
-import config from "@/config";
+
 import {
   Package2,
   Boxes,
@@ -10,7 +10,7 @@ import {
   LifeBuoy,
   NewspaperIcon,
 } from "lucide-react";
-import { UserType } from "~/core/user/types/user.types";
+import { UserType } from "~/core/user/models/user.model";
 
 const userDashboardMenuItems = [
   {

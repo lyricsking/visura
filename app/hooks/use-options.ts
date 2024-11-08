@@ -1,25 +1,22 @@
-import { useFetcher, useSubmit } from "@remix-run/react";
+import { useFetcher, useNavigation, useSubmit } from "@remix-run/react";
 
 export const useOptions = () => {
-  const submit = useSubmit();
+  const fetcher = useFetcher();
 
   const add = (name: string, value: any, autoload: boolean = false) => {
-    submit(
+    fetcher.submit(
       { name, value, autoload },
-      { method: "POST", action: "/api/add-options", navigate: false }
+      { method: "POST", action: "/api/options" }
     );
   };
 
   const save = (name: string, value: any) => {
-    submit(
-      { name, value },
-      { action: "/api/save-options", method: "POST", navigate: false }
-    );
+    fetcher.submit({ name, value }, { action: "/api/options", method: "POST" });
   };
 
   // const saveUserMeta = (key: string, value: any) => {
-  //   fetcher.submit({ key: value }, { action: "/api/user-profile" });
+  //   fetcher.fetcher.submit({ key: value }, { action: "/api/user-profile" });
   // };
 
-  return { add, save };
+  return { add, save, isSubmitting: fetcher.state !== "idle" };
 };

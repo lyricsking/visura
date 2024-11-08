@@ -32,8 +32,8 @@ export const googleStrategy = new GoogleStrategy(
     const app = await getAppContext();
 
     if (!user) {
-      const signupEnabled = app.configs("signupEnabled");
-      const autoSignupEnabled = app.configs("autoSignupEnabled");
+      const signupEnabled = app.config("signupEnabled");
+      const autoSignupEnabled = app.config("autoSignupEnabled");
 
       if (!signupEnabled || !autoSignupEnabled) {
         throw new AuthorizationError(
