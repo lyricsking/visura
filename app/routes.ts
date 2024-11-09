@@ -15,11 +15,12 @@ export default function routes(route: DefineRouteFunction) {
   route("administration", "admin/routes/layout.tsx", () => {
     route("", "admin/routes/overview.tsx", { index: true });
     route("pages", "admin/routes/pages.tsx");
+    route("pages/:new", "admin/routes/page-edit.tsx");
     route("users", "admin/routes/users.tsx");
     route("settings", "admin/routes/settings.tsx", { id: "setting" }, () => {
       route("general", "admin/routes/general-settings.tsx", { index: true });
       route("display", "admin/routes/display-settings.tsx");
-      route("privacy", "admin/routes/privacy-settings.tsx");
+      route("policy", "admin/routes/privacy-settings.tsx");
     });
     route("*", "admin/routes/catch-all.tsx");
   });

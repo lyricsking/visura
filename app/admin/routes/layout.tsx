@@ -4,11 +4,9 @@ import {
   Link,
   Outlet,
   useLoaderData,
-  useLocation,
   useMatches,
 } from "@remix-run/react";
-import { isAuthenticated, setAuthUser } from "~/core/auth/server/auth.server";
-import { isAuthUser } from "~/core/auth/utils/helper";
+import { isAuthenticated } from "~/core/auth/server/auth.server";
 import Breadcrumb from "~/components/breadcrumb";
 import {
   PageLayout,
@@ -16,15 +14,10 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-import { getSubdomain } from "~/core/utils/domain";
 import HeaderIcons from "../components/header-icons";
-import { Menu } from "~/types/menu";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/components/ui/admin-sidebar";
-import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
-import User, { IHydratedUser } from "~/core/user/models/user.model";
-import { handleResponse } from "~/core/utils/helpers";
-import { APP_NAME, getAppContext } from "~/app";
+import { APP_NAME } from "~/app";
 import { useAppContext } from "~/core/utils/app-context";
 import { getUserOrFetch } from "~/core/user/server/user.server";
 import { Navbar } from "~/components/ui/navbar";
@@ -33,7 +26,7 @@ export const handle = {
   breadcrumb: {
     id: "dashboard",
     label: "Dashboard",
-    path: "/dashboard",
+    path: "/administration",
   },
 };
 

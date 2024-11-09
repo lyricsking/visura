@@ -1,6 +1,7 @@
 import { NavLink } from "@remix-run/react";
 import { Menu } from "~/types/menu";
 import { renderIcon } from "./icon-loader";
+import { cn } from "~/core/utils/util";
 
 export type NavbarProps = {
   menu: Menu[];
@@ -27,6 +28,7 @@ export function Navbar() {
       icon: "lucide-Settings",
     },
   ];
+  
   return (
     <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
       {menu.map((menu) => {
@@ -35,11 +37,12 @@ export function Navbar() {
             key={menu.id}
             to={menu.path}
             className={({ isActive, isPending }) =>
-              `py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform ${
-                isActive
-                  ? "bg-gray-100 dark:bg-gray-700"
-                  : "hover:bg-gray-100 dark:hover:bg-gray-700"
-              } ${isPending ? "animate-none" : ""}`
+              cn(
+                "py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform",
+                "hover:bg-gray-100 dark:hover:bg-gray-700",
+                isActive && "bg-gray-100 dark:bg-gray-700",
+                isPending && "animate-none"
+              )
             }
             end={true}
           >

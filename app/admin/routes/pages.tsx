@@ -8,7 +8,7 @@ import {
   DropdownMenuCheckboxItem,
 } from "@radix-ui/react-dropdown-menu";
 import { Badge } from "~/components/badge";
-import Button from "~/components/button";
+import Button, { buttonVariants } from "~/components/button";
 import {
   Card,
   CardHeader,
@@ -31,7 +31,8 @@ import { Progress } from "~/components/progress";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { IPage } from "~/core/page/types/page";
 import { ApiResponse } from "~/core/utils/helpers";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { cn } from "~/core/utils/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = "http://localhost:3000/api/pages";
@@ -75,14 +76,18 @@ export default function Pages() {
           <CardHeader className="pb-3">
             <CardTitle>Custom Pages</CardTitle>
             <CardDescription className="max-w-lg text-balance leading-relaxed">
-              Manage all yur custom pages via a single dashboard. Create, manage
-              and organize all your custom pages. It is where to create static
-              page such as Static landing page, About Us, Contact Us, Services,
-              Privacy policy and Terms of Service.
+              Manage and organize all custom pages via a single dashboard.
+              <br />
+              <br />
+              Create and manage static pages such as Static landing or homepage,
+              About Us, Contact Us, Services, Privacy policy and Terms of
+              Service pages.
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Button>Create New Page</Button>
+            <Link to={"new"} className={cn(buttonVariants())}>
+              Create New Page
+            </Link>
           </CardFooter>
         </Card>
         <Card x-chunk="dashboard-05-chunk-1">

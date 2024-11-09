@@ -1,8 +1,6 @@
 import {
-  ActionFunction,
   json,
   LoaderFunctionArgs,
-  redirect,
 } from "@remix-run/node";
 import {
   Outlet,
@@ -11,27 +9,7 @@ import {
   useNavigate,
   useOutletContext,
 } from "@remix-run/react";
-import {
-  PROFILE_UPDATE_ACTION,
-  PASSWORD_UPDATE_ACTION,
-  ACCOUNT_UPDATE_ACTION,
-  NOTIFICATION_UPDATE_ACTION,
-  DISPLAY_UPDATE_ACTION,
-  ORDER_UPDATE_ACTION,
-} from "../utils/constants";
-import { logout } from "~/core/auth/server/auth.server";
 import { IHydratedUser } from "~/core/user/models/user.model";
-import {
-  updateUserProfile,
-  updateUserPreference,
-} from "~/core/user/server/user-profile.server";
-import {
-  updateUserPassword,
-  getUserFromSession,
-  invalidateCacheUser,
-} from "~/core/user/server/user.server";
-import formDataToObject from "~/core/utils/form-data-to-object";
-import { getSession, commitSession } from "~/core/utils/session";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 export const handle = {
@@ -43,58 +21,8 @@ export const handle = {
   },
 };
 
-export const action: ActionFunction = async ({ request }) => {
-  const user = await getUserFromSession(request);
-
-  const formData = await request.formData();
-  const formObject = formDataToObject(formData);
-
-  const { _action, ...otherData } = formObject;
-
-  let userId = user?.id;
-  if (!userId) throw Error("ggg");
-  if (_action === PROFILE_UPDATE_ACTION) {
-    const [firstName, lastName] = otherData["name"].split(" ");
-    await updateUserProfile(userId, { firstName, lastName });
-  } else if (_action === PASSWORD_UPDATE_ACTION) {
-    await updateUserPassword(
-      userId,
-      otherData["currentPassword"],
-      otherData["newPassword"]
-    );
-  } else if (_action === ACCOUNT_UPDATE_ACTION) {
-    await logout(request, { redirectTo: "/" });
-  } else if (_action === NOTIFICATION_UPDATE_ACTION) {
-    // let notification: IUserMeta[""]["notifications"] = {
-    //   orderUpdates: otherData["orderUpdates"] === "true" ? true : false,
-    //   subscriptionReminders:
-    //     otherData["subscriptionReminders"] === "true" ? true : false,
-    //   promotional: otherData["promotional"] === "true" ? true : false,
-    //   supportNotification:
-    //     otherData["supportNotification"] === "true" ? true : false,
-    //   preferredSupportChannel: otherData["preferredSupportChannel"] || "chat",
-    // };
-    // await updateUserPreference(userId, "notifications", notification);
-  } else if (_action === DISPLAY_UPDATE_ACTION) {
-    await updateUserPreference(userId, "display", otherData);
-  } else if (_action === ORDER_UPDATE_ACTION) {
-    await updateUserPreference(userId, "order", otherData);
-  } else {
-    return null;
-  }
-
-  const session = await getSession(request);
-  await invalidateCacheUser(session);
-
-  return json({}, { headers: { "Set-Cookie": await commitSession(session) } });
-};
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const tab = new URL(request.url).pathname.split("/")[3] ?? "";
-  console.log(tab);
-  // if (!tab) {
-  //   return redirect("/administration/settings/general");
-  // }
 
   return json({ tab: tab });
 };

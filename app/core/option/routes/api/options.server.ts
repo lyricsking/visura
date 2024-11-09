@@ -31,16 +31,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   let userId = user?.id;
 
-  const formData = await request.formData();
-  const formObject = formDataToObject(formData);
+  const jsonData = await request.json();
 
-  console.log("subm", JSON.stringify({ formObject }, null, 2));
-
-  const name = formObject["name"];
-  const value = formObject["value"];
+  const name=jsonData["name"]
+  const value = jsonData["value"];
 
   let response: DBReponse<UpdateWriteOpResult | null> = await handleDbResult(
-    OptionModel.updateOne({ name, value: value }).exec()
+    OptionModel.updateOne({name},{ name, value: value }).exec()
   );
 
   return handleResponse<UpdateWriteOpResult | null>({

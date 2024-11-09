@@ -1,10 +1,5 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useNavigation,
-} from "@remix-run/react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { getAppContext } from "~/app";
 import { Label } from "~/components/label";
 import {
@@ -23,26 +18,33 @@ import {
 import Button from "~/components/button";
 import { FormEvent, useEffect, useState } from "react";
 import { IPage } from "~/core/page/types/page";
-import { DISPLAY_OPTION_KEY } from "~/core/option/types/option";
+import { DISPLAY_OPTION_KEY, IOption } from "~/core/option/types/option";
 import lo from "lodash";
 import formDataToObject from "~/core/utils/form-data-to-object";
 
 export const loader = async ({}: LoaderFunctionArgs) => {
   const app = await getAppContext();
 
-  const displaySettings = app.config(DISPLAY_OPTION_KEY) as DisplayOptions;
   const pluginRoutes = app.pluginRoutes.filter(
     (route) => route.default != false
   );
-  const staticPages = await fetch("http://localhost:3000/api/pages").then(
-    (req) => {
+
+  const optionsURL = new URL("http://localhost:3000/api/options");
+  optionsURL.searchParams.set("name", DISPLAY_OPTION_KEY);
+
+  const [displaySettings, staticPages] = await Promise.all([
+    await fetch(optionsURL).then((req) => {
       if (req) return req.json();
       return [];
-    }
-  );
+    }),
+    await fetch("http://localhost:3000/api/pages").then((req) => {
+      if (req) return req.json();
+      return [];
+    }),
+  ]);
 
   const data = {
-    displaySettings,
+    displaySettings: displaySettings.data[0].value as DisplayOptions,
     pluginRoutes,
     staticPages: staticPages.data as IPage[],
   };
@@ -53,6 +55,7 @@ export const loader = async ({}: LoaderFunctionArgs) => {
 export default function DisplaySettings() {
   const { displaySettings, staticPages, pluginRoutes } =
     useLoaderData<typeof loader>();
+
   const { isSubmitting, save } = useOptions();
   const navigation = useNavigation();
   const [homepageType, setHomepageType] = useState<string>(
