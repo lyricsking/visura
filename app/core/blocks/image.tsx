@@ -1,17 +1,20 @@
+import Button from "~/components/button";
+import { BlockProps } from ".";
 
-
-interface ImageBlockProps {
+interface ImageBlockProps extends BlockProps {
   src: string;
   alt: string;
+  className: string;
 }
 
-export const ImageBlock: Block<ImageBlockProps> = {
-  type: "image",
-  props: {
-    src: "",
-    alt: "",
-  },
-  render(props) {
-    return <img src={props.src} alt={props.alt} />;
-  },
-};
+export function ImageBlock({ src, alt }: ImageBlockProps) {
+  return (
+    <div className="p-4 bg-gray-200 my-2 rounded">
+      {src && alt ? (
+        <img src={src} alt={alt} className="" />
+      ) : (
+        <Button className="bg-blue-500">Upload image</Button>
+      )}
+    </div>
+  );
+}
