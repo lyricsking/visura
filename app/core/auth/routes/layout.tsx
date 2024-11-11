@@ -11,7 +11,7 @@ import { useAppContext } from "~/core/utils/app-context";
 
 export default function Layout() {
   const app = useAppContext();
-  const appName = app.configs(APP_NAME);
+  const appName = app.config(APP_NAME);
 
   return (
     <PageLayout className="bg-white max-h-screen overflow-y-auto no-scrollbar">

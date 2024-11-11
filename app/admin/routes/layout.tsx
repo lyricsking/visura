@@ -4,11 +4,9 @@ import {
   Link,
   Outlet,
   useLoaderData,
-  useLocation,
   useMatches,
 } from "@remix-run/react";
 import { isAuthenticated } from "~/core/auth/server/auth.server";
-import { isAuthUser } from "~/core/auth/utils/helper";
 import Breadcrumb from "~/components/breadcrumb";
 import {
   PageLayout,
@@ -16,57 +14,42 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-import { getSubdomain } from "~/core/utils/domain";
 import HeaderIcons from "../components/header-icons";
-import { Menu } from "~/types/menu";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/components/ui/admin-sidebar";
-import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
-import User, { IHydratedUser } from "~/core/user/models/user.model";
-import { handleResponse } from "~/core/utils/helpers";
-import { APP_NAME, getAppContext } from "~/app";
+import { APP_NAME } from "~/app";
 import { useAppContext } from "~/core/utils/app-context";
 import { getUserOrFetch } from "~/core/user/server/user.server";
+import { Navbar } from "~/components/ui/navbar";
 
 export const handle = {
   breadcrumb: {
     id: "dashboard",
     label: "Dashboard",
-    path: "/dashboard",
+    path: "/administration",
   },
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Get the authenticated user or redirects to auth page
-  const authRes = await isAuthenticated(request);
-
-  if (!isAuthUser(authRes)) {
-    return authRes;
-  }
+  const authRes = await isAuthenticated(request, true);
 
   // check the subdomain we are accessing the page from, useed to manage staff users access.
   // let subdomain = getSubdomain(request);
   // if the user has role access to the subdomain
   // Get the cache user object from session, could be undefined or IHydrated user.
-  let userResponse: DBReponse<IHydratedUser | undefined> = await handleDbResult(
-    getUserOrFetch(request, authRes.email)
-  );
 
-  return handleResponse<IHydratedUser | null>({
-    ...userResponse,
-    statusCode: 200,
-  });
+  const user = await getUserOrFetch(request, authRes!.email);
+
+  return json({ user });
 };
 
 export default function Layout() {
   const data = useLoaderData<typeof loader>();
 
-  let user: IHydratedUser = {} as IHydratedUser;
-  if (data.success) {
-    user = data.data as IHydratedUser;
-  }
+  let user = data.user;
 
-  const appName = useAppContext().configs(APP_NAME);
+  const appName = useAppContext().config(APP_NAME);
 
   const matches = useMatches();
   const currentRoute: any = matches.at(-1);
@@ -94,23 +77,25 @@ export default function Layout() {
 
   return (
     <SidebarProvider>
+      {/* Admin sidebar drawer */}
       <AdminSidebar />
+      {/** PageLayout */}
       <PageLayout className="bg-gray-100">
         <PageLayoutHeader position={"sticky"} className="bg-white">
-          <PageLayoutHeaderItem spacing={"compact"} className="">
+          <PageLayoutHeaderItem spacing={"compact"}>
             <div className="flex w-full items-center justify-between space-x-2">
               <div className="flex flex-row items-center gap-2 text-lg text-center font-medium sm:text-sm md:gap-6">
+                {/** Sidebar Trigger */}
                 <SidebarTrigger />
-
-                <Link to="">
+                <Link to="/administration">
                   <h1 className="text-[24px] font-bold tracking-tight">
                     {appName}
                   </h1>
                 </Link>
-                {/* <Navbar menu={menu} /> */}
+                {/* <Navbar /> */}
               </div>
 
-              <HeaderIcons user={user} />
+              <HeaderIcons user={user as any} />
             </div>
           </PageLayoutHeaderItem>
 
@@ -124,7 +109,9 @@ export default function Layout() {
             {currentpage || "Dashboard"}
           </h1>
 
-          <Outlet context={{ user: user }} />
+          <div className="px-4">
+            <Outlet context={{ user: user }} />
+          </div>
         </PageLayoutContent>
       </PageLayout>
     </SidebarProvider>

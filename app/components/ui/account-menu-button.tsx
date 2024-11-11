@@ -21,13 +21,12 @@ export default function AccountMenuButton({ menu, user }: Props) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  let profile = user?.profile;
-  let profilePhoto = profile?.photo;
+  let profilePhoto = user?.photo;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-2">
-        {profile && profilePhoto ? (
+        {user && profilePhoto ? (
           <img
             src={profilePhoto}
             alt="User account menu icon"

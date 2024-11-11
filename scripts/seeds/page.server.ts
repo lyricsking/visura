@@ -1,15 +1,15 @@
-import { PageModel } from "~/core/page/models/page.model";
+import { PageModel } from "~/core/page/models/page.server";
 
 export const seedPages = async () => {
   try {
     await PageModel.updateOne(
-      { path: "" },
+      { path: "/" },
       {
         metadata: {
           title: "Default Home",
           description: "The default page description.",
         },
-        content: { type: "markdown", value: "# Hi there!" },
+        content: { type: "markdown", value: "# Hi there! I am Jamiu Adeniyi." },
       },
       { upsert: true }
     );

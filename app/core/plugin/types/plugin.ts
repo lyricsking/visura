@@ -5,7 +5,6 @@ import { AppContext } from "~/app";
 export const PLUGIN_KEY = "plugins";
 
 export interface PluginSetting {
-  routes: Omit<IPage, "id">[];
   [key: string]: any;
 }
 
@@ -15,6 +14,7 @@ export interface IBasePlugin {
   path: string;
   // displayName: string;
   settings?: PluginSetting;
+  routes: Omit<IPage, "id">[];
   version: string;
 }
 

@@ -1,4 +1,3 @@
-import { Home } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -7,14 +6,34 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
+  sidebarMenuButtonVariants,
   SidebarMenuItem,
 } from "../sidebar";
+import { Menu } from "~/types/menu";
+import { renderIcon } from "./icon-loader";
+import { NavLink } from "@remix-run/react";
+import { Settings2 } from "lucide-react";
+import { cn } from "~/core/utils/util";
+import { buttonVariants } from "../button";
 
-const items = [
+const items: Menu[] = [
   {
-    title: "Home",
-    url: "#",
-    icon: Home,
+    id: "home",
+    label: "Home",
+    path: "/administration",
+    // icon: "lucide-Home",
+  },
+  {
+    id: "page",
+    label: "Page",
+    path: "pages",
+    // icon: "lucide-PanelLeft",
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    path: "settings",
+    // icon: "lucide-Settings",
   },
 ];
 
@@ -27,13 +46,28 @@ export function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
+                <SidebarMenuItem key={item.label}>
+                  <NavLink
+                    key={item.id}
+                    to={item.path}
+                    className={({ isActive, isPending }) =>
+                      cn(
+                        sidebarMenuButtonVariants(),
+                        // "w-full  py-2 px-2 text-gray-800 rounded-md capitalize transition-colors duration-300 transform",
+                        // "hover:bg-gray-100 dark:hover:bg-gray-700",
+                        isActive && "bg-gray-100 dark:bg-gray-700",
+                        isPending && "animate-none"
+                      )
+                    }
+                    end={item.path === "/administration" ? true : false}
+                  >
+                    {item.icon &&
+                      renderIcon({
+                        icon: item.icon,
+                        className: "w-5 h-5 inline-block mr-2",
+                      })}
+                    {item.label}
+                  </NavLink>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

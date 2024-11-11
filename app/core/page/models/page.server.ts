@@ -3,7 +3,8 @@ import { IPage } from "../types/page";
 
 type IPageModel = Model<IPage>;
 const pageSchema = new Schema<IPage, IPageModel>({
-  path: { type: String, required: true },
+  path: { type: String, required: true, unique: true },
+  default: { type: Boolean, default: false },
   metadata: { type: Schema.Types.Mixed, required: true },
   content: { type: Schema.Types.Mixed, required: true },
 });

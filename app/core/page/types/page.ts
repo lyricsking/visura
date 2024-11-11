@@ -33,6 +33,7 @@ export type PluginActionFunction = (
 export interface IPage {
   id: Types.ObjectId;
   path: string;
+  default?: boolean;
   metadata: PageMetadata;
   content: PageContentType;
   action?: PluginActionFunction;

@@ -1,5 +1,5 @@
 import { StringColorFormat } from "@faker-js/faker";
-import { Suspense, lazy } from "react";
+import { ComponentProps, Suspense, lazy } from "react";
 import { cn } from "~/core/utils/util";
 
 export type RenderIconProps = {
@@ -10,14 +10,19 @@ export const renderIcon = ({ icon, className }: RenderIconProps) => {
   if (icon.startsWith("data:image")) {
     return <img src={icon} alt="icon" className={cn(className)} />;
   } else if (icon.startsWith("lucide-")) {
-    return <DynamicLucideIcon iconName={icon.replace("lucide-", "")} />;
+    return (
+      <DynamicLucideIcon
+        iconName={icon.replace("lucide-", "")}
+        className={className}
+      />
+    );
   }
   // Add more libraries here as needed...
   return null;
 };
 
 // Type for the props accepted by the DynamicLucideIcon component
-interface DynamicLucideIconProps {
+interface DynamicLucideIconProps extends ComponentProps<"div"> {
   iconName: string;
 }
 
@@ -45,14 +50,14 @@ const loadLucideIcon = (
   }
 };
 // Component to render the Lucide icon dynamically
-const DynamicLucideIcon = ({ iconName }: DynamicLucideIconProps) => {
+const DynamicLucideIcon = ({ iconName, className }: DynamicLucideIconProps) => {
   const IconComponent = loadLucideIcon(iconName);
 
   if (!IconComponent) return null;
 
   return (
     <Suspense fallback={<span>Loading...</span>}>
-      <IconComponent className="w-5 h-5 inline-block mr-2" />
+      <IconComponent className={className} />
     </Suspense>
   );
 };

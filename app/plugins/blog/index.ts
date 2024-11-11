@@ -1,6 +1,8 @@
 import { AppContext } from "~/app";
 import { IBasePlugin, PluginSetting } from "~/core/plugin/types/plugin";
 import Blog, { blogLoader } from "./src/routes/blog";
+import { PageContentType } from "~/core/page/types/page";
+import { Types } from "mongoose";
 
 export default class BlogPlugin implements IBasePlugin {
   readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
@@ -8,19 +10,19 @@ export default class BlogPlugin implements IBasePlugin {
   readonly displayName = "Blog";
   readonly description = "";
   readonly version = "0.0.1";
-  readonly settings: PluginSetting = {
-    routes: [
-      {
-        path: "/app/plugins/blog",
-        loader: blogLoader,
-        metadata: { title: "Blog", description: "" },
-        content: {
-          type: "component",
-          value: Blog,
-        },
+  readonly routes = [
+    {
+      // id: new Types.ObjectId("app/plugins/blog"),
+      path: "/blog",
+      loader: blogLoader,
+      metadata: { title: "Blog", description: "" },
+      content: {
+        type: "component" as PageContentType["type"],
+        value: Blog,
       },
-    ],
-  };
+    },
+  ];
+  readonly settings: PluginSetting = {};
 
   constructor({ version, settings }: any) {
     this.version = version;

@@ -1,6 +1,8 @@
-import { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { redirect, ActionFunctionArgs } from "@remix-run/node";
 import { authenticate } from "../server/auth.server";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export let loader = () => redirect("/login");
+
+export let action = async ({ request }: ActionFunctionArgs) => {
   return await authenticate("google", request);
 };

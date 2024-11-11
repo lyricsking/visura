@@ -1,8 +1,6 @@
 import { DisplayOptions } from "~/admin/type/options";
 import { APP_NAME } from "~/app";
-import {
-  OptionModel,
-} from "~/core/option/models/option.server";
+import { OptionModel } from "~/core/option/models/option.server";
 import { DISPLAY_OPTION_KEY } from "~/core/option/types/option";
 
 export const seedOptions = async () => {
@@ -10,7 +8,7 @@ export const seedOptions = async () => {
     const displayOptionValue: DisplayOptions = {
       homepage: {
         type: "static",
-        path: "",
+        path: "/",
       },
     };
 
@@ -25,6 +23,7 @@ export const seedOptions = async () => {
       { value: "RemixWP" },
       { upsert: true }
     );
+
     console.log("Homepath updated successfully");
   } catch (error) {
     console.error("Error seeding options %s", error);

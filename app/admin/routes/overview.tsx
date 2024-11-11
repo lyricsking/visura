@@ -4,11 +4,9 @@ import {
   ArrowUpRight,
   CreditCard,
   DollarSign,
-  Table,
   Users,
 } from "lucide-react";
 import Avatar from "~/components/avatar";
-import { Badge } from "~/components/badge";
 import Button from "~/components/button";
 import {
   Card,
@@ -17,13 +15,6 @@ import {
   CardContent,
   CardDescription,
 } from "~/components/card";
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "~/components/table";
 
 export const handle = {
   pageName: "Overview",
@@ -31,48 +22,11 @@ export const handle = {
     id: "overview",
     label: "Overview",
   },
-  // sidebarMenu: () => [
-  //   {
-  //     id: "orders",
-  //     label: "Orders",
-  //     path: "/dashboard/orders",
-  //   },
-  //   {
-  //     id: "subscriptions",
-  //     label: "Subscription",
-  //     path: "/dashboard/subscriptions",
-  //   },
-  //   {
-  //     id: "invoices",
-  //     label: "Invoices",
-  //     path: "/dashboard/invoices",
-  //   },
-  //   {
-  //     id: "transactions",
-  //     label: "Transactions",
-  //     path: "/dashboard/transactions",
-  //   },
-  //   {
-  //     id: "settings",
-  //     label: "Settings",
-  //     path: "/dashboard/settings",
-  //   },
-  //   {
-  //     id: "support",
-  //     label: "Support Center",
-  //     path: "/support",
-  //   },
-  //   {
-  //     id: "blog",
-  //     label: "Blog",
-  //     path: `/dashboard/${config.blogPath}`,
-  //   },
-  // ],
 };
 
 export default function Overview() {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 sm:gap-8">
+    <div className="flex flex-1 flex-col gap-4 sm:gap-8">
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
         <Card x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -140,7 +94,7 @@ export default function Overview() {
             </Button>
           </CardHeader>
           <CardContent>
-            <Table>
+            {/* <Table >
               <TableHeader>
                 <TableRow>
                   <TableHead>Customer</TableHead>
@@ -248,7 +202,7 @@ export default function Overview() {
                   <TableCell className="text-right">$550.00</TableCell>
                 </TableRow>
               </TableBody>
-            </Table>
+            </Table> */}
           </CardContent>
         </Card>
         <Card x-chunk="dashboard-01-chunk-5">

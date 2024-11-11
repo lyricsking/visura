@@ -11,18 +11,17 @@ import {
 } from "~/components/ui/page.layout";
 import { APP_NAME, getAppContext } from "~/app";
 import { getUserFromSession } from "~/core/user/server/user.server";
+import { IHydratedUser } from "~/core/user/models/user.model";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserFromSession(request);
 
   const app = await getAppContext();
-  return json({ config: { appName: app.configs(APP_NAME) }, user: user });
+  return json({ config: { appName: app.config(APP_NAME) }, user: user! });
 };
 
 export default function Default() {
   const { config, user } = useLoaderData<typeof loader>();
-
-  console.log(user);
 
   // const headerIcons = plugins
   //   .filter((plugin) => plugin.headerIcon)
@@ -44,7 +43,7 @@ export default function Default() {
           <div className="flex h-full divide-x">
             {/* {headerIcons.map((Icon, index) => Icon && <Icon />)} */}
             <div className="flex-none mx-auto">
-              <AccountMenuButton user={user} />
+              <AccountMenuButton user={user as IHydratedUser} />
             </div>
           </div>
         </PageLayoutHeaderItem>

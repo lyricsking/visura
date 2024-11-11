@@ -97,7 +97,7 @@ export function ErrorBoundary() {
         <h1>
           {error.status} {error.statusText}
         </h1>
-        <p>{JSON.stringify(error.data, null,2)}</p>
+        <p>{error.data['message']?error.data['message']: error.data}</p>
       </>
     );
   } else if (error instanceof Error) {
