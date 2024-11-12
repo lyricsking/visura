@@ -3,25 +3,19 @@ import Block, {
   baseSettings,
   BlockMetadata,
   BlockProps,
+  DefaultBlocksProps,
   SettingsSection,
 } from "./block";
 
-type TextBlockProps = Pick<
-  BlockMetadata<{ content: string }>,
-  "id" | "props" | "blocks"
->;
+type TextBlockProps = DefaultBlocksProps<{ content: string }>;
 
-export const TextBlock: FC<TextBlockProps> = ({ props }: TextBlockProps) => {
+export const TextBlock: FC<TextBlockProps> = ({ props, onBlockChange }) => {
   const textSettings: SettingsSection[] = [
     {
       title: "Text",
       fields: [
-        { label: "Font Size", value: "16px", onChange: (value: string) => {} },
-        {
-          label: "Font Color",
-          value: "#000000",
-          onChange: (value: string) => {},
-        },
+        { label: "Font Size", value: "16px" },
+        { label: "Font Color", value: "#000000" },
       ],
     },
     ...baseSettings,

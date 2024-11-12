@@ -27,10 +27,23 @@ export interface OnClickEvent {
 //   onClick?: OnClickEvent;
 // }
 
+interface SettingField {
+  id?: string;
+  label: string;
+  value: any;
+}
+
 export interface SettingsSection {
   title: string;
-  fields: Array<{ label: string; value: any; onChange: (value: any) => void }>;
+  fields: SettingField[];
 }
+
+export type DefaultBlocksProps<T = {}> = Pick<
+  BlockMetadata<T>,
+  "id" | "props" | "blocks"
+> & {
+  onBlockChange: (updatedSettings: SettingsSection[]) => void;
+};
 
 export interface BlockProps {
   settings: SettingsSection[];
@@ -59,7 +72,8 @@ const Block: FC<BlockProps> = ({
   ) => {
     const updatedSettings = [...settings];
     updatedSettings[sectionIndex].fields[fieldIndex].value = value;
-    onSettingsUpdate(updatedSettings);
+    // onSettingsUpdate(updatedSettings);
+    setSettings(updatedSettings);
   };
 
   return (
@@ -97,12 +111,8 @@ export const baseSettings: SettingsSection[] = [
   {
     title: "General",
     fields: [
-      {
-        label: "Background  Color",
-        value: "#ffffff",
-        onChange: (value: string) => {},
-      },
-      { label: "Padding", value: "10px", onChange: (value: string) => {} },
+      { label: "Background  Color", value: "#ffffff" },
+      { label: "Padding", value: "10px" },
     ],
   },
 ];

@@ -1,24 +1,25 @@
 import Button from "~/components/button";
-import Block, { baseSettings, BlockProps, SettingsSection } from "./block";
+import Block, {
+  baseSettings,
+  BlockProps,
+  DefaultBlocksProps,
+  SettingsSection,
+} from "./block";
 import { FC } from "react";
 
-interface ImageBlockProps extends BlockProps {
+type ImageBlockProps = DefaultBlocksProps<{
   src: string;
   alt: string;
   className: string;
-}
+}>;
 
-export const ImageBlock: FC<ImageBlockProps> = ({ src, alt }) => {
+export const ImageBlock: FC<ImageBlockProps> = ({ props: { src, alt } }) => {
   const textSettings: SettingsSection[] = [
     {
       title: "Text",
       fields: [
-        { label: "Font Size", value: "16px", onChange: (value: string) => {} },
-        {
-          label: "Font Color",
-          value: "#000000",
-          onChange: (value: string) => {},
-        },
+        { label: "Font Size", value: "16px" },
+        { label: "Font Color", value: "#000000" },
       ],
     },
     ...baseSettings,
