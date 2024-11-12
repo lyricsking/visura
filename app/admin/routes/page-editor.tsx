@@ -37,6 +37,7 @@ import { PageEditorToolbar } from "../components/page-editor-toolbar";
 import { TextBlock } from "~/core/blocks/text";
 import { ImageBlock } from "~/core/blocks/image";
 import { DraggableBlock } from "~/components/ui/draggable";
+import { BlockMetadata } from "~/core/blocks/block";
 
 export const handle = {
   pageName: "Edit Page",
@@ -47,15 +48,21 @@ export const handle = {
 };
 
 export default function PageEditor() {
-  const [blocks, setBlocks] = useState<any>([]);
+  const [blocks, setBlocks] = useState<BlockMetadata[]>([]);
   const [selectedBlock, setSelectedBlock] = useState(null);
 
   // Droppable setup for the maineditor area
   const { setNodeRef } = useDroppable({ id: "editor-dopzone" });
-  const addBlock = (type: string) => {
+
+  const addBlock = ({ id, type, props, blocks = [] }: BlockMetadata) => {
     setBlocks([
       ...blocks,
-      { id: Date.now(), type, content: type === "text" ? "Sample text" : "" },
+      {
+        id,
+        type,
+        props,
+        blocks,
+      },
     ]);
   };
 
@@ -81,7 +88,7 @@ export default function PageEditor() {
               {blocks.map((block: any) => (
                 <DraggableBlock key={block.id} id={block.id}>
                   {block.type === "text" ? (
-                    <TextBlock content={block.content} />
+                    <TextBlock {...block.content} />
                   ) : (
                     <ImageBlock {...block.content} />
                   )}

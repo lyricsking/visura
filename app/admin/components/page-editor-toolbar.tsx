@@ -1,8 +1,9 @@
 import { Eye, Settings } from "lucide-react";
 import Button from "~/components/button";
+import { BlockMetadata } from "~/core/blocks/block";
 
 type ToolbarProps = {
-  addBlock: (type: string) => void;
+  addBlock: (blockMeta: BlockMetadata) => void;
 };
 export function PageEditorToolbar({ addBlock }: ToolbarProps) {
   return (
