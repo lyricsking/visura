@@ -11,6 +11,7 @@ export const Blocks = {
   h2: "h2",
   p: "p",
   button: Button,
+  text: "p",
 } as const;
 
 export type BlockType = keyof typeof Blocks;

@@ -2,24 +2,21 @@ import { useNavigate } from "@remix-run/react";
 import { BlockMetadata, Blocks, OnClickEvent } from "../../core/blocks/block";
 
 const renderBlock = (block: BlockMetadata): JSX.Element | null => {
-  const { blockId, type, props, blocks } = block;
-  const Component = Blocks[type];
+  const { id, type, blocks, ...props } = block;
+  const Component = Blocks[type as keyof typeof Blocks];
 
   if (!Component) return null;
 
-  const attr = props || {};
-  const { children, ...otherProps } = attr;
+  // const attr = props || {};
 
-  const newProps = {
-    ...otherProps,
-    onClick: () => otherProps.onClick && handleOnClick(otherProps.onClick),
-  };
+  // const newProps = {
+  //   ...otherProps,
+  //   onClick: () => otherProps.onClick && handleOnClick(otherProps.onClick),
+  // };
 
   return (
-    <Component key={blockId} {...newProps}>
-      {children
-        ? children
-        : blocks && blocks.map((child, index) => renderBlock(child))}
+    <Component key={id} {...props}>
+      {blocks && blocks.map((childBlock, index) => renderBlock(childBlock))}
     </Component>
   );
   // switch (type) {

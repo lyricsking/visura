@@ -7,9 +7,9 @@ type ToolbarProps = {
 };
 export function PageEditorToolbar({ addBlock }: ToolbarProps) {
   return (
-    <div className="w-20 bg-gray-800 text-white p-2 flex space-x-2">
+    <div className="w-full bg-white text-white p-2 rounded shadow-md flex justify-between space-x-4">
       <Button>
-        <Eye className="w-5 h-5" />
+        <Eye />
       </Button>
 
       <Button>Add Block</Button>

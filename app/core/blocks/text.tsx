@@ -1,8 +1,6 @@
 import { FC } from "react";
 import Block, {
   baseSettings,
-  BlockMetadata,
-  BlockProps,
   DefaultBlocksProps,
   SettingsSection,
 } from "./block";
