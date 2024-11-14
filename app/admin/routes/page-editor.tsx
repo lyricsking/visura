@@ -36,13 +36,13 @@ const sampleBlockMeta: BlockMetadata[] = [
   {
     id: "1",
     type: "text",
-    props: { content: "First block" },
+    props: { children: "First block" },
     blocks: [],
   },
   {
     id: "2",
     type: "text",
-    props: { content: "Second block" },
+    props: { children: "Second block" },
     blocks: [],
   },
 ];
@@ -117,7 +117,7 @@ export default function PageEditor() {
             <div className="bg-white p-4 rounded shadow-md min-h-full">
               {blocks.map((block: any) => (
                 <Sortable key={block.id} id={block.id}>
-                  {block.type === "text" ? <TextBlock {...block} /> : null}
+                  {renderBlock(block)}
                 </Sortable>
               ))}
             </div>
