@@ -2,30 +2,54 @@ import { FC } from "react";
 import Block, {
   baseSettings,
   DefaultBlocksProps,
+  mergeSettings,
   SettingsSection,
 } from "./block";
 
-type TextBlockProps = DefaultBlocksProps<{ content: string }>;
-
-export const TextBlock: FC<TextBlockProps> = ({ props, onBlockChange }) => {
-  const textSettings: SettingsSection[] = [
+export const TextBlock: FC<DefaultBlocksProps> = ({
+  id,
+  type,
+  settings = [],
+  mode,
+}) => {
+  const textDefaultSettings: SettingsSection[] = [
     {
       title: "Text",
       fields: [
-        { label: "Font Size", value: "16px" },
-        { label: "Font Color", value: "#000000" },
+        { name: "content", value: "First" },
+        { name: "Font Size", value: "16px" },
+        { name: "Font Color", value: "#000000" },
       ],
     },
     ...baseSettings,
   ];
 
+  // Merge provided settings with defaults
+  const mergedSettings = mergeSettings(textDefaultSettings, settings);
+  // Find the section with title same as component key
+  const textSection = mergedSettings.find(
+    (section) => section.title === "Text"
+  );
+  // Find the field with label "content" within the "text" Section
+  const valueField = textSection?.fields.find(
+    (field) => field.name === "content"
+  );
   const handleSettingsUpdate = (updatedSettings: any) => {};
 
-  return (
-    <Block settings={textSettings} onSettingsUpdate={handleSettingsUpdate}>
-      <div className="p-4 bg-gray-200 my-2 rounded">
-        <p>{props.content}</p>
-      </div>
-    </Block>
-  );
+  const children = <p>{valueField?.value || "Input text"}</p>;
+
+  if (mode === "editor") {
+    return (
+      <Block
+        id={id}
+        type={type}
+        settings={mergedSettings}
+        onSettingsUpdate={handleSettingsUpdate}
+      >
+        {children}
+      </Block>
+    );
+  }
+  
+  return children;
 };

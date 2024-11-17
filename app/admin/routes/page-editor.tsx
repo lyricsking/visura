@@ -18,11 +18,19 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { PageEditorToolbar } from "../components/page-editor-toolbar";
-import { TextBlock } from "~/core/blocks/text";
-import { BlockMetadata } from "~/core/blocks/block";
+import {
+  baseSettings,
+  Blocks,
+  BlockType,
+  DefaultBlocksProps,
+  SettingsSection,
+} from "~/core/blocks/block";
 import { Sortable } from "~/components/ui/sortable";
 import { Item } from "~/components/ui/item";
-import renderBlock from "~/components/ui/block";
+import render from "~/components/ui/render";
+import { Grip } from "lucide-react";
+import { BlockSettingSidebar } from "~/core/blocks/block-settings-sidebar";
+import { SidebarProvider } from "~/components/sidebar";
 
 export const handle = {
   pageName: "Edit Page",
@@ -32,25 +40,54 @@ export const handle = {
   },
 };
 
-const sampleBlockMeta: BlockMetadata[] = [
+const sampleBlockMeta: DefaultBlocksProps[] = [
   {
     id: "1",
     type: "text",
-    props: { children: "First block" },
-    blocks: [],
+    settings: [
+      {
+        title: "Text",
+        fields: [{ name: "content", value: "First Text" }],
+      },
+      {
+        title: "styles",
+        fields: [
+          { name: "Font Size", value: "16px" },
+          { name: "Font Color", value: "#000000" },
+        ],
+      },
+    ],
+    mode: "render",
+    onSettingsUpdate: function (updatedSettings: SettingsSection[]): void {},
   },
   {
     id: "2",
     type: "text",
-    props: { children: "Second block" },
-    blocks: [],
+    settings: [
+      {
+        title: "Text",
+        fields: [{ name: "content", value: "Second Text" }],
+      },
+      {
+        title: "styles",
+        fields: [
+          { name: "Font Size", value: "16px" },
+          { name: "Font Color", value: "#000000" },
+        ],
+      },
+    ],
+    mode: "render",
+    onSettingsUpdate: function (updatedSettings: SettingsSection[]): void {},
   },
 ];
 
 export default function PageEditor() {
-  const [blocks, setBlocks] = useState<BlockMetadata[]>(sampleBlockMeta);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
+  const [blocks, setBlocks] = useState<DefaultBlocksProps[]>(sampleBlockMeta);
+  // const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeBlock, setActiveBlock] = useState<DefaultBlocksProps | null>(
+    null
+  );
+  const [open, setOpen] = useState(true);
 
   // Droppable setup for the maineditor area
   const { setNodeRef } = useDroppable({ id: "editor-dopzone" });
@@ -60,33 +97,38 @@ export default function PageEditor() {
     useSensor(KeyboardSensor)
   );
 
-  const addBlock = ({ id, type, props, blocks = [] }: BlockMetadata) => {
+  const addBlock = ({ id, type, settings }: DefaultBlocksProps) => {
     setBlocks([
       ...blocks,
       {
         id,
         type,
-        props,
-        blocks,
+        settings,
+        mode: "render",
+        onSettingsUpdate: () => updateBlock(id, settings),
       },
     ]);
   };
 
-  const updateBlock = (id: number, content: string) => {
+  const updateBlock = (id: number | string, settings: SettingsSection[]) => {
     setBlocks(
-      blocks.map((block: any) =>
-        block.id === id ? { ...block, content } : block
+      blocks.map((block) =>
+        block.id === id ? { ...block, settings: settings } : block
       )
     );
   };
 
   function handleDragStart(event: DragStartEvent): void {
-    setActiveId(event.active.id.toString());
+    // setActiveId(event.active.id.toString());
+    setActiveBlock(
+      blocks.find((block) => block.id === event.active.id.toString()) || null
+    );
   }
 
   function handleDragEnd(event: DragEndEvent): void {
     const { active, over } = event;
-    setActiveId(null);
+    // setActiveId(null);
+    setActiveBlock(null);
 
     if (active.id !== over?.id) {
       setBlocks((blocks) => {
@@ -99,52 +141,59 @@ export default function PageEditor() {
   }
 
   return (
-    <div className="relative container mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+    <SidebarProvider
+      id="block-sidebar-provider"
+      open={open}
+      onOpenChange={setOpen}
+    >
       {/* Right sidebar context here */}
-
-      <div className="bg-gray-100">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={blocks}
-            strategy={verticalListSortingStrategy}
+      <BlockSettingSidebar />
+      <div className="relative container mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+        <div className="bg-gray-100">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
           >
-            {/* Droppable area */}
-            <div className="bg-white p-4 rounded shadow-md min-h-full">
-              {blocks.map((block: any) => (
-                <Sortable key={block.id} id={block.id}>
-                  {renderBlock(block)}
-                </Sortable>
-              ))}
-            </div>
-          </SortableContext>
-          <DragOverlay>
-            {activeId ? (
-              <Item
-                id={activeId}
-                ref={setNodeRef}
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  marginBottom: "8px",
-                  backgroundColor: "#f0f0f0",
-                }}
-              >
-                {renderBlock(blocks.find((block) => block.id === activeId)!)}
-              </Item>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+            <SortableContext
+              items={blocks}
+              strategy={verticalListSortingStrategy}
+            >
+              {/* Droppable area */}
+              <div className="bg-white p-4 rounded shadow-md min-h-full">
+                {blocks.map((block) => (
+                  <Sortable key={block.id} id={block.id}>
+                    {render(Blocks[block.type as BlockType], {
+                      settings: block.settings,
+                      mode: "editor",
+                      onSettingsUpdate: updateBlock,
+                    })}
+                  </Sortable>
+                ))}
+              </div>
+            </SortableContext>
+            <DragOverlay>
+              {activeBlock ? (
+                <Item
+                  id={activeBlock.id}
+                  ref={setNodeRef}
+                  className="rounded-sm bg-gray-200"
+                >
+                  {" "}
+                  {render(Blocks[activeBlock.type as BlockType], {
+                    settings: activeBlock.settings,
+                  })}
+                </Item>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        </div>
+        {/* Bottom toolbar */}
+        <div className="fixed w-full left-0 right-0 bottom-0 md:hidden">
+          <PageEditorToolbar addBlock={addBlock} showSettings={setOpen} />
+        </div>
       </div>
-
-      {/* Bottom toolbar */}
-      <div className="sticky w-full bottom-0">
-        <PageEditorToolbar addBlock={addBlock} />
-      </div>
-    </div>
+    </SidebarProvider>
   );
 }

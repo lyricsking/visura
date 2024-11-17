@@ -10,7 +10,7 @@ import { FC } from "react";
 type ImageBlockProps = DefaultBlocksProps<{
   src: string;
   alt: string;
-  className: string;
+  className?: string;
 }>;
 
 export const ImageBlock: FC<ImageBlockProps> = ({ props: { src, alt } }) => {

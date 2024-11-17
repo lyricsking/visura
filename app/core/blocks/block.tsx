@@ -1,5 +1,7 @@
 import { FC, HTMLAttributes, ReactNode, useState } from "react";
 import Button from "~/components/button";
+import { TextBlock } from "./text";
+import { ImageBlock } from "./image";
 
 export const Blocks = {
   div: "div",
@@ -11,9 +13,10 @@ export const Blocks = {
   h2: "h2",
   p: "p",
   button: Button,
-  text: "p",
+  text: TextBlock,
+  image: ImageBlock,
 } as const;
-
+export type Blocks = (typeof Blocks)[keyof typeof Blocks];
 export type BlockType = keyof typeof Blocks;
 
 export interface OnClickEvent {
@@ -30,7 +33,7 @@ export interface OnClickEvent {
 
 interface SettingField {
   id?: string;
-  label: string;
+  name: string;
   value: any;
 }
 
@@ -39,25 +42,20 @@ export interface SettingsSection {
   fields: SettingField[];
 }
 
-export type DefaultBlocksProps<T = {}> = Pick<
-  BlockMetadata<T>,
-  "id" | "props" | "blocks"
-> & {
-  onBlockChange: (updatedSettings: SettingsSection[]) => void;
-};
-
 export interface BlockProps {
+  id: string;
+  type: string;
   settings: SettingsSection[];
   onSettingsUpdate: (updatedSettings: SettingsSection[]) => void;
   children: ReactNode;
 }
 
-export interface BlockMetadata<T = {}> {
-  id: string;
-  type: string;
-  props: T;
-  blocks: BlockMetadata<any>[];
-}
+export type DefaultBlocksProps = Pick<
+  BlockProps,
+  "id" | "type" | "settings" | "onSettingsUpdate"
+> & {
+  mode: "editor" | "render";
+};
 
 const Block: FC<BlockProps> = ({
   settings: initialSettings,
@@ -88,7 +86,7 @@ const Block: FC<BlockProps> = ({
               <h4>{section.title}</h4>
               {section.fields.map((field, fieldIndex) => (
                 <div key={fieldIndex}>
-                  <label>{field.label}</label>
+                  <label>{field.name}</label>
                   <input
                     type="text"
                     value={field.value}
@@ -106,14 +104,50 @@ const Block: FC<BlockProps> = ({
     </div>
   );
 };
-export default Block;
+
+export const mergeSettings = (
+  defaultSettings: SettingsSection[],
+  providedSettings: SettingsSection[]
+) => {
+  // Merge provided settings with defaults
+  return defaultSettings.map((defaultSection) => {
+    const providedSection = providedSettings.find(
+      (section) => section.title === defaultSection.title
+    );
+    return {
+      ...defaultSection,
+      ...providedSection, // Merge provided section if it exists
+      fields: defaultSection.fields.map((defaultField) => {
+        const providedField = providedSection?.fields.find(
+          (field) => field.name == defaultField.name
+        );
+        return { ...defaultField, ...providedField };
+      }),
+    };
+  });
+};
+
+export const generateStyles = (
+  settings: SettingsSection[]
+): React.CSSProperties => {
+  const styleObject: React.CSSProperties = {};
+
+  const styleSection = settings.find((section) => section.title === "styles");
+  styleSection?.fields.forEach((field) => {
+    styleObject[field.name as keyof React.CSSProperties] = field.value;
+  });
+
+  return styleObject;
+};
 
 export const baseSettings: SettingsSection[] = [
   {
     title: "General",
     fields: [
-      { label: "Background  Color", value: "#ffffff" },
-      { label: "Padding", value: "10px" },
+      { name: "Background  Color", value: "#ffffff" },
+      { name: "Padding", value: "10px" },
     ],
   },
 ];
+
+export default Block;

@@ -1,4 +1,4 @@
-import renderBlock from "~/components/ui/block";
+import render from "~/components/ui/render";
 import { PageContentType } from "~/core/page/types/page";
 import { useAppContext } from "~/core/utils/app-context";
 import Loading from "../loading";
@@ -15,7 +15,7 @@ export const renderPage = (
 ) => {
   switch (content.type) {
     case "block":
-      return renderBlock(content.value);
+      return render(content.value);
     case "markdown":
       return (
         <div className="prose md:prose-lg lg:prose-xl ">
