@@ -64,6 +64,7 @@ const SidebarProvider = forwardRef<
     defaultOpen?: boolean;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    sidebarName?: string;
   }
 >(
   (
@@ -71,6 +72,7 @@ const SidebarProvider = forwardRef<
       defaultOpen = true,
       open: openProp,
       onOpenChange: setOpenProp,
+      sidebarName,
       className,
       style,
       children,
@@ -87,16 +89,15 @@ const SidebarProvider = forwardRef<
     const open = openProp ?? _open;
     const setOpen = useCallback(
       (value: boolean | ((value: boolean) => boolean)) => {
+        const openState = typeof value === "function" ? value(open) : value;
         if (setOpenProp) {
-          return setOpenProp?.(
-            typeof value === "function" ? value(open) : value
-          );
+          setOpenProp(openState);
+        } else {
+          _setOpen(openState);
         }
-        else {
-          _setOpen(value);
-        }
+
         // This sets the cookie to keep the sidebar state.
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+        document.cookie = `${sidebarName}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
       },
       [setOpenProp, open]
     );

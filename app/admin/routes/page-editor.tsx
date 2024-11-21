@@ -19,7 +19,6 @@ import {
 } from "@dnd-kit/sortable";
 import { PageEditorToolbar } from "../components/page-editor-toolbar";
 import {
-  baseSettings,
   Blocks,
   BlockType,
   DefaultBlocksProps,
@@ -28,9 +27,7 @@ import {
 import { Sortable } from "~/components/ui/sortable";
 import { Item } from "~/components/ui/item";
 import render from "~/components/ui/render";
-import { Grip } from "lucide-react";
-import { BlockSettingSidebar } from "~/core/blocks/block-settings-sidebar";
-import { SidebarProvider } from "~/components/sidebar";
+import { useMediaQuery } from "~/hooks/use-media-query";
 
 export const handle = {
   pageName: "Edit Page",
@@ -88,6 +85,8 @@ export default function PageEditor() {
     null
   );
   const [open, setOpen] = useState(true);
+  // Hook to determine mediaQuery Used to determine if the current screen is dessktop
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   // Droppable setup for the maineditor area
   const { setNodeRef } = useDroppable({ id: "editor-dopzone" });
@@ -141,59 +140,72 @@ export default function PageEditor() {
   }
 
   return (
-    <SidebarProvider
-      id="block-sidebar-provider"
-      open={open}
-      onOpenChange={setOpen}
-    >
-      {/* Right sidebar context here */}
-      <BlockSettingSidebar />
-      <div className="relative container mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-        <div className="bg-gray-100">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={blocks}
-              strategy={verticalListSortingStrategy}
+    <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+      <div className="flex items-center gap-4">{/* template here */}</div>
+      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-4">
+        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+          {/*Main content  */}
+          <div className="bg-gray-100">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
             >
-              {/* Droppable area */}
-              <div className="bg-white p-4 rounded shadow-md min-h-full">
-                {blocks.map((block) => (
-                  <Sortable key={block.id} id={block.id}>
-                    {render(Blocks[block.type as BlockType], {
-                      settings: block.settings,
-                      mode: "editor",
-                      onSettingsUpdate: updateBlock,
+              <SortableContext
+                items={blocks}
+                strategy={verticalListSortingStrategy}
+              >
+                {/* Droppable area */}
+                <div className="bg-white p-4 rounded shadow-md min-h-full">
+                  {blocks.map((block) => (
+                    <Sortable key={block.id} id={block.id}>
+                      {render(Blocks[block.type as BlockType], {
+                        settings: block.settings,
+                        mode: "editor",
+                        onSettingsUpdate: updateBlock,
+                      })}
+                    </Sortable>
+                  ))}
+                </div>
+              </SortableContext>
+              <DragOverlay>
+                {activeBlock ? (
+                  <Item
+                    id={activeBlock.id}
+                    ref={setNodeRef}
+                    className="rounded-sm bg-gray-200"
+                  >
+                    {render(Blocks[activeBlock.type as BlockType], {
+                      settings: activeBlock.settings,
                     })}
-                  </Sortable>
-                ))}
-              </div>
-            </SortableContext>
-            <DragOverlay>
-              {activeBlock ? (
-                <Item
-                  id={activeBlock.id}
-                  ref={setNodeRef}
-                  className="rounded-sm bg-gray-200"
-                >
-                  {" "}
-                  {render(Blocks[activeBlock.type as BlockType], {
-                    settings: activeBlock.settings,
-                  })}
-                </Item>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
+                  </Item>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+          </div>
         </div>
-        {/* Bottom toolbar */}
-        <div className="fixed w-full left-0 right-0 bottom-0 md:hidden">
-          <PageEditorToolbar addBlock={addBlock} showSettings={setOpen} />
+        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+          {/* Page sidebar */}
+          {isDesktop && (
+            <PageEditorToolbar
+              isDesktop
+              addBlock={addBlock}
+              showSettings={setOpen}
+            />
+          )}
         </div>
       </div>
-    </SidebarProvider>
+      <div className="fixed w-full left-0 right-0 bottom-0 flex items-center justify-center gap-2 md:hidden">
+        {/* mobile only toolbar here */}
+        {!isDesktop && (
+          <PageEditorToolbar
+            isDesktop={false}
+            addBlock={addBlock}
+            showSettings={setOpen}
+          />
+        )}
+      </div>
+    </div>
   );
 }

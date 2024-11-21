@@ -16,11 +16,12 @@ import {
 } from "~/components/ui/page.layout";
 import HeaderIcons from "../components/header-icons";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
-import { AdminSidebar } from "~/components/ui/admin-sidebar";
+import { AdminSidebar } from "~/admin/components/admin-sidebar";
 import { APP_NAME } from "~/app";
 import { useAppContext } from "~/core/utils/app-context";
 import { getUserOrFetch } from "~/core/user/server/user.server";
-import { Navbar } from "~/components/ui/navbar";
+import { IUser } from "~/core/user/models/user.model";
+import { Types } from "mongoose";
 
 export const handle = {
   breadcrumb: {
@@ -31,15 +32,30 @@ export const handle = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  // Get the authenticated user or redirects to auth page
-  const authRes = await isAuthenticated(request, true);
+  let user: IUser | undefined;
 
-  // check the subdomain we are accessing the page from, useed to manage staff users access.
-  // let subdomain = getSubdomain(request);
-  // if the user has role access to the subdomain
-  // Get the cache user object from session, could be undefined or IHydrated user.
+  if (process.env.NODE_ENV != "production") {
+    user = {
+      _id: new Types.ObjectId(),
+      firstName: "",
+      lastName: "",
+      email: "",
+      type: "customer",
+      isActive: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  } else {
+    // Get the authenticated user or redirects to auth page
+    const authRes = await isAuthenticated(request, true);
 
-  const user = await getUserOrFetch(request, authRes!.email);
+    // check the subdomain we are accessing the page from, useed to manage staff users access.
+    // let subdomain = getSubdomain(request);
+    // if the user has role access to the subdomain
+    // Get the cache user object from session, could be undefined or IHydrated user.
+
+    user = await getUserOrFetch(request, authRes!.email);
+  }
 
   return json({ user });
 };
@@ -80,6 +96,7 @@ export default function Layout() {
       {/* Admin sidebar drawer */}
       <AdminSidebar />
       {/** PageLayout */}
+
       <PageLayout className="bg-gray-100">
         <PageLayoutHeader position={"sticky"} className="bg-white">
           <PageLayoutHeaderItem spacing={"compact"}>

@@ -13,7 +13,15 @@ export const loader = async (args: LoaderFunctionArgs) => {
   const homepage = app.homepageConfig;
 
   if (homepage.type === "static") {
-    page = (await PageModel.findOne({ path: homepage.path })) as IPage;
+    if (process.env.NODE_ENV != "production")
+      page = new PageModel({
+        metadata: {
+          title: "Default Home",
+          description: "The default page description.",
+        },
+        content: { type: "markdown", value: "# Hi there! I am Jamiu Adeniyi." },
+      });
+    else page = (await PageModel.findOne({ path: homepage.path })) as IPage;
   } else if (homepage.type === "plugin") {
     page = app.findRoute(homepage.path!) as IPage;
     loaderData = page?.loader && (await page.loader({ ...args, app }));

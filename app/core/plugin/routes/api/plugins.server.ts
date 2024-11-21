@@ -1,21 +1,36 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "../../models/plugin.model";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { IPlugin } from "../../types/plugin";
 import { handleResponse } from "~/core/utils/helpers";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
+  let response: DBReponse<IPlugin[] | null>;
 
-  const isActive = url.searchParams.get("isActive") === "true";
+  if (process.env.NODE_ENV !== "production") {
+    const blogPlugin = new PluginModel({
+      name: "blog",
+      description: "Blog description",
+      path: "/app/plugins/blog/index",
+      isActive: true,
+      settings: {
+        routes: [],
+      },
+      version: "0.0.1",
+    });
 
-  const query: { isActive?: boolean } = {};
+    response = { data: [blogPlugin] };
+  } else {
+    const url = new URL(request.url);
 
-  if (isActive) query.isActive = isActive;
+    const isActive = url.searchParams.get("isActive") === "true";
 
-  let response: DBReponse<IPlugin[] | null> = await handleDbResult(
-    PluginModel.find(query)
-  );
+    const query: { isActive?: boolean } = {};
+
+    if (isActive) query.isActive = isActive;
+
+    response = await handleDbResult(PluginModel.find(query));
+  }
 
   return handleResponse<IPlugin[] | null>({
     ...response,

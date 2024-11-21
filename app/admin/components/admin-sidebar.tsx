@@ -5,16 +5,13 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   sidebarMenuButtonVariants,
   SidebarMenuItem,
-} from "../sidebar";
+} from "../../components/sidebar";
 import { Menu } from "~/types/menu";
-import { renderIcon } from "./icon-loader";
+import { renderIcon } from "../../components/ui/icon-loader";
 import { NavLink } from "@remix-run/react";
-import { Settings2 } from "lucide-react";
 import { cn } from "~/core/utils/util";
-import { buttonVariants } from "../button";
 
 const items: Menu[] = [
   {
@@ -24,8 +21,8 @@ const items: Menu[] = [
     // icon: "lucide-Home",
   },
   {
-    id: "page",
-    label: "Page",
+    id: "pages",
+    label: "Pages",
     path: "pages",
     // icon: "lucide-PanelLeft",
   },

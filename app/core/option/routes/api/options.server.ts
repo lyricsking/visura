@@ -1,26 +1,45 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { OptionModel } from "../../models/option.server";
 import { getUserFromSession } from "~/core/user/server/user.server";
-import formDataToObject from "~/core/utils/form-data-to-object";
 import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { UpdateWriteOpResult } from "mongoose";
 import { handleResponse } from "~/core/utils/helpers";
-import { IPlugin } from "~/core/plugin/types/plugin";
+import { APP_NAME } from "~/app";
+import { DISPLAY_OPTION_KEY, IOption } from "../../types/option";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
+  let response: DBReponse<IOption[] | null>;
 
-  const name = url.searchParams.get("name");
+  if (process.env.NODE_ENV != "production") {
+    const appOption = new OptionModel({
+      name: APP_NAME,
+      value: "Test App",
+    });
 
-  const query: { name?: string } = {};
+    const displayOption = new OptionModel({
+      name: DISPLAY_OPTION_KEY,
+      value: {
+        homepage: {
+          type: "static",
+          path: "/",
+        },
+      },
+    });
 
-  if (name) query.name = name;
+    response = { data: [appOption, displayOption] };
+  } else {
+    const url = new URL(request.url);
 
-  let response: DBReponse<IPlugin[] | null> = await handleDbResult(
-    OptionModel.find(query)
-  );
+    const name = url.searchParams.get("name");
 
-  return handleResponse<IPlugin[] | null>({
+    const query: { name?: string } = {};
+
+    if (name) query.name = name;
+
+    response = await handleDbResult(OptionModel.find(query));
+  }
+
+  return handleResponse<IOption[] | null>({
     ...response,
     statusCode: 200,
   });
@@ -33,11 +52,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const jsonData = await request.json();
 
-  const name=jsonData["name"]
+  const name = jsonData["name"];
   const value = jsonData["value"];
 
   let response: DBReponse<UpdateWriteOpResult | null> = await handleDbResult(
-    OptionModel.updateOne({name},{ name, value: value }).exec()
+    OptionModel.updateOne({ name }, { name, value: value }).exec()
   );
 
   return handleResponse<UpdateWriteOpResult | null>({

@@ -45,11 +45,9 @@ export const TextBlock: FC<DefaultBlocksProps> = ({
         type={type}
         settings={mergedSettings}
         onSettingsUpdate={handleSettingsUpdate}
-      >
-        {children}
-      </Block>
+      />
     );
   }
-  
+
   return children;
 };

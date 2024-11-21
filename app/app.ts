@@ -1,4 +1,3 @@
-import { BlockMetadata } from "./core/blocks/block";
 import { Menu, MenuType, SettingsTab } from "./types/menu";
 import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
 import { IBasePlugin, IPlugin } from "./core/plugin/types/plugin";
@@ -7,17 +6,19 @@ import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 import { DisplayOptions } from "./admin/type/options";
 import { DISPLAY_OPTION_KEY, IOption } from "./core/option/types/option";
+import { Types } from "mongoose";
+import BlogPlugin from "./plugins/blog";
 
 export const APP_NAME = "app_name";
-
-export type BlockMetadataFunction = MaybeAsyncFunction<any, BlockMetadata>;
 
 type PluginInstance = IPlugin & { instance: IBasePlugin };
 
 class AppContext {
   private static baseUrl =
-    "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
-  // "https://ynm7f3-3000.csb.app";
+    // "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
+    // "https://ynm7f3-3000.csb.app";
+    "http://localhost:3000";
+
   private static instance: AppContext | null = null;
   private static queue: Array<(instance: AppContext) => void> = [];
 
@@ -50,7 +51,10 @@ class AppContext {
   }
 
   private static async init() {
-    if (typeof document === "undefined") {
+    if (
+      process.env.NODE_ENV === "production" &&
+      typeof document === "undefined"
+    ) {
       serverOnly$(await createDBConnection());
     }
 
@@ -84,6 +88,8 @@ class AppContext {
   }
 
   static async loadActivePlugins(): Promise<PluginInstance[]> {
+    const pluginsInstance: PluginInstance[] = [];
+
     let pluginReq;
     if (typeof document === "undefined") {
       pluginReq = await fetch("http://localhost:3000/api/plugins");
@@ -94,8 +100,6 @@ class AppContext {
     const plugins = pluginRes.data;
 
     console.log("Fetched plugins");
-
-    const pluginsInstance: PluginInstance[] = [];
 
     for (const plugin of plugins) {
       // Dynamically import and initialize active plugins
@@ -114,7 +118,6 @@ class AppContext {
         });
       }
     }
-
     return pluginsInstance;
   }
 
