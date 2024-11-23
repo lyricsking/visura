@@ -38,16 +38,14 @@ export const TextBlock: FC<DefaultBlocksProps> = ({
 
   const children = <p>{valueField?.value || "Input text"}</p>;
 
-  if (mode === "editor") {
-    return (
-      <Block
-        id={id}
-        type={type}
-        settings={mergedSettings}
-        onSettingsUpdate={handleSettingsUpdate}
-      />
-    );
-  }
-
-  return children;
+  return (
+    <Block
+      id={id}
+      type={type}
+      settings={mergedSettings}
+      onSettingsUpdate={handleSettingsUpdate}
+      mode={mode}
+      children={children}
+    />
+  );
 };

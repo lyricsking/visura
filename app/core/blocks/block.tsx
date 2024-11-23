@@ -3,10 +3,12 @@ import Button from "~/components/button";
 import { TextBlock } from "./text";
 import { ImageBlock } from "./image";
 
+import { Dialog, DialogContent, DialogTrigger } from "~/components/dialog";
+
 export const Blocks = {
   text: TextBlock,
   image: ImageBlock,
-  button: Button,
+  // button: Button,
   // div: "div",
   // header: "header",
   // main: "main",
@@ -47,59 +49,19 @@ export interface BlockProps {
   type: string;
   settings: SettingsSection[];
   onSettingsUpdate: (updatedSettings: SettingsSection[]) => void;
-  // children: ReactNode;
+  children: ReactNode;
+  mode: "editor" | "render";
 }
 
 export type DefaultBlocksProps = Pick<
   BlockProps,
-  "id" | "type" | "settings" | "onSettingsUpdate"
-> & {
-  mode: "editor" | "render";
-};
+  "id" | "type" | "settings" | "onSettingsUpdate" | "mode"
+>;
 
-const Block: FC<BlockProps> = ({
-  settings: initialSettings,
-  onSettingsUpdate,
-}) => {
-  const [settings, setSettings] = useState<SettingsSection[]>(initialSettings);
-  const [isDialogOpen, setDialogOpen] = useState(false);
-  const handleUpdate = (
-    sectionIndex: number,
-    fieldIndex: number,
-    value: any
-  ) => {
-    const updatedSettings = [...settings];
-    updatedSettings[sectionIndex].fields[fieldIndex].value = value;
-    // onSettingsUpdate(updatedSettings);
-    setSettings(updatedSettings);
-  };
-
-  return (
-    // <div onClick={() => setDialogOpen(true)}>
-    <div className="">
-      <h4>Block settings</h4>
-      {settings.map((section, sectionIndex) => (
-        <div key={sectionIndex}>
-          <h4>{section.title}</h4>
-          {section.fields.map((field, fieldIndex) => (
-            <div key={fieldIndex}>
-              <label>{field.name}</label>
-              <input
-                type="text"
-                value={field.value}
-                onChange={(e) =>
-                  handleUpdate(sectionIndex, fieldIndex, e.target.value)
-                }
-              />
-            </div>
-          ))}
-        </div>
-      ))}
-      {/* <button onClick={() => setDialogOpen(false)}>Close</button> */}
-    </div>
-    // </div>
-  );
-};
+export type JSONDefaultBlocksProps = Pick<
+  BlockProps,
+  "id" | "type" | "settings" | "mode"
+>;
 
 export const mergeSettings = (
   defaultSettings: SettingsSection[],
@@ -146,4 +108,43 @@ export const baseSettings: SettingsSection[] = [
   },
 ];
 
-export default Block;
+export default function Block({
+  type,
+  settings: initialSettings,
+  onSettingsUpdate,
+  children,
+  mode,
+}: BlockProps) {
+  const [settings, setSettings] = useState<SettingsSection[]>(initialSettings);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const handleUpdate = (
+    sectionIndex: number,
+    fieldIndex: number,
+    value: any
+  ) => {
+    const updatedSettings = [...settings];
+    updatedSettings[sectionIndex].fields[fieldIndex].value = value;
+    // onSettingsUpdate(updatedSettings);
+    setSettings(updatedSettings);
+  };
+
+  return mode === "render"
+    ? children
+    : settings.map((section, sectionIndex) => (
+        <div key={sectionIndex}>
+          <h4>{section.title}</h4>
+          {section.fields.map((field, fieldIndex) => (
+            <div key={fieldIndex}>
+              <label>{field.name}</label>
+              <input
+                type="text"
+                value={field.value}
+                onChange={(e) => {
+                  // handleUpdate(sectionIndex, fieldIndex, e.target.value);
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      ));
+}

@@ -1,0 +1,8 @@
+layout: grid
+settings:
+  columns: 3
+  gap: 20px
+sections:
+  - type: Hero
+    props:
+      title: "Hey hero"

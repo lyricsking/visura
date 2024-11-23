@@ -1,7 +1,7 @@
 import { Eye, Settings } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import Button from "~/components/button";
-import { Blocks, DefaultBlocksProps } from "~/core/blocks/block";
+import { Blocks, DefaultBlocksProps, JSONDefaultBlocksProps } from "~/core/blocks/block";
 
 import { Menu } from "~/types/menu";
 import { useState } from "react";
@@ -23,15 +23,23 @@ import {
 } from "~/components/sheet";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/dialog";
 
+type SettingsFunction = (
+  showSettings: boolean,
+  block: Partial<DefaultBlocksProps> & Pick<DefaultBlocksProps, "id">
+) => void;
+
+export type AddBlockProps = Pick<DefaultBlocksProps, "settings" | "type">;
+
 type ToolbarProps = {
-  addBlock: (blockMeta: DefaultBlocksProps) => void;
-  showSettings: Dispatch<SetStateAction<boolean>>;
+  addBlock: (props: AddBlockProps) => void;
+  // showSettings: SettingsFunction;
   isDesktop?: boolean;
 };
 
 export function PageEditorToolbar({
   addBlock,
   isDesktop = false,
+  // showSettings,
 }: ToolbarProps) {
   const [open, setOpen] = useState();
 
@@ -44,7 +52,9 @@ export function PageEditorToolbar({
             Add any number of blocks to your custom page.
           </CardDescription>
         </CardHeader>
-        <CardContent>{renderBlocksButton()}</CardContent>
+        <CardContent>
+          <BlocksButton addBlock={addBlock} />
+        </CardContent>
       </Card>
     );
   }
@@ -66,7 +76,7 @@ export function PageEditorToolbar({
               Add any number of blocks to your custom page.
             </SheetDescription>
           </SheetHeader>
-          {renderBlocksButton()}
+          <BlocksButton addBlock={addBlock} />
         </SheetContent>
       </Sheet>
 
@@ -77,50 +87,21 @@ export function PageEditorToolbar({
   );
 }
 
-function renderBlocksButton() {
+type BlocksButtonProps = { addBlock: (props: AddBlockProps) => void };
+
+function BlocksButton({ addBlock }: BlocksButtonProps) {
   return (
     <div className="grid grid-cols-3 gap-4 mt-6 md:mt-0">
-      {Object.entries(Blocks).map(([key, block]) => {
-        const Tag = block;
+      {Object.entries(Blocks).map(([type, block]) => {
+        const onClick = () => {
+          addBlock({
+            type,
+            settings: [],
+          });
+        };
 
-        return (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button key={key} className="bg-transparent border shadow-none">
-                <span className="capitalize">{key}</span>
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent>
-              {/* <DialogHeader>
-              <DialogTitle></DialogTitle>
-              <DialogDescription></DialogDescription>
-            </DialogHeader> */}
-              <Tag />
-            </DialogContent>
-          </Dialog>
-        );
+        return <Button onClick={onClick}>{type}</Button>;
       })}
     </div>
   );
 }
-const items: Menu[] = [
-  {
-    id: "home",
-    label: "Home",
-    path: "/administration",
-    // icon: "lucide-Home",
-  },
-  {
-    id: "page",
-    label: "Page",
-    path: "pages",
-    // icon: "lucide-PanelLeft",
-  },
-  {
-    id: "settings",
-    label: "Settings",
-    path: "settings",
-    // icon: "lucide-Settings",
-  },
-];

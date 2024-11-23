@@ -1,6 +1,6 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import Button from "./button";
-import { Textarea, TextareaProps } from "./textarea";
+import Button from "../button";
+import { Textarea, TextareaProps } from "../textarea";
 import {
   AlignJustifyIcon,
   AlignLeftIcon,
@@ -22,7 +22,7 @@ import {
 import { customMarkdownParser } from "~/core/utils/markdown-utils";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ScrollArea, ScrollBar } from "./scrollable.area";
+import { ScrollArea, ScrollBar } from "../scrollable.area";
 import rehypeRaw from "rehype-raw";
 
 export interface MarkdownEditorProps extends TextareaProps {

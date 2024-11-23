@@ -2,16 +2,14 @@ import { Types } from "mongoose";
 
 export interface PageMetadata {
   title: string;
+  desfription?: string;
+  keywords?: string[];
   [key: string]: any;
 }
 
 export interface PageContentType {
-  type:
-    | "block"
-    /*  |  "text" | "image" */
-    | "markdown"
-    | "component";
-  value: any;
+  type: "block" | "component" | "markdown" | "yaml";
+  value: any; // YAML configuration for type "yaml", React Components for "component" type
 }
 import { AppContext } from "~/app";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";

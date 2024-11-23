@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import {
+  closestCenter,
+  DndContext,
   DragEndEvent,
+  DragOverlay,
   DragStartEvent,
   KeyboardSensor,
   MouseSensor,
@@ -11,21 +14,28 @@ import {
 } from "@dnd-kit/core";
 import {
   arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import {
   AddBlockProps,
   PageEditorToolbar,
 } from "../components/page-editor-toolbar";
 import {
+  Blocks,
+  BlockType,
+  DefaultBlocksProps,
   JSONDefaultBlocksProps,
   SettingsSection,
 } from "~/core/blocks/block";
+import { Item, Sortable } from "~/components/ui/sortable";
+import render from "~/components/ui/render";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import { getNanoid } from "~/core/utils/util";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { Dialog, DialogContent } from "~/components/dialog";
-import { PageModel } from "~/core/page/models/page.server";
+import { json, LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/dialog";
+import Button from "~/components/button";
 
 const SETTINGS_DIALOG = "settingsId";
 export const handle = {
@@ -36,11 +46,49 @@ export const handle = {
   },
 };
 
+const sampleBlockMeta: JSONDefaultBlocksProps[] = [
+  {
+    id: "1",
+    type: "text",
+    settings: [
+      {
+        title: "Text",
+        fields: [{ name: "content", value: "First Text" }],
+      },
+      {
+        title: "styles",
+        fields: [
+          { name: "Font Size", value: "16px" },
+          { name: "Font Color", value: "#000000" },
+        ],
+      },
+    ],
+    mode: "render",
+  },
+  {
+    id: "2",
+    type: "text",
+    settings: [
+      {
+        title: "Text",
+        fields: [{ name: "content", value: "Second Text" }],
+      },
+      {
+        title: "styles",
+        fields: [
+          { name: "Font Size", value: "16px" },
+          { name: "Font Color", value: "#000000" },
+        ],
+      },
+    ],
+    mode: "render",
+  },
+];
 type LoaderDataType = {
   blocks: JSONDefaultBlocksProps[];
 };
 export const loader = ({}: LoaderFunctionArgs) => {
-  return json<LoaderDataType>({ blocks: [] });
+  return json<LoaderDataType>({ blocks: sampleBlockMeta });
 };
 
 export default function PageEditor() {
@@ -144,7 +192,57 @@ export default function PageEditor() {
       <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-4">
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
           {/*Main content  */}
-          <div className="bg-gray-100"></div>
+          <div className="bg-gray-100">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={sortedBlocks}
+                strategy={verticalListSortingStrategy}
+              >
+                {/* Droppable area */}
+                <div className="bg-white p-4 rounded shadow-md min-h-full">
+                  {sortedBlocks.map((block) => {
+                    return (
+                      <Sortable
+                        key={block.id}
+                        id={block.id}
+                        onClick={() => {
+                          setSearchParams((prev) => {
+                            prev.set(SETTINGS_DIALOG, block.id);
+
+                            return prev;
+                          });
+                        }}
+                      >
+                        {render(Blocks[block.type as BlockType], {
+                          mode: "render",
+                          settings: block.settings,
+                        })}
+                      </Sortable>
+                    );
+                  })}
+                </div>
+              </SortableContext>
+              <DragOverlay>
+                {draggingBlock && (
+                  <Item
+                    id={draggingBlock.id}
+                    ref={setNodeRef}
+                    className="rounded-sm bg-gray-200"
+                  >
+                    {render(Blocks[draggingBlock.type as BlockType], {
+                      mode: "render",
+                      settings: draggingBlock.settings,
+                    })}
+                  </Item>
+                )}
+              </DragOverlay>
+            </DndContext>
+          </div>
         </div>
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
           {/* Page sidebar */}
@@ -158,7 +256,17 @@ export default function PageEditor() {
         )}
       </div>
       <Dialog open={!!activeSettingsId} onOpenChange={handleShowSettings}>
-        <DialogContent></DialogContent>
+        <DialogContent>
+          <div className="">
+            <h4>Block settings</h4>
+            {editBlock &&
+              render(Blocks[editBlock.type as BlockType], {
+                ...editBlock,
+                mode: "editor",
+              })}
+            {/* <button onClick={() => setDialogOpen(false)}>Close</button> */}
+          </div>
+        </DialogContent>
       </Dialog>
     </div>
   );

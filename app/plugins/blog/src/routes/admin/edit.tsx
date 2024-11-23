@@ -3,7 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import Button from "~/components/button";
 import { ImagePreview } from "~/components/image-preview";
 import { Input } from "~/components/input";
-import { MarkdownEditor } from "~/components/markdown-editor";
+import { MarkdownEditor } from "~/components/editor/markdown-editor";
 import { Textarea } from "~/components/textarea";
 import { ValidationMessage } from "~/components/ui/validation-message";
 import { useFileUpload } from "~/hooks/use-upload";
