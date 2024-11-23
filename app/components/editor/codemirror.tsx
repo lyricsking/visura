@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { EditorState, Extension } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
-import { yaml } from "@codemirror/lang-yaml";
 import { oneDark } from "@codemirror/theme-one-dark";
 
 interface CodeMirrorProps {
@@ -24,7 +23,6 @@ export default function CodeMirrorEditor({
         doc: value,
         extensions: [
           basicSetup,
-          yaml(),
           oneDark,
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {

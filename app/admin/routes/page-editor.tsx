@@ -27,6 +27,7 @@ import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import { PageModel } from "~/core/page/models/page.server";
 import CodeMirrorEditor from "~/components/editor/codemirror";
+import { yaml } from "@codemirror/lang-yaml";
 
 const SETTINGS_DIALOG = "settingsId";
 export const handle = {
@@ -160,7 +161,7 @@ const { blocks } = useLoaderData() as LoaderDataType;
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
           {/*Main content  */}
           <div className="bg-gray-100">
-            <CodeMirrorEditor value={yamlContent} onChange={setYamlContent} />
+            <CodeMirrorEditor value={yamlContent} onChange={setYamlContent} extensions={[yaml()]} />
             <button
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
               onClick={handleSave}
