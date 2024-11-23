@@ -26,6 +26,7 @@ import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { json, LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import { PageModel } from "~/core/page/models/page.server";
+import CodeMirrorEditor from "~/components/editor/codemirror";
 
 const SETTINGS_DIALOG = "settingsId";
 export const handle = {
@@ -44,7 +45,21 @@ export const loader = ({}: LoaderFunctionArgs) => {
 };
 
 export default function PageEditor() {
-  const { blocks } = useLoaderData() as LoaderDataType;
+    const [yamlContent, setYamlContent] = useState<string>(`
+sections:
+  - type: hero
+    props:
+      title: Welcome to My Website
+      subtitle: Build dynamic pages with ease
+      background: /images/hero-bg.jpg
+`);
+
+    const handleSave = () => {
+      // Save the YAML content to the database
+      console.log("Saved YAML Content:", yamlContent);
+    };
+
+const { blocks } = useLoaderData() as LoaderDataType;
   const [sortedBlocks, setSortedBlocks] =
     useState<JSONDefaultBlocksProps[]>(blocks);
   const [editBlock, setEditBlock] = useState<JSONDefaultBlocksProps>();
@@ -144,7 +159,15 @@ export default function PageEditor() {
       <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-4">
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
           {/*Main content  */}
-          <div className="bg-gray-100"></div>
+          <div className="bg-gray-100">
+            <CodeMirrorEditor value={yamlContent} onChange={setYamlContent} />
+            <button
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+          </div>
         </div>
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
           {/* Page sidebar */}
