@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { EditorState, Extension } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -17,7 +17,7 @@ export default function CodeMirrorEditor({
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (editorRef.current) {
       const state = EditorState.create({
         doc: value,

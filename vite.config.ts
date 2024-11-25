@@ -5,8 +5,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import routes from "./app/routes";
 import { envOnlyMacros } from "vite-env-only";
 
-installGlobals();
-
 export default defineConfig({
   server: { port: 3000 },
   plugins: [
@@ -21,8 +19,10 @@ export default defineConfig({
       },
       future: {
         v3_fetcherPersist: true,
-        //v3_relativeSplatPath: true,
+        v3_relativeSplatPath: true,
+        v3_singleFetch: true,
         v3_throwAbortReason: true,
+        v3_lazyRouteDiscovery: true,
       },
     }),
     tsconfigPaths(),
@@ -32,3 +32,9 @@ export default defineConfig({
     exclude: ["@mapbox"], // Mapbox lib causing error during build time.
   },
 });
+
+declare module "@remix-run/server-runtime" {
+  interface Future {
+    v3_singleFetch: true;
+  }
+}
