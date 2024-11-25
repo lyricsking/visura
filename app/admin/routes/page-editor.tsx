@@ -22,6 +22,8 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import CodeMirrorEditor from "~/components/editor/codemirror";
 import { yaml } from "@codemirror/lang-yaml";
+import jsYaml from "js-yaml";
+import { linter } from "@codemirror/lint";
 
 const SETTINGS_DIALOG = "settingsId";
 export const handle = {
@@ -50,13 +52,33 @@ export default function PageEditor() {
           subtitle: Build dynamic pages with ease
           background: /images/hero-bg.jpg`);
 
+  const [preview, setPreview] = useState<string[]>([]);
+
   // Hook to determine mediaQuery
   // Used to determine if the current screen is desktop
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  const handleChange = (value: string) => {
+    try {
+      setYamlContent(value);
+
+      const parsedYaml: any = jsYaml.load(yamlContent);
+      alert(JSON.stringify(parsedYaml.secions, null, 2));
+      // Update preview
+      setPreview(parsedYaml.secions || []);
+    } catch (error) {
+      alert(JSON.stringify(error, null, 2));
+    }
+  };
+
   const handleSave = () => {
-    // Save the YAML content to the database
-    console.log("Saved YAML Content:", yamlContent);
+    try {
+      const parsedYaml = jsYaml.load(yamlContent);
+      alert(JSON.stringify(parsedYaml, null, 2));
+      // Save the YAML content to the database
+    } catch (error) {
+      alert(JSON.stringify(error, null, 2));
+    }
   };
 
   function handleShowSettings(isOpen: boolean, blockId?: string): void {
@@ -73,6 +95,22 @@ export default function PageEditor() {
     });
   }
 
+  const yamlLinter = linter(() => {
+    try {
+      jsYaml.load(yamlContent);
+      return [];
+    } catch (error: any) {
+      return [
+        {
+          from: 0,
+          to: yamlContent.length,
+          message: error.message,
+          severity: 0,
+        },
+      ];
+    }
+  });
+
   return (
     <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
       <div className="flex items-center gap-4">{/* template here */}</div>
@@ -82,7 +120,7 @@ export default function PageEditor() {
           <div className="bg-gray-100">
             <CodeMirrorEditor
               value={yamlContent}
-              onChange={setYamlContent}
+              onChange={handleChange}
               extensions={[yaml()]}
             />
             <button

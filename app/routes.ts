@@ -1,41 +1,53 @@
-import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
+import { index, type RouteConfig } from "@remix-run/route-config";
+import { remixRoutesOptionAdapter } from "@remix-run/routes-option-adapter";
 
-export default function routes(route: DefineRouteFunction) {
-  // Define all static routes first
-  // Auth routes
-  route("auth", "core/auth/routes/layout.tsx", () => {
-    route("", "core/auth/routes/signin.tsx", { index: true });
-    route("signup", "core/auth/routes/signup.tsx");
-    route("google", "core/auth/routes/google-signin.tsx");
-    route("google/callback", "core/auth/routes/google-callback.tsx");
-    route("signout", "core/auth/routes/signout.tsx");
-  });
+export default [
+  ...(await remixRoutesOptionAdapter((defineRoutes) => {
+    return defineRoutes((route) => {
+      // Define all static routes first
+      // Auth routes
+      route("auth", "core/auth/routes/layout.tsx", () => {
+        index("core/auth/routes/signin.tsx");
+        route("signup", "core/auth/routes/signup.tsx");
+        route("google", "core/auth/routes/google-signin.tsx");
+        route("google/callback", "core/auth/routes/google-callback.tsx");
+        route("signout", "core/auth/routes/signout.tsx");
+      });
 
-  // Admin routes
-  route("administration", "admin/routes/layout.tsx", () => {
-    route("", "admin/routes/overview.tsx", { index: true });
-    route("pages", "admin/routes/pages.tsx");
-    route("pages/:new", "admin/routes/page-editor.tsx");
-    route("users", "admin/routes/users.tsx");
-    route("settings", "admin/routes/settings.tsx", { id: "setting" }, () => {
-      route("general", "admin/routes/general-settings.tsx", { index: true });
-      route("display", "admin/routes/display-settings.tsx");
-      route("policy", "admin/routes/privacy-settings.tsx");
+      // Admin routes
+      route("administration", "admin/routes/layout.tsx", () => {
+        route("", "admin/routes/overview.tsx", { index: true });
+        route("pages", "admin/routes/pages.tsx");
+        route("pages/:new", "admin/routes/page-editor.tsx");
+        route("users", "admin/routes/users.tsx");
+        route(
+          "settings",
+          "admin/routes/settings.tsx",
+          { id: "setting" },
+          () => {
+            route("general", "admin/routes/general-settings.tsx", {
+              index: true,
+            });
+            route("display", "admin/routes/display-settings.tsx");
+            route("policy", "admin/routes/privacy-settings.tsx");
+          }
+        );
+        route("*", "admin/routes/catch-all.tsx");
+      });
+
+      // Public pages, registered last so that catch all route would match non handle routes only.
+      route("/", "public/routes/layout.tsx", () => {
+        route("", "public/routes/home.tsx", { index: true });
+        route("*", "public/routes/catch-all.tsx");
+      });
+
+      // Api routes
+      route("api/options", "core/option/routes/api/options.server.ts");
+      route("api/pages", "core/page/routes/api/pages.server.ts");
+      route("api/plugins", "core/plugin/routes/api/plugins.server.ts");
     });
-    route("*", "admin/routes/catch-all.tsx");
-  });
-
-  // Public pages, registered last so that catch all route would match non handle routes only.
-  route("/", "public/routes/layout.tsx", () => {
-    route("", "public/routes/home.tsx", { index: true });
-    route("*", "public/routes/catch-all.tsx");
-  });
-
-  // Api routes
-  route("api/options", "core/option/routes/api/options.server.ts");
-  route("api/pages", "core/page/routes/api/pages.server.ts");
-  route("api/plugins", "core/plugin/routes/api/plugins.server.ts");
-}
+  })),
+] satisfies RouteConfig;
 
 const defaultRoutes = () => {
   // route("cart", "Order/routes/layout.tsx", () => {

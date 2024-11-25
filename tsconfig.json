@@ -4,9 +4,11 @@
     "**/*.ts",
     "**/*.tsx",
     "app/plugins/Home/developer.jsx",
-    "server.js"
-, "scripts/generator/plugin.cjs"  ],
+    "server.js",
+    "scripts/generator/plugin.cjs"
+  ],
   "compilerOptions": {
+    "types": ["@remix-run/node", "vite/client"],
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
     "esModuleInterop": true,

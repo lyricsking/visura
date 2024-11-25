@@ -17,7 +17,8 @@ import { AppContext, getAppContext } from "./app";
 import { singleton } from "./core/utils/singleton";
 import createDBConnection from "./core/database/db.server";
 
-const ABORT_DELAY = 5_000;
+// Reject/cancel all pending promises after 5 seconds
+export const streamTimeout = 5000;
 
 export default async function handleRequest(
   request: Request,
@@ -60,11 +61,7 @@ function handleBotRequest(
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
       <AppContextProvider appContext={app}>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
+        <RemixServer context={remixContext} url={request.url} />
       </AppContextProvider>,
       {
         onAllReady() {
@@ -97,8 +94,9 @@ function handleBotRequest(
         },
       }
     );
-
-    setTimeout(abort, ABORT_DELAY);
+    // Automatically timeout the React renderer after 6 seconds, which ensure
+    // React has enough time to flush down the rejected boundary contents
+    setTimeout(abort, streamTimeout + 1000);
   });
 }
 
@@ -113,11 +111,7 @@ function handleBrowserRequest(
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
       <AppContextProvider appContext={app}>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
+        <RemixServer context={remixContext} url={request.url} />
       </AppContextProvider>,
       {
         onShellReady() {
@@ -151,6 +145,6 @@ function handleBrowserRequest(
       }
     );
 
-    setTimeout(abort, ABORT_DELAY);
+    setTimeout(abort, streamTimeout + 1000);
   });
 }
