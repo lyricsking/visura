@@ -36,11 +36,12 @@ export default function PageEditor() {
   const componentInfo = componentName ? componentsMap[componentName] : null;
 
   const [yamlContent, setYamlContent] = useState<string>(`sections:
-  - type: hero
+  - type: text
     props:
-      title: Welcome to My Website
-      subtitle: Build dynamic pages with ease
-      background: /images/hero-bg.jpg`);
+      text: Welcome to My Website
+      as: 'p'
+      class: "italic"
+      `);
 
   const [preview, setPreview] = useState<string[]>([]);
 

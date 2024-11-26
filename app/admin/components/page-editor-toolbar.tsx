@@ -76,10 +76,8 @@ type BlocksButtonProps = Pick<ToolbarProps, "showHintForComponent">;
 function BlocksButton({ showHintForComponent }: BlocksButtonProps) {
   return (
     <div className="grid grid-cols-3 md:grid-cols-2 gap-4 mt-6 md:mt-0">
-      {Object.entries(componentsMap).map(([key, componentInfo]) => {
-        const onClick = () => {
-          showHintForComponent(key);
-        };
+      {Object.keys(componentsMap).map((key) => {
+        const onClick = () => showHintForComponent(key);
 
         return <Button onClick={onClick}>{key}</Button>;
       })}

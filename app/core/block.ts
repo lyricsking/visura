@@ -1,5 +1,6 @@
 import { ComponentType, ReactNode, useState } from "react";
-import TextValueType from "../components/ui/text";
+import { TextProps, TextValueType } from "../components/ui/text";
+import { ImageProps } from "~/components/ui/image";
 
 /**
  *  A type representation of the structure of components map
@@ -32,7 +33,16 @@ export const componentsMap: Record<string, ComponentInfo> = {
 } as const;
 
 export type Blocks = (typeof componentsMap)[keyof typeof componentsMap];
-export type BlockType = keyof typeof componentsMap;
+export type BlockComponentType = keyof typeof componentsMap;
+
+export type SectionProps = TextProps;
+export type SectionType =
+  | { type: "text"; props: TextProps }
+  | { type: "image"; props: ImageProps };
+
+export type YAMLContent = {
+  sections: SectionType[];
+};
 
 // export interface OnClickEvent {
 //   type: "alert" | "navigation" | "submit" | "toggle";
