@@ -10,8 +10,9 @@ import { yaml } from "@codemirror/lang-yaml";
 import { parse, YAMLParseError } from "yaml";
 import { Diagnostic, linter } from "@codemirror/lint";
 import Button from "~/components/button";
-import { Copy } from "lucide-react";
+import { ChevronLeft, Copy } from "lucide-react";
 import { useToast } from "~/hooks/use-toast";
+import { Badge } from "~/components/badge";
 
 const COMPONENT_DIALOG_KEY = "component";
 
@@ -90,23 +91,43 @@ export default function PageEditor() {
   };
 
   return (
-    <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-      <div className="flex items-center gap-4">{/* template here */}</div>
-      <div className="h-96 grid gap-4 md:grid-cols-[1fr_250px] border rounded-lg shadow-md lg:grid-cols-12 lg:gap-0">
+    <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-2">
+      <div className="flex items-center gap-4">
+        {/* template here */}
+        <Button variant="ghost" size="icon" className="h-7 w-7 mx-0 hidden">
+          <ChevronLeft className="h-4 w-4" />
+          <span className="sr-only">Back</span>
+        </Button>
+        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 ">
+          Page Name
+        </h1>
+        <Badge variant="outline" className="ml-auto sm:ml-0">
+          Draft
+        </Badge>
+        <div className="hidden items-center gap-2 md:ml-auto md:flex">
+          <Button variant="ghost" size="sm">
+            Discard
+          </Button>
+
+          <Button
+            size="sm"
+            className="bg-indigo-600 text-white"
+            onClick={handleSave}
+          >
+            Save Page
+          </Button>
+        </div>
+      </div>
+      <div className="h-96 grid gap-4 mb-8 md:grid-cols-[1fr_250px] border rounded-lg shadow-md lg:grid-cols-12 lg:gap-0">
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-9 lg:gap-8">
           {/*Main content  */}
+
           <CodeMirrorEditor
             value={yamlContent}
             onChange={handleChange}
             extensions={[yaml(), yamlLinter()]}
             className="h-96 p-[2px] rounded-lg md:rounded-s-lg md:rounded-e-none bg-gray-800/90"
           />
-          <Button
-            className="ml-auto mt-4 bg-violet-500 text-white hover:bg-violet-600 hidden"
-            onClick={handleSave}
-          >
-            Save
-          </Button>
         </div>
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-3 lg:gap-8">
           {/* Page sidebar */}
