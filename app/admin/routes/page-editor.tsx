@@ -1,29 +1,15 @@
-import { useEffect, useState } from "react";
-import {
-  DragEndEvent,
-  DragStartEvent,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  useDroppable,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import {
-  AddBlockProps,
-  PageEditorToolbar,
-} from "../components/page-editor-toolbar";
+import { useState } from "react";
+import { PageEditorToolbar } from "../components/page-editor-toolbar";
 import { JSONDefaultBlocksProps, SettingsSection } from "~/core/blocks/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { getNanoid } from "~/core/utils/util";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import CodeMirrorEditor from "~/components/editor/codemirror";
 import { yaml } from "@codemirror/lang-yaml";
-import jsYaml from "js-yaml";
-import { linter } from "@codemirror/lint";
+import { parse, YAMLParseError } from "yaml";
+import { Diagnostic, linter } from "@codemirror/lint";
+import Button from "~/components/button";
 
 const SETTINGS_DIALOG = "settingsId";
 export const handle = {
@@ -44,13 +30,12 @@ export default function PageEditor() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeSettingsId = searchParams.get(SETTINGS_DIALOG);
 
-  const [yamlContent, setYamlContent] = useState<string>(`
-    sections:
-      - type: hero
-        props:
-          title: Welcome to My Website
-          subtitle: Build dynamic pages with ease
-          background: /images/hero-bg.jpg`);
+  const [yamlContent, setYamlContent] = useState<string>(`sections:
+  - type: hero
+    props:
+      title: Welcome to My Website
+      subtitle: Build dynamic pages with ease
+      background: /images/hero-bg.jpg`);
 
   const [preview, setPreview] = useState<string[]>([]);
 
@@ -62,19 +47,15 @@ export default function PageEditor() {
     try {
       setYamlContent(value);
 
-      const parsedYaml: any = jsYaml.load(yamlContent);
-      alert(JSON.stringify(parsedYaml.secions, null, 2));
+      const parsedYaml: any = parse(value);
       // Update preview
-      setPreview(parsedYaml.secions || []);
-    } catch (error) {
-      alert(JSON.stringify(error, null, 2));
-    }
+      setPreview(parsedYaml.sections || []);
+    } catch (error) {}
   };
 
   const handleSave = () => {
     try {
-      const parsedYaml = jsYaml.load(yamlContent);
-      alert(JSON.stringify(parsedYaml, null, 2));
+      const parsedYaml = parse(yamlContent);
       // Save the YAML content to the database
     } catch (error) {
       alert(JSON.stringify(error, null, 2));
@@ -95,40 +76,24 @@ export default function PageEditor() {
     });
   }
 
-  const yamlLinter = linter(() => {
-    try {
-      jsYaml.load(yamlContent);
-      return [];
-    } catch (error: any) {
-      return [
-        {
-          from: 0,
-          to: yamlContent.length,
-          message: error.message,
-          severity: 0,
-        },
-      ];
-    }
-  });
-
   return (
     <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
       <div className="flex items-center gap-4">{/* template here */}</div>
       <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-4">
         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
           {/*Main content  */}
-          <div className="bg-gray-100">
+          <div className="bg-gray-100 mb-4">
             <CodeMirrorEditor
               value={yamlContent}
               onChange={handleChange}
-              extensions={[yaml()]}
+              extensions={[yaml(), yamlLinter()]}
             />
-            <button
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+            <Button
+              className="ml-auto mt-4 bg-violet-500 text-white hover:bg-violet-600"
               onClick={handleSave}
             >
               Save
-            </button>
+            </Button>
           </div>
         </div>
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
@@ -147,4 +112,23 @@ export default function PageEditor() {
       </Dialog>
     </div>
   );
+}
+
+function yamlLinter() {
+  return linter((view) => {
+    const diagnostics: Diagnostic[] = [];
+    try {
+      parse(view.state.doc.toString()); // Validates YAML
+    } catch (error: any) {
+      if (error instanceof YAMLParseError) {
+        diagnostics.push({
+          from: error.pos[0],
+          to: error.pos[1],
+          severity: "error", // Specify severity
+          message: error.message,
+        });
+      }
+    }
+    return diagnostics;
+  });
 }

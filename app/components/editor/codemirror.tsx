@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditorState, Extension } from "@codemirror/state";
 import { EditorView, basicSetup } from "codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -9,6 +9,8 @@ interface CodeMirrorProps {
   extensions?: Extension[];
 }
 
+const lineWrapping = EditorView.lineWrapping;
+
 export default function CodeMirrorEditor({
   value,
   onChange,
@@ -16,6 +18,7 @@ export default function CodeMirrorEditor({
 }: CodeMirrorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const [isShown, setIsShown] = useState<boolean>(false);
 
   // Initialize the editor only once
   useEffect(() => {
@@ -33,6 +36,7 @@ export default function CodeMirrorEditor({
           }
         }),
         ...extensions,
+        lineWrapping,
       ],
     });
 
@@ -41,6 +45,7 @@ export default function CodeMirrorEditor({
       parent: editorRef.current,
     });
 
+    setIsShown(true);
     return () => {
       viewRef.current?.destroy();
     };
@@ -54,5 +59,11 @@ export default function CodeMirrorEditor({
       });
     }
   }, [value]); // Listen to only when value chnages.
-  return <div ref={editorRef} />;
+
+  return (
+    <div
+      ref={editorRef}
+      className="w-full h-80 rounded-lg border border-gray-300 shadow-md"
+    />
+  );
 }

@@ -6,8 +6,6 @@ import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 import { DisplayOptions } from "./admin/type/options";
 import { DISPLAY_OPTION_KEY, IOption } from "./core/option/types/option";
-import { Types } from "mongoose";
-import BlogPlugin from "./plugins/blog";
 
 export const APP_NAME = "app_name";
 
@@ -15,9 +13,9 @@ type PluginInstance = IPlugin & { instance: IBasePlugin };
 
 class AppContext {
   private static baseUrl =
-    // "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
+    "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu116.gitpod.io";
     // "https://ynm7f3-3000.csb.app";
-    "http://localhost:3000";
+    // "http://localhost:3000";
 
   private static instance: AppContext | null = null;
   private static queue: Array<(instance: AppContext) => void> = [];
