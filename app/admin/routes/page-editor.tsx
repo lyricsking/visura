@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PageEditorToolbar } from "../components/page-editor-toolbar";
-import { JSONDefaultBlocksProps, SettingsSection } from "~/core/blocks/block";
+import { componentsMap } from "~/core/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
@@ -10,8 +10,11 @@ import { yaml } from "@codemirror/lang-yaml";
 import { parse, YAMLParseError } from "yaml";
 import { Diagnostic, linter } from "@codemirror/lint";
 import Button from "~/components/button";
+import { Copy } from "lucide-react";
+import { useToast } from "~/hooks/use-toast";
 
-const SETTINGS_DIALOG = "settingsId";
+const COMPONENT_DIALOG_KEY = "component";
+
 export const handle = {
   pageName: "Edit Page",
   breadcrumb: {
@@ -21,14 +24,15 @@ export const handle = {
 };
 
 export const loader = ({}: LoaderFunctionArgs) => {
-  return { blocks: [] as JSONDefaultBlocksProps[] };
+  return { blocks: [] as any[] };
 };
 
 export default function PageEditor() {
   const { blocks } = useLoaderData<typeof loader>();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeSettingsId = searchParams.get(SETTINGS_DIALOG);
+  const componentName = searchParams.get(COMPONENT_DIALOG_KEY);
+  const componentInfo = componentName ? componentsMap[componentName] : null;
 
   const [yamlContent, setYamlContent] = useState<string>(`sections:
   - type: hero
@@ -42,6 +46,8 @@ export default function PageEditor() {
   // Hook to determine mediaQuery
   // Used to determine if the current screen is desktop
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  //
+  const { toast } = useToast();
 
   const handleChange = (value: string) => {
     try {
@@ -62,54 +68,85 @@ export default function PageEditor() {
     }
   };
 
-  function handleShowSettings(isOpen: boolean, blockId?: string): void {
+  function handleShowSettings(isOpen: boolean, componentKey?: string): void {
     setSearchParams((prev) => {
-      if (isOpen && blockId) {
-        prev.set(SETTINGS_DIALOG, blockId);
-      }
-
-      if (!isOpen) {
-        prev.delete(SETTINGS_DIALOG);
+      if (isOpen && componentKey) {
+        prev.set(COMPONENT_DIALOG_KEY, componentKey);
+      } else {
+        prev.delete(COMPONENT_DIALOG_KEY);
       }
 
       return prev;
     });
   }
+  // Fucntion to code usage code example to clipboard and show toast notification
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    // Todo Show toast
+    toast({
+      description: "Code copied to clipboard!.",
+      position: "bottomCenter",
+    });
+  };
 
   return (
     <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
       <div className="flex items-center gap-4">{/* template here */}</div>
-      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-4">
-        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+      <div className="h-96 grid gap-4 md:grid-cols-[1fr_250px] border rounded-lg shadow-md lg:grid-cols-12 lg:gap-0">
+        <div className="grid auto-rows-max items-start gap-4 lg:col-span-9 lg:gap-8">
           {/*Main content  */}
-          <div className="bg-gray-100 mb-4">
-            <CodeMirrorEditor
-              value={yamlContent}
-              onChange={handleChange}
-              extensions={[yaml(), yamlLinter()]}
-            />
-            <Button
-              className="ml-auto mt-4 bg-violet-500 text-white hover:bg-violet-600"
-              onClick={handleSave}
-            >
-              Save
-            </Button>
-          </div>
+          <CodeMirrorEditor
+            value={yamlContent}
+            onChange={handleChange}
+            extensions={[yaml(), yamlLinter()]}
+            className="h-96 p-[2px] rounded-lg md:rounded-s-lg md:rounded-e-none bg-gray-800/90"
+          />
+          <Button
+            className="ml-auto mt-4 bg-violet-500 text-white hover:bg-violet-600 hidden"
+            onClick={handleSave}
+          >
+            Save
+          </Button>
         </div>
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+        <div className="grid auto-rows-max items-start gap-4 lg:col-span-3 lg:gap-8">
           {/* Page sidebar */}
-          {isDesktop && <PageEditorToolbar isDesktop addBlock={() => {}} />}
+          {isDesktop && (
+            <PageEditorToolbar
+              isDesktop
+              showHintForComponent={(key) => handleShowSettings(true, key)}
+            />
+          )}
         </div>
       </div>
       <div className="fixed w-full left-0 right-0 bottom-0 flex items-center justify-center gap-2 md:hidden">
         {/* mobile only toolbar here */}
         {!isDesktop && (
-          <PageEditorToolbar isDesktop={false} addBlock={() => {}} />
+          <PageEditorToolbar
+            isDesktop={false}
+            showHintForComponent={(key) => handleShowSettings(true, key)}
+          />
         )}
       </div>
-      <Dialog open={!!activeSettingsId} onOpenChange={handleShowSettings}>
-        <DialogContent></DialogContent>
-      </Dialog>
+      {componentInfo && (
+        <Dialog open={!!componentName} onOpenChange={handleShowSettings}>
+          <DialogContent>
+            <div className="mt-4">
+              <h3 className="font-semibold">Usage Example</h3>
+              <div className="grid items-center">
+                <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto">
+                  {componentInfo.usageExample}
+                </pre>
+                <button
+                  className="fixed end-8 p-1 text-gray-400"
+                  onClick={() => copyToClipboard(componentInfo.usageExample)}
+                >
+                  <Copy />
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

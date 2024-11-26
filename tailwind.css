@@ -112,7 +112,7 @@
 
 /* Codemirror */
 .cm-editor {
-  @apply h-80 text-xs rounded-lg border border-gray-300 overflow-hidden;
+  @apply h-full text-xs overflow-hidden;
 }
 
 .cm-line {

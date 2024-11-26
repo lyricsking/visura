@@ -7,6 +7,7 @@ interface CodeMirrorProps {
   value: string;
   onChange: (value: string) => void;
   extensions?: Extension[];
+  className?: string | undefined;
 }
 
 const lineWrapping = EditorView.lineWrapping;
@@ -15,6 +16,7 @@ export default function CodeMirrorEditor({
   value,
   onChange,
   extensions = [],
+  className,
 }: CodeMirrorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -60,10 +62,5 @@ export default function CodeMirrorEditor({
     }
   }, [value]); // Listen to only when value chnages.
 
-  return (
-    <div
-      ref={editorRef}
-      className="w-full h-80 rounded-lg border border-gray-300 shadow-md"
-    />
-  );
+  return <div ref={editorRef} className={className} />;
 }

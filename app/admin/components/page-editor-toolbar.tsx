@@ -1,11 +1,5 @@
 import { Eye, Settings } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
 import Button from "~/components/button";
-import { Blocks, DefaultBlocksProps, JSONDefaultBlocksProps } from "~/core/blocks/block";
-
-import { Menu } from "~/types/menu";
-import { useState } from "react";
-
 import {
   Card,
   CardContent,
@@ -21,39 +15,29 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/sheet";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/dialog";
-
-type SettingsFunction = (
-  showSettings: boolean,
-  block: Partial<DefaultBlocksProps> & Pick<DefaultBlocksProps, "id">
-) => void;
-
-export type AddBlockProps = Pick<DefaultBlocksProps, "settings" | "type">;
+import { componentsMap } from "~/core/block";
 
 type ToolbarProps = {
-  addBlock: (props: AddBlockProps) => void;
+  showHintForComponent: (key: string) => void;
   // showSettings: SettingsFunction;
   isDesktop?: boolean;
 };
 
 export function PageEditorToolbar({
-  addBlock,
+  showHintForComponent,
   isDesktop = false,
-  // showSettings,
 }: ToolbarProps) {
-  const [open, setOpen] = useState();
-
   if (isDesktop) {
     return (
-      <Card className="overflow-hidden">
+      <Card className="h-96 rounded-s-none overflow-y-auto">
         <CardHeader>
           <CardTitle className="text-center">Add Block</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-center">
             Add any number of blocks to your custom page.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <BlocksButton addBlock={addBlock} />
+          <BlocksButton showHintForComponent={showHintForComponent} />
         </CardContent>
       </Card>
     );
@@ -76,7 +60,7 @@ export function PageEditorToolbar({
               Add any number of blocks to your custom page.
             </SheetDescription>
           </SheetHeader>
-          <BlocksButton addBlock={addBlock} />
+          <BlocksButton showHintForComponent={showHintForComponent} />
         </SheetContent>
       </Sheet>
 
@@ -87,20 +71,17 @@ export function PageEditorToolbar({
   );
 }
 
-type BlocksButtonProps = { addBlock: (props: AddBlockProps) => void };
+type BlocksButtonProps = Pick<ToolbarProps, "showHintForComponent">;
 
-function BlocksButton({ addBlock }: BlocksButtonProps) {
+function BlocksButton({ showHintForComponent }: BlocksButtonProps) {
   return (
-    <div className="grid grid-cols-3 gap-4 mt-6 md:mt-0">
-      {Object.entries(Blocks).map(([type, block]) => {
+    <div className="grid grid-cols-3 md:grid-cols-2 gap-4 mt-6 md:mt-0">
+      {Object.entries(componentsMap).map(([key, componentInfo]) => {
         const onClick = () => {
-          addBlock({
-            type,
-            settings: [],
-          });
+          showHintForComponent(key);
         };
 
-        return <Button onClick={onClick}>{type}</Button>;
+        return <Button onClick={onClick}>{key}</Button>;
       })}
     </div>
   );
