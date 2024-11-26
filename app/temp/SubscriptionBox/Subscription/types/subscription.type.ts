@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 
 export interface IItem {
   product: Types.ObjectId;
@@ -7,11 +7,12 @@ export interface IItem {
 }
 
 export const SubscriptionStatus = {
-  active: 'active',
-  paused: 'paused',
-  cancelled: 'cancelled'
-} as const
-export type SubscriptionStatus = typeof SubscriptionStatus[keyof typeof SubscriptionStatus];
+  active: "active",
+  paused: "paused",
+  cancelled: "cancelled",
+} as const;
+export type SubscriptionStatus =
+  (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus];
 
 export interface ISubscription {
   _id: Types.ObjectId;

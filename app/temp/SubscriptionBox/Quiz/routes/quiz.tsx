@@ -29,8 +29,8 @@ export default function Quiz() {
         Health and Wellness Supplement Quiz
       </h2>
       <p className="text-lg text-start mt-8 px-6">
-        Take the health and wellness supplement quiz to help you quickly decide on
-        what is best for your health.
+        Take the health and wellness supplement quiz to help you quickly decide
+        on what is best for your health.
       </p>
       <p className="text-lg text-start mt-8 px-6">
         By participating in this quiz, you agree that your responses will be

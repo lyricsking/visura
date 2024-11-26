@@ -26,26 +26,24 @@ export const createOrUpdateAddress = async ({
     console.log("Address saved successfully.");
   } catch (err) {
     console.error("Error saving address.", err);
-  } 
+  }
 };
 
 export const getAddress = async (id: string) => {
   try {
-
     const address = await Address.findById(id).exec();
     console.log("Fetched address success: ", address);
 
     return address;
   } catch (e) {
     console.log("Failed to fetch address:", e);
-  } 
+  }
 };
 
 export const getAddressesByEmail = async (
   email: string
 ): Promise<IAddress[]> => {
   try {
-
     const addresses = await Address.find({ email: email }).exec();
     console.log("Fetched addresses success: ", addresses);
 
@@ -60,7 +58,6 @@ export const getAddressRegions = async (): Promise<
   HydratedDocument<IAddressRegion>[]
 > => {
   try {
-
     const regions = await AddressRegion.find({}).exec();
 
     console.log("Fetched regions success: ", regions);
@@ -69,7 +66,7 @@ export const getAddressRegions = async (): Promise<
   } catch (e) {
     console.log("Failed to fetch regions :", e);
     throw e;
-  } 
+  }
 };
 
 export const deleteAddress = async (id: Types.ObjectId) => {};

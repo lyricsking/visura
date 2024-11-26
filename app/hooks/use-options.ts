@@ -20,12 +20,12 @@ export const useOptions = () => {
   };
 
   const app = useAppContext();
-  useEffect(() => { 
-    if(fetcher.data){
-     app.config 
+  useEffect(() => {
+    if (fetcher.data) {
+      app.config;
     }
   }, [fetcher.data]);
-  
+
   // const saveUserMeta = (key: string, value: any) => {
   //   fetcher.fetcher.submit({ key: value }, { action: "/api/user-profile" });
   // };

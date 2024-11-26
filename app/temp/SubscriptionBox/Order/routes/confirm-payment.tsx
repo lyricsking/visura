@@ -1,4 +1,4 @@
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from "@remix-run/react";
 
 const OrderConfirmationModal = () => {
   const fetcher = useFetcher();
@@ -7,13 +7,12 @@ const OrderConfirmationModal = () => {
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
         <div className="flex justify-center mb-4">
-          <div className="bg-blue-500 text-white rounded-full p-3">
-            ✓
-          </div>
+          <div className="bg-blue-500 text-white rounded-full p-3">✓</div>
         </div>
         <h3 className="text-lg font-bold text-center">Congratulations !!</h3>
         <p className="text-center text-gray-600 mb-4">
-          Your order is accepted. Your items are on the way and should arrive shortly.
+          Your order is accepted. Your items are on the way and should arrive
+          shortly.
         </p>
         <button
           className="w-full bg-blue-500 text-white py-2 rounded mb-2"

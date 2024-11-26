@@ -41,7 +41,7 @@ const tipsSchema = new Schema<ITips, TipsModelType>(
       type: Schema.Types.ObjectId,
       ref: "League",
       required: true,
-     /* validate: {
+      /* validate: {
         validator: async function (league) {
           const mLeague = await LeagueModel.findById(league);
           if (!mLeague) {
@@ -54,7 +54,7 @@ const tipsSchema = new Schema<ITips, TipsModelType>(
         message: "Invalid league for the selected country.",
       },
     */
-   },
+    },
     teamARank: { type: Number, required: true },
     teamBRank: { type: Number, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },

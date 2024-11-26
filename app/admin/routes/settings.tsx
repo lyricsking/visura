@@ -1,7 +1,4 @@
-import {
-  json,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import { json, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Outlet,
   ShouldRevalidateFunctionArgs,

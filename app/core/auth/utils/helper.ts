@@ -7,4 +7,3 @@ export const isAuthUser = (authUser: any): authUser is AuthUser =>
 export const isSessionInstance = (
   authUser: AuthUser | Session | undefined
 ): authUser is Session => typeof (authUser as Session).has === "function";
-

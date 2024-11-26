@@ -37,7 +37,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
   }
 
   return json({
-    path: path ,
+    path: path,
     params: params,
     data: loaderData,
     content: page?.content,

@@ -70,4 +70,3 @@ const PostModel: PostModelType =
   mongoose.models.Post || mongoose.model("Post", postSchema);
 
 export default PostModel;
-

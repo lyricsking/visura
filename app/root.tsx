@@ -96,7 +96,7 @@ export function ErrorBoundary() {
         <h1>
           {error.status} {error.statusText}
         </h1>
-        <p>{error.data['message']?error.data['message']: error.data}</p>
+        <p>{error.data["message"] ? error.data["message"] : error.data}</p>
       </>
     );
   }

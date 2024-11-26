@@ -1,34 +1,45 @@
-
 export default function About() {
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-gray-900">About Us</h1>
       <section className="mt-8">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Our Story 
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900">Our Story</h2>
         <p className="mt-4 text-gray-600">
-          YourBrand was founded with the mission to provide the best wellness supplements to our customers. Our journey started in [Year] with a small team and a big dream. Today, we are proud to serve thousands of happy customers.
+          YourBrand was founded with the mission to provide the best wellness
+          supplements to our customers. Our journey started in [Year] with a
+          small team and a big dream. Today, we are proud to serve thousands of
+          happy customers.
         </p>
       </section>
 
       <section className="mt-8">
         <h2 className="text-2xl font-bold text-gray-900">Our Team</h2>
         <p className="mt-4 text-gray-600">
-          Our team is composed of passionate professionals dedicated to your health and wellness.
+          Our team is composed of passionate professionals dedicated to your
+          health and wellness.
         </p>
         {/* Include key team members here if applicable */}
       </section>
 
       <section className="mt-8">
-        <h2 className="text-2xl font-bold text-gray-900">Contact Information</h2>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Contact Information
+        </h2>
         <p className="mt-4 text-gray-600">You can reach us at:</p>
         <address className="mt-4 not-italic">
           <p className="text-gray-600">YourBrand</p>
           <p className="text-gray-600">123 Wellness Street</p>
           <p className="text-gray-600">Health City, Wellness State, 12345</p>
           <p className="text-gray-600">Phone: (123) 456-7890</p>
-          <p className="text-gray-600">Email: <a href="mailto:support@yourbrand.com" className="text-green-500 hover:underline">support@yourbrand.com</a></p>
+          <p className="text-gray-600">
+            Email:{" "}
+            <a
+              href="mailto:support@yourbrand.com"
+              className="text-green-500 hover:underline"
+            >
+              support@yourbrand.com
+            </a>
+          </p>
         </address>
       </section>
 

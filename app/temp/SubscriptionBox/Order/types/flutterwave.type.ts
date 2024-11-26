@@ -2,7 +2,7 @@
  * Check out {@link https://developer.flutterwave.com/docs/flutterwave-standard} for more information.
  */
 
- export interface FlutterWaveProps {
+export interface FlutterWaveProps {
   /**
    * 	Your transaction reference. This MUST be unique for every transaction
    */
@@ -11,7 +11,7 @@
   /**
    * currency to charge in. Defaults to NGN
    */
-  currency: 'NGN' | string;
+  currency: "NGN" | string;
   /**
    * 	This is a sha256 hash of your FlutterwaveCheckout values, it is used for passing secured values to the payment gateway.
    */
@@ -19,7 +19,7 @@
   /**
    * This specifies the payment options to be displayed e.g - [card, mobilemoney, ussd] and so on. Defaults to 'card, ussd, mobilemoney'
    */
-  payment_options: 'card, ussd, mobilemoney' | string;
+  payment_options: "card, ussd, mobilemoney" | string;
   /**
    *	This is the payment plan ID used for Recurring billing
    */
@@ -88,10 +88,10 @@
 }
 
 export interface FlutterWaveResponse {
-  amount: FlutterWaveProps['amount'];
-  currency: FlutterWaveProps['currency'];
-  customer: FlutterWaveProps['customer'];
-  tx_ref: FlutterWaveProps['tx_ref'];
+  amount: FlutterWaveProps["amount"];
+  currency: FlutterWaveProps["currency"];
+  customer: FlutterWaveProps["customer"];
+  tx_ref: FlutterWaveProps["tx_ref"];
   flw_ref: string;
   status: string;
   transaction_id: number;

@@ -28,7 +28,7 @@ export function Navbar() {
       icon: "lucide-Settings",
     },
   ];
-  
+
   return (
     <nav className="hidden md:flex md:flex-row gap-1 text-lg font-medium md:items-center md:text-xs">
       {menu.map((menu) => {

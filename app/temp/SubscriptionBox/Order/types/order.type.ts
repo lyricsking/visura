@@ -14,12 +14,13 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
 export const OrderPurchaseMode = {
   "one-time": "one-time",
   "bi-weekly": "bi-weekly",
-  "weekly": "weekly",
-  "monthly": "monthly",
+  weekly: "weekly",
+  monthly: "monthly",
   "bi-monthly": "bi-monthly",
-  "quarterly": "quarterly"
+  quarterly: "quarterly",
 } as const;
-export type OrderPurchaseMode = typeof OrderPurchaseMode[keyof typeof OrderPurchaseMode];
+export type OrderPurchaseMode =
+  (typeof OrderPurchaseMode)[keyof typeof OrderPurchaseMode];
 
 export interface IItem {
   productId: Types.ObjectId;
@@ -45,7 +46,7 @@ export interface IOrder {
   discount: {
     type: string;
     value: number;
-  }
+  };
   createdAt: Date;
   updatedAt: Date;
 }

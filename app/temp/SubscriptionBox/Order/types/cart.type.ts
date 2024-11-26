@@ -1,1 +1,1 @@
-export const CART_FETCHER_KEY="cart-fetcher";
+export const CART_FETCHER_KEY = "cart-fetcher";
