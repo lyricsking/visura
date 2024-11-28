@@ -2,7 +2,14 @@ import { FormEvent, useState } from "react";
 import { PageEditorToolbar } from "../components/page-editor-toolbar";
 import { componentsMap } from "~/core/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { Form, useFetcher, useLoaderData, useNavigation, useSearchParams, useSubmit } from "@remix-run/react";
+import {
+  Form,
+  useFetcher,
+  useLoaderData,
+  useNavigation,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import CodeMirrorEditor from "~/components/editor/codemirror";
@@ -61,13 +68,13 @@ export const loader = ({}: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const v = formDataToObject(formData);
-  
+
   const pagesURL = new URL("http://localhost:3000/api/options");
   pagesURL.pathname = "/api/pages";
 
-    const req = await fetch(pagesURL, { body: v as BodyInit, method: "post" });
-    const json = await req.json()
-    console.log(json)
+  const req = await fetch(pagesURL, { body: v as BodyInit, method: "post" });
+  const json = await req.json();
+  console.log(json);
 
   return null;
 };
@@ -76,7 +83,7 @@ export default function PageEditor() {
   const { blocks } = useLoaderData<typeof loader>();
 
   const submit = useSubmit();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -122,7 +129,7 @@ export default function PageEditor() {
     e.preventDefault();
 
     const dataObject = formDataToObject(new FormData(e.currentTarget));
-    
+
     try {
       const parsedYaml = parse(yamlContent);
       // Save the YAML content to the database
@@ -134,10 +141,10 @@ export default function PageEditor() {
 
       // Parse FormData into an array of objects
       const ogTags: { [key: string]: string } = {};
-      
-      let properties = dataObject["properties"]
-      let contents = dataObject["contents"]
-      
+
+      let properties = dataObject["properties"];
+      let contents = dataObject["contents"];
+
       Array.isArray(properties)
         ? properties.forEach((property, index) => {
             if (property.length) ogTags[property] = contents[index];
@@ -156,7 +163,7 @@ export default function PageEditor() {
         value: yamlContent,
       };
 
-      toast({ description: JSON.stringify(page,null,2) });
+      toast({ description: JSON.stringify(page, null, 2) });
 
       submit(page, { method: "post" });
     } catch (error) {
