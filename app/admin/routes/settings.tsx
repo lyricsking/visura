@@ -21,7 +21,7 @@ export const handle = {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const tab = new URL(request.url).pathname.split("/")[3] ?? "";
 
-  return json({ tab: tab });
+  return { tab: tab };
 };
 
 /**

@@ -1,9 +1,11 @@
 import { FC, ReactNode } from "react";
 import { cva, VariantProps } from "class-variance-authority";
+import { ComponentInfo } from "~/core/block";
 
-interface SectionProps extends VariantProps<typeof sectionClasses> {
+export interface SectionProps extends VariantProps<typeof sectionClasses> {
   /** Content inside the Section */
-  children: ReactNode;
+  // children: ReactNode;
+  blocks?: any;
 
   /** Custom class names to override default styling */
   className?: string;
@@ -58,7 +60,7 @@ const sectionClasses = cva("w-full", {
     },
   },
   defaultVariants: {
-    container: false,
+    container: true,
     layout: "default",
     gap: "none",
     padding: "medium",
@@ -67,7 +69,8 @@ const sectionClasses = cva("w-full", {
 });
 
 const Section: FC<SectionProps> = ({
-  children,
+  // children,
+  blocks,
   className = "",
   id,
   as: Component = "div",
@@ -102,6 +105,8 @@ const Section: FC<SectionProps> = ({
     .filter(Boolean)
     .join(" ");
 
+  const children = "test  content";
+
   return (
     <Component
       id={id}
@@ -120,3 +125,25 @@ const Section: FC<SectionProps> = ({
 };
 
 export default Section;
+
+export const SectionInfo: ComponentInfo = {
+  component: Section,
+  description: "",
+  instructions: "",
+  props: {},
+  usageExample: `- type: section
+  props:
+    blocks:
+      - type: text
+        props:
+          text: Welcome to My Website
+          as: 'p'
+          class: "italic"
+        
+      - type: text
+        props:
+          text: I am Jamiu
+          as: 'p'
+          class: "font-bold"
+  `,
+};

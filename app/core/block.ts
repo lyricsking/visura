@@ -1,6 +1,7 @@
 import { ComponentType } from "react";
-import { TextProps, TextValueType } from "../components/ui/text";
-import { ImageProps } from "~/components/ui/image";
+import { TextProps, TextInfo } from "../components/ui/text";
+import { ImageInfo, ImageProps } from "~/components/ui/image";
+import Section, { SectionInfo, SectionProps } from "~/components/ui/section";
 
 /**
  *  A type representation of the structure of components map
@@ -19,29 +20,22 @@ export type ComponentInfo = {
 };
 
 export const componentsMap: Record<string, ComponentInfo> = {
-  text: TextValueType,
-  // image: ImageBlock,
-  // button: Button,
-  // div: "div",
-  // header: "header",
-  // main: "main",
-  // section: "section",
-  // footer: "footer",
-  // h1: "h1",
-  // h2: "h2",
-  // p: "p",
+  section: SectionInfo,
+  text: TextInfo,
+  image: ImageInfo,
 } as const;
 
 export type Blocks = (typeof componentsMap)[keyof typeof componentsMap];
-export type BlockComponentType = keyof typeof componentsMap;
+export type BlockKeys = keyof typeof componentsMap;
 
-export type SectionProps = TextProps;
-export type SectionType =
+export type BlockProps = SectionProps | TextProps | ImageProps;
+export type BlockType =
+  | { type: "section"; props: SectionProps }
   | { type: "text"; props: TextProps }
   | { type: "image"; props: ImageProps };
 
 export type YAMLContent = {
-  sections: SectionType[];
+  sections: BlockType[];
 };
 
 // export interface OnClickEvent {
@@ -51,7 +45,7 @@ export type YAMLContent = {
 //   };
 // }
 
-// // export interface BlockProps
+// // export interface XBlockProps
 // //   extends Omit<HTMLAttributes<HTMLElement>, "onClick"> {
 // //   onClick?: OnClickEvent;
 // // }
@@ -67,7 +61,7 @@ export type YAMLContent = {
 //   fields: SettingField[];
 // }
 
-// export interface BlockProps {
+// export interface XBlockProps {
 //   id: string;
 //   type: string;
 //   settings: SettingsSection[];
@@ -77,12 +71,12 @@ export type YAMLContent = {
 // }
 
 // export type DefaultBlocksProps = Pick<
-//   BlockProps,
+//   XBlockProps,
 //   "id" | "type" | "settings" | "onSettingsUpdate" | "mode"
 // >;
 
 // export type JSONDefaultBlocksProps = Pick<
-//   BlockProps,
+//   XBlockProps,
 //   "id" | "type" | "settings" | "mode"
 // >;
 
@@ -137,7 +131,7 @@ export type YAMLContent = {
 //   onSettingsUpdate,
 //   children,
 //   mode,
-// }: BlockProps) {
+// }: XBlockProps) {
 //   const [settings, setSettings] = useState<SettingsSection[]>(initialSettings);
 //   const [isDialogOpen, setDialogOpen] = useState(false);
 //   const handleUpdate = (

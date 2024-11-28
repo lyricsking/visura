@@ -1,4 +1,4 @@
-import { Eye, Settings } from "lucide-react";
+import { Eye, Info, Settings } from "lucide-react";
 import Button from "~/components/button";
 import {
   Card,
@@ -33,7 +33,13 @@ export function PageEditorToolbar({
         <CardHeader>
           <CardTitle className="text-center">Add Block</CardTitle>
           <CardDescription className="text-center">
-            Add any number of blocks to your custom page.
+            Incrementally add blocks to compose a page.
+            <br />
+            <br />
+            <span className="flex ">
+              <Info className="w-4 h-4" />
+              Click on any block button to read more about each block.
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -75,7 +81,7 @@ type BlocksButtonProps = Pick<ToolbarProps, "showHintForComponent">;
 
 function BlocksButton({ showHintForComponent }: BlocksButtonProps) {
   return (
-    <div className="grid grid-cols-3 md:grid-cols-2 gap-4 mt-6 md:mt-0">
+    <div className="grid grid-cols-3 md:grid-cols-3 gap-2 mt-6 md:mt-0">
       {Object.keys(componentsMap).map((key) => {
         const onClick = () => showHintForComponent(key);
 

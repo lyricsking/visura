@@ -1,4 +1,4 @@
-import { ComponentProps, FC } from "react";
+import { FC } from "react";
 import { ComponentInfo } from "../../core/block";
 
 export type TextProps = {
@@ -31,12 +31,16 @@ const Text: FC<TextProps> = ({
   );
 };
 
-export const TextValueType: ComponentInfo = {
+export const TextInfo: ComponentInfo = {
   component: Text,
   description: "",
   instructions: "",
   props: {},
-  usageExample: `type: text`,
+  usageExample: `- type: text
+  props:
+    text: I am Jamiu
+    as: 'p'
+    class: "font-bold"`,
 };
 
 export default Text;

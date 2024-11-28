@@ -1,4 +1,4 @@
-import { ComponentProps, FC, useState } from "react";
+import { FC, useState } from "react";
 import { ComponentInfo } from "~/core/block";
 
 export type ImageProps = {
@@ -52,19 +52,20 @@ export const Image: FC<ImageProps> = ({
   );
 };
 
-export const ImageValueType: ComponentInfo = {
+export const ImageInfo: ComponentInfo = {
   component: Image,
   description: "",
   instructions: "",
   props: {},
-  usageExample: `type: img
-  src: ""
-  alt: ""
-  fallbackSrc: ""
-  lazy: true
-  width: 300
-  height: 300
-  class: "rounded`,
+  usageExample: `- type: image
+  props:
+    src: ""
+    alt: ""
+    fallbackSrc: ""
+    lazy: true
+    width: 300
+    height: 300
+    class: "rounded"`,
 };
 
 export default Image;

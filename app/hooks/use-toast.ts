@@ -164,6 +164,7 @@ function toast({ ...props }: Toast) {
       onOpenChange: (open) => {
         if (!open) dismiss();
       },
+      position: "topRight"
     },
   });
 

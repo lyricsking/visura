@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface PageMetadata {
   title: string;
-  desfription?: string;
+  description?: string;
   keywords?: string[];
   [key: string]: any;
 }
