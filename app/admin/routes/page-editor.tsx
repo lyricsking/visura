@@ -72,11 +72,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const pagesURL = new URL("http://localhost:3000/api/options");
   pagesURL.pathname = "/api/pages";
 
-  const req = await fetch(pagesURL, { body: v as BodyInit, method: "post" });
+  const req = await fetch(pagesURL, { method: "POST", body: formData });
+
   const json = await req.json();
   console.log(json);
 
-  return null;
+  return json;
 };
 
 export default function PageEditor() {
@@ -305,7 +306,7 @@ export default function PageEditor() {
         {/* Templates */}
         {/* <div className="flex items-center gap-4 bg-gray-500"></div> */}
 
-        <div className="h-96 grid md:grid-cols-[1fr_250px] mt-2 lg:mt-8 border rounded-lg shadow-md lg:grid-cols-12">
+        <div className="h-96 grid md:grid-cols-[1fr_250px] border rounded-lg shadow-md lg:grid-cols-12">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-8 lg:gap-8">
             <CodeMirrorEditor
               value={yamlContent}

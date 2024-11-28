@@ -33,7 +33,7 @@ export function PageEditorToolbar({
         <CardHeader>
           <CardTitle className="text-center">Add Block</CardTitle>
           <CardDescription className="text-center">
-            Incrementally add blocks to compose a page.
+            Incrementally add blocks to compose page.
             <br />
             <br />
             <span className="flex ">
