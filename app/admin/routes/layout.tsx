@@ -86,9 +86,7 @@ export default function Layout() {
   let pageName =
     currentRoute?.handle?.pageName || parentRoute?.handle?.pageName;
   if (pageName && typeof pageName === "function") {
-    pageName = pageName(
-      currentRoute?.handle?.data || parentRoute?.handle?.data
-    );
+    pageName = pageName(currentRoute?.data || parentRoute?.data);
   }
 
   return (

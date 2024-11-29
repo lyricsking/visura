@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs, ActionFunctionArgs, json } from "@remix-run/node";
 import { UpdateWriteOpResult } from "mongoose";
 import { APP_NAME } from "~/app";
 import { OptionModel } from "~/option/models/option.server";
@@ -39,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     response = await handleDbResult(OptionModel.find(query));
   }
 
-  return response;
+  return json(response);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

@@ -4,16 +4,13 @@ import { componentsMap } from "~/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import {
   Form,
+  useActionData,
   useLoaderData,
   useNavigation,
   useSearchParams,
   useSubmit,
 } from "@remix-run/react";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  redirect,
-} from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import CodeMirrorEditor from "~/components/editor/codemirror";
 import { yaml } from "@codemirror/lang-yaml";
@@ -40,16 +37,17 @@ import {
 } from "~/components/card";
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
-import { template } from "lodash";
 import formDataToObject from "~/utils/form-data-to-object";
 import { IPage } from "~/page/types/page";
-import { defaultPage } from "~/page/models/page.server";
+import { defaultPage, PageModel } from "~/page/models/page.server";
+import { getSlug } from "~/utils/string";
 
 const COMPONENT_DIALOG_KEY = "component";
 
 export const handle = {
-  pageName: async (data: ReturnType<typeof loader>) => {
-    const page = (await data).pageId;
+  pageName: (data: any) => {
+    const page = data.pageId;
+
     if (page) {
       return "Edit Page";
     } else {
@@ -63,16 +61,51 @@ export const handle = {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  const formData = formDataToObject(await request.formData());
 
-  const pagesURL = new URL("http://localhost:3000/api/pages");
+  console.log(formData);
 
-  const req = await fetch(pagesURL, { method: "POST", body: formData });
+  const errors = {};
 
-  const json = await req.json();
-  console.log(json);
+  const title = formData["title"];
+  const description = formData["description"];
+  const keywords = formData["keywords"];
+  const contentType = formData["contentType"];
+  const contentValue = formData["contentValue"];
+  const properties = formData["properties"];
+  const contents = formData["contents"];
 
-  return json;
+  const metadata: IPage["metadata"] = {
+    title,
+    description,
+    keywords: (keywords as string).split(","),
+  };
+
+  Array.isArray(properties)
+    ? properties.forEach((property, index) => {
+        if (property.length) metadata[property] = contents[index];
+      })
+    : properties.length
+    ? (metadata[properties] = contents)
+    : null;
+
+  if (Object.keys(errors).length > 0) {
+    return { errors };
+  }
+
+  const savedPage = await new PageModel({
+    path: getSlug(title),
+    description,
+    metadata,
+    content: {
+      type: contentType,
+      value: contentValue,
+    },
+  }).save();
+
+  console.log(savedPage);
+
+  return { data: savedPage };
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -88,19 +121,15 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     if (!templateId) {
       response = { page: defaultPage as IPage };
     } else {
-      findPageUrl.searchParams.set("path", templateId);
-      findPageUrl.searchParams.set("template", "true");
-      const templateReq = await fetch(findPageUrl);
+      const query = { path: templateId, isTemplate: true };
+      const page = await PageModel.findOne(query).exec();
 
-      const templateRes = await templateReq.json();
-      response = { page: templateRes["data"][0] };
+      if (page) response = { page };
     }
   } else if (url.pathname.includes("pages/edit") && pageId) {
-    findPageUrl.searchParams.set("path", pageId);
+    const page = await PageModel.findOne({ path: pageId }).exec();
 
-    const pageReq = await fetch(findPageUrl);
-    const pageRes = await pageReq.json();
-    response = { pageId, page: pageRes["data"][0] };
+    if (page) response = { pageId, page: page };
   }
 
   return response;
@@ -108,6 +137,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function PageEditor() {
   const { page, pageId } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
 
   let yamlContent = page.content.value;
 
@@ -122,6 +152,8 @@ export default function PageEditor() {
   const submit = useSubmit();
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
+
+  navigation.formData;
 
   const [preview, setPreview] = useState<string[]>([]);
 
@@ -147,23 +179,18 @@ export default function PageEditor() {
       parse(yamlContent);
 
       // Parse FormData into an array of objects
-      const newPage: Record<string, string | string[]> = {
+      const newPage: Record<string, string> = {
         title: dataObject["title"],
         description: dataObject["description"],
-        keywords: (dataObject["keywords"] as string).split(","),
+        keywords: dataObject["keywords"],
         contentType: "yaml",
         contentValue: yamlContent,
+        properties: dataObject["properties"],
+        contents: dataObject["contents"],
       };
 
       let properties = dataObject["properties"];
       let contents = dataObject["contents"];
-      Array.isArray(properties)
-        ? properties.forEach((property, index) => {
-            if (property.length) newPage[property] = contents[index];
-          })
-        : properties.length
-        ? (newPage[properties] = contents)
-        : null;
 
       if (pageId) newPage["path"] = pageId;
 

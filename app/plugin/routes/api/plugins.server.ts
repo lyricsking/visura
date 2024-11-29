@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "../../models/plugin.model";
 import { DBReponse, handleDbResult } from "~/utils/mongoose";
 import { IPlugin } from "../../types/plugin";
@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     response = await handleDbResult(PluginModel.find(query));
   }
 
-  return response;
+  return json(response);
 };
 
 export const action = ({}: ActionFunctionArgs) => {};
