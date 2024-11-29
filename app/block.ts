@@ -1,5 +1,5 @@
 import { ComponentType } from "react";
-import { TextProps, TextInfo } from "../components/ui/text";
+import { TextProps, TextInfo } from "./components/ui/text";
 import { ImageInfo, ImageProps } from "~/components/ui/image";
 import { SectionInfo, SectionProps } from "~/components/ui/section";
 

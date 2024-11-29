@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ComponentInfo } from "../../core/block";
+import { ComponentInfo } from "../../block";
 
 export type TextProps = {
   /** The text content to display */

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { PageEditorToolbar } from "../components/page-editor-toolbar";
-import { componentsMap } from "~/core/block";
+import { componentsMap } from "~/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import {
   Form,

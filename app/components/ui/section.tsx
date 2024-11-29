@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentInfo } from "~/core/block";
+import { ComponentInfo } from "~/block";
 
 export interface SectionProps extends VariantProps<typeof sectionClasses> {
   /** Content inside the Section */

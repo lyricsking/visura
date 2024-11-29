@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { ComponentInfo } from "~/core/block";
+import { ComponentInfo } from "~/block";
 
 export type ImageProps = {
   /** The source URL of the image */

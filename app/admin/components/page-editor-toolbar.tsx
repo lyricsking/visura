@@ -15,7 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/sheet";
-import { componentsMap } from "~/core/block";
+import { componentsMap } from "~/block";
 
 type ToolbarProps = {
   showHintForComponent: (key: string) => void;
