@@ -1,4 +1,5 @@
-import { PluginModel } from "~/core/plugin/models/plugin.model";
+import { PluginModel } from "~/plugin/models/plugin.model";
+
 
 export const seedPlugins = async () => {
   try {

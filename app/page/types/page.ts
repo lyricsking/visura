@@ -28,6 +28,8 @@ export type PluginActionFunction = (
   args: PluginActionFunctionArgs
 ) => Promise<Response | any>; // Adjust the return type as necessary
 
+export type PageStatus = "active" | "archive" | "draft";
+
 export interface IPage {
   id: Types.ObjectId;
   path: string;
@@ -36,7 +38,7 @@ export interface IPage {
   content: PageContentType;
   action?: PluginActionFunction;
   loader?: PluginLoaderFunction;
-  createdBy: Types.ObjectId
-  isTemplate?: boolean
-  isActive: boolean
+  createdBy: Types.ObjectId;
+  isTemplate?: boolean;
+  status: PageStatus;
 }

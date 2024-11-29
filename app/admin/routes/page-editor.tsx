@@ -42,6 +42,8 @@ import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
 import { template } from "lodash";
 import formDataToObject from "~/utils/form-data-to-object";
+import { IPage } from "~/page/types/page";
+import { defaultPage } from "~/page/models/page.server";
 
 const COMPONENT_DIALOG_KEY = "component";
 
@@ -73,30 +75,34 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   const findPageUrl = new URL("http://localhost:3000/api/pages");
 
+  let response: { pageId?: string; page: IPage } = {} as any;
+
   if (url.pathname.includes("pages/create")) {
     if (!templateId) {
-      url.searchParams.set("template", "blank");
-      return redirect(url.toString());
+      response = { page: defaultPage as IPage };
+    } else {
+      findPageUrl.searchParams.set("path", templateId);
+      findPageUrl.searchParams.set("template", "true");
+      const templateReq = await fetch(findPageUrl);
+
+      const templateRes = await templateReq.json();
+      response = { page: templateRes["data"][0] };
     }
-
-    findPageUrl.searchParams.set("path", templateId);
-    findPageUrl.searchParams.set("template", "true");
-    const templateReq = await fetch(findPageUrl);
-
-    return { template: await templateReq.json() };
   } else if (url.pathname.includes("pages/edit") && pageId) {
     findPageUrl.searchParams.set("path", pageId);
 
     const pageReq = await fetch(findPageUrl);
-    return { page: await pageReq.json() };
+    const pageRes = await pageReq.json();
+    response = { pageId, page: pageRes["data"][0] };
   }
 
-  return {};
+  return response;
 };
 
 export default function PageEditor() {
-  const { page, template } = useLoaderData<typeof loader>();
+  const { page, pageId } = useLoaderData<typeof loader>();
 
+  let yamlContent = page.content.value;
   const submit = useSubmit();
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
@@ -104,23 +110,6 @@ export default function PageEditor() {
   const [searchParams, setSearchParams] = useSearchParams();
   const componentName = searchParams.get(COMPONENT_DIALOG_KEY);
   const componentInfo = componentName ? componentsMap[componentName] : null;
-
-  const [yamlContent, setYamlContent] = useState<string>(`sections:
-  - type: section
-    props:
-      blocks:
-        - type: text
-          props: 
-            text: Welcome to My Website
-            as: 'p'
-            class: "italic"
-
-        - type: text
-          props: 
-            text: I am Jamiu
-            as: 'p'
-            class: "font-bold"
-  `);
 
   const [preview, setPreview] = useState<string[]>([]);
 
@@ -130,11 +119,9 @@ export default function PageEditor() {
   //
   const { toast } = useToast();
 
-  // toast({ description: JSON.stringify({ page, template }, null, 2) });
-
   const handleChange = (value: string) => {
     try {
-      setYamlContent(value);
+      yamlContent = value;
 
       const parsedYaml: any = parse(value);
       // Update preview
@@ -148,13 +135,7 @@ export default function PageEditor() {
     const dataObject = formDataToObject(new FormData(e.currentTarget));
 
     try {
-      const parsedYaml = parse(yamlContent);
-      // Save the YAML content to the database
-      // const page: IPage = {
-      //   path: "",
-      //   metadata: undefined,
-      //   content: undefined,
-      // };
+      parse(yamlContent);
 
       // Parse FormData into an array of objects
       const ogTags: { [key: string]: string } = {};
@@ -170,8 +151,8 @@ export default function PageEditor() {
         ? (ogTags[properties] = contents)
         : null;
 
-      const page = {
-        path: dataObject["title"],
+      const pageObject = {
+        path: pageId,
         title: dataObject["title"],
         description: dataObject["description"],
         keywords: (dataObject["keywords"] as string).split(","),
@@ -180,9 +161,9 @@ export default function PageEditor() {
         value: yamlContent,
       };
 
-      toast({ description: JSON.stringify(page, null, 2) });
+      toast({ description: JSON.stringify(pageObject, null, 2) });
 
-      submit(page, { method: "post" });
+      submit(pageObject, { method: "post" });
     } catch (error) {
       toast({ description: "Error! Cannot save page. See editor for errors." });
     }

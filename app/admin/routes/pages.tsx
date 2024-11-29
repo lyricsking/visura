@@ -81,10 +81,7 @@ export default function Pages() {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link
-              to={"create?template='blank'"}
-              className={cn(buttonVariants())}
-            >
+            <Link to={"create"} className={cn(buttonVariants())}>
               Create New Page
             </Link>
           </CardFooter>

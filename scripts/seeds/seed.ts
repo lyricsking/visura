@@ -1,4 +1,4 @@
-import createDBConnection from "~/core/database/db.server";
+import createDBConnection from "~/database/db.server";
 import { seedOptions } from "./options.server";
 import { seedPages } from "./page.server";
 import { seedPlugins } from "./plugin.server";
@@ -15,6 +15,7 @@ const seedDatabase = async () => {
   } catch (error) {
     console.error("Error seeding database:", error);
   }
+  process.exit(1);
 };
 
 seedDatabase();

@@ -1,7 +1,8 @@
 import { DisplayOptions } from "~/admin/type/options";
 import { APP_NAME } from "~/app";
-import { OptionModel } from "~/core/option/models/option.server";
-import { DISPLAY_OPTION_KEY } from "~/core/option/types/option";
+import { OptionModel } from "~/option/models/option.server";
+import { DISPLAY_OPTION_KEY } from "~/option/types/option";
+
 
 export const seedOptions = async () => {
   try {
