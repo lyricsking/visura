@@ -8,11 +8,7 @@ import User, {
 } from "../models/user.model";
 import { IUserMeta } from "../models/user-meta.model";
 import { Session } from "@remix-run/node";
-import {
-  getSession,
-  USER_SESSION_KEY,
-  commitSession,
-} from "~/core/utils/session";
+import { getSession, USER_SESSION_KEY, commitSession } from "~/utils/session";
 
 export type CreateUserProps = {
   email: string;

@@ -17,7 +17,7 @@ import { CART_FETCHER_KEY } from "../types/cart.type";
 import {} from "../models/order.model";
 import { updatePaymentMethod } from "../server/cart.server";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { getNanoid } from "~/core/utils/util";
+import { getNanoid } from "~/utils/util";
 
 const PaymentMethods = {
   Card: "card",

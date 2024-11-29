@@ -11,7 +11,7 @@ import {
 import { Menu } from "~/types/menu";
 import { renderIcon } from "../../components/ui/icon-loader";
 import { NavLink } from "@remix-run/react";
-import { cn } from "~/core/utils/util";
+import { cn } from "~/utils/util";
 
 const items: Menu[] = [
   {

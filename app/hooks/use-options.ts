@@ -1,6 +1,6 @@
 import { useFetcher, useNavigation, useSubmit } from "@remix-run/react";
 import { useEffect } from "react";
-import { useAppContext } from "~/core/utils/app-context";
+import { useAppContext } from "~/utils/app-context";
 
 export const useOptions = () => {
   const fetcher = useFetcher();

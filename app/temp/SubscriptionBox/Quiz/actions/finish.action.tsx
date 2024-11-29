@@ -1,13 +1,13 @@
 import { ActionFunction, json } from "@remix-run/node";
 import { ISupplement } from "~/Supplement/supplement.type";
-import { commitSession, getSession } from "~/core/utils/session";
+import { commitSession, getSession } from "~/utils/session";
 import {
   recommendSupplements,
   createCart,
   getAnswers,
 } from "../server/quiz.server";
 import { ANSWER_KEY, QIDS_MAP_KEY } from "../utils/constants";
-import formDataToObject from "~/core/utils/form-data-to-object";
+import formDataToObject from "~/utils/form-data-to-object";
 import {
   getAuthUser,
   getUserFromSession,

@@ -17,10 +17,10 @@ import {
 } from "../type/options";
 import Button from "~/components/button";
 import { FormEvent, useEffect, useState } from "react";
-import { IPage } from "~/core/page/types/page";
-import { DISPLAY_OPTION_KEY, IOption } from "~/core/option/types/option";
+import { IPage } from "~/page/types/page";
+import { DISPLAY_OPTION_KEY, IOption } from "~/option/types/option";
 import lo from "lodash";
-import formDataToObject from "~/core/utils/form-data-to-object";
+import formDataToObject from "~/utils/form-data-to-object";
 
 export const loader = async ({}: LoaderFunctionArgs) => {
   const app = await getAppContext();

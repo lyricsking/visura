@@ -1,14 +1,10 @@
 import { Authenticator, AuthorizationError } from "remix-auth";
-import {
-  commitSession,
-  getSession,
-  sessionStorage,
-} from "~/core/utils/session";
+import { commitSession, getSession, sessionStorage } from "~/utils/session";
 import { googleStrategy } from "../strategy/google-strategy";
 import { formStrategy } from "../strategy/form-strategy";
 import { AuthUser } from "../types/auth-user.type";
 import { redirect, Session } from "@remix-run/node";
-import { handleResponse } from "~/core/utils/helpers";
+import { handleResponse } from "~/utils/helpers";
 import { isAuthUser } from "../utils/helper";
 
 export const REDIRECT_URL = "redirect-url";

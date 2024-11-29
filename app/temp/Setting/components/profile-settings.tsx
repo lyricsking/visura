@@ -8,7 +8,7 @@ import {
 } from "~/admin/utils/constants";
 import Button from "~/core/components/button";
 import { Input } from "~/core/components/input";
-import { cn } from "~/core/utils/util";
+import { cn } from "~/utils/util";
 
 export default function ProfileSettings({ user }: SettingsType) {
   const {

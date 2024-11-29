@@ -1,9 +1,9 @@
 import { Calendar, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
-import { formatDateByParts } from "~/core/utils/date";
+import { formatDateByParts } from "~/utils/date";
 import { buttonVariants } from "~/components/button";
 import { Link } from "@remix-run/react";
-import { cn } from "~/core/utils/util";
+import { cn } from "~/utils/util";
 import { getSlug } from "../utils/slug";
 
 type TipCardProps = {

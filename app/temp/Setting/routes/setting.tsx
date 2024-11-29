@@ -12,14 +12,14 @@ import ProfileSettings from "../components/profile-settings";
 import NotificationSettings from "../components/notification-settings";
 import DisplaySettings from "../components/display-settings";
 import OrderSettings from "~/plugins/SubscriptionBox/Order/components/order-settings";
-import { commitSession, getSession } from "~/core/utils/session";
+import { commitSession, getSession } from "~/utils/session";
 import { disableUser, updateUserPassword } from "~/core/user/server/user.server";
 import {
   updateUserPreference,
   updateUserProfile,
 } from "~/core/user/server/user-profile.server";
 import { SettingsType } from "../../Dashboard/type/settings.type";
-import formDataToObject from "~/core/utils/form-data-to-object";
+import formDataToObject from "~/utils/form-data-to-object";
 import {
   ACCOUNT_UPDATE_ACTION,
   DISPLAY_UPDATE_ACTION,~/utils/form-data-to-object

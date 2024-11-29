@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import formDataToObject from "~/core/utils/form-data-to-object";
-import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
+import formDataToObject from "~/utils/form-data-to-object";
+import { DBReponse, handleDbResult } from "~/utils/mongoose";
 import UserMeta, { IUserMeta } from "../../models/user-meta.model";
 import { getUserFromSession } from "../../server/user.server";
 

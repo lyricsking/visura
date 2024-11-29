@@ -2,9 +2,9 @@ import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { match, MatchResult } from "path-to-regexp";
 import { getAppContext } from "~/app";
-import { IPage, PageContentType } from "~/core/page/types/page";
+import { IPage, PageContentType } from "~/page/types/page";
 import { renderPage } from "~/components/ui/render-page";
-import { PageModel } from "~/core/page/models/page.server";
+import { PageModel } from "~/page/models/page.server";
 
 const NOT_FOUND_PATH = "not-found";
 

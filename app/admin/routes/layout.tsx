@@ -6,7 +6,7 @@ import {
   useLoaderData,
   useMatches,
 } from "@remix-run/react";
-import { isAuthenticated } from "~/core/auth/server/auth.server";
+import { isAuthenticated } from "~/auth/server/auth.server";
 import Breadcrumb from "~/components/breadcrumb";
 import {
   PageLayout,
@@ -18,9 +18,9 @@ import HeaderIcons from "../components/header-icons";
 import { SidebarProvider, SidebarTrigger } from "~/components/sidebar";
 import { AdminSidebar } from "~/admin/components/admin-sidebar";
 import { APP_NAME } from "~/app";
-import { useAppContext } from "~/core/utils/app-context";
-import { getUserOrFetch } from "~/core/user/server/user.server";
-import { IUser } from "~/core/user/models/user.model";
+import { useAppContext } from "~/utils/app-context";
+import { getUserOrFetch } from "~/user/server/user.server";
+import { IUser } from "~/user/models/user.model";
 import { Types } from "mongoose";
 
 export const handle = {

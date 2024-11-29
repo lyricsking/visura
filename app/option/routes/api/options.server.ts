@@ -1,11 +1,11 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { OptionModel } from "../../models/option.server";
-import { getUserFromSession } from "~/core/user/server/user.server";
-import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
+import { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { UpdateWriteOpResult } from "mongoose";
-import { handleResponse } from "~/core/utils/helpers";
 import { APP_NAME } from "~/app";
-import { DISPLAY_OPTION_KEY, IOption } from "../../types/option";
+import { OptionModel } from "~/option/models/option.server";
+import { IOption, DISPLAY_OPTION_KEY } from "~/option/types/option";
+import { getUserFromSession } from "~/user/server/user.server";
+import { handleResponse } from "~/utils/helpers";
+import { DBReponse, handleDbResult } from "~/utils/mongoose";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   let response: DBReponse<IOption[] | null>;

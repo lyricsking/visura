@@ -7,7 +7,7 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/components/ui/page.layout";
-import { useAppContext } from "~/core/utils/app-context";
+import { useAppContext } from "~/utils/app-context";
 
 export default function Layout() {
   const app = useAppContext();

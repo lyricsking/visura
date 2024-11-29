@@ -9,7 +9,7 @@ import {
   useOutletContext,
 } from "@remix-run/react";
 import id from "~/plugins/SubscriptionBox/Order/routes/id";
-import formDataToObject from "~/core/utils/form-data-to-object";
+import formDataToObject from "~/utils/form-data-to-object";
 import { action } from "../actions/finish.action";
 import { Checkbox } from "~/components/checkbox";
 import { loader } from "../loader/finish.loader";

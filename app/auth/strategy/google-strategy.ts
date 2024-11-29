@@ -3,10 +3,10 @@ import {
   createUser,
   findUser,
   setUserToSession,
-} from "~/core/user/server/user.server";
+} from "~/user/server/user.server";
 import { AuthUser } from "../types/auth-user.type";
 import { getAppContext } from "~/app";
-import { UserType } from "~/core/user/models/user.model";
+import { UserType } from "~/user/models/user.model";
 import { AuthorizationError } from "remix-auth";
 import doenv from "dotenv";
 doenv.config();

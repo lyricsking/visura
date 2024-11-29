@@ -37,8 +37,8 @@ import {
   TableBody,
   TableCell,
 } from "~/components/table";
-import { formatDateByParts } from "~/core/utils/date";
-import { cn } from "~/core/utils/util";
+import { formatDateByParts } from "~/utils/date";
+import { cn } from "~/utils/util";
 export const handle = {
   breadcrumb: {
     id: "post-list",

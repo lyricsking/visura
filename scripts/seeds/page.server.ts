@@ -1,4 +1,4 @@
-import { PageModel } from "~/core/page/models/page.server";
+import { PageModel } from "~/page/models/page.server";
 
 export const seedPages = async () => {
   try {
@@ -33,11 +33,6 @@ export const seedPages = async () => {
                     as: 'p'
                     class: "italic"
 
-                - type: text
-                  props:
-                    text: I am Jamiu
-                    as: 'p'
-                    class: "font-bold"
         `,
         },
         isTemplate: true,

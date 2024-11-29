@@ -1,5 +1,5 @@
 import { ActionFunction, json } from "@remix-run/node";
-import formDataToObject from "~/core/utils/form-data-to-object";
+import formDataToObject from "~/utils/form-data-to-object";
 import { createTicket } from "../server/ticket.server";
 
 export const action: ActionFunction = async ({ request }) => {

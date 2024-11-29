@@ -20,7 +20,7 @@ import { AddressForm } from "../components/address-form";
 import { AddressItem } from "../components/address-item";
 import { useEffect } from "react";
 import { updateCartAddress } from "../server/cart.server";
-import { getSession } from "~/core/utils/session";
+import { getSession } from "~/utils/session";
 import { IAddress, IAddressRegion } from "../types/address.type";
 import {
   getAuthUser,

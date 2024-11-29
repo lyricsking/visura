@@ -1,11 +1,10 @@
-import { Menu, MenuType, SettingsTab } from "./types/menu";
-import { MaybeAsyncFunction } from "./core/utils/maybe-async-fn";
-import { IBasePlugin, IPlugin } from "./core/plugin/types/plugin";
-import { IPage } from "./core/page/types/page";
-import createDBConnection from "./core/database/db.server";
 import { serverOnly$ } from "vite-env-only/macros";
 import { DisplayOptions } from "./admin/type/options";
-import { DISPLAY_OPTION_KEY, IOption } from "./core/option/types/option";
+import createDBConnection from "./database/db.server";
+import { IOption, DISPLAY_OPTION_KEY } from "./option/types/option";
+import { IPage } from "./page/types/page";
+import { IPlugin, IBasePlugin } from "./plugin/types/plugin";
+import { Menu, MenuType, SettingsTab } from "./types/menu";
 
 export const APP_NAME = "app_name";
 

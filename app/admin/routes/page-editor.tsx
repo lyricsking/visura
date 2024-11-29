@@ -23,7 +23,6 @@ import Button from "~/components/button";
 import { ChevronLeft, Copy } from "lucide-react";
 import { useToast } from "~/hooks/use-toast";
 import { Badge } from "~/components/badge";
-import formDataToObject from "~/core/utils/form-data-to-object";
 import {
   Select,
   SelectContent,
@@ -42,6 +41,7 @@ import {
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
 import { template } from "lodash";
+import formDataToObject from "~/utils/form-data-to-object";
 
 const COMPONENT_DIALOG_KEY = "component";
 

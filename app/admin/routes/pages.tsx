@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import { Progress } from "~/components/progress";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { cn } from "~/utils/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = "http://localhost:3000/api/pages";

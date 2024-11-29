@@ -10,8 +10,8 @@ import {
   PageLayoutFooter,
 } from "~/components/ui/page.layout";
 import { APP_NAME, getAppContext } from "~/app";
-import { getUserFromSession } from "~/core/user/server/user.server";
-import { IHydratedUser } from "~/core/user/models/user.model";
+import { getUserFromSession } from "~/user/server/user.server";
+import { IHydratedUser } from "~/user/models/user.model";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserFromSession(request);

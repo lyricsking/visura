@@ -3,7 +3,7 @@ import { Label } from "~/components/label";
 import { Checkbox } from "~/components/checkbox";
 import { AnswerType } from "../types/quiz.type";
 import { Input } from "~/components/input";
-import { cn } from "~/core/utils/util";
+import { cn } from "~/utils/util";
 
 type OptionsType = {
   name: string;

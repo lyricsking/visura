@@ -6,12 +6,12 @@ export default [
     return defineRoutes((route) => {
       // Define all static routes first
       // Auth routes
-      route("auth", "core/auth/routes/layout.tsx", () => {
-        index("core/auth/routes/signin.tsx");
-        route("signup", "core/auth/routes/signup.tsx");
-        route("google", "core/auth/routes/google-signin.tsx");
-        route("google/callback", "core/auth/routes/google-callback.tsx");
-        route("signout", "core/auth/routes/signout.tsx");
+      route("auth", "auth/routes/layout.tsx", () => {
+        index("auth/routes/signin.tsx");
+        route("signup", "auth/routes/signup.tsx");
+        route("google", "auth/routes/google-signin.tsx");
+        route("google/callback", "auth/routes/google-callback.tsx");
+        route("signout", "auth/routes/signout.tsx");
       });
 
       // Admin routes
@@ -47,9 +47,9 @@ export default [
       });
 
       // Api routes
-      route("api/options", "core/option/routes/api/options.server.ts");
-      route("api/pages", "core/page/routes/api/pages.server.ts");
-      route("api/plugins", "core/plugin/routes/api/plugins.server.ts");
+      route("api/options", "option/routes/api/options.server.ts");
+      route("api/pages", "page/routes/api/pages.server.ts");
+      route("api/plugins", "plugin/routes/api/plugins.server.ts");
     });
   })),
 ] satisfies RouteConfig;
