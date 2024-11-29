@@ -83,10 +83,10 @@ export default function Layout() {
     }
   });
 
-  let currentpage =
+  let pageName =
     currentRoute?.handle?.pageName || parentRoute?.handle?.pageName;
-  if (currentpage && typeof currentpage === "function") {
-    currentpage = currentpage(
+  if (pageName && typeof pageName === "function") {
+    pageName = pageName(
       currentRoute?.handle?.data || parentRoute?.handle?.data
     );
   }
@@ -123,7 +123,7 @@ export default function Layout() {
 
         <PageLayoutContent>
           <h1 className="text-3xl font-bold text-gray-900 p-4">
-            {currentpage || "Dashboard"}
+            {pageName || "Dashboard"}
           </h1>
 
           <div className="px-4">

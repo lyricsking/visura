@@ -48,12 +48,9 @@ class AppContext {
   }
 
   private static async init() {
-    if (
-      // process.env.NODE_ENV === "production" &&
-      typeof document === "undefined"
-    ) {
+    // process.env.NODE_ENV === "production" &&
+    if (typeof document === "undefined")
       serverOnly$(await createDBConnection());
-    }
 
     const [configs, plugins] = await Promise.all([
       AppContext.loadConfigOptions(),

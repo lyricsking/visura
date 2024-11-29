@@ -32,10 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     response = await handleDbResult(PluginModel.find(query));
   }
 
-  return handleResponse<IPlugin[] | null>({
-    ...response,
-    statusCode: 200,
-  });
+  return response;
 };
 
 export const action = ({}: ActionFunctionArgs) => {};

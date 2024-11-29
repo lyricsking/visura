@@ -48,7 +48,14 @@ import { defaultPage } from "~/page/models/page.server";
 const COMPONENT_DIALOG_KEY = "component";
 
 export const handle = {
-  pageName: "Edit Page",
+  pageName: async (data: ReturnType<typeof loader>) => {
+    const page = (await data).pageId;
+    if (page) {
+      return "Edit Page";
+    } else {
+      return "Create";
+    }
+  },
   breadcrumb: {
     id: "edit-page",
     label: "Edit Page",
@@ -103,19 +110,21 @@ export default function PageEditor() {
   const { page, pageId } = useLoaderData<typeof loader>();
 
   let yamlContent = page.content.value;
-  const submit = useSubmit();
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state !== "idle";
+
+  // Hook to determine mediaQuery
+  // Used to determine if the current screen is desktop
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const componentName = searchParams.get(COMPONENT_DIALOG_KEY);
   const componentInfo = componentName ? componentsMap[componentName] : null;
 
+  const submit = useSubmit();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state !== "idle";
+
   const [preview, setPreview] = useState<string[]>([]);
 
-  // Hook to determine mediaQuery
-  // Used to determine if the current screen is desktop
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   //
   const { toast } = useToast();
 
@@ -138,32 +147,27 @@ export default function PageEditor() {
       parse(yamlContent);
 
       // Parse FormData into an array of objects
-      const ogTags: { [key: string]: string } = {};
-
-      let properties = dataObject["properties"];
-      let contents = dataObject["contents"];
-
-      Array.isArray(properties)
-        ? properties.forEach((property, index) => {
-            if (property.length) ogTags[property] = contents[index];
-          })
-        : properties.length
-        ? (ogTags[properties] = contents)
-        : null;
-
-      const pageObject = {
-        path: pageId,
+      const newPage: Record<string, string | string[]> = {
         title: dataObject["title"],
         description: dataObject["description"],
         keywords: (dataObject["keywords"] as string).split(","),
-        ...(ogTags && { ...ogTags }),
-        type: "yaml",
-        value: yamlContent,
+        contentType: "yaml",
+        contentValue: yamlContent,
       };
 
-      toast({ description: JSON.stringify(pageObject, null, 2) });
+      let properties = dataObject["properties"];
+      let contents = dataObject["contents"];
+      Array.isArray(properties)
+        ? properties.forEach((property, index) => {
+            if (property.length) newPage[property] = contents[index];
+          })
+        : properties.length
+        ? (newPage[properties] = contents)
+        : null;
 
-      submit(pageObject, { method: "post" });
+      if (pageId) newPage["path"] = pageId;
+
+      submit(newPage, { method: "post" });
     } catch (error) {
       toast({ description: "Error! Cannot save page. See editor for errors." });
     }

@@ -39,10 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     response = await handleDbResult(OptionModel.find(query));
   }
 
-  return handleResponse<IOption[] | null>({
-    ...response,
-    statusCode: 200,
-  });
+  return response;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
