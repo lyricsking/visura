@@ -7,6 +7,9 @@ const pageSchema = new Schema<IPage, IPageModel>({
   default: { type: Boolean, default: false },
   metadata: { type: Schema.Types.Mixed, required: true },
   content: { type: Schema.Types.Mixed, required: true },
+  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+  isTemplate: { type: Boolean, default: false },
+  isActive: { type: Boolean, default: false },
 });
 
 export const PageModel: IPageModel =

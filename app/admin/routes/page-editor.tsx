@@ -4,20 +4,23 @@ import { componentsMap } from "~/core/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import {
   Form,
-  useFetcher,
   useLoaderData,
   useNavigation,
   useSearchParams,
   useSubmit,
 } from "@remix-run/react";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/dialog";
 import CodeMirrorEditor from "~/components/editor/codemirror";
 import { yaml } from "@codemirror/lang-yaml";
 import { parse, YAMLParseError } from "yaml";
 import { Diagnostic, linter } from "@codemirror/lint";
 import Button from "~/components/button";
-import { ChevronLeft, Copy, PlusCircle, Table, Upload } from "lucide-react";
+import { ChevronLeft, Copy } from "lucide-react";
 import { useToast } from "~/hooks/use-toast";
 import { Badge } from "~/components/badge";
 import formDataToObject from "~/core/utils/form-data-to-object";
@@ -29,27 +32,16 @@ import {
   SelectValue,
 } from "~/components/select";
 import { Label } from "~/components/label";
-import { ToggleGroup, ToggleGroupItem } from "~/components/toggle.group";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "~/components/card";
 import { Input } from "~/components/input";
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "~/components/table";
 import { Textarea } from "~/components/textarea";
-import { property } from "lodash";
-import { IPage } from "~/core/page/types/page";
-import { DatabaseModule } from "@faker-js/faker";
+import { template } from "lodash";
 
 const COMPONENT_DIALOG_KEY = "component";
 
@@ -61,16 +53,10 @@ export const handle = {
   },
 };
 
-export const loader = ({}: LoaderFunctionArgs) => {
-  return { blocks: [] as any[] };
-};
-
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const v = formDataToObject(formData);
 
-  const pagesURL = new URL("http://localhost:3000/api/options");
-  pagesURL.pathname = "/api/pages";
+  const pagesURL = new URL("http://localhost:3000/api/pages");
 
   const req = await fetch(pagesURL, { method: "POST", body: formData });
 
@@ -80,8 +66,36 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json;
 };
 
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const templateId = url.searchParams.get("template");
+  const pageId = url.searchParams.get("pageId");
+
+  const findPageUrl = new URL("http://localhost:3000/api/pages");
+
+  if (url.pathname.includes("pages/create")) {
+    if (!templateId) {
+      url.searchParams.set("template", "blank");
+      return redirect(url.toString());
+    }
+
+    findPageUrl.searchParams.set("path", templateId);
+    findPageUrl.searchParams.set("template", "true");
+    const templateReq = await fetch(findPageUrl);
+
+    return { template: await templateReq.json() };
+  } else if (url.pathname.includes("pages/edit") && pageId) {
+    findPageUrl.searchParams.set("path", pageId);
+
+    const pageReq = await fetch(findPageUrl);
+    return { page: await pageReq.json() };
+  }
+
+  return {};
+};
+
 export default function PageEditor() {
-  const { blocks } = useLoaderData<typeof loader>();
+  const { page, template } = useLoaderData<typeof loader>();
 
   const submit = useSubmit();
   const navigation = useNavigation();
@@ -115,6 +129,8 @@ export default function PageEditor() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   //
   const { toast } = useToast();
+
+  // toast({ description: JSON.stringify({ page, template }, null, 2) });
 
   const handleChange = (value: string) => {
     try {
@@ -196,7 +212,7 @@ export default function PageEditor() {
 
   return (
     <Form method="post" onSubmit={handleSave}>
-      <div className="mx-auto grid gap-4 max-w-[59rem] flex-1 auto-rows-max">
+      <div className="mx-auto grid gap-4 max-w-[59rem] mb-10 flex-1 auto-rows-max">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="h-7 w-7 mx-0 hidden">
             <ChevronLeft className="h-4 w-4" />

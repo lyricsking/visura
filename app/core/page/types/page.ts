@@ -36,4 +36,7 @@ export interface IPage {
   content: PageContentType;
   action?: PluginActionFunction;
   loader?: PluginLoaderFunction;
+  createdBy: Types.ObjectId
+  isTemplate?: boolean
+  isActive: boolean
 }

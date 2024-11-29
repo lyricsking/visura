@@ -28,21 +28,14 @@ import {
 import { File, ListFilter, PlusCircle, MoreHorizontal } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 import { Progress } from "~/components/progress";
-import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { IPage } from "~/core/page/types/page";
-import { ApiResponse } from "~/core/utils/helpers";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { cn } from "~/core/utils/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = "http://localhost:3000/api/pages";
   const pagesReq = await fetch(url);
 
-  const pagesRes: ApiResponse<IPage[] | null> = await pagesReq.json();
-
-  const { data, error, success, statusCode } = pagesRes;
-
-  return json({ data, error });
+  return await pagesReq.json();
 };
 
 /**
@@ -67,7 +60,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
  * @returns `JSX.Element`
  */
 export default function Pages() {
-  const { data, error } = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
+
+  console.log(data);
 
   return (
     <div className="mx-auto grid auto-rows-max gap-4">
@@ -85,7 +80,10 @@ export default function Pages() {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link to={"new"} className={cn(buttonVariants())}>
+            <Link
+              to={"create?template='blank'"}
+              className={cn(buttonVariants())}
+            >
               Create New Page
             </Link>
           </CardFooter>
@@ -134,7 +132,7 @@ export default function Pages() {
           <div className="ml-auto flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 gap-1">
+                <Button size="sm" className="h-8 gap-1">
                   <ListFilter className="h-3.5 w-3.5" />
                   <span className="sr-only md:not-sr-only md:whitespace-nowrap">
                     Filter
@@ -151,7 +149,7 @@ export default function Pages() {
                 <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button size="sm" variant="outline" className="h-8 gap-1">
+            <Button size="sm" className="h-8 gap-1">
               <File className="h-3.5 w-3.5" />
               <span className="sr-only md:not-sr-only md:whitespace-nowrap">
                 Export

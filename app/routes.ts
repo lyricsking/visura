@@ -18,7 +18,12 @@ export default [
       route("administration", "admin/routes/layout.tsx", () => {
         route("", "admin/routes/overview.tsx", { index: true });
         route("pages", "admin/routes/pages.tsx");
-        route("pages/:new", "admin/routes/page-editor.tsx");
+        route("pages/edit/:pageId", "admin/routes/page-editor.tsx", {
+          id: "edit-page",
+        });
+        route("pages/create", "admin/routes/page-editor.tsx", {
+          id: "create-page",
+        });
         route("users", "admin/routes/users.tsx");
         route(
           "settings",

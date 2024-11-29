@@ -1,7 +1,7 @@
 import { ComponentType } from "react";
 import { TextProps, TextInfo } from "../components/ui/text";
 import { ImageInfo, ImageProps } from "~/components/ui/image";
-import Section, { SectionInfo, SectionProps } from "~/components/ui/section";
+import { SectionInfo, SectionProps } from "~/components/ui/section";
 
 /**
  *  A type representation of the structure of components map
