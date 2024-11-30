@@ -29,7 +29,7 @@ export function PageEditorToolbar({
 }: ToolbarProps) {
   if (isDesktop) {
     return (
-      <Card className="h-96 rounded-s-none overflow-y-auto">
+      <Card className="h-96 rounded-t-none overflow-y-auto">
         <CardHeader>
           <CardTitle className="text-center">Add Block</CardTitle>
           <CardDescription className="text-center">

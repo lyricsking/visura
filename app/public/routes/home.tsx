@@ -1,6 +1,6 @@
 import { json, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { IPage, PageContentType } from "~/page/types/page";
+import { IPage, PageContent } from "~/page/types/page";
 import { renderPage } from "~/components/ui/render-page";
 import { getAppContext } from "~/app";
 import { PageModel } from "~/page/models/page.server";
@@ -54,5 +54,5 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Home() {
   const { data, path, content } = useLoaderData<typeof loader>();
 
-  return renderPage(path, content as PageContentType, data);
+  return renderPage(path, content as PageContent, data);
 }

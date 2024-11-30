@@ -4,8 +4,10 @@ import { componentsMap } from "~/block";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import {
   Form,
+  Outlet,
   useActionData,
   useLoaderData,
+  useLocation,
   useNavigation,
   useSearchParams,
   useSubmit,
@@ -38,9 +40,12 @@ import {
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
 import formDataToObject from "~/utils/form-data-to-object";
-import { IPage } from "~/page/types/page";
+import { IPage, OpenGraphTag, PageStatus } from "~/page/types/page";
 import { defaultPage, PageModel } from "~/page/models/page.server";
 import { getSlug } from "~/utils/string";
+import { cn } from "~/utils/util";
+import { loader as pageLoader } from "~/page/routes/api/pages.server";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/tabs";
 
 const COMPONENT_DIALOG_KEY = "component";
 
@@ -63,8 +68,6 @@ export const handle = {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = formDataToObject(await request.formData());
 
-  console.log(formData);
-
   const errors = {};
 
   const title = formData["title"];
@@ -74,72 +77,78 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const contentValue = formData["contentValue"];
   const properties = formData["properties"];
   const contents = formData["contents"];
+  const status = formData["status"];
 
   const metadata: IPage["metadata"] = {
     title,
     description,
-    keywords: (keywords as string).split(","),
+    keywords,
   };
 
+  const openTags: OpenGraphTag[] = [];
   Array.isArray(properties)
     ? properties.forEach((property, index) => {
-        if (property.length) metadata[property] = contents[index];
+        if (typeof property === "string" && property.length > 0)
+          openTags
       })
-    : properties.length
-    ? (metadata[properties] = contents)
+    : typeof properties === "string" && properties.length > 0
+    ? (openTags[properties] = contents)
     : null;
 
   if (Object.keys(errors).length > 0) {
     return { errors };
   }
 
-  const savedPage = await new PageModel({
+  const pageData: Partial<IPage> = {
     path: getSlug(title),
-    description,
     metadata,
     content: {
       type: contentType,
       value: contentValue,
     },
-  }).save();
+    status: status,
+  };
 
-  console.log(savedPage);
+  const res = await fetch("http://localhost:3000/api/pages", {
+    method: "POST",
+    body: JSON.stringify(pageData),
+    headers: { "Content-Type": "application/json" },
+  });
 
-  return { data: savedPage };
+  return await res.json();
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
-  const templateId = url.searchParams.get("template");
-  const pageId = url.searchParams.get("pageId");
 
-  const findPageUrl = new URL("http://localhost:3000/api/pages");
+  const baseUrl = process.env.BASE_URL || "";
+  const pageReqUrl = new URL("/api/pages", baseUrl);
 
-  let response: { pageId?: string; page: IPage } = {} as any;
+  const pageId = params["pageId"];
 
   if (url.pathname.includes("pages/create")) {
-    if (!templateId) {
-      response = { page: defaultPage as IPage };
-    } else {
-      const query = { path: templateId, isTemplate: true };
-      const page = await PageModel.findOne(query).exec();
+    const templateId = params["templateId"] || "67497b624940bae1fbb643d5";
 
-      if (page) response = { page };
-    }
+    pageReqUrl.searchParams.set("id", templateId);
+    pageReqUrl.searchParams.set("template", "true");
+
+    return await (await fetch(pageReqUrl, { method: "GET" })).json();
   } else if (url.pathname.includes("pages/edit") && pageId) {
-    const page = await PageModel.findOne({ path: pageId }).exec();
+    pageReqUrl.searchParams.set("id", pageId);
 
-    if (page) response = { pageId, page: page };
+    return await (await fetch(pageReqUrl, { method: "GET" })).json();
   }
-
-  return response;
 };
 
 export default function PageEditor() {
-  const { page, pageId } = useLoaderData<typeof loader>();
+  const page = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  let yamlContent = page.content.value;
+  let pageId;
+  const location = useLocation();
+  if (location.pathname.includes("edit")) pageId = page._id;
+
+  let yamlContent = "page.content.value";
 
   // Hook to determine mediaQuery
   // Used to determine if the current screen is desktop
@@ -152,8 +161,6 @@ export default function PageEditor() {
   const submit = useSubmit();
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
-
-  navigation.formData;
 
   const [preview, setPreview] = useState<string[]>([]);
 
@@ -187,12 +194,10 @@ export default function PageEditor() {
         contentValue: yamlContent,
         properties: dataObject["properties"],
         contents: dataObject["contents"],
+        status: dataObject["status"],
       };
 
-      let properties = dataObject["properties"];
-      let contents = dataObject["contents"];
-
-      if (pageId) newPage["path"] = pageId;
+      // if (pageId) newPage["path"] = pageId;
 
       submit(newPage, { method: "post" });
     } catch (error) {
@@ -222,176 +227,196 @@ export default function PageEditor() {
     });
   };
 
+  const saveButtonLabel = pageId ? "Publish" : "Save";
+  const isSubmittingLabel = pageId ? "Publishing" : "Saving";
+  const saveButtonValue = pageId ? PageStatus.published : PageStatus.draft;
+
   return (
-    <Form method="post" onSubmit={handleSave}>
-      <div className="mx-auto grid gap-4 max-w-[59rem] mb-10 flex-1 auto-rows-max">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="h-7 w-7 mx-0 hidden">
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Back</span>
+    <div className="mx-auto grid gap-4 max-w-[59rem] mb-10 flex-1 auto-rows-max">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" className="h-7 w-7 mx-0 hidden">
+          <ChevronLeft className="h-4 w-4" />
+          <span className="sr-only">Back</span>
+        </Button>
+        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 ">
+          {page.metadata.title}
+        </h1>
+        <Badge variant="outline" className="ml-auto sm:ml-0">
+          Draft
+        </Badge>
+        <div className="hidden items-center gap-2 md:ml-auto md:flex">
+          <Button variant="ghost" size="sm">
+            Discard
           </Button>
-          <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 ">
-            Page Name
-          </h1>
-          <Badge variant="outline" className="ml-auto sm:ml-0">
-            Draft
-          </Badge>
-          <div className="hidden items-center gap-2 md:ml-auto md:flex">
-            <Button variant="ghost" size="sm">
-              Discard
-            </Button>
 
-            <Button
-              size="sm"
-              type="submit"
-              className="bg-indigo-600 text-white hover:bg-indigo-400"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Saving" : "Save Page"}
-            </Button>
-          </div>
+          <Button
+            name="status"
+            value={saveButtonValue}
+            size="sm"
+            type="submit"
+            className="bg-indigo-600 text-white hover:bg-indigo-400"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? isSubmittingLabel : saveButtonLabel}
+          </Button>
         </div>
+      </div>
 
-        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            {/*Main content  */}
-            <Card className="min-h-[24rem]" x-chunk="dashboard-07-chunk-0">
-              <CardHeader>
-                <CardTitle>Page Info</CardTitle>
-                <CardDescription>
-                  Lipsum dolor sit amet, consectetur adipiscing elit
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6">
-                  {/* Page Title */}
-                  <div className="grid gap-3">
-                    <Label htmlFor="title">Page Title</Label>
-                    <Input
-                      id="title"
-                      name="title"
-                      type="text"
-                      className="w-full"
-                      placeholder="Enter page title"
-                    />
-                  </div>
+      <Tabs defaultValue="settings">
+        <TabsList className="bg-white border-violet-400 rounded-t-md overflow-x-auto no-scrollbar">
+          <TabsTrigger value="settings" className="capitalize">
+            Settings
+          </TabsTrigger>
+          <TabsTrigger value="content" className="capitalize">
+            Content
+          </TabsTrigger>
+        </TabsList>
 
-                  {/* Meta description */}
-                  <div className="grid gap-3">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      name="description"
-                      placeholder="Enter brief page description."
-                      className="min-h-32"
-                    />
-                  </div>
+        <Form method="post" onSubmit={handleSave}>
+          <TabsContent value={"settings"} className="h-fit">
+            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-10 lg:gap-8">
+              <div className="grid auto-rows-max items-start gap-4 lg:col-span-6 lg:gap-8">
+                {/*Main content  */}
+                <Card
+                  className="min-h-[24rem] rounded-t-none"
+                  x-chunk="dashboard-07-chunk-0"
+                >
+                  <CardHeader>
+                    <CardTitle>Page Info</CardTitle>
+                    <CardDescription>
+                      Lipsum dolor sit amet, consectetur adipiscing elit
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-6">
+                      {/* Page Title */}
+                      <div className="grid gap-3">
+                        <Label htmlFor="title">Page Title</Label>
+                        <Input
+                          id="title"
+                          name="title"
+                          defaultValue={page.metadata.title}
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter page title"
+                        />
+                      </div>
 
-                  {/* Keywords */}
-                  <div className="grid gap-3">
-                    <Label htmlFor="keywords">Keywords</Label>
-                    <Input
-                      id="keywords"
-                      name="keywords"
-                      type="text"
-                      className="w-full"
-                      placeholder="Enter keywords (comma-separated)"
-                    />
-                  </div>
+                      {/* Meta description */}
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                          id="description"
+                          name="description"
+                          defaultValue={page.metadata.description}
+                          placeholder="Enter brief page description."
+                          className="min-h-32"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-                  <DynamicMetaFields />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="h-full grid auto-rows-max items-start gap-4 lg:gap-8">
-            {/* Page sidebar */}
-            <Card x-chunk="dashboard-07-chunk-3" className="min-h-[24rem]">
-              <CardHeader>
-                <CardTitle>Page Status</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6">
-                  <div className="grid gap-3">
-                    <Label htmlFor="status">Status</Label>
-                    <Select>
-                      <SelectTrigger id="status" aria-label="Select status">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="published">Active</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              <div className="grid auto-rows-max items-start gap-4 lg:col-span-4 lg:gap-8">
+                {/* Page sidebar */}
+                <Card
+                  x-chunk="dashboard-07-chunk-3"
+                  className="min-h-[24rem] rounded-t-none"
+                >
+                  <CardHeader>
+                    <CardTitle>SEO Settings</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-6">
+                      {/* Keywords */}
+                      <div className="grid gap-3">
+                        <Label htmlFor="keywords">Meta Keywords</Label>
+                        <Input
+                          id="keywords"
+                          name="keywords"
+                          defaultValue={page.metadata.keywords}
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter keywords (comma-separated)"
+                        />
+                      </div>
 
-        {/* Templates */}
-        {/* <div className="flex items-center gap-4 bg-gray-500"></div> */}
+                      <DynamicMetaFields openTags={page.metadata.openTags} />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
 
-        <div className="h-96 grid md:grid-cols-[1fr_250px] border rounded-lg shadow-md lg:grid-cols-12">
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-8 lg:gap-8">
-            <CodeMirrorEditor
-              value={yamlContent}
-              onChange={handleChange}
-              extensions={[yaml(), yamlLinter()]}
-              className="h-96 p-[2px] rounded-lg  md:rounded-e-none bg-gray-800/90"
-            />
-          </div>
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-4 lg:gap-8">
-            {isDesktop && (
+          {/* Templates */}
+          {/* <div className="flex items-center gap-4 bg-gray-500"></div> */}
+          <TabsContent value={"content"} className="h-fit">
+            <div className="h-96 grid md:grid-cols-[1fr_250px] rounded-b-lg shadow-md lg:grid-cols-12">
+              <div className="grid auto-rows-max items-start gap-4 lg:col-span-8 lg:gap-8">
+                <CodeMirrorEditor
+                  value={yamlContent}
+                  onChange={handleChange}
+                  extensions={[yaml(), yamlLinter()]}
+                  className="h-96 p-[2px] rounded-b-lg  md:rounded-e-none bg-gray-800/90"
+                />
+              </div>
+              <div className="grid auto-rows-max items-start gap-4 lg:col-span-4 lg:gap-8">
+                {isDesktop && (
+                  <PageEditorToolbar
+                    isDesktop
+                    showHintForComponent={(key) =>
+                      handleShowSettings(true, key)
+                    }
+                  />
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <div className="fixed w-full left-0 right-0 bottom-0 flex items-center justify-center gap-2 md:hidden">
+            {/* mobile only toolbar here */}
+            {!isDesktop && (
               <PageEditorToolbar
-                isDesktop
+                isDesktop={false}
                 showHintForComponent={(key) => handleShowSettings(true, key)}
               />
             )}
           </div>
-        </div>
 
-        <div className="fixed w-full left-0 right-0 bottom-0 flex items-center justify-center gap-2 md:hidden">
-          {/* mobile only toolbar here */}
-          {!isDesktop && (
-            <PageEditorToolbar
-              isDesktop={false}
-              showHintForComponent={(key) => handleShowSettings(true, key)}
-            />
-          )}
-        </div>
+          <div className="flex items-center justify-center gap-2 mb-20 md:hidden">
+            <Button variant={"ghost"}>Discard</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Saving" : "Save Page"}
+            </Button>
+          </div>
 
-        <div className="flex items-center justify-center gap-2 mb-20 md:hidden">
-          <Button variant={"ghost"}>Discard</Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving" : "Save Page"}
-          </Button>
-        </div>
-
-        {componentInfo && (
-          <Dialog open={!!componentName} onOpenChange={handleShowSettings}>
-            <DialogContent>
-              <div className="mt-4">
-                <h3 className="font-semibold">Usage Example</h3>
-                <div className="grid items-center">
-                  <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto">
-                    {componentInfo.usageExample}
-                  </pre>
-                  <button
-                    className="fixed end-8 p-1 text-gray-400"
-                    onClick={() => copyToClipboard(componentInfo.usageExample)}
-                  >
-                    <Copy />
-                  </button>
+          {componentInfo && (
+            <Dialog open={!!componentName} onOpenChange={handleShowSettings}>
+              <DialogContent>
+                <div className="mt-4">
+                  <h3 className="font-semibold">Usage Example</h3>
+                  <div className="grid items-center">
+                    <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto">
+                      {componentInfo.usageExample}
+                    </pre>
+                    <button
+                      className="fixed end-8 p-1 text-gray-400"
+                      onClick={() =>
+                        copyToClipboard(componentInfo.usageExample)
+                      }
+                    >
+                      <Copy />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
-    </Form>
+              </DialogContent>
+            </Dialog>
+          )}
+        </Form>
+      </Tabs>
+    </div>
   );
 }
 
@@ -414,15 +439,12 @@ function yamlLinter() {
   });
 }
 
-interface OpenGraphTag {
-  property: string;
-  content: string;
-}
+type DynamicMetaFieldsProps = { openTags: OpenGraphTag[] };
 
-function DynamicMetaFields() {
-  const [ogTags, setOgTags] = useState<OpenGraphTag[]>([
-    { property: "", content: "" },
-  ]);
+function DynamicMetaFields({ openTags }: DynamicMetaFieldsProps) {
+  const [ogTags, setOgTags] = useState<OpenGraphTag[]>(
+    openTags || [{ property: "", content: "" }]
+  );
 
   const handleAddOgTag = () => {
     setOgTags([...ogTags, { property: "", content: "" }]);
@@ -448,7 +470,7 @@ function DynamicMetaFields() {
           <Input
             type="text"
             name="properties"
-            placeholder="Propery name (e.g keywords, og:title)"
+            placeholder="Property name (e.g keywords, og:title)"
             value={tag.property}
             onChange={(e) => handleOgChange(index, "property", e.target.value)}
           />

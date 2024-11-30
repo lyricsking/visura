@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
-
+/** @deprecated */
 export interface DBReponse<T> {
   data?: T | null;
   error?: Record<string, any>;
 }
 
+/** @deprecated */
 export async function handleDbResult<T>(
   asyncFn: Promise<T>
 ): Promise<DBReponse<T>> {
@@ -20,6 +21,7 @@ export async function handleDbResult<T>(
   }
 }
 
+/** @deprecated */
 export const parseError = (errorObject: mongoose.Error) => {
   if (errorObject instanceof mongoose.Error.ValidationError) {
     let error: Record<string, any> = {};

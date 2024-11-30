@@ -2,7 +2,7 @@ import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { match, MatchResult } from "path-to-regexp";
 import { getAppContext } from "~/app";
-import { IPage, PageContentType } from "~/page/types/page";
+import { IPage, PageContent } from "~/page/types/page";
 import { renderPage } from "~/components/ui/render-page";
 import { PageModel } from "~/page/models/page.server";
 
@@ -46,6 +46,6 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
 export default function CatchAll() {
   const { data, path, content } = useLoaderData<typeof loader>();
-  if (content) return renderPage(path, content as PageContentType, data);
+  if (content) return renderPage(path, content as PageContent, data);
   return <>Nothing</>;
 }

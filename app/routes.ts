@@ -21,7 +21,7 @@ export default [
         route("pages/edit/:pageId", "admin/routes/page-editor.tsx", {
           id: "edit-page",
         });
-        route("pages/create", "admin/routes/page-editor.tsx", {
+        route("pages/create/:templateId?", "admin/routes/page-editor.tsx", {
           id: "create-page",
         });
         route("users", "admin/routes/users.tsx");

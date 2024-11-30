@@ -1,14 +1,27 @@
 import { Types } from "mongoose";
 
+export interface OpenGraphTag {
+  property: string;
+  content: string;
+}
+
 export interface PageMetadata {
   title: string;
   description?: string;
-  keywords?: string[];
-  [key: string]: any;
+  keywords?: string;
+  openTags?: OpenGraphTag[];
 }
 
-export interface PageContentType {
-  type: "block" | "component" | "markdown" | "yaml";
+export const PageContentType = [
+  "block",
+  "component",
+  "markdown",
+  "yaml",
+] as const;
+export type PageContentType = (typeof PageContentType)[number];
+
+export interface PageContent {
+  type: PageContentType;
   value: any; // YAML configuration for type "yaml", React Components for "component" type
 }
 import { AppContext } from "~/app";
@@ -28,14 +41,19 @@ export type PluginActionFunction = (
   args: PluginActionFunctionArgs
 ) => Promise<Response | any>; // Adjust the return type as necessary
 
-export type PageStatus = "active" | "archive" | "draft";
+export const PageStatus = {
+  draft: "draft",
+  published: "published",
+  archived: "archived",
+} as const;
+export type PageStatus = (typeof PageStatus)[keyof typeof PageStatus];
 
 export interface IPage {
   id: Types.ObjectId;
-  path: string;
+  path?: string;
   default?: boolean;
   metadata: PageMetadata;
-  content: PageContentType;
+  content: PageContent;
   action?: PluginActionFunction;
   loader?: PluginLoaderFunction;
   createdBy: Types.ObjectId;
