@@ -89,10 +89,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   Array.isArray(properties)
     ? properties.forEach((property, index) => {
         if (typeof property === "string" && property.length > 0)
-          openTags
+          openTags.push({ property, content: contents[index] });
       })
     : typeof properties === "string" && properties.length > 0
-    ? (openTags[properties] = contents)
+    ? openTags.push({ property: properties, content: contents })
     : null;
 
   if (Object.keys(errors).length > 0) {
