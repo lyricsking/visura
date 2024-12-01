@@ -2,7 +2,7 @@ import mongoose, { ObjectId, ValidatorFunction } from "mongoose";
 import PostModel, { PostModelType } from "../models/post.model";
 import { IPost } from "../types/post.type";
 import { faker } from "@faker-js/faker";
-import { DBReponse } from "~/utils/mongoose";
+import { DBReponse } from "~/shared/utils/mongoose";
 
 export const createPost = async function (
   data: Pick<

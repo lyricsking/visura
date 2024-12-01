@@ -2,7 +2,7 @@ import { LinksFunction, type MetaFunction } from "@remix-run/node";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import { PostSummary } from "../components/post-summary";
-import { findFontByName } from "~/utils/fonts";
+import { findFontByName } from "~/shared/utils/fonts";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Select,
@@ -11,8 +11,13 @@ import {
   SelectContent,
   SelectItem,
 } from "@radix-ui/react-select";
-import Button from "~/components/button";
-import { Card, CardHeader, CardContent, CardFooter } from "~/components/card";
+import Button from "~/shared/components/button";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "~/shared/components/card";
 import { serverOnly$ } from "vite-env-only/macros";
 import { TipSummary } from "../components/tip-card";
 import { ITips } from "../types/tips.type";

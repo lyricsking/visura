@@ -1,13 +1,13 @@
 import { Link, Outlet } from "@remix-run/react";
-import Footer from "~/components/ui/footer";
+import Footer from "~/shared/components/ui/footer";
 import {
   PageLayout,
   PageLayoutContent,
   PageLayoutFooter,
   PageLayoutHeader,
   PageLayoutHeaderItem,
-} from "~/components/ui/page.layout";
-import Button from "~/components/button";
+} from "~/shared/components/ui/page.layout";
+import Button from "~/shared/components/button";
 
 export default function Layout() {
   return (

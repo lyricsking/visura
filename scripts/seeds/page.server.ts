@@ -1,4 +1,4 @@
-import { PageModel } from "~/page/models/page.server";
+import { PageModel } from "~/features/page/models/page.server";
 
 export const seedPages = async () => {
   try {
@@ -23,8 +23,11 @@ export const seedPages = async () => {
           description: "The default page description.",
         },
         content: {
-          type: "markdown",
-          value: "# Hi there! I am Jamiu Adeniyi.",
+          type: "yaml",
+          value: `# A blank
+sections:
+  - type: section:
+      `,
         },
         status: "active",
       },

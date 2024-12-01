@@ -13,7 +13,7 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
 import { AppContext, getAppContext } from "./app";
-import AppContextProvider from "./utils/app-context";
+import AppContextProvider from "./shared/utils/app-context";
 
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;

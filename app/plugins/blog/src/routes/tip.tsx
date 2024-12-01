@@ -2,10 +2,10 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { findPostById, findPostBySlug } from "../server/post.server";
 import ReactMarkdown from "react-markdown";
-import { formatDateByParts, formatDateOrTime } from "~/utils/date";
+import { formatDateByParts, formatDateOrTime } from "~/shared/utils/date";
 import { findTipBySlug } from "../server/tips.server";
 import { loader } from "../loaders/tip.loader";
-import { Card, CardHeader, CardContent } from "~/components/card";
+import { Card, CardHeader, CardContent } from "~/shared/components/card";
 
 export default function TipPage({ tip }: ReturnType<typeof loader>) {
   let title = tip.teamA + " - " + tip.teamB;

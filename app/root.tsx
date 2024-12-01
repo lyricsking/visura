@@ -13,7 +13,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { Toaster } from "./components/toaster";
+import { Toaster } from "./shared/components/toaster";
 import { getAppContext } from "./app";
 
 export const links: LinksFunction = () => [

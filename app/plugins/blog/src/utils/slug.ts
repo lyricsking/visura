@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { getNanoid } from "~/utils/util";
+import { getNanoid } from "~/shared/utils/util";
 
 export const getSlug = (text: string) => {
   let slug = slugify(text, {

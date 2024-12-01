@@ -1,10 +1,10 @@
 import { serverOnly$ } from "vite-env-only/macros";
-import { DisplayOptions } from "./admin/type/options";
-import createDBConnection from "./database/db.server";
-import { IOption, DISPLAY_OPTION_KEY } from "./option/types/option";
-import { IPage } from "./page/types/page";
-import { IPlugin, IBasePlugin } from "./plugin/types/plugin";
-import { Menu, MenuType, SettingsTab } from "./types/menu";
+import { DisplayOptions } from "./features/admin/type/options";
+import createDBConnection from "./shared/services/db.server";
+import { IOption, DISPLAY_OPTION_KEY } from "./features/option/types/option";
+import { IPage } from "./features/page/types/page";
+import { IPlugin, IBasePlugin } from "./features/plugin/types/plugin";
+import { Menu, MenuType, SettingsTab } from "./shared/types/menu";
 
 export const APP_NAME = "app_name";
 
