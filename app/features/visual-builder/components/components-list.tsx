@@ -28,7 +28,5 @@ export function ComponentsPanel({}: ComponentsPanelProps) {
     </>
   ));
 
-  console.log(itemsC);
-
   return <>{itemsC}</>;
 }

@@ -23,7 +23,5 @@ export function ComponentSettingsPanel() {
     </>
   ));
 
-  console.log(itemsC);
-
   return <>{itemsC}</>;
 }
