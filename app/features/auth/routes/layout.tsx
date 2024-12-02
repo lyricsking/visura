@@ -7,7 +7,7 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/shared/components/ui/page.layout";
-import { useAppContext } from "~/shared/utils/app-context";
+import { useAppContext } from "~/shared/providers/app.provider.tsx";
 
 export default function Layout() {
   const app = useAppContext();

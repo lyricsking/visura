@@ -1,5 +1,7 @@
 import stylesheet from "tailwind.css?url";
-
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import "@mantine/core/styles.css";
 import { json, LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   useRouteLoaderData,
@@ -15,6 +17,8 @@ import {
 
 import { Toaster } from "./shared/components/toaster";
 import { getAppContext } from "./app";
+
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -64,9 +68,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <ColorSchemeScript />
       </head>
       <body className="bg-base-100 text-neutral max-h-screen max-w-full overflow-x-hidden">
-        {children}
+        <MantineProvider>{children}</MantineProvider>
         <Toaster />
         <ScrollRestoration
           getKey={(location) => {

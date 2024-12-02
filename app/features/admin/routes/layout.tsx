@@ -18,7 +18,7 @@ import HeaderIcons from "../components/header-icons";
 import { SidebarProvider, SidebarTrigger } from "~/shared/components/sidebar";
 import { AdminSidebar } from "~/features/admin/components/admin-sidebar";
 import { APP_NAME } from "~/app";
-import { useAppContext } from "~/shared/utils/app-context";
+import { useAppContext } from "~/shared/providers/app.provider.tsx";
 import { getUserOrFetch } from "~/features/user/server/user.server";
 import { IUser } from "~/features/user/models/user.model";
 import { Types } from "mongoose";

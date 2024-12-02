@@ -16,7 +16,7 @@ import {
   PageLayoutHeaderItem,
 } from "~/shared/components/ui/page.layout";
 import { useQuiz } from "~/features/temp/SubscriptionBox/Quiz/utils/quiz.utils";
-import { useAppContext } from "~/shared/utils/app-context";
+import { useAppContext } from "~/shared/providers/app.provider.tsx";
 
 export type ChildHeaderObject = {
   title: string;

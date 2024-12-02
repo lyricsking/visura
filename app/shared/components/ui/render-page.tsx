@@ -1,12 +1,12 @@
 import render from "~/shared/components/ui/render";
-import { PageContentType } from "~/core/page/types/page";
-import { useAppContext } from "~/shared/utils/app-context";
+import { useAppContext } from "~/shared/providers/app.provider.tsx";
 import Loading from "../loading";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { preview } from "vite";
 import { customMarkdownParser } from "~/shared/utils/markdown-utils";
+import { PageContentType } from "~/features/page/types/page";
 
 export const renderPage = (
   path: string,
