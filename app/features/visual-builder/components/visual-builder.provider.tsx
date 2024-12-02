@@ -6,12 +6,10 @@ import {
   useContext,
   useState,
 } from "react";
-import {
-  ComponentsInfo,
-  ComponentsInfoGroup,
-} from "../types/builder.components";
+import { ComponentsInfo } from "../types/builder.components";
+import { textInfo } from "./text";
 
-const visualComponentsList: ComponentsInfo[] = [];
+const visualComponentsList: ComponentsInfo[] = [textInfo];
 
 type VisualBuilderValue = {
   defaultList: ComponentsInfo[];

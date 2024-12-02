@@ -6,50 +6,57 @@ export default [
     return defineRoutes((route) => {
       // Define all static routes first
       // Auth routes
-      route("auth", "auth/routes/layout.tsx", () => {
-        index("auth/routes/signin.tsx");
-        route("signup", "auth/routes/signup.tsx");
-        route("google", "auth/routes/google-signin.tsx");
-        route("google/callback", "auth/routes/google-callback.tsx");
-        route("signout", "auth/routes/signout.tsx");
+      route("auth", "features/auth/routes/layout.tsx", () => {
+        index("features/auth/routes/signin.tsx");
+        route("signup", "features/auth/routes/signup.tsx");
+        route("google", "features/auth/routes/google-signin.tsx");
+        route("google/callback", "features/auth/routes/google-callback.tsx");
+        route("signout", "features/auth/routes/signout.tsx");
       });
 
       // Admin routes
-      route("administration", "admin/routes/layout.tsx", () => {
-        route("", "admin/routes/overview.tsx", { index: true });
-        route("pages", "admin/routes/pages.tsx");
-        route("pages/edit/:pageId", "admin/routes/page-editor.tsx", {
+      
+      route("visual", "features/admin/routes/visual.tsx");
+      route("administration", "features/admin/routes/layout.tsx", () => {
+        route("", "features/admin/routes/overview.tsx", { index: true });
+        route("pages", "features/admin/routes/pages.tsx");
+        route("pages/edit/:pageId", "features/admin/routes/page-editor.tsx", {
           id: "edit-page",
         });
-        route("pages/create/:templateId?", "admin/routes/page-editor.tsx", {
-          id: "create-page",
-        });
-        route("users", "admin/routes/users.tsx");
         route(
-          "settings",
-          "admin/routes/settings.tsx",
-          { id: "setting" },
-          () => {
-            route("general", "admin/routes/general-settings.tsx", {
-              index: true,
-            });
-            route("display", "admin/routes/display-settings.tsx");
-            route("policy", "admin/routes/privacy-settings.tsx");
+          "pages/create/:templateId?",
+          "features/admin/routes/page-editor.tsx",
+          {
+            id: "create-page",
           }
         );
-        route("*", "admin/routes/catch-all.tsx");
+        route("users", "features/admin/routes/users.tsx");
+        route(
+          "settings",
+          "features/admin/routes/settings.tsx",
+          { id: "setting" },
+          () => {
+            route("general", "features/admin/routes/general-settings.tsx", {
+              index: true,
+            });
+            route("display", "features/admin/routes/display-settings.tsx");
+            route("policy", "features/admin/routes/privacy-settings.tsx");
+          }
+        );
+
+        route("*", "features/admin/routes/catch-all.tsx");
       });
 
       // Public pages, registered last so that catch all route would match non handle routes only.
-      route("/", "public/routes/layout.tsx", () => {
-        route("", "public/routes/home.tsx", { index: true });
-        route("*", "public/routes/catch-all.tsx");
+      route("/", "features/public/routes/layout.tsx", () => {
+        route("", "features/public/routes/home.tsx", { index: true });
+        route("*", "features/public/routes/catch-all.tsx");
       });
 
       // Api routes
-      route("api/options", "option/routes/api/options.server.ts");
-      route("api/pages", "page/routes/api/pages.server.ts");
-      route("api/plugins", "plugin/routes/api/plugins.server.ts");
+      route("api/options", "features/option/routes/api/options.server.ts");
+      route("api/pages", "features/page/routes/api/pages.server.ts");
+      route("api/plugins", "features/plugin/routes/api/plugins.server.ts");
     });
   })),
 ] satisfies RouteConfig;
