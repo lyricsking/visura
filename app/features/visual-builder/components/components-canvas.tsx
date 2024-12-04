@@ -9,7 +9,7 @@ export default function ComponentsCanvas() {
       {/* Check if we have an active component for editing
       and display appropriate settings component */}
       {components.map((component, index) => (
-        <component.component key={index} {...component.props} />
+        <component.component key={component.props.id} {...component.props} />
       ))}
     </div>
   );
