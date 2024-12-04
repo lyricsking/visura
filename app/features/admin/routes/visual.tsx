@@ -3,68 +3,87 @@ import {
   AppShellAside,
   Burger,
   Group,
+  ScrollArea,
   Skeleton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { FigmaLogoIcon } from "@radix-ui/react-icons";
+import ComponentsCanvas from "~/features/visual-builder/components/components-canvas";
 import { ComponentsPanel } from "~/features/visual-builder/components/components-list";
 import { ComponentSettingsPanel } from "~/features/visual-builder/components/components-settings-panel";
-import VisualBuilderProvider from "~/features/visual-builder/components/visual-builder.provider";
+import VisualBuilderProvider, {
+  useVisualBuilder,
+} from "~/features/visual-builder/components/visual-builder.provider";
 
 export default function VisualBuilder() {
+  return (
+    <VisualBuilderProvider components={[]}>
+      <VisualBuilderChild />
+    </VisualBuilderProvider>
+  );
+}
+
+/**
+ * This sub component is needed to be able to use `useVisualBuilder()` hook,
+ * as it can only be used within VisualBuilderProvider
+ * @returns
+ */
+function VisualBuilderChild() {
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
 
-  function onComponentSelected(name: string): void {}
-
   return (
-    <VisualBuilderProvider components={[]}>
-      <AppShell
-        header={{ height: 45 }}
-        footer={{ height: 60 }}
-        navbar={{
-          width: 220,
-          breakpoint: "sm",
-          collapsed: { mobile: !opened },
-        }}
-        aside={{
-          width: 220,
-          breakpoint: "md",
-          collapsed: { desktop: false, mobile: !asideOpened },
-        }}
-        padding="md"
-      >
-        <AppShell.Header>
-          <Group h="100%" px="md" justify="space-between">
-            <Group h="100%">
-              <Burger
-                opened={opened}
-                onClick={toggle}
-                hiddenFrom="sm"
-                size="sm"
-              />
-              <FigmaLogoIcon className="h-8 w-8" />
-            </Group>
+    <AppShell
+      header={{ height: 45 }}
+      // footer={{ height: 60 }}
+      navbar={{
+        width: 250,
+        breakpoint: "sm",
+        collapsed: { mobile: !opened },
+      }}
+      aside={{
+        width: 250,
+        breakpoint: "md",
+        collapsed: { desktop: false, mobile: !asideOpened },
+      }}
+      padding="md"
+    >
+      <AppShell.Header>
+        <Group h="100%" px="md" justify="space-between">
+          <Group h="100%">
             <Burger
-              opened={asideOpened}
-              onClick={asideToggle}
+              opened={opened}
+              onClick={toggle}
               hiddenFrom="sm"
               size="sm"
             />
+            <FigmaLogoIcon className="h-8 w-8" />
           </Group>
-        </AppShell.Header>
-        <AppShell.Navbar p="md">
-          <ComponentsPanel onComponentSelected={onComponentSelected} />
-        </AppShell.Navbar>
-        <AppShell.Main>
-          Aside is hidden on on md breakpoint and cannot be opened when it is
-          collapsed
-        </AppShell.Main>
-        <AppShell.Aside p="md">
+          <Burger
+            opened={asideOpened}
+            onClick={asideToggle}
+            hiddenFrom="sm"
+            size="sm"
+          />
+        </Group>
+      </AppShell.Header>
+
+      <AppShell.Navbar bg={"#f3f4f6"}>
+        <AppShell.Section p="md" grow component={ScrollArea}>
+          <ComponentsPanel />
+        </AppShell.Section>
+      </AppShell.Navbar>
+
+      <AppShell.Main>
+        <ComponentsCanvas />
+      </AppShell.Main>
+
+      <AppShell.Aside bg={"#f3f4f6"}>
+        <AppShell.Section p="md" grow component={ScrollArea}>
           <ComponentSettingsPanel />
-        </AppShell.Aside>
-        <AppShell.Footer p="md">Footer</AppShell.Footer>
-      </AppShell>
-    </VisualBuilderProvider>
+        </AppShell.Section>
+      </AppShell.Aside>
+      {/* <AppShell.Footer p="md">Footer</AppShell.Footer> */}
+    </AppShell>
   );
 }

@@ -1,1 +1,1 @@
-export type onComponentSelected = (name: string) => void;
+export type AddComponent = (name: string) => void;

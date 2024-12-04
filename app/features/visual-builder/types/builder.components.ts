@@ -7,11 +7,17 @@ export const ComponentsInfoGroup = {
 export type ComponentsInfoGroup =
   (typeof ComponentsInfoGroup)[keyof typeof ComponentsInfoGroup];
 
-export type ComponentsInfo = {
+export type BaseComponentsInfoProps = {
   id?: string;
+  children: ReactNode;
+};
+
+export type ComponentsInfo<
+  T extends BaseComponentsInfoProps = BaseComponentsInfoProps
+> = {
   name: string;
   group: ComponentsInfoGroup;
-  component: ComponentType;
-  settingsComponent: ComponentType;
-  defaultValue: Record<string, any>;
+  component: ComponentType<any>;
+  settingsComponent: ComponentType<any>;
+  props: T;
 };

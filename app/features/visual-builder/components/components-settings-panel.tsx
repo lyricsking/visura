@@ -1,27 +1,23 @@
-import { ComponentsInfo } from "../types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 
 export function ComponentSettingsPanel() {
-  const { defaultList } = useVisualBuilder();
-  const x = defaultList.reduce(
-    (acc: Record<string, ComponentsInfo[]>, item: ComponentsInfo) => {
-      const key = String(item.group);
-
-      if (!acc[key]) acc[key] = [];
-
-      acc[key].push(item);
-      return acc;
-    },
-    {}
+  // Use useVisualBuilder hook to obtain components
+  const { selection, components } = useVisualBuilder();
+  // Find the currently selected component by it's id.
+  const editingComp = components.find(
+    (component) => component.props.id === selection
   );
 
-  const itemsC = Object.entries(x).map(([key, items]) => (
-    <>
-      {items.map((item) => (
-        <item.settingsComponent key={item.name} {...item.defaultValue} />
-      ))}
-    </>
-  ));
-
-  return <>{itemsC}</>;
+  return (
+    <div>
+      {/* Check if we have an active component for editing
+      and display appropriate settings component */}
+      {editingComp && (
+        <editingComp.settingsComponent
+          key={editingComp.props.id}
+          {...editingComp.props}
+        />
+      )}
+    </div>
+  );
 }
