@@ -1,13 +1,8 @@
 import { Button, Divider, Text } from "@mantine/core";
 import { ComponentsInfo } from "../types/builder.components";
-import { AddComponent } from "../utils/fns";
 import { useVisualBuilder } from "./visual-builder.provider";
 
-export type ComponentsPanelProps = {
-  // addComponent: AddComponent;
-};
-
-export function ComponentsPanel({}: ComponentsPanelProps) {
+export function BlockList() {
   const { defaultList, addComponent } = useVisualBuilder();
 
   const componentsMap = defaultList.reduce(

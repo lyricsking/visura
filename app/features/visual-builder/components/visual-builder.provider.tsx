@@ -3,8 +3,16 @@ import { ComponentsInfo } from "../types/builder.components";
 import { textInfo } from "./text";
 import { getNanoid } from "~/shared/utils/util";
 import { AddComponent } from "../utils/fns";
+import { imageInfo } from "./image";
+import { avatarInfo } from "./avatar";
+import { faqInfo } from "./faq";
 
-const defaultComponents: ComponentsInfo[] = [textInfo];
+const defaultComponents: ComponentsInfo[] = [
+  textInfo,
+  imageInfo,
+  avatarInfo,
+  faqInfo,
+];
 
 type VisualBuilderValue = {
   defaultList: ComponentsInfo[];

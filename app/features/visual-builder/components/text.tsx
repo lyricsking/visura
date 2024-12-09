@@ -8,8 +8,6 @@ import {
   ColorPicker,
   Slider,
   NativeSelect,
-  Tooltip,
-  Switch,
 } from "@mantine/core";
 import {
   ComponentsInfo,

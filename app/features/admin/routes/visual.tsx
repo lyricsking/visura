@@ -1,19 +1,10 @@
-import {
-  AppShell,
-  AppShellAside,
-  Burger,
-  Group,
-  ScrollArea,
-  Skeleton,
-} from "@mantine/core";
+import { AppShell, Burger, Group, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { FigmaLogoIcon } from "@radix-ui/react-icons";
-import ComponentsCanvas from "~/features/visual-builder/components/components-canvas";
-import { ComponentsPanel } from "~/features/visual-builder/components/components-list";
-import { ComponentSettingsPanel } from "~/features/visual-builder/components/components-settings-panel";
-import VisualBuilderProvider, {
-  useVisualBuilder,
-} from "~/features/visual-builder/components/visual-builder.provider";
+import ComponentsCanvas from "~/features/visual-builder/components/builder-canvas";
+import { ComponentSettingsPanel } from "~/features/visual-builder/components/block-settings";
+import VisualBuilderProvider from "~/features/visual-builder/components/visual-builder.provider";
+import { BlockList } from "~/features/visual-builder/components/block-list";
 
 export default function VisualBuilder() {
   return (
@@ -70,7 +61,7 @@ function VisualBuilderChild() {
 
       <AppShell.Navbar bg={"#f3f4f6"}>
         <AppShell.Section p="md" grow component={ScrollArea}>
-          <ComponentsPanel />
+          <BlockList />
         </AppShell.Section>
       </AppShell.Navbar>
 
