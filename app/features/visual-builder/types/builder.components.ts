@@ -4,6 +4,7 @@ export const ComponentsInfoGroup = {
   layout: "layout",
   display: "display",
   misc: "misc",
+  sections: "sections",
 } as const;
 export type ComponentsInfoGroup =
   (typeof ComponentsInfoGroup)[keyof typeof ComponentsInfoGroup];

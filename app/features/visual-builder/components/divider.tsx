@@ -27,7 +27,9 @@ export const dividerInfo: DividerSettingsProps = {
     label: "",
     labelPosition: "left",
     size: "sm",
-    orientation: "vertical",
+    my: "xs",
+    mx: "0",
+    orientation: "horizontal",
   },
 };
 

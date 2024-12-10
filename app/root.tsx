@@ -2,7 +2,8 @@ import stylesheet from "tailwind.css?url";
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
 import "@mantine/core/styles.css";
-import { json, LinksFunction, MetaFunction } from "@remix-run/node";
+import "@mantine/carousel/styles.css";
+import { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   useRouteLoaderData,
   Meta,
@@ -36,7 +37,7 @@ export const loader = async () => {
     config: {},
   };
 
-  return json(data);
+  return Response.json(data);
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

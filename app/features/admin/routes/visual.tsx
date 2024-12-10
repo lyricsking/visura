@@ -37,7 +37,6 @@ function VisualBuilderChild() {
         breakpoint: "md",
         collapsed: { desktop: false, mobile: !asideOpened },
       }}
-      padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">

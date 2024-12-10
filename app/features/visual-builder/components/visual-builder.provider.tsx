@@ -8,6 +8,8 @@ import { avatarInfo } from "./avatar";
 import { faqInfo } from "./faq";
 import { pageInfo } from "./page";
 import { dividerInfo } from "./divider";
+import { carouselInfo } from "./carousel";
+import { heroImageBackgroundInfo } from "./hero-image-background";
 
 const defaultComponents: ComponentsInfo[] = [
   // pageInfo,
@@ -15,7 +17,9 @@ const defaultComponents: ComponentsInfo[] = [
   imageInfo,
   avatarInfo,
   dividerInfo,
+  carouselInfo,
   faqInfo,
+  heroImageBackgroundInfo,
 ];
 
 type VisualBuilderValue = {
@@ -25,6 +29,7 @@ type VisualBuilderValue = {
   onSelect: (selection: string) => void;
   addComponent: AddComponent;
   updateComponent: (id: string, key: string, value: any) => void;
+  deleteComponent: (id: string) => void;
 };
 
 const VisualBuilderContext = createContext<VisualBuilderValue | undefined>(
@@ -85,6 +90,19 @@ export default function VisualBuilderProvider({
     setComponents(newComponents);
   };
 
+  /**
+   * Delete corresponding component with the provided from the components' list
+   * @param id string
+   */
+  const deleteComponent = (id: string) => {
+    // Find the component info that matches the given name
+    const newComponents = components.filter(
+      (component) => component.props.id !== id
+    );
+
+    setComponents(newComponents);
+  };
+
   return (
     <VisualBuilderContext.Provider
       value={{
@@ -94,6 +112,7 @@ export default function VisualBuilderProvider({
         onSelect: setSelection,
         addComponent,
         updateComponent,
+        deleteComponent,
       }}
     >
       {children}
