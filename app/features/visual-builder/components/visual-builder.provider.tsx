@@ -6,11 +6,15 @@ import { AddComponent } from "../utils/fns";
 import { imageInfo } from "./image";
 import { avatarInfo } from "./avatar";
 import { faqInfo } from "./faq";
+import { pageInfo } from "./page";
+import { dividerInfo } from "./divider";
 
 const defaultComponents: ComponentsInfo[] = [
+  // pageInfo,
   textInfo,
   imageInfo,
   avatarInfo,
+  dividerInfo,
   faqInfo,
 ];
 
@@ -18,6 +22,7 @@ type VisualBuilderValue = {
   defaultList: ComponentsInfo[];
   components: ComponentsInfo[];
   selection?: string;
+  onSelect: (selection: string) => void;
   addComponent: AddComponent;
   updateComponent: (id: string, key: string, value: any) => void;
 };
@@ -86,6 +91,7 @@ export default function VisualBuilderProvider({
         defaultList: defaultComponents,
         components,
         selection,
+        onSelect: setSelection,
         addComponent,
         updateComponent,
       }}

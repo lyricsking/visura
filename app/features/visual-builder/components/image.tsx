@@ -22,7 +22,7 @@ type MantineImageSettingsProps = ComponentsInfo<
 
 export const imageInfo: MantineImageSettingsProps = {
   name: "image",
-  group: "data",
+  group: "display",
   component: Image,
   settingsComponent: MantineImageSetting,
   props: {

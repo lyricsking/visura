@@ -8,6 +8,8 @@ import {
   ColorPicker,
   Slider,
   NativeSelect,
+  Container,
+  ContainerProps,
 } from "@mantine/core";
 import {
   ComponentsInfo,
@@ -15,18 +17,20 @@ import {
 } from "../types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 
-type PageSettingsProps = ComponentsInfo<TextProps & BaseComponentsInfoProps>;
+type PageSettingsProps = ComponentsInfo<
+  ContainerProps & BaseComponentsInfoProps
+>;
 
-export const textInfo: PageSettingsProps = {
+export const pageInfo: PageSettingsProps = {
   name: "page",
   group: "layout",
-  component: Text,
+  component: Container,
   settingsComponent: PageSetting,
-  props: {},
+  props: { fluid: true },
 };
 
 export function PageSetting({ ...props }: PageSettingsProps["props"]) {
-  const { id, c, gradient, lineClamp, size, span, ta, variant } = props;
+  const { id } = props;
 
   const { updateComponent } = useVisualBuilder();
 

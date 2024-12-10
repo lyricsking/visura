@@ -2,8 +2,8 @@ import { ComponentType, ReactNode } from "react";
 
 export const ComponentsInfoGroup = {
   layout: "layout",
-  typography: "typography",
-  data: "data",
+  display: "display",
+  misc: "misc",
 } as const;
 export type ComponentsInfoGroup =
   (typeof ComponentsInfoGroup)[keyof typeof ComponentsInfoGroup];

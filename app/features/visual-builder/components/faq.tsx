@@ -39,7 +39,7 @@ interface FAQsProps {
 
 export const faqInfo: MantineFAQSettingsProps = {
   name: "FAQs",
-  group: "data",
+  group: "display",
   component: FAQs,
   settingsComponent: MantineFAQSetting,
   props: {
@@ -84,7 +84,7 @@ function FAQs({ accordion, items }: FAQsProps) {
   ));
 
   return (
-    <Accordion chevronPosition="right" variant="contained" order={3}>
+    <Accordion chevronPosition="right" order={3}>
       {itemsComponent}
     </Accordion>
   );
@@ -131,7 +131,7 @@ export function MantineFAQSetting({
       <Text children="Faq Items" size="lg" fw={"bold"} className="capitalize" />
 
       {items.map((item, index) => (
-        <>
+        <Stack>
           <Text
             children={`Item ${index + 1}`}
             size="md"
@@ -139,128 +139,125 @@ export function MantineFAQSetting({
             className="capitalize"
           />
 
-          <div key={item.id}>
-            <TextInput
-              label="Avatar Image Url"
-              description="Specify image url."
-              defaultValue={item.avatar.src ?? undefined}
-              placeholder="http://www.example.com/placeholder.jpg"
-              onChange={(event) => {
-                const newItems = items.map((yitem) => {
-                  const newItem = { ...yitem };
-                  if (yitem.id === item.id) {
-                    newItem.avatar.src = event.currentTarget.value;
+          <TextInput
+            label="Heading text"
+            description="Specify header text."
+            defaultValue={item.title}
+            onChange={(event) => {
+              const newItems = items.map((yitem) => {
+                const newItem = { ...yitem };
+                if (yitem.id === item.id) {
+                  newItem.title = event.currentTarget.value;
+                }
+                return newItem;
+              });
+              return updateComponent(id!, "items", newItems);
+            }}
+          />
+
+          <TextInput
+            label="Subheading text"
+            description="Specify header text."
+            defaultValue={item.subtitle}
+            onChange={(event) => {
+              const newItems = items.map((yitem) => {
+                const newItem = { ...yitem };
+                if (yitem.id === item.id) {
+                  newItem.subtitle = event.currentTarget.value;
+                }
+                return newItem;
+              });
+              return updateComponent(id!, "items", newItems);
+            }}
+          />
+
+          <TextInput
+            label="Avatar Image Url"
+            description="Specify image url."
+            defaultValue={item.avatar.src ?? undefined}
+            placeholder="http://www.example.com/placeholder.jpg"
+            onChange={(event) => {
+              const newItems = items.map((yitem) => {
+                const newItem = { ...yitem };
+                if (yitem.id === item.id) {
+                  newItem.avatar.src = event.currentTarget.value;
+                }
+                return newItem;
+              });
+              return updateComponent(id!, "items", newItems);
+            }}
+          />
+
+          <TextInput
+            label="Avatar Image Alt"
+            description="Specify avatar image alt text."
+            defaultValue={item.avatar.alt}
+            placeholder="Image Alt"
+            onChange={(event) => {
+              const newItems = items.map((yitem) => {
+                const newItem = { ...yitem };
+                if (yitem.id === item.id) {
+                  newItem.avatar.alt = event.currentTarget.value;
+                }
+                return newItem;
+              });
+              return updateComponent(id!, "items", newItems);
+            }}
+          />
+
+          <TextInput
+            label="Optional Avatar Name"
+            description="Specify this if you want to display user initials"
+            defaultValue={item.avatar.name as string}
+            onChange={(event) => {
+              const newItems = items.map((yitem) => {
+                const newItem = { ...yitem };
+                if (yitem.id === item.id) {
+                  newItem.avatar.name = event.currentTarget.value;
+                  if (newItem.avatar.name) {
+                    newItem.avatar.color = "initials";
                   }
-                  return newItem;
-                });
-                return updateComponent(id!, "items", newItems);
-              }}
-            />
+                }
+                return newItem;
+              });
+              return updateComponent(id!, "items", newItems);
+            }}
+          />
 
-            <TextInput
-              label="Avatar Image Alt"
-              description="Specify avatar image alt text."
-              defaultValue={item.avatar.alt}
-              placeholder="Image Alt"
-              onChange={(event) => {
-                const newItems = items.map((yitem) => {
-                  const newItem = { ...yitem };
-                  if (yitem.id === item.id) {
-                    newItem.avatar.alt = event.currentTarget.value;
-                  }
-                  return newItem;
-                });
-                return updateComponent(id!, "items", newItems);
-              }}
-            />
+          <NativeSelect
+            label="Avatar Type"
+            description="Specify avatar variant."
+            defaultValue={item.avatar.variant}
+            onChange={(event) =>
+              updateComponent(id!, "avatar", {
+                ...item.avatar,
+                variant: event.currentTarget.value,
+              })
+            }
+            data={[
+              { label: "Default", value: "default" },
+              { label: "Filled", value: "filled" },
+              { label: "Light", value: "light" },
+              { label: "Outline", value: "outline" },
+              { label: "Transparent", value: "transparent" },
+              { label: "White", value: "white" },
+            ]}
+          />
 
-            <TextInput
-              label="Optional Avatar Name"
-              description="Specify this if you want to display user initials"
-              defaultValue={item.avatar.name as string}
-              onChange={(event) => {
-                const newItems = items.map((yitem) => {
-                  const newItem = { ...yitem };
-                  if (yitem.id === item.id) {
-                    newItem.avatar.name = event.currentTarget.value;
-                    if (newItem.avatar.name) {
-                      newItem.avatar.color = "initials";
-                    }
-                  }
-                  return newItem;
-                });
-                return updateComponent(id!, "items", newItems);
-              }}
-            />
-
-            <NativeSelect
-              label="Avatar Type"
-              description="Specify avatar variant."
-              defaultValue={item.avatar.variant}
-              onChange={(event) =>
-                updateComponent(id!, "avatar", {
-                  ...item.avatar,
-                  variant: event.currentTarget.value,
-                })
-              }
-              data={[
-                { label: "Default", value: "default" },
-                { label: "Filled", value: "filled" },
-                { label: "Light", value: "light" },
-                { label: "Outline", value: "outline" },
-                { label: "Transparent", value: "transparent" },
-                { label: "White", value: "white" },
-              ]}
-            />
-
-            <NativeSelect
-              label="Radius"
-              description="Specify the image radius"
-              defaultValue={item.avatar.radius}
-              onChange={(event) =>
-                updateComponent(id!, "avatar", {
-                  ...item.avatar,
-                  radius: event.currentTarget.value,
-                })
-              }
-              data={["xs", "sm", "md", "lg", "xl"]}
-            />
-
-            <TextInput
-              label="Heading text"
-              description="Specify header text."
-              defaultValue={item.title}
-              onChange={(event) => {
-                const newItems = items.map((yitem) => {
-                  const newItem = { ...yitem };
-                  if (yitem.id === item.id) {
-                    newItem.title = event.currentTarget.value;
-                  }
-                  return newItem;
-                });
-                return updateComponent(id!, "items", newItems);
-              }}
-            />
-
-            <TextInput
-              label="Subheading text"
-              description="Specify header text."
-              defaultValue={item.subtitle}
-              onChange={(event) => {
-                const newItems = items.map((yitem) => {
-                  const newItem = { ...yitem };
-                  if (yitem.id === item.id) {
-                    newItem.subtitle = event.currentTarget.value;
-                  }
-                  return newItem;
-                });
-                return updateComponent(id!, "items", newItems);
-              }}
-            />
-          </div>
-
+          <NativeSelect
+            label="Radius"
+            description="Specify the image radius"
+            defaultValue={item.avatar.radius}
+            onChange={(event) =>
+              updateComponent(id!, "avatar", {
+                ...item.avatar,
+                radius: event.currentTarget.value,
+              })
+            }
+            data={["xs", "sm", "md", "lg", "xl"]}
+          />
           {index < items.length && <Divider my="md" />}
-        </>
+        </Stack>
       ))}
 
       <Button

@@ -38,7 +38,7 @@ const colorSwatch = [
 
 export const textInfo: MantineTextSettingsProps = {
   name: "text",
-  group: "typography",
+  group: "display",
   component: Text,
   settingsComponent: MantineTextSetting,
   props: {
@@ -73,7 +73,7 @@ export function MantineTextSetting({
         </Text>
         <SegmentedControl
           defaultValue={variant}
-          onChange={(value) => updateComponent(id!, "variant", value)}
+          onChange={(value: string) => updateComponent(id!, "variant", value)}
           data={[
             { label: "Text", value: "text" },
             { label: "Gradient", value: "gradient" },
@@ -89,7 +89,7 @@ export function MantineTextSetting({
         </Text>
         <SegmentedControl
           defaultValue={ta as string}
-          onChange={(value) => updateComponent(id!, "ta", value)}
+          onChange={(value: any) => updateComponent(id!, "ta", value)}
           data={[
             { label: "Start", value: "start" },
             { label: "Center", value: "center" },
@@ -101,7 +101,7 @@ export function MantineTextSetting({
 
       <ColorInput
         defaultValue={c as string}
-        onChange={(value) => updateComponent(id!, "c", value)}
+        onChange={(value: any) => updateComponent(id!, "c", value)}
         label="Text color"
         description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
       />
@@ -113,7 +113,7 @@ export function MantineTextSetting({
 
         <ColorPicker
           defaultValue={gradient?.from}
-          onChange={(value) =>
+          onChange={(value: any) =>
             updateComponent(id!, "gradient", {
               from: value,
               to: gradient?.to,
@@ -133,7 +133,7 @@ export function MantineTextSetting({
 
         <ColorPicker
           defaultValue={gradient?.to}
-          onChange={(value) =>
+          onChange={(value: any) =>
             updateComponent(id!, "gradient", {
               from: gradient?.from,
               to: value,
@@ -153,7 +153,7 @@ export function MantineTextSetting({
         <Slider
           color={"blue"}
           defaultValue={gradient?.deg}
-          onChange={(value) =>
+          onChange={(value: any) =>
             updateComponent(id!, "gradient", {
               from: gradient?.from,
               to: gradient?.to,
@@ -172,7 +172,7 @@ export function MantineTextSetting({
         label="Size"
         description="Specify the text size"
         defaultValue={size}
-        onChange={(event) =>
+        onChange={(event: any) =>
           updateComponent(id!, "size", event.currentTarget.value)
         }
         data={["xs", "sm", "md", "lg", "xl"]}
@@ -182,7 +182,7 @@ export function MantineTextSetting({
         label="Line Clamp"
         description="Specify the number of lines after which Text will be truncated"
         defaultValue={lineClamp}
-        onChange={(event) =>
+        onChange={(event: any) =>
           updateComponent(id!, "lineClamp", Number(event.currentTarget.value))
         }
         data={["none", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
@@ -198,7 +198,9 @@ export function MantineTextSetting({
         </Text>
         <SegmentedControl
           defaultValue={span ? "true" : "false"}
-          onChange={(value) => updateComponent(id!, "span", value === "true")}
+          onChange={(value: any) =>
+            updateComponent(id!, "span", value === "true")
+          }
           data={[
             { label: "Span", value: "true" },
             { label: "Paragraph", value: "false" },
