@@ -28,6 +28,7 @@ export const avatarInfo: MantineAvatarSettingsProps = {
   component: Avatar,
   settingsComponent: MantineAvatarSettings,
   props: {
+    onPropsUpdate: () => {},
     name: undefined,
     color: "initials",
     src: undefined,
@@ -40,9 +41,7 @@ export const avatarInfo: MantineAvatarSettingsProps = {
 export function MantineAvatarSettings({
   ...props
 }: MantineAvatarSettingsProps["props"]) {
-  const { id, name, color, src, alt, radius, variant } = props;
-
-  const { updateComponent } = useVisualBuilder();
+  const { id, name, color, src, alt, radius, variant, onPropsUpdate } = props;
 
   return (
     <Stack mb={35}>
@@ -52,7 +51,7 @@ export function MantineAvatarSettings({
         defaultValue={src ?? undefined}
         placeholder="http://www.example.com/placeholder.jpg"
         onChange={(event) =>
-          updateComponent(id!, "src", event.currentTarget.value)
+          onPropsUpdate(id!, "src", event.currentTarget.value)
         }
       />
 
@@ -62,7 +61,7 @@ export function MantineAvatarSettings({
         defaultValue={alt}
         placeholder="Image Alt"
         onChange={(event) =>
-          updateComponent(id!, "alt", event.currentTarget.value)
+          onPropsUpdate(id!, "alt", event.currentTarget.value)
         }
       />
 
@@ -75,9 +74,9 @@ export function MantineAvatarSettings({
         onChange={(event) => {
           const value = event.currentTarget.value;
           if (value) {
-            updateComponent(id!, "color", "initials");
+            onPropsUpdate(id!, "color", "initials");
           }
-          return updateComponent(id!, "name", value);
+          return onPropsUpdate(id!, "name", value);
         }}
       />
 
@@ -87,7 +86,7 @@ export function MantineAvatarSettings({
         description="Specify avatar variant."
         defaultValue={variant}
         onChange={(event) =>
-          updateComponent(id!, "variant", event.currentTarget.value)
+          onPropsUpdate(id!, "variant", event.currentTarget.value)
         }
         data={[
           { label: "Default", value: "default" },
@@ -104,7 +103,7 @@ export function MantineAvatarSettings({
         description="Specify the image radius"
         defaultValue={radius}
         onChange={(event) =>
-          updateComponent(id!, "radius", event.currentTarget.value)
+          onPropsUpdate(id!, "radius", event.currentTarget.value)
         }
         data={["xs", "sm", "md", "lg", "xl"]}
       />

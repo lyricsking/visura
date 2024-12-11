@@ -69,7 +69,7 @@ function VisualBuilderChild() {
       </AppShell.Main>
 
       <AppShell.Aside bg={"#f3f4f6"}>
-        <AppShell.Section p="md" grow component={ScrollArea}>
+        <AppShell.Section p="xs" grow component={ScrollArea}>
           <ComponentSettingsPanel />
         </AppShell.Section>
       </AppShell.Aside>

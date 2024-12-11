@@ -36,6 +36,7 @@ export const carouselInfo: CarouselSettingsProps = {
   component: Carousel,
   settingsComponent: CarouselSetting,
   props: {
+    onPropsUpdate: () => {},
     align: "start",
     orientation: "horizontal",
     slideSize: "70%",
@@ -130,9 +131,8 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
     slideGap,
     withControls,
     withIndicators,
+    onPropsUpdate,
   } = props;
-
-  const { updateComponent } = useVisualBuilder();
 
   return (
     <Stack mb={35}>
@@ -143,7 +143,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         <SegmentedControl
           aria-describedby="label-position-description"
           defaultValue={align as string}
-          onChange={(value: string) => updateComponent(id!, "align", value)}
+          onChange={(value: string) => onPropsUpdate(id!, "align", value)}
           data={[
             { label: "Start", value: "start" },
             { label: "Center", value: "center" },
@@ -158,9 +158,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={orientation}
-          onChange={(value: string) =>
-            updateComponent(id!, "orientation", value)
-          }
+          onChange={(value: string) => onPropsUpdate(id!, "orientation", value)}
           data={[
             { label: "Horizontal", value: "horizontal" },
             { label: "Vertical", value: "vertical" },
@@ -173,7 +171,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         description="Specify image height. Could be number or string value"
         defaultValue={height as string}
         onChange={(event) =>
-          updateComponent(id!, "height", event.currentTarget.value)
+          onPropsUpdate(id!, "height", event.currentTarget.value)
         }
       />
 
@@ -191,7 +189,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
           step={5}
           marks={slideSizeMarks}
           onChange={(value: number) => {
-            updateComponent(
+            onPropsUpdate(
               id!,
               "slideSize",
               slideSizeMarks.find((mark) => mark.value === value)!.label
@@ -211,7 +209,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
           step={20}
           marks={marks}
           onChange={(value: number) =>
-            updateComponent(
+            onPropsUpdate(
               id!,
               "slideGap",
               marks.find((mark) => mark.value === value)!.label
@@ -233,7 +231,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
           step={20}
           marks={marks}
           onChange={(value: number) =>
-            updateComponent(
+            onPropsUpdate(
               id!,
               "controlsOffset",
               marks.find((mark) => mark.value === value)!.label
@@ -252,9 +250,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
           step={1}
           min={14}
           max={40}
-          onChange={(value: number) =>
-            updateComponent(id!, "controlSize", value)
-          }
+          onChange={(value: number) => onPropsUpdate(id!, "controlSize", value)}
           styles={{ markLabel: { display: "none" } }}
         />
       </div>
@@ -263,7 +259,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         defaultChecked={loop}
         label="Loop"
         onChange={(event) =>
-          updateComponent(id!, "loop", event.currentTarget.checked)
+          onPropsUpdate(id!, "loop", event.currentTarget.checked)
         }
       />
 
@@ -271,7 +267,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         defaultChecked={draggable}
         label="Draggable"
         onChange={(event) =>
-          updateComponent(id!, "draggable", event.currentTarget.checked)
+          onPropsUpdate(id!, "draggable", event.currentTarget.checked)
         }
       />
 
@@ -279,7 +275,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         defaultChecked={dragFree}
         label="Drag Free"
         onChange={(event) =>
-          updateComponent(id!, "dragFree", event.currentTarget.checked)
+          onPropsUpdate(id!, "dragFree", event.currentTarget.checked)
         }
       />
 
@@ -287,7 +283,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         defaultChecked={withControls}
         label="With Controls"
         onChange={(event) =>
-          updateComponent(id!, "withControls", event.currentTarget.checked)
+          onPropsUpdate(id!, "withControls", event.currentTarget.checked)
         }
       />
 
@@ -295,7 +291,7 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
         defaultChecked={withIndicators}
         label="With Indicators"
         onChange={(event) =>
-          updateComponent(id!, "withIndicators", event.currentTarget.checked)
+          onPropsUpdate(id!, "withIndicators", event.currentTarget.checked)
         }
       />
     </Stack>

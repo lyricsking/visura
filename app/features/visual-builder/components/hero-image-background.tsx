@@ -20,7 +20,9 @@ export const heroImageBackgroundInfo: HeroImageBackgroundSettingsProps = {
   group: "sections",
   component: HeroImageBackground,
   settingsComponent: HeroImageBackgroundSettings,
-  props: {},
+  props: {
+    onPropsUpdate: () => {},
+  },
 };
 
 export function HeroImageBackground() {

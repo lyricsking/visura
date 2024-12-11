@@ -22,13 +22,15 @@ const defaultComponents: ComponentsInfo[] = [
   heroImageBackgroundInfo,
 ];
 
+export type PropsUpdateFunction = (id: string, key: string, value: any) => void;
+
 type VisualBuilderValue = {
   defaultList: ComponentsInfo[];
   components: ComponentsInfo[];
   selection?: string;
   onSelect: (selection: string) => void;
   addComponent: AddComponent;
-  updateComponent: (id: string, key: string, value: any) => void;
+  updateComponent: PropsUpdateFunction;
   deleteComponent: (id: string) => void;
 };
 

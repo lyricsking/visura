@@ -23,6 +23,7 @@ export const dividerInfo: DividerSettingsProps = {
   component: Divider,
   settingsComponent: DividerSetting,
   props: {
+    onPropsUpdate: () => {},
     variant: "solid",
     label: "",
     labelPosition: "left",
@@ -34,9 +35,15 @@ export const dividerInfo: DividerSettingsProps = {
 };
 
 export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
-  const { id, label, labelPosition, orientation, size, variant } = props;
-
-  const { updateComponent } = useVisualBuilder();
+  const {
+    id,
+    label,
+    labelPosition,
+    orientation,
+    size,
+    variant,
+    onPropsUpdate,
+  } = props;
 
   return (
     <Stack mb={35}>
@@ -46,9 +53,7 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={orientation}
-          onChange={(value: string) =>
-            updateComponent(id!, "orientation", value)
-          }
+          onChange={(value: string) => onPropsUpdate(id!, "orientation", value)}
           data={[
             { label: "Horizontal", value: "horizontal" },
             { label: "Vertical", value: "vertical" },
@@ -62,7 +67,7 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={variant}
-          onChange={(value: string) => updateComponent(id!, "variant", value)}
+          onChange={(value: string) => onPropsUpdate(id!, "variant", value)}
           data={[
             { label: "Solid", value: "solid" },
             { label: "Dashed", value: "dashed" },
@@ -76,7 +81,7 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
         description="Specify an optional label for the divider."
         defaultValue={typeof label === "string" ? label : undefined}
         onChange={(event) =>
-          updateComponent(id!, "label", event.currentTarget.value)
+          onPropsUpdate(id!, "label", event.currentTarget.value)
         }
       />
 
@@ -88,7 +93,7 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
           aria-describedby="label-position-description"
           defaultValue={labelPosition}
           onChange={(value: string) =>
-            updateComponent(id!, "labelPosition", value)
+            onPropsUpdate(id!, "labelPosition", value)
           }
           data={[
             { label: "Left", value: "left" },
@@ -103,7 +108,7 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
         description="Specify the divider size"
         defaultValue={size}
         onChange={(event: any) =>
-          updateComponent(id!, "size", event.currentTarget.value)
+          onPropsUpdate(id!, "size", event.currentTarget.value)
         }
         data={["xs", "sm", "md", "lg", "xl"]}
       />

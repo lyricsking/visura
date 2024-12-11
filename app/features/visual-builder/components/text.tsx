@@ -13,7 +13,6 @@ import {
   ComponentsInfo,
   BaseComponentsInfoProps,
 } from "../types/builder.components";
-import { useVisualBuilder } from "./visual-builder.provider";
 
 type MantineTextSettingsProps = ComponentsInfo<
   TextProps & BaseComponentsInfoProps
@@ -42,6 +41,7 @@ export const textInfo: MantineTextSettingsProps = {
   component: Text,
   settingsComponent: MantineTextSetting,
   props: {
+    onPropsUpdate: () => {},
     variant: "text",
     c: "#474747",
     gradient: { from: "#0d34de", to: "#37cf15", deg: 60 },
@@ -61,9 +61,8 @@ export const textInfo: MantineTextSettingsProps = {
 export function MantineTextSetting({
   ...props
 }: MantineTextSettingsProps["props"]) {
-  const { id, c, gradient, lineClamp, size, span, ta, variant } = props;
-
-  const { updateComponent } = useVisualBuilder();
+  const { id, c, gradient, lineClamp, size, span, ta, variant, onPropsUpdate } =
+    props;
 
   return (
     <Stack mb={35}>
@@ -73,7 +72,7 @@ export function MantineTextSetting({
         </Text>
         <SegmentedControl
           defaultValue={variant}
-          onChange={(value: string) => updateComponent(id!, "variant", value)}
+          onChange={(value: string) => onPropsUpdate(id!, "variant", value)}
           data={[
             { label: "Text", value: "text" },
             { label: "Gradient", value: "gradient" },
@@ -89,7 +88,7 @@ export function MantineTextSetting({
         </Text>
         <SegmentedControl
           defaultValue={ta as string}
-          onChange={(value: any) => updateComponent(id!, "ta", value)}
+          onChange={(value: any) => onPropsUpdate(id!, "ta", value)}
           data={[
             { label: "Start", value: "start" },
             { label: "Center", value: "center" },
@@ -101,7 +100,7 @@ export function MantineTextSetting({
 
       <ColorInput
         defaultValue={c as string}
-        onChange={(value: any) => updateComponent(id!, "c", value)}
+        onChange={(value: any) => onPropsUpdate(id!, "c", value)}
         label="Text color"
         description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
       />
@@ -114,7 +113,7 @@ export function MantineTextSetting({
         <ColorPicker
           defaultValue={gradient?.from}
           onChange={(value: any) =>
-            updateComponent(id!, "gradient", {
+            onPropsUpdate(id!, "gradient", {
               from: value,
               to: gradient?.to,
               deg: gradient?.deg,
@@ -134,7 +133,7 @@ export function MantineTextSetting({
         <ColorPicker
           defaultValue={gradient?.to}
           onChange={(value: any) =>
-            updateComponent(id!, "gradient", {
+            onPropsUpdate(id!, "gradient", {
               from: gradient?.from,
               to: value,
               deg: gradient?.deg,
@@ -154,7 +153,7 @@ export function MantineTextSetting({
           color={"blue"}
           defaultValue={gradient?.deg}
           onChange={(value: any) =>
-            updateComponent(id!, "gradient", {
+            onPropsUpdate(id!, "gradient", {
               from: gradient?.from,
               to: gradient?.to,
               deg: value,
@@ -173,7 +172,7 @@ export function MantineTextSetting({
         description="Specify the text size"
         defaultValue={size}
         onChange={(event: any) =>
-          updateComponent(id!, "size", event.currentTarget.value)
+          onPropsUpdate(id!, "size", event.currentTarget.value)
         }
         data={["xs", "sm", "md", "lg", "xl"]}
       />
@@ -183,7 +182,7 @@ export function MantineTextSetting({
         description="Specify the number of lines after which Text will be truncated"
         defaultValue={lineClamp}
         onChange={(event: any) =>
-          updateComponent(id!, "lineClamp", Number(event.currentTarget.value))
+          onPropsUpdate(id!, "lineClamp", Number(event.currentTarget.value))
         }
         data={["none", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
       />
@@ -199,7 +198,7 @@ export function MantineTextSetting({
         <SegmentedControl
           defaultValue={span ? "true" : "false"}
           onChange={(value: any) =>
-            updateComponent(id!, "span", value === "true")
+            onPropsUpdate(id!, "span", value === "true")
           }
           data={[
             { label: "Span", value: "true" },

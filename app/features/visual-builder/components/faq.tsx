@@ -43,6 +43,7 @@ export const faqInfo: MantineFAQSettingsProps = {
   component: FAQs,
   settingsComponent: MantineFAQSetting,
   props: {
+    onPropsUpdate: () => {},
     accordion: {},
     items: [
       {
@@ -84,7 +85,7 @@ function FAQs({ accordion, items }: FAQsProps) {
   ));
 
   return (
-    <Accordion chevronPosition="right" order={3}>
+    <Accordion chevronPosition="right" order={3} p={"sm"}>
       {itemsComponent}
     </Accordion>
   );
@@ -97,12 +98,10 @@ type MantineFAQSettingsProps = ComponentsInfo<
 export function MantineFAQSetting({
   ...props
 }: MantineFAQSettingsProps["props"]) {
-  const { id, accordion, items } = props;
+  const { id, accordion, items,onPropsUpdate } = props;
 
   const {} = accordion;
   // const { alt, src, name, radius, variant } = it;
-
-  const { updateComponent } = useVisualBuilder();
 
   function addFAQItem(event: MouseEvent<HTMLButtonElement>): void {
     const v = {
@@ -122,7 +121,7 @@ export function MantineFAQSetting({
 
     const newItems = [...items, v];
 
-    return updateComponent(id!, "items", newItems);
+    return onPropsUpdate(id!, "items", newItems);
   }
 
   return (
@@ -151,7 +150,7 @@ export function MantineFAQSetting({
                 }
                 return newItem;
               });
-              return updateComponent(id!, "items", newItems);
+              return onPropsUpdate(id!, "items", newItems);
             }}
           />
 
@@ -167,7 +166,7 @@ export function MantineFAQSetting({
                 }
                 return newItem;
               });
-              return updateComponent(id!, "items", newItems);
+              return onPropsUpdate(id!, "items", newItems);
             }}
           />
 
@@ -184,7 +183,7 @@ export function MantineFAQSetting({
                 }
                 return newItem;
               });
-              return updateComponent(id!, "items", newItems);
+              return onPropsUpdate(id!, "items", newItems);
             }}
           />
 
@@ -201,7 +200,7 @@ export function MantineFAQSetting({
                 }
                 return newItem;
               });
-              return updateComponent(id!, "items", newItems);
+              return onPropsUpdate(id!, "items", newItems);
             }}
           />
 
@@ -220,7 +219,7 @@ export function MantineFAQSetting({
                 }
                 return newItem;
               });
-              return updateComponent(id!, "items", newItems);
+              return onPropsUpdate(id!, "items", newItems);
             }}
           />
 
@@ -229,7 +228,7 @@ export function MantineFAQSetting({
             description="Specify avatar variant."
             defaultValue={item.avatar.variant}
             onChange={(event) =>
-              updateComponent(id!, "avatar", {
+              onPropsUpdate(id!, "avatar", {
                 ...item.avatar,
                 variant: event.currentTarget.value,
               })
@@ -249,7 +248,7 @@ export function MantineFAQSetting({
             description="Specify the image radius"
             defaultValue={item.avatar.radius}
             onChange={(event) =>
-              updateComponent(id!, "avatar", {
+              onPropsUpdate(id!, "avatar", {
                 ...item.avatar,
                 radius: event.currentTarget.value,
               })

@@ -26,6 +26,7 @@ export const imageInfo: MantineImageSettingsProps = {
   component: Image,
   settingsComponent: MantineImageSetting,
   props: {
+    onPropsUpdate: () => {},
     src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-9.png",
     h: "auto",
     w: "auto",
@@ -38,9 +39,7 @@ export const imageInfo: MantineImageSettingsProps = {
 export function MantineImageSetting({
   ...props
 }: MantineImageSettingsProps["props"]) {
-  const { id, c, fallbackSrc, fit, h, radius, src, w } = props;
-
-  const { updateComponent } = useVisualBuilder();
+  const { id, c, fallbackSrc, fit, h, radius, src, w, onPropsUpdate } = props;
 
   return (
     <Stack mb={35}>
@@ -49,7 +48,7 @@ export function MantineImageSetting({
         description="Specify image url."
         defaultValue={src}
         placeholder="http://www.example.com/placeholder.jpg"
-        onChange={(value) => updateComponent(id!, "src", value)}
+        onChange={(value) => onPropsUpdate(id!, "src", value)}
       />
 
       <TextInput
@@ -58,7 +57,7 @@ export function MantineImageSetting({
         defaultValue={fallbackSrc}
         placeholder="http://www.example.com/placeholder.jpg"
         onChange={(event) =>
-          updateComponent(id!, "fallbackSrc", event.currentTarget.value)
+          onPropsUpdate(id!, "fallbackSrc", event.currentTarget.value)
         }
       />
 
@@ -68,18 +67,14 @@ export function MantineImageSetting({
         label="Image Width"
         description="Specify image width. Could be number or string value"
         defaultValue={w as string}
-        onChange={(event) =>
-          updateComponent(id!, "w", event.currentTarget.value)
-        }
+        onChange={(event) => onPropsUpdate(id!, "w", event.currentTarget.value)}
       />
 
       <TextInput
         label="Image Height"
         description="Specify image height. Could be number or string value"
         defaultValue={h as string}
-        onChange={(event) =>
-          updateComponent(id!, "h", event.currentTarget.value)
-        }
+        onChange={(event) => onPropsUpdate(id!, "h", event.currentTarget.value)}
       />
 
       <Divider my="md" />
@@ -91,9 +86,9 @@ export function MantineImageSetting({
         onChange={(event) => {
           const value = event.currentTarget.value;
           if (value === "contain") {
-            updateComponent(id!, "w", "auto");
+            onPropsUpdate(id!, "w", "auto");
           }
-          return updateComponent(id!, "fit", value);
+          return onPropsUpdate(id!, "fit", value);
         }}
         data={["contain", "cover", "fit"]}
       />
@@ -103,7 +98,7 @@ export function MantineImageSetting({
         description="Specify the image radius"
         defaultValue={radius}
         onChange={(event) =>
-          updateComponent(id!, "radius", event.currentTarget.value)
+          onPropsUpdate(id!, "radius", event.currentTarget.value)
         }
         data={["xs", "sm", "md", "lg", "xl"]}
       />

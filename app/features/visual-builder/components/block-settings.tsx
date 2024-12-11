@@ -5,7 +5,8 @@ import { componentsMap } from "~/shared/block";
 
 export function ComponentSettingsPanel() {
   // Use useVisualBuilder hook to obtain components
-  const { selection, components, deleteComponent } = useVisualBuilder();
+  const { selection, components, deleteComponent, updateComponent } =
+    useVisualBuilder();
   // Find the currently selected component by it's id.
   const editingComp = components.find(
     (component) => component.props.id === selection
@@ -31,6 +32,7 @@ export function ComponentSettingsPanel() {
           <editingComp.settingsComponent
             key={editingComp.props.id}
             {...editingComp.props}
+            updateComponent={updateComponent}
           />
         </div>
       )}

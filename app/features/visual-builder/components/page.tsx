@@ -26,13 +26,12 @@ export const pageInfo: PageSettingsProps = {
   group: "layout",
   component: Container,
   settingsComponent: PageSetting,
-  props: { fluid: true },
+  props: { 
+  onPropsUpdate: () => {},fluid: true },
 };
 
 export function PageSetting({ ...props }: PageSettingsProps["props"]) {
   const { id } = props;
-
-  const { updateComponent } = useVisualBuilder();
 
   return <Stack mb={35}></Stack>;
 }

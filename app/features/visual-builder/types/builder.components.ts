@@ -1,4 +1,5 @@
 import { ComponentType, ReactNode } from "react";
+import { PropsUpdateFunction } from "../components/visual-builder.provider";
 
 export const ComponentsInfoGroup = {
   layout: "layout",
@@ -12,6 +13,7 @@ export type ComponentsInfoGroup =
 export type BaseComponentsInfoProps = {
   id?: string;
   children?: ReactNode;
+  onPropsUpdate: PropsUpdateFunction;
 };
 
 export type ComponentsInfo<
