@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   NumberInput,
+  Divider,
 } from "@mantine/core";
 import {
   Carousel as MantineCarousel,
@@ -18,6 +19,7 @@ import {
   BaseComponentsInfoProps,
 } from "../types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
+import { slideSizeMarks, marks } from "../utils/marks";
 
 type CarouselProps = MantineCarouselProps & {
   slides: {
@@ -83,38 +85,6 @@ export function Carousel(props: CarouselProps) {
   );
 }
 
-const marks = [
-  { value: 0, label: "0" },
-  { value: 20, label: "xs" },
-  { value: 40, label: "sm" },
-  { value: 60, label: "md" },
-  { value: 80, label: "lg" },
-  { value: 100, label: "xl" },
-];
-
-const slideSizeMarks = [
-  { value: 0, label: "0%" },
-  { value: 5, label: "5%" },
-  { value: 10, label: "10%" },
-  { value: 15, label: "15%" },
-  { value: 20, label: "20%" },
-  { value: 25, label: "25%" },
-  { value: 30, label: "30%" },
-  { value: 35, label: "35%" },
-  { value: 40, label: "40%" },
-  { value: 45, label: "45%" },
-  { value: 50, label: "50%" },
-  { value: 55, label: "55%" },
-  { value: 60, label: "60%" },
-  { value: 65, label: "65%" },
-  { value: 70, label: "70%" },
-  { value: 75, label: "75%" },
-  { value: 80, label: "80%" },
-  { value: 85, label: "85%" },
-  { value: 90, label: "90%" },
-  { value: 95, label: "95%" },
-  { value: 100, label: "100%" },
-];
 
 export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
   const {
@@ -126,6 +96,8 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
     draggable,
     height,
     loop,
+    my,
+    mx,
     orientation,
     slideSize,
     slideGap,
@@ -167,13 +139,45 @@ export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
       </div>
 
       <TextInput
-        label="Gallery"
+        label="Height"
         description="Specify image height. Could be number or string value"
         defaultValue={height as string}
         onChange={(event) =>
           onPropsUpdate(id!, "height", event.currentTarget.value)
         }
       />
+
+      <Divider />
+
+      <div>
+        <Text size="sm" fw={500}>
+          Vertical Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(my)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "my", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Horizontal Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mx)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "mx", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <Divider />
 
       <div>
         <Text size="sm" fw={500}>

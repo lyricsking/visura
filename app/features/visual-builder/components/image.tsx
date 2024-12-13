@@ -9,6 +9,7 @@ import {
   TextInput,
   Group,
   NumberInput,
+  Slider,
 } from "@mantine/core";
 import {
   ComponentsInfo,
@@ -39,7 +40,8 @@ export const imageInfo: MantineImageSettingsProps = {
 export function MantineImageSetting({
   ...props
 }: MantineImageSettingsProps["props"]) {
-  const { id, c, fallbackSrc, fit, h, radius, src, w, onPropsUpdate } = props;
+  const { id, c, fallbackSrc, fit, h, my, mx, radius, src, w, onPropsUpdate } =
+    props;
 
   return (
     <Stack mb={35}>
@@ -61,7 +63,7 @@ export function MantineImageSetting({
         }
       />
 
-      <Divider my="md" />
+      <Divider />
 
       <TextInput
         label="Image Width"
@@ -77,7 +79,37 @@ export function MantineImageSetting({
         onChange={(event) => onPropsUpdate(id!, "h", event.currentTarget.value)}
       />
 
-      <Divider my="md" />
+      <Divider />
+
+      <div>
+        <Text size="sm" fw={500}>
+          Vertical Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(my)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "my", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Horizontal Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mx)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "mx", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <Divider />
 
       <NativeSelect
         label="Image Fit"

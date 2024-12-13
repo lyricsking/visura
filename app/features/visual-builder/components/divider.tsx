@@ -6,6 +6,7 @@ import {
   DividerProps,
   TextInput,
   NativeSelect,
+  Slider,
 } from "@mantine/core";
 import {
   ComponentsInfo,
@@ -28,8 +29,8 @@ export const dividerInfo: DividerSettingsProps = {
     label: "",
     labelPosition: "left",
     size: "sm",
-    my: "xs",
-    mx: "0",
+    my: 0,
+    mx: 0,
     orientation: "horizontal",
   },
 };
@@ -40,6 +41,9 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
     label,
     labelPosition,
     orientation,
+    mt,
+    mb,
+    mx,
     size,
     variant,
     onPropsUpdate,
@@ -112,6 +116,50 @@ export function DividerSetting({ ...props }: DividerSettingsProps["props"]) {
         }
         data={["xs", "sm", "md", "lg", "xl"]}
       />
+
+      <Divider />
+
+      <div>
+        <Text size="sm" fw={500}>
+          Top Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mt)}
+          step={1}
+          min={0}
+          max={100}
+          onChange={(value: number) => onPropsUpdate(id!, "mt", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Bottom Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mb)}
+          step={1}
+          min={0}
+          max={100}
+          onChange={(value: number) => onPropsUpdate(id!, "mb", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Horizontal Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mx)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "mx", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
     </Stack>
   );
 }

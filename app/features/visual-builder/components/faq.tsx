@@ -85,7 +85,7 @@ function FAQs({ accordion, items }: FAQsProps) {
   ));
 
   return (
-    <Accordion chevronPosition="right" order={3} p={"sm"}>
+    <Accordion chevronPosition="right" order={3} p={"sm"} {...accordion}>
       {itemsComponent}
     </Accordion>
   );
@@ -98,9 +98,9 @@ type MantineFAQSettingsProps = ComponentsInfo<
 export function MantineFAQSetting({
   ...props
 }: MantineFAQSettingsProps["props"]) {
-  const { id, accordion, items,onPropsUpdate } = props;
+  const { id, accordion, items, onPropsUpdate } = props;
 
-  const {} = accordion;
+  const { my, mx } = accordion;
   // const { alt, src, name, radius, variant } = it;
 
   function addFAQItem(event: MouseEvent<HTMLButtonElement>): void {
@@ -243,6 +243,48 @@ export function MantineFAQSetting({
             ]}
           />
 
+          <Divider />
+
+          <div>
+            <Text size="sm" fw={500}>
+              Vertical Spacing
+            </Text>
+            <Slider
+              defaultValue={Number(my)}
+              step={1}
+              min={0}
+              max={40}
+              onChange={(value: number) =>
+                onPropsUpdate(id!, "accordion", {
+                  ...accordion,
+                  py: value,
+                })
+              }
+              styles={{ markLabel: { display: "none" } }}
+            />
+          </div>
+
+          <div>
+            <Text size="sm" fw={500}>
+              Horizontal Spacing
+            </Text>
+            <Slider
+              defaultValue={Number(mx)}
+              step={1}
+              min={0}
+              max={40}
+              onChange={(value: number) =>
+                onPropsUpdate(id!, "accordion", {
+                  ...accordion,
+                  px: value,
+                })
+              }
+              styles={{ markLabel: { display: "none" } }}
+            />
+          </div>
+
+          <Divider />
+
           <NativeSelect
             label="Radius"
             description="Specify the image radius"
@@ -255,7 +297,7 @@ export function MantineFAQSetting({
             }
             data={["xs", "sm", "md", "lg", "xl"]}
           />
-          {index < items.length && <Divider my="md" />}
+          {index < items.length && <Divider />}
         </Stack>
       ))}
 

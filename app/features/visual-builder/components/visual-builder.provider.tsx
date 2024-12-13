@@ -6,20 +6,23 @@ import { AddComponent } from "../utils/fns";
 import { imageInfo } from "./image";
 import { avatarInfo } from "./avatar";
 import { faqInfo } from "./faq";
-import { pageInfo } from "./page";
 import { dividerInfo } from "./divider";
 import { carouselInfo } from "./carousel";
-import { heroImageBackgroundInfo } from "./hero-image-background";
+import { hero1Info } from "./hero-1";
+import { titleInfo } from "./title";
+import { buttonInfo } from "./button";
 
 const defaultComponents: ComponentsInfo[] = [
   // pageInfo,
   textInfo,
+  titleInfo,
+  buttonInfo,
   imageInfo,
   avatarInfo,
+  faqInfo,
+  hero1Info,
   dividerInfo,
   carouselInfo,
-  faqInfo,
-  heroImageBackgroundInfo,
 ];
 
 export type PropsUpdateFunction = (id: string, key: string, value: any) => void;
@@ -28,9 +31,9 @@ type VisualBuilderValue = {
   defaultList: ComponentsInfo[];
   components: ComponentsInfo[];
   selection?: string;
-  onSelect: (selection: string) => void;
+  setSelection: (selection: string) => void;
   addComponent: AddComponent;
-  updateComponent: PropsUpdateFunction;
+  updateProps: PropsUpdateFunction;
   deleteComponent: (id: string) => void;
 };
 
@@ -80,7 +83,7 @@ export default function VisualBuilderProvider({
    * Adds corresponding component with to the components' list
    * @param id string
    */
-  const updateComponent = (id: string, key: string, value: any) => {
+  const updateProps = (id: string, key: string, value: any) => {
     // Find the component info that matches the given name
     const newComponents = components.map((component) => {
       if (component.props.id === id) {
@@ -111,10 +114,10 @@ export default function VisualBuilderProvider({
         defaultList: defaultComponents,
         components,
         selection,
-        onSelect: setSelection,
+        setSelection,
         addComponent,
-        updateComponent,
         deleteComponent,
+        updateProps,
       }}
     >
       {children}

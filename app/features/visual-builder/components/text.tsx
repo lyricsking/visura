@@ -1,6 +1,5 @@
+import { ElementType } from "react";
 import {
-  Text,
-  TextProps,
   Stack,
   SegmentedControl,
   Divider,
@@ -8,41 +7,32 @@ import {
   ColorPicker,
   Slider,
   NativeSelect,
+  HighlightProps,
+  Text,
+  Highlight,
+  TextProps,
+  HighlightFactory,
+  PolymorphicComponentProps,
+  Textarea,
 } from "@mantine/core";
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
 } from "../types/builder.components";
+import { colorSwatch } from "../utils/color";
 
-type MantineTextSettingsProps = ComponentsInfo<
-  TextProps & BaseComponentsInfoProps
+export type MantineTextSettingsProps = ComponentsInfo<
+  BaseComponentsInfoProps & HighlightProps
 >;
-
-const colorSwatch = [
-  "#2e2e2e",
-  "#868e96",
-  "#fa5252",
-  "#e64980",
-  "#be4bdb",
-  "#7950f2",
-  "#4c6ef5",
-  "#228be6",
-  "#15aabf",
-  "#12b886",
-  "#40c057",
-  "#82c91e",
-  "#fab005",
-  "#fd7e14",
-];
 
 export const textInfo: MantineTextSettingsProps = {
   name: "text",
   group: "display",
-  component: Text,
+  component: Highlight,
   settingsComponent: MantineTextSetting,
   props: {
-    onPropsUpdate: () => {},
     variant: "text",
+    highlight: "",
     c: "#474747",
     gradient: { from: "#0d34de", to: "#37cf15", deg: 60 },
     size: "lg",
@@ -53,22 +43,61 @@ export const textInfo: MantineTextSettingsProps = {
     ta: "justify",
     td: "",
     tt: "none",
-    children:
-      "From Bulbapedia: Bulbasaur is a small, quadrupedal Pokémon that has blue-green skin with darker patches. It has red eyes with white pupils, pointed, ear-like structures on top of its head, and a short, blunt snout with a wide mouth. A pair of small, pointed teeth are visible in the upper jaw when its mouth is open. Each of its thick legs ends with three sharp claws. On Bulbasaur's back is a green plant bulb, which is grown from a seed planted there at birth. The bulb also conceals two slender, tentacle-like vines and provides it with energy",
+    children: "Enter text",
+    onPropsUpdate: () => {},
   },
 };
 
-export function MantineTextSetting({
-  ...props
-}: MantineTextSettingsProps["props"]) {
-  const { id, c, gradient, lineClamp, size, span, ta, variant, onPropsUpdate } =
-    props;
+export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
+  const {
+    id,
+    color,
+    children,
+    gradient,
+    lineClamp,
+    mt,mb,
+    mx,
+    span,
+    size,
+    ta,
+    variant,
+    onPropsUpdate,
+  } = props;
 
   return (
     <Stack mb={35}>
+      {/*  label="span"
+        description="" */}
+
+      <Textarea
+        label="Text"
+        description="Enter text below"
+        placeholder="Enter text here"
+        defaultValue={String(children)}
+        onChange={(event) =>
+          onPropsUpdate(id!, "children", event.currentTarget.value)
+        }
+      />
+
       <div>
         <Text size="sm" fw={500} mb={3}>
-          Text Type
+          Span
+        </Text>
+        <SegmentedControl
+          defaultValue={span ? "true" : "false"}
+          onChange={(value: any) =>
+            onPropsUpdate(id!, "span", value === "true")
+          }
+          data={[
+            { label: "Span", value: "true" },
+            { label: "Paragraph", value: "false" },
+          ]}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500} mb={3}>
+          Text Style
         </Text>
         <SegmentedControl
           defaultValue={variant}
@@ -80,7 +109,7 @@ export function MantineTextSetting({
         />
       </div>
 
-      <Divider my="md" />
+      <Divider />
 
       <div>
         <Text size="sm" fw={500} mb={3}>
@@ -98,74 +127,139 @@ export function MantineTextSetting({
         />
       </div>
 
+      <Divider />
+
+      <div>
+        <Text size="sm" fw={500}>
+          Top Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mt)}
+          step={1}
+          min={0}
+          max={100}
+          onChange={(value: number) => onPropsUpdate(id!, "mt", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Bottom Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mb)}
+          step={1}
+          min={0}
+          max={100}
+          onChange={(value: number) => onPropsUpdate(id!, "mb", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Horizontal Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mx)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "mx", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <Divider />
+
       <ColorInput
-        defaultValue={c as string}
+        defaultValue={color as string}
         onChange={(value: any) => onPropsUpdate(id!, "c", value)}
         label="Text color"
         description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
       />
 
-      <div>
-        <Text size="sm" fw={500} mb={1}>
-          Gradient From
-        </Text>
+      {variant === "gradient" ? (
+        <>
+          <div>
+            <Text size="sm" fw={500} mb={1}>
+              Gradient From
+            </Text>
 
-        <ColorPicker
-          defaultValue={gradient?.from}
-          onChange={(value: any) =>
-            onPropsUpdate(id!, "gradient", {
-              from: value,
-              to: gradient?.to,
-              deg: gradient?.deg,
-            })
-          }
-          format="hex"
-          fullWidth
-          swatches={colorSwatch}
-        />
-      </div>
+            <ColorPicker
+              defaultValue={gradient?.from}
+              onChange={(value: any) =>
+                onPropsUpdate(id!, "gradient", {
+                  from: value,
+                  to: gradient?.to,
+                  deg: gradient?.deg,
+                })
+              }
+              format="hex"
+              fullWidth
+              swatches={colorSwatch}
+            />
+          </div>
 
-      <div>
-        <Text size="sm" fw={500}>
-          Gradient To
-        </Text>
+          <div>
+            <Text size="sm" fw={500}>
+              Gradient To
+            </Text>
 
-        <ColorPicker
-          defaultValue={gradient?.to}
-          onChange={(value: any) =>
-            onPropsUpdate(id!, "gradient", {
-              from: gradient?.from,
-              to: value,
-              deg: gradient?.deg,
-            })
-          }
-          format="hex"
-          fullWidth
-          swatches={colorSwatch}
-        />
-      </div>
+            <ColorPicker
+              defaultValue={gradient?.to}
+              onChange={(value: any) =>
+                onPropsUpdate(id!, "gradient", {
+                  from: gradient?.from,
+                  to: value,
+                  deg: gradient?.deg,
+                })
+              }
+              format="hex"
+              fullWidth
+              swatches={colorSwatch}
+            />
+          </div>
 
-      <div>
-        <Text size="sm" fw={500}>
-          Gradient degree
-        </Text>
-        <Slider
-          color={"blue"}
-          defaultValue={gradient?.deg}
-          onChange={(value: any) =>
-            onPropsUpdate(id!, "gradient", {
-              from: gradient?.from,
-              to: gradient?.to,
-              deg: value,
-            })
-          }
-          min={0}
-          max={360}
-          step={10}
-        />
-      </div>
+          <div>
+            <Text size="sm" fw={500}>
+              Gradient degree
+            </Text>
+            <Slider
+              color={"blue"}
+              defaultValue={gradient?.deg}
+              onChange={(value: any) =>
+                onPropsUpdate(id!, "gradient", {
+                  from: gradient?.from,
+                  to: gradient?.to,
+                  deg: value,
+                })
+              }
+              min={0}
+              max={360}
+              step={10}
+            />
+          </div>
+        </>
+      ) : (
+        <div>
+          <Text size="sm" fw={500}>
+            Color
+          </Text>
 
-      <Divider my="md" />
+          <ColorPicker
+            defaultValue={color}
+            onChange={(value) => onPropsUpdate(id!, "color", value)}
+            format="hex"
+            withPicker={false}
+            fullWidth
+            swatches={colorSwatch}
+          />
+        </div>
+      )}
+
+      <Divider />
 
       <NativeSelect
         label="Size"
@@ -186,26 +280,6 @@ export function MantineTextSetting({
         }
         data={["none", "1", "2", "3", "4", "5", "6", "7", "8", "9"]}
       />
-
-      <Divider my="md" />
-
-      {/*  label="span"
-        description="" */}
-      <div>
-        <Text size="sm" fw={500} mb={3}>
-          Span?
-        </Text>
-        <SegmentedControl
-          defaultValue={span ? "true" : "false"}
-          onChange={(value: any) =>
-            onPropsUpdate(id!, "span", value === "true")
-          }
-          data={[
-            { label: "Span", value: "true" },
-            { label: "Paragraph", value: "false" },
-          ]}
-        />
-      </div>
     </Stack>
   );
 }

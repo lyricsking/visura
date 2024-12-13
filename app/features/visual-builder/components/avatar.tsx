@@ -1,11 +1,7 @@
 import {
   Text,
-  TextProps,
   Stack,
-  SegmentedControl,
   Divider,
-  ColorInput,
-  ColorPicker,
   Slider,
   NativeSelect,
   AvatarProps,
@@ -16,7 +12,6 @@ import {
   ComponentsInfo,
   BaseComponentsInfoProps,
 } from "../types/builder.components";
-import { useVisualBuilder } from "./visual-builder.provider";
 
 type MantineAvatarSettingsProps = ComponentsInfo<
   AvatarProps & BaseComponentsInfoProps
@@ -41,7 +36,8 @@ export const avatarInfo: MantineAvatarSettingsProps = {
 export function MantineAvatarSettings({
   ...props
 }: MantineAvatarSettingsProps["props"]) {
-  const { id, name, color, src, alt, radius, variant, onPropsUpdate } = props;
+  const { id, name, color, src, alt, my, mx, radius, variant, onPropsUpdate } =
+    props;
 
   return (
     <Stack mb={35}>
@@ -65,7 +61,7 @@ export function MantineAvatarSettings({
         }
       />
 
-      <Divider my="md" />
+      <Divider />
 
       <TextInput
         label="Optional Avatar Name"
@@ -80,7 +76,8 @@ export function MantineAvatarSettings({
         }}
       />
 
-      <Divider my="md" />
+      <Divider />
+
       <NativeSelect
         label="Avatar Type"
         description="Specify avatar variant."
@@ -97,6 +94,38 @@ export function MantineAvatarSettings({
           { label: "White", value: "white" },
         ]}
       />
+
+      <Divider />
+
+      <div>
+        <Text size="sm" fw={500}>
+          Vertical Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(my)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "my", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <div>
+        <Text size="sm" fw={500}>
+          Horizontal Spacing
+        </Text>
+        <Slider
+          defaultValue={Number(mx)}
+          step={1}
+          min={0}
+          max={40}
+          onChange={(value: number) => onPropsUpdate(id!, "mx", value)}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
+
+      <Divider />
 
       <NativeSelect
         label="Radius"
