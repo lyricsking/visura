@@ -1,4 +1,3 @@
-import { ElementType } from "react";
 import {
   Stack,
   SegmentedControl,
@@ -10,9 +9,6 @@ import {
   HighlightProps,
   Text,
   Highlight,
-  TextProps,
-  HighlightFactory,
-  PolymorphicComponentProps,
   Textarea,
 } from "@mantine/core";
 import {
@@ -55,7 +51,8 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
     children,
     gradient,
     lineClamp,
-    mt,mb,
+    mt,
+    mb,
     mx,
     span,
     size,
@@ -85,6 +82,7 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={span ? "true" : "false"}
+          size="xs"
           onChange={(value: any) =>
             onPropsUpdate(id!, "span", value === "true")
           }
@@ -101,6 +99,7 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={variant}
+          size="xs"
           onChange={(value: string) => onPropsUpdate(id!, "variant", value)}
           data={[
             { label: "Text", value: "text" },
@@ -117,6 +116,7 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={ta as string}
+          size="xs"
           onChange={(value: any) => onPropsUpdate(id!, "ta", value)}
           data={[
             { label: "Start", value: "start" },

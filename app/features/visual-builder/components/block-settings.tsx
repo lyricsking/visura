@@ -17,8 +17,8 @@ export function ComponentSettingsPanel() {
       {/* Check if we have an active component for editing
       and display appropriate settings component */}
       {editingComp && (
-        <div className="relative w-full">
-          <div className="absolute top-0 right-0">
+        <div className="w-full flex flex-col gap-2 flex-wrap">
+          <div className="flex justify-end">
             <ActionIcon
               variant="filled"
               bg={"red"}

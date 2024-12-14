@@ -11,6 +11,7 @@ import { carouselInfo } from "./carousel";
 import { hero1Info } from "./hero-1";
 import { titleInfo } from "./title";
 import { buttonInfo } from "./button";
+import { itemCardInfo } from "./item-card";
 
 const defaultComponents: ComponentsInfo[] = [
   // pageInfo,
@@ -19,6 +20,7 @@ const defaultComponents: ComponentsInfo[] = [
   buttonInfo,
   imageInfo,
   avatarInfo,
+  itemCardInfo,
   faqInfo,
   hero1Info,
   dividerInfo,
@@ -96,7 +98,7 @@ export default function VisualBuilderProvider({
   };
 
   /**
-   * Delete corresponding component with the provided from the components' list
+   * Delete corresponding component with the provided id from the components' list
    * @param id string
    */
   const deleteComponent = (id: string) => {
@@ -106,6 +108,7 @@ export default function VisualBuilderProvider({
     );
 
     setComponents(newComponents);
+    setSelection(undefined);
   };
 
   return (

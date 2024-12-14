@@ -49,7 +49,7 @@ export const faqInfo: MantineFAQSettingsProps = {
       {
         id: getNanoid(5),
         title: "Default label",
-        subtitle: "DEscription",
+        subtitle: "Description",
         content: "Content",
         avatar: {
           name: "",

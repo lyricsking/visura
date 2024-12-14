@@ -46,11 +46,11 @@ export const carouselInfo: CarouselSettingsProps = {
     controlsOffset: "xs",
     controlSize: "14",
     height: "auto",
-    loop: false,
+    loop: true,
     draggable: true,
     dragFree: false,
     withControls: true,
-    withIndicators: true,
+    withIndicators: false,
     slides: [
       {
         id: "1",
@@ -84,7 +84,6 @@ export function Carousel(props: CarouselProps) {
     </MantineCarousel>
   );
 }
-
 
 export function CarouselSetting({ ...props }: CarouselSettingsProps["props"]) {
   const {

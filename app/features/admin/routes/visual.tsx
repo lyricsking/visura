@@ -3,7 +3,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { FigmaLogoIcon } from "@radix-ui/react-icons";
 import ComponentsCanvas from "~/features/visual-builder/components/builder-canvas";
 import { ComponentSettingsPanel } from "~/features/visual-builder/components/block-settings";
-import VisualBuilderProvider, { useVisualBuilder } from "~/features/visual-builder/components/visual-builder.provider";
+import VisualBuilderProvider, {
+  useVisualBuilder,
+} from "~/features/visual-builder/components/visual-builder.provider";
 import { BlockList } from "~/features/visual-builder/components/block-list";
 import "@mantine/tiptap/styles.css";
 import { useEffect } from "react";
@@ -25,24 +27,24 @@ function VisualBuilderChild() {
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
 
-  const {components, selection} = useVisualBuilder()
-  
+  const { components, selection } = useVisualBuilder();
+
   // Listen for addition, remival or update changes to components and close navbar if currently opened
   useEffect(() => {
-    if (components.length > 0&& opened) {
-      toggle()
+    if (components.length > 0 && opened) {
+      toggle();
     }
-  }, [components])
+  }, [components]);
 
-  // Listens for changes to selected item, and closes aside 
+  // Listens for changes to selected item, and closes aside
   useEffect(() => {
     if (selection && !asideOpened) {
       asideToggle();
-    } else if(asideOpened) {
-      asideToggle()
+    } else if (asideOpened) {
+      asideToggle();
     }
   }, [selection]);
-  
+
   return (
     <AppShell
       header={{ height: 45 }}
@@ -50,12 +52,12 @@ function VisualBuilderChild() {
       navbar={{
         width: 250,
         breakpoint: "sm",
-        collapsed: { mobile: !opened, desktop:false},
+        collapsed: { mobile: !opened, desktop: false },
       }}
       aside={{
         width: 250,
         breakpoint: "md",
-        collapsed: { desktop: false, mobile: !asideOpened },
+        collapsed: { mobile: !asideOpened, desktop: false },
       }}
     >
       <AppShell.Header>
@@ -90,7 +92,7 @@ function VisualBuilderChild() {
       </AppShell.Main>
 
       <AppShell.Aside bg={"#f3f4f6"}>
-        <AppShell.Section p="xs" grow component={ScrollArea}>
+        <AppShell.Section p={"xs"} component={ScrollArea}>
           <ComponentSettingsPanel />
         </AppShell.Section>
       </AppShell.Aside>

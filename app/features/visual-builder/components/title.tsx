@@ -90,6 +90,7 @@ export function MantineTitleSetting(props: MantineTitleSettingsProps["props"]) {
         <SegmentedControl
           defaultValue={ta as string}
           onChange={(value: any) => onPropsUpdate(id!, "ta", value)}
+          size="xs"
           data={[
             { label: "Start", value: "start" },
             { label: "Center", value: "center" },

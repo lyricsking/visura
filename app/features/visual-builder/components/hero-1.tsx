@@ -1,4 +1,5 @@
 import {
+  Accordion,
   Button,
   ColorInput,
   Container,
@@ -36,14 +37,14 @@ type Hero1SettingsProps = ComponentsInfo<
       highlightProps: HighlightProps;
       highlightText?: string;
       trailingText?: string;
-      heroTextProps: MantineTextSettingsProps["props"];
+      subtitleTextProps: MantineTextSettingsProps["props"];
       buttonLeftProps: ButtonSettingsProps["props"];
       buttonRightProps: ButtonSettingsProps["props"];
     }
 >;
 
 export const hero1Info: Hero1SettingsProps = {
-  name: "hero 1",
+  name: "Hero (Basic)",
   group: "sections",
   component: Hero,
   settingsComponent: HeroSettings,
@@ -54,7 +55,7 @@ export const hero1Info: Hero1SettingsProps = {
     },
     highlightText: "with highlighted text",
     trailingText: "and a trailing text",
-    heroTextProps: {
+    subtitleTextProps: {
       ...textInfo["props"],
       c: "#474747",
       ta: "center",
@@ -82,7 +83,7 @@ export function Hero(props: Hero1SettingsProps["props"]) {
     my,
     mx,
     trailingText,
-    heroTextProps,
+    subtitleTextProps,
     highlightText,
     highlightProps,
     titleProps,
@@ -103,7 +104,7 @@ export function Hero(props: Hero1SettingsProps["props"]) {
         </Title>
 
         <Container p={0} size={600}>
-          <Text {...heroTextProps} />
+          <Text {...subtitleTextProps} />
         </Container>
 
         <Flex
@@ -128,7 +129,7 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
     my,
     mx,
     titleProps,
-    heroTextProps,
+    subtitleTextProps,
     highlightProps,
     highlightText,
     trailingText,
@@ -153,71 +154,94 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
   };
 
   return (
-    <Stack>
-      <MantineTitleSetting
-        {...titleProps}
-        id={id}
-        onPropsUpdate={(id, key, value) =>
-          newPropsUpdate(id, "titleProps", titleProps, key, value)
-        }
-      />
+    <Accordion defaultValue="title" variant="contained">
+      <Accordion.Item value={"title"}>
+        <Accordion.Control>Title Section</Accordion.Control>
+        <Accordion.Panel>
+          <MantineTitleSetting
+            {...titleProps}
+            id={id}
+            onPropsUpdate={(id, key, value) =>
+              newPropsUpdate(id, "titleProps", titleProps, key, value)
+            }
+          />
 
-      <Textarea
-        label="Highlight text"
-        description="Enter an optional highlighted text"
-        placeholder="Highlight"
-        defaultValue={String(highlightText)}
-        onChange={(event) =>
-          onPropsUpdate(id!, "highlightText", event.currentTarget.value)
-        }
-      />
+          <Textarea
+            label="Highlight text"
+            description="Enter an optional highlighted text"
+            placeholder="Highlight"
+            defaultValue={String(highlightText)}
+            onChange={(event) =>
+              onPropsUpdate(id!, "highlightText", event.currentTarget.value)
+            }
+          />
 
-      <ColorInput
-        defaultValue={c as string}
-        onChange={(value: any) =>
-          newPropsUpdate(id!, "highlightProps", highlightProps, "c", value)
-        }
-        label="Highlight color"
-        description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
-      />
+          <ColorInput
+            defaultValue={c as string}
+            onChange={(value: any) =>
+              newPropsUpdate(id!, "highlightProps", highlightProps, "c", value)
+            }
+            label="Highlight color"
+            description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
+          />
 
-      <Textarea
-        label="Trailing text"
-        description="Enter an optional trailing text to appear after highlighted text"
-        placeholder="Trailing"
-        defaultValue={String(trailingText)}
-        onChange={(event) =>
-          onPropsUpdate(id!, "trailingText", event.currentTarget.value)
-        }
-      />
+          <Textarea
+            label="Trailing text"
+            description="Enter an optional trailing text to appear after highlighted text"
+            placeholder="Trailing"
+            defaultValue={String(trailingText)}
+            onChange={(event) =>
+              onPropsUpdate(id!, "trailingText", event.currentTarget.value)
+            }
+          />
+        </Accordion.Panel>
+      </Accordion.Item>
 
-      <Divider />
+      <Accordion.Item value={"subtitle"}>
+        <Accordion.Control>Subtitle Section</Accordion.Control>
+        <Accordion.Panel>
+          <MantineTextSetting
+            {...subtitleTextProps}
+            id={id}
+            onPropsUpdate={(id, key, value) =>
+              newPropsUpdate(
+                id,
+                "subtitleTextProps",
+                subtitleTextProps,
+                key,
+                value
+              )
+            }
+          />
+        </Accordion.Panel>
+      </Accordion.Item>
 
-      <MantineTextSetting
-        {...heroTextProps}
-        id={id}
-        onPropsUpdate={(id, key, value) =>
-          newPropsUpdate(id, "heroTextProps", heroTextProps, key, value)
-        }
-      />
+      <Accordion.Item value={"buttons"}>
+        <Accordion.Control>Buttons Section</Accordion.Control>
+        <Accordion.Panel>
+          <ButtonSetting
+            {...buttonLeftProps}
+            id={id}
+            onPropsUpdate={(id, key, value) =>
+              newPropsUpdate(id, "buttonLeftProps", buttonLeftProps, key, value)
+            }
+          />
 
-      <Divider />
-
-      <ButtonSetting
-        {...buttonLeftProps}
-        id={id}
-        onPropsUpdate={(id, key, value) =>
-          newPropsUpdate(id, "buttonLeftProps", buttonLeftProps, key, value)
-        }
-      />
-
-      <ButtonSetting
-        {...buttonRightProps}
-        id={id}
-        onPropsUpdate={(id, key, value) =>
-          newPropsUpdate(id, "buttonRightProps", buttonRightProps, key, value)
-        }
-      />
-    </Stack>
+          <ButtonSetting
+            {...buttonRightProps}
+            id={id}
+            onPropsUpdate={(id, key, value) =>
+              newPropsUpdate(
+                id,
+                "buttonRightProps",
+                buttonRightProps,
+                key,
+                value
+              )
+            }
+          />
+        </Accordion.Panel>
+      </Accordion.Item>
+    </Accordion>
   );
 }

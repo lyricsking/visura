@@ -19,17 +19,17 @@ export function BlockList() {
 
   const componentsListElement = Object.entries(componentsMap).map(
     ([key, items], index) => (
-      <div key={key} className="grid gap-4">
-        {index !== 0 && <Divider my="md" />}
+      <div key={key} className="grid">
+        {index !== 0 && <Divider my="sm" />}
 
         <Text children={key} className="capitalize" />
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           {items.map((item) => (
             <Button
               key={item.name}
               variant={"outline"}
-              px="2"
+              px="6"
               radius={"2"}
               className="capitalize shadow-md"
               onClick={() => addComponent(item.name)}
@@ -42,5 +42,5 @@ export function BlockList() {
     )
   );
 
-  return <div className=" rounded-md">{componentsListElement}</div>;
+  return <div>{componentsListElement}</div>;
 }

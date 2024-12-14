@@ -98,6 +98,7 @@ export function ButtonSetting(props: ButtonSettingsProps["props"]) {
         </Text>
         <SegmentedControl
           defaultValue={component}
+          size="xs"
           onChange={(value: any) => onPropsUpdate(id!, "component", value)}
           data={[
             { label: "Button", value: "button" },
