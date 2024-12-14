@@ -1,11 +1,7 @@
 import {
   Text,
-  TextProps,
   Stack,
-  SegmentedControl,
   Divider,
-  ColorInput,
-  ColorPicker,
   Slider,
   NativeSelect,
   AccordionProps,
@@ -20,8 +16,6 @@ import {
   ComponentsInfo,
   BaseComponentsInfoProps,
 } from "../types/builder.components";
-import { useVisualBuilder } from "./visual-builder.provider";
-import { color } from "@codemirror/theme-one-dark";
 import { MouseEvent } from "react";
 import { getNanoid } from "~/shared/utils/util";
 

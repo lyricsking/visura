@@ -88,12 +88,12 @@ export function Hero(props: Hero1SettingsProps["props"]) {
     highlightProps,
     titleProps,
   } = props;
-  const { children } = titleProps;
+  const { children, ...titleAttrs } = titleProps;
 
   return (
     <Container fluid my={my} mx={mx}>
       <div>
-        <Title {...titleProps}>
+        <Title {...titleAttrs}>
           {children}{" "}
           {highlightText && (
             <Text {...highlightProps} component="span" inherit>
