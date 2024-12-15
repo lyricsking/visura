@@ -16,6 +16,7 @@ import {
   BaseComponentsInfoProps,
 } from "../types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
+import { marks } from "../utils/marks";
 
 type MantineImageSettingsProps = ComponentsInfo<
   ImageProps & BaseComponentsInfoProps
@@ -28,6 +29,9 @@ export const imageInfo: MantineImageSettingsProps = {
   settingsComponent: MantineImageSetting,
   props: {
     onPropsUpdate: () => {},
+    my: 0,
+    mb: 0,
+    mx: 0,
     src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-9.png",
     h: "auto",
     w: "auto",
@@ -124,7 +128,7 @@ export function MantineImageSetting({
         }}
         data={["contain", "cover", "fit"]}
       />
-
+      {/* 
       <NativeSelect
         label="Radius"
         description="Specify the image radius"
@@ -133,7 +137,27 @@ export function MantineImageSetting({
           onPropsUpdate(id!, "radius", event.currentTarget.value)
         }
         data={["xs", "sm", "md", "lg", "xl"]}
-      />
+      /> */}
+
+      <div>
+        <Text size="sm" fw={500}>
+          Radius
+        </Text>
+        <Slider
+          defaultValue={marks.find((mark) => mark.label === radius)!.value}
+          label={(val) => marks.find((mark) => mark.value === val)!.label}
+          step={20}
+          marks={marks}
+          onChange={(value: number) => {
+            onPropsUpdate(
+              id!,
+              "radius",
+              marks.find((mark) => mark.value === value)!.label
+            );
+          }}
+          styles={{ markLabel: { display: "none" } }}
+        />
+      </div>
     </Stack>
   );
 }

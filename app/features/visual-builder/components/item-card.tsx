@@ -147,6 +147,8 @@ function ItemCard(props: ItemCardSettingsProps["props"]) {
             <Text {...subtitleProps} />
           </Flex>
         </Flex>
+
+        <Space h={gap} />
       </div>
     );
   });

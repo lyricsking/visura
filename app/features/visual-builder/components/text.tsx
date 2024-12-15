@@ -30,12 +30,15 @@ export const textInfo: MantineTextSettingsProps = {
     variant: "text",
     highlight: "",
     c: "#474747",
-    gradient: { from: "#0d34de", to: "#37cf15", deg: 60 },
-    size: "lg",
-    lineClamp: 0,
-    truncate: false,
-    span: true,
     fw: "400",
+    gradient: { from: "#0d34de", to: "#37cf15", deg: 60 },
+    lineClamp: 0,
+    mt: 0,
+    mb: 0,
+    mx: 0,
+    size: "lg",
+    span: true,
+    truncate: false,
     ta: "justify",
     td: "",
     tt: "none",
@@ -63,7 +66,6 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
 
   return (
     <Stack mb={35}>
-
       <Textarea
         label="Text"
         description="Enter text below"
@@ -171,13 +173,6 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
 
       <Divider />
 
-      <ColorInput
-        defaultValue={color as string}
-        onChange={(value: any) => onPropsUpdate(id!, "c", value)}
-        label="Text color"
-        description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
-      />
-
       {variant === "gradient" ? (
         <>
           <div>
@@ -241,20 +236,12 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
           </div>
         </>
       ) : (
-        <div>
-          <Text size="sm" fw={500}>
-            Color
-          </Text>
-
-          <ColorPicker
-            defaultValue={color}
-            onChange={(value) => onPropsUpdate(id!, "color", value)}
-            format="hex"
-            withPicker={false}
-            fullWidth
-            swatches={colorSwatch}
-          />
-        </div>
+        <ColorInput
+          defaultValue={color as string}
+          onChange={(value: any) => onPropsUpdate(id!, "c", value)}
+          label="Text color"
+          description="Pick a text color, Click the picker icon on the right to pick from anywhere in the screen"
+        />
       )}
 
       <Divider />
