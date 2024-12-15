@@ -99,7 +99,7 @@ const defaultItem: Omit<ItemProps, "id"> = {
     children: "Subheading",
     size: "sm",
     color: "#474747",
-    ta: "center",
+    ta: "start",
   },
   avatar: {
     name: "Avatar",
@@ -272,7 +272,7 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
                         id!,
                         index,
                         item,
-                        "titleProps",
+                        "avatar",
                         "src",
                         event.currentTarget.value
                       )
@@ -289,7 +289,7 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
                         id!,
                         index,
                         item,
-                        "titleProps",
+                        "avatar",
                         "alt",
                         event.currentTarget.value
                       )
@@ -309,7 +309,7 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
                           id!,
                           index,
                           item,
-                          "titleProps",
+                          "avatar",
                           "color",
                           "initials"
                         );
@@ -318,7 +318,7 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
                         id!,
                         index,
                         item,
-                        "titleProps",
+                        "avatar",
                         "name",
                         value
                       );
@@ -336,7 +336,7 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
                         id!,
                         index,
                         item,
-                        "titleProps",
+                        "avatar",
                         "variant",
                         event.currentTarget.value
                       )
@@ -353,54 +353,6 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
 
                   <Divider />
 
-                  <div>
-                    <Text size="sm" fw={500}>
-                      Vertical Spacing
-                    </Text>
-                    <Slider
-                      defaultValue={Number(item.avatar.my)}
-                      step={1}
-                      min={0}
-                      max={40}
-                      onChange={(value: number) =>
-                        newPropsUpdate(
-                          id!,
-                          index,
-                          item,
-                          "titleProps",
-                          "my",
-                          value
-                        )
-                      }
-                      styles={{ markLabel: { display: "none" } }}
-                    />
-                  </div>
-
-                  <div>
-                    <Text size="sm" fw={500}>
-                      Horizontal Spacing
-                    </Text>
-                    <Slider
-                      defaultValue={Number(item.avatar.mx)}
-                      step={1}
-                      min={0}
-                      max={40}
-                      onChange={(value: number) =>
-                        newPropsUpdate(
-                          id!,
-                          index,
-                          item,
-                          "titleProps",
-                          "mx",
-                          value
-                        )
-                      }
-                      styles={{ markLabel: { display: "none" } }}
-                    />
-                  </div>
-
-                  <Divider />
-
                   <NativeSelect
                     label="Radius"
                     description="Specify the image radius"
@@ -410,13 +362,15 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
                         id!,
                         index,
                         item,
-                        "titleProps",
+                        "avatar",
                         "radius",
                         event.currentTarget.value
                       )
                     }
                     data={["xs", "sm", "md", "lg", "xl"]}
                   />
+
+                  <Divider mb="md" />
 
                   <Title children="Heading" order={5} />
 
