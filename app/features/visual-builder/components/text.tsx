@@ -63,8 +63,6 @@ export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
 
   return (
     <Stack mb={35}>
-      {/*  label="span"
-        description="" */}
 
       <Textarea
         label="Text"
