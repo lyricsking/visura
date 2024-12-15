@@ -87,7 +87,7 @@ function VisualBuilderChild() {
         </AppShell.Section>
       </AppShell.Navbar>
 
-      <AppShell.Main>
+      <AppShell.Main bg={"#f3f4f6"}>
         <ComponentsCanvas />
       </AppShell.Main>
 
