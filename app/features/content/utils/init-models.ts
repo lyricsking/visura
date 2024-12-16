@@ -6,6 +6,6 @@ async function initDynamicModels() {
   const ContentTypes = await ContentType.find();
 
   ContentTypes.forEach((contentType) => {
-    createDynamicModel(contentType.modelName, contentType.fields);
+    createDynamicModel(contentType.name, contentType.fields);
   });
 }

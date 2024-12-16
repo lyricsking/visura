@@ -13,15 +13,13 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const { model } = params;
 
   // Fetch the content type definition
-  const contentType = await ContentType.findOne({ modelName: model });
+  const contentType = await ContentType.findOne({ name: model });
   if (!contentType) {
     return Response.json({ error: "Content type not found" }, { status: 404 });
   }
+  
   // get the dynamic model and create a new record
-  const DynamicModel = createDynamicModel(
-    contentType.modelName,
-    contentType.fields
-  );
+  const DynamicModel = createDynamicModel(contentType.name, contentType.fields);
 
   const requestData = await request.json();
 
@@ -113,7 +111,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   try {
     if (model) {
-      const contentType = await ContentType.findOne({ modelName: model });
+      const contentType = await ContentType.findOne({ name: model });
       if (!contentType) {
         return Response.json(
           { error: "Content type not found" },
@@ -122,7 +120,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       }
       // get the dynamic model and  fetch data
       const DynamicModel = createDynamicModel(
-        contentType.modelName,
+        contentType.name,
         contentType.fields
       );
 

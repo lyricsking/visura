@@ -2,6 +2,8 @@ import mongoose, { Model, Schema } from "mongoose";
 import { Field } from "../types/content";
 import { convertFieldType } from "./convert-field-type";
 
+type FieldMap = Record<string, any>;
+
 /**
  * Dynamically creates or retrieve a mongoose model for a given content type
  *
@@ -18,13 +20,14 @@ export function createDynamicModel(name: string, fields: Field[]): Model<any> {
   }
 
   // Create the schema based on the fields
-  const schemaDefinition: Record<string, any> = {};
-  fields.forEach((field) => {
-    schemaDefinition[field.name] = {
+  const schemaDefinition = fields.reduce((acc, field) => {
+    acc[field.name] = {
       type: convertFieldType(field.type),
       required: field.required || false,
     };
-  });
+
+    return acc;
+  }, {} as FieldMap);
 
   const schema = new Schema(schemaDefinition);
   const model = mongoose.model(name, schema);

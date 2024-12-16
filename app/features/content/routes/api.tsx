@@ -11,13 +11,12 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({ error: "Method not allowed" }, { status: 405 });
 
   const body = await request.json();
-  if (!body.name || !body.modelName || !Array.isArray(body.fields))
+  if (!body.name || !Array.isArray(body.fields))
     return Response.json({ error: "Invalid data" }, { status: 400 });
 
   try {
     const contentType = new ContentType({
       name: body.name,
-      modelName: body.modelName,
       fields: body.fields,
     });
 
