@@ -1,25 +1,11 @@
-import {
-  AppShell,
-  Burger,
-  ScrollArea,
-  Modal,
-  Stack,
-  SimpleGrid,
-  TextInput,
-  Flex,
-  Button,
-  Group,
-} from "@mantine/core";
-import { Form, useNavigation } from "@remix-run/react";
+import { AppShell, Burger, ScrollArea, Group } from "@mantine/core";
+import { useNavigation } from "@remix-run/react";
 import { BlockList } from "~/features/visual-builder/components/block-list";
 import { ComponentSettingsPanel } from "~/features/visual-builder/components/block-settings";
-import ComponentsCanvas from "~/features/visual-builder/components/builder-canvas";
-import page from "~/shared/components/ui/page";
 import C from "../../content/components/c";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect, FormEvent } from "react";
+import { useEffect } from "react";
 import { useVisualBuilder } from "~/features/visual-builder/components/visual-builder.provider";
-import formDataToObject from "~/shared/utils/form-data-to-object";
 
 export default function Studio() {
   const [opened, { toggle }] = useDisclosure();
@@ -27,24 +13,6 @@ export default function Studio() {
 
   const [isModalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
-
-  const { components, selection } = useVisualBuilder();
-
-  // Listen for addition, remival or update changes to components and close navbar if currently opened
-  useEffect(() => {
-    if (components.length > 0 && opened) {
-      toggle();
-    }
-  }, [components]);
-
-  // Listens for changes to selected item, and closes aside
-  useEffect(() => {
-    if (selection && !asideOpened) {
-      asideToggle();
-    } else if (asideOpened) {
-      asideToggle();
-    }
-  }, [selection]);
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
@@ -86,9 +54,7 @@ export default function Studio() {
       </AppShell.Header>
 
       <AppShell.Navbar bg={"#f3f4f6"}>
-        <AppShell.Section p="md" grow component={ScrollArea}>
-          <BlockList />
-        </AppShell.Section>
+        <AppShell.Section p="md" grow component={ScrollArea}></AppShell.Section>
       </AppShell.Navbar>
 
       <AppShell.Main bg={"#f3f4f6"}>
@@ -96,9 +62,7 @@ export default function Studio() {
       </AppShell.Main>
 
       <AppShell.Aside bg={"#f3f4f6"}>
-        <AppShell.Section p={"xs"} component={ScrollArea}>
-          <ComponentSettingsPanel />
-        </AppShell.Section>
+        <AppShell.Section p={"xs"} component={ScrollArea}></AppShell.Section>
       </AppShell.Aside>
       {/* <AppShell.Footer p="md">Footer</AppShell.Footer> */}
     </AppShell>

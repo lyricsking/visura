@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Fieldset,
   Flex,
   NativeSelect,
@@ -22,8 +21,6 @@ export default function C() {
     setFields([...fields, { name: "", type: "", required: false }]);
   };
 
-  const handleOgChange = () => {};
-
   return (
     <Stack p={"sm"}>
       <Form method="POST">
@@ -35,7 +32,7 @@ export default function C() {
           required
         />
         <Fieldset legend="Fields" name="tags">
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 5 }}>
+          <SimpleGrid cols={{ base: 1, lg: 5 }}>
             {fields.map((field, index) => (
               <div key={index} className="grid grid-cols-2 gap-4 mb-4">
                 <TextInput
