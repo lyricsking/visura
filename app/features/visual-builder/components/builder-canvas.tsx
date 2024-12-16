@@ -1,21 +1,25 @@
 import {
-  Box,
   Button,
-  ButtonGroup,
   Center,
   Container,
   Divider,
-  Flex,
-  NavLink,
   ScrollArea,
   SegmentedControl,
-  Stack,
   Text,
 } from "@mantine/core";
 import { useVisualBuilder } from "./visual-builder.provider";
 import { cn } from "~/shared/utils/util";
+import { useDisclosure } from "@mantine/hooks";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 
-export default function ComponentsCanvas() {
+type ComponentsCanvasProps = {
+  onSave: () => void;
+};
+
+export default function ComponentsCanvas(props: ComponentsCanvasProps) {
+  const { onSave } = props;
+
   // Use useVisualBuilder hook to obtain components
   const { components, setSelection } = useVisualBuilder();
 
@@ -50,6 +54,7 @@ export default function ComponentsCanvas() {
           size="compact-sm"
           color="#228be6"
           // color="#cccccc"
+          onClick={onSave}
           children="Save"
         />
       </div>
