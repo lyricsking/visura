@@ -22,7 +22,7 @@ export default function C() {
   };
 
   return (
-    <Stack p={"sm"}>
+    <Stack p={"sm"} gap={"md"}>
       <Form method="POST">
         <TextInput
           label="Content Name"
