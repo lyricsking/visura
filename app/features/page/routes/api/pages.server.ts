@@ -56,7 +56,7 @@ const createPageSchema = z.object({
     title: z.string().min(3),
     description: z.string().min(10),
     keywords: z.string().optional(),
-    openTags: z.record(z.any()),
+    openTags: z.array(z.any()),
   }),
   content: z.object({
     type: z.enum(PageContentType),

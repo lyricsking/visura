@@ -56,7 +56,7 @@ export const TemplateType = {
 export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType];
 
 export interface IPage {
-  id: Types.ObjectId;
+  _id: Types.ObjectId;
   path?: string;
   default?: boolean;
   metadata: PageMetadata;
@@ -67,3 +67,5 @@ export interface IPage {
   isTemplate?: TemplateType;
   status: PageStatus;
 }
+
+export type IPageWithOptionalId = Omit<IPage, "_id"> & { _id?: Types.ObjectId };

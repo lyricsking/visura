@@ -19,7 +19,7 @@ import VisualBuilderProvider, {
 } from "~/features/visual-builder/components/visual-builder.provider";
 import { BlockList } from "~/features/visual-builder/components/block-list";
 import "@mantine/tiptap/styles.css";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
@@ -27,11 +27,15 @@ import {
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
-import { IPage, OpenGraphTag, PageContent } from "~/features/page/types/page";
+import {
+  IPage,
+  IPageWithOptionalId,
+  OpenGraphTag,
+} from "~/features/page/types/page";
 import { Types } from "mongoose";
 import { getSlug } from "~/shared/utils/string";
 import formDataToObject from "~/shared/utils/form-data-to-object";
-import { PageModel } from "~/features/page/models/page.server";
+import { ComponentsInfo } from "~/features/visual-builder/types/builder.components";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.json();
@@ -74,24 +78,28 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     status: status,
   };
 
-  const res = await fetch("http://localhost:3000/api/pages", {
-    method: "POST",
+  const pageId = formData["_id"];
+
+  const apiURL = new URL("http://localhost:3000/api/pages");
+  if (pageId) {
+    apiURL.searchParams.set("id", pageId);
+  }
+
+  const res = await fetch(apiURL, {
+    method: "PUT",
     body: JSON.stringify(pageData),
     headers: { "Content-Type": "application/json" },
   });
 
-  console.log(JSON.stringify(pageData, null, 2));
-
   const data = await res.json();
-  console.log(JSON.stringify(data, null, 2));
 
   return data;
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const pageId = params["pageId"];
   //  Create a default blank page
-  let page: Omit<IPage, "id"> = {
+  let page: IPageWithOptionalId = {
     metadata: {
       title: "Page Title",
       description: "Page description",
@@ -110,30 +118,65 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
   if (pageId) {
     // Fetch page if pageId is provided and valid
-    const foundPage = await PageModel.findById(pageId);
+    const pageReqUrl = new URL("http://localhost:3000/api/pages");
+
+    pageReqUrl.searchParams.set("id", pageId);
+
+    const foundPage = await (await fetch(pageReqUrl, { method: "GET" })).json();
     // Ensures the the fetched page is valid, otherwise return a default page object
     foundPage && (page = foundPage);
   }
 
-  return { page };
+  return { page: page };
 };
 
 export default function VisualBuilder() {
+  const { page } = useLoaderData<typeof loader>();
+
+  const submit = useSubmit();
+
+  function savePage(
+    data: Record<string, any>,
+    components: ComponentsInfo[]
+  ): void {
+    // Parse FormData into an array of objects
+    const newPage: Record<string, any> = {
+      _id: page._id as unknown as "",
+      title: data["title"],
+      description: data["description"],
+      keywords: data["keywords"],
+      contentType: "block",
+      contentValue: components,
+      properties: data["properties"],
+      contents: data["contents"],
+      status: data["status"] || page.status,
+    };
+
+    submit(newPage, { method: "post", encType: "application/json" });
+  }
+
+
   return (
-    <VisualBuilderProvider components={[]}>
-      <VisualBuilderChild />
+    <VisualBuilderProvider components={page.content.value}>
+      <VisualBuilderConsumer
+        page={page as unknown as IPageWithOptionalId}
+        onSave={savePage}
+      />
     </VisualBuilderProvider>
   );
 }
 
+type VisualBuilderType = {
+  page: IPageWithOptionalId;
+  onSave: (data: Record<string, any>, components: ComponentsInfo[]) => void;
+};
+
 /**
  * This sub component is needed to be able to use `useVisualBuilder()` hook,
  * as it can only be used within VisualBuilderProvider
- * @returns
+ * @returns [React.Element]
  */
-function VisualBuilderChild() {
-  const { page } = useLoaderData<typeof loader>();
-
+function VisualBuilderConsumer({ page, onSave }: VisualBuilderType) {
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
 
@@ -141,11 +184,6 @@ function VisualBuilderChild() {
     useDisclosure(false);
 
   const { components, selection } = useVisualBuilder();
-
-  const submit = useSubmit();
-
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state !== "idle";
 
   // Listen for addition, remival or update changes to components and close navbar if currently opened
   useEffect(() => {
@@ -163,24 +201,13 @@ function VisualBuilderChild() {
     }
   }, [selection]);
 
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state !== "idle";
+
   function savePage(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const dataObject = formDataToObject(new FormData(e.currentTarget));
-
-    // Parse FormData into an array of objects
-    const newPage: Record<string, any> = {
-      title: dataObject["title"],
-      description: dataObject["description"],
-      keywords: dataObject["keywords"],
-      contentType: page.content.type,
-      contentValue: components,
-      properties: dataObject["properties"],
-      contents: dataObject["contents"],
-      status: dataObject["status"] || page.status,
-    };
-
-    submit(newPage, { method: "post", encType: "application/json" });
+    onSave(formDataToObject(new FormData(e.currentTarget)), components);
   }
 
   return (

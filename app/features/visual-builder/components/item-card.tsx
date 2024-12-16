@@ -134,12 +134,12 @@ function ItemCard(props: ItemCardSettingsProps["props"]) {
     const { titleProps, subtitleProps } = item;
 
     return (
-      <div>
+      <div key={item.id}>
         {divider && index !== 0 && <Divider mb={gap} />}
 
         <Space h={gap} />
 
-        <Flex key={item.id} align={align} direction={direction} gap={"xs"}>
+        <Flex align={align} direction={direction} gap={"xs"}>
           <Avatar {...item.avatar} />
 
           <Flex direction="column" align={itemAlign} gap={0} className="flex-1">
@@ -258,7 +258,7 @@ export function ItemCardSetting(props: ItemCardSettingsProps["props"]) {
           const { c, children, lineClamp, order } = item.titleProps;
 
           return (
-            <Accordion.Item value={String(index)}>
+            <Accordion.Item key={item.id} value={String(index)}>
               <Accordion.Control>Item {index + 1}</Accordion.Control>
               <Accordion.Panel>
                 <Stack>

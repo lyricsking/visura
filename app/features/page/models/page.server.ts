@@ -1,7 +1,7 @@
 import mongoose, { model, Model, Schema } from "mongoose";
 import { IPage, PageStatus, TemplateType } from "../types/page";
 
-type IPageModel = Model<IPage>;
+export type IPageModel = Model<IPage>;
 const pageSchema = new Schema<IPage, IPageModel>({
   path: { type: String, unique: true },
   default: { type: Boolean, default: false },

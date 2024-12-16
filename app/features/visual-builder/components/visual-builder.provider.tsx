@@ -13,6 +13,9 @@ import { titleInfo } from "./title";
 import { buttonInfo } from "./button";
 import { itemCardInfo } from "./item-card";
 
+import lo from "lodash";
+const { merge } = lo;
+
 const defaultComponents: ComponentsInfo[] = [
   // pageInfo,
   textInfo,
@@ -52,8 +55,23 @@ export default function VisualBuilderProvider({
   components: initialComponents,
   children,
 }: VisualBuilderProviderProps) {
-  const [components, setComponents] =
-    useState<ComponentsInfo[]>(initialComponents);
+  const [components, setComponents] = useState<ComponentsInfo[]>(() => {
+    const components: ComponentsInfo[] = [];
+
+    for (const component of initialComponents) {
+      // console.log(component);
+
+      const defComponent = defaultComponents.find(
+        (defComponent) => defComponent.name === component.name
+      );
+
+      if (defComponent) {
+        components.push(merge(defComponent, component));
+      }
+    }
+
+    return components;
+  });
 
   // State variable to manage selected component block for editing
   const [selection, setSelection] = useState<string>();

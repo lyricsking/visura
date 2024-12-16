@@ -12,6 +12,7 @@ import { cn } from "~/shared/utils/util";
 import { useDisclosure } from "@mantine/hooks";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import { merge } from "lodash";
 
 type ComponentsCanvasProps = {
   onSave: () => void;
