@@ -29,13 +29,13 @@ import {
 import { MouseEvent } from "react";
 import { getNanoid } from "~/shared/utils/util";
 import { marks } from "../utils/marks";
-import { MantineTextSettingsProps, textInfo } from "./text";
+import { TextSettingsProps, textInfo } from "./text";
 import { colorSwatch } from "../utils/color";
 
 interface ItemProps {
   id: string;
   titleProps: TitleProps;
-  subtitleProps: MantineTextSettingsProps["props"];
+  subtitleProps: TextSettingsProps["props"];
   avatar: AvatarProps;
 }
 

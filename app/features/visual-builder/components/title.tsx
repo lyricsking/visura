@@ -15,21 +15,22 @@ import {
   BaseComponentsInfoProps,
 } from "../types/builder.components";
 
-export type MantineTitleSettingsProps = ComponentsInfo<
+export type TitleSettingsProps = ComponentsInfo<
   BaseComponentsInfoProps & TitleProps
 >;
 
-export const titleInfo: MantineTitleSettingsProps = {
+export const titleInfo: TitleSettingsProps = {
   name: "title",
   group: "display",
   component: Title,
-  settingsComponent: MantineTitleSetting,
+  settingsComponent: TitleSetting,
   props: {
     c: "#474747",
     order: 3,
     lineClamp: 0,
     ta: "center",
-    my: 0,
+    mt: 0,
+    mb: 0,
     mx: 0,
     children: "Example text",
     onPropsUpdate: () => {},
@@ -39,7 +40,7 @@ export const titleInfo: MantineTitleSettingsProps = {
 const content =
   '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
 
-export function MantineTitleSetting(props: MantineTitleSettingsProps["props"]) {
+export function TitleSetting(props: TitleSettingsProps["props"]) {
   const { id, c, children, lineClamp, order, mt, mb, mx, ta, onPropsUpdate } =
     props;
 

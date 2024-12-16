@@ -52,21 +52,22 @@ type VisualBuilderProviderProps = {
 };
 
 export default function VisualBuilderProvider({
-  components: initialComponents,
+  components: initialComponents = [],
   children,
 }: VisualBuilderProviderProps) {
   const [components, setComponents] = useState<ComponentsInfo[]>(() => {
     const components: ComponentsInfo[] = [];
 
-    for (const component of initialComponents) {
-      // console.log(component);
+    if (Array.isArray(initialComponents)) {
+      for (const component of initialComponents) {
 
-      const defComponent = defaultComponents.find(
-        (defComponent) => defComponent.name === component.name
-      );
+        const defComponent = defaultComponents.find(
+          (defComponent) => defComponent.name === component.name
+        );
 
-      if (defComponent) {
-        components.push(merge(defComponent, component));
+        if (defComponent) {
+          components.push(merge(defComponent, component));
+        }
       }
     }
 

@@ -65,6 +65,7 @@ export default function ComponentsCanvas(props: ComponentsCanvasProps) {
         <ScrollArea
           h={"100%"}
           bg="white"
+          p={"sm"}
           className={cn("m-4 border rounded-sm")}
         >
           {components.length > 0 ? (

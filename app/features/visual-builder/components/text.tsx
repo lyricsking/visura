@@ -17,15 +17,15 @@ import {
 } from "../types/builder.components";
 import { colorSwatch } from "../utils/color";
 
-export type MantineTextSettingsProps = ComponentsInfo<
+export type TextSettingsProps = ComponentsInfo<
   BaseComponentsInfoProps & HighlightProps
 >;
 
-export const textInfo: MantineTextSettingsProps = {
+export const textInfo: TextSettingsProps = {
   name: "text",
   group: "display",
   component: Highlight,
-  settingsComponent: MantineTextSetting,
+  settingsComponent: TextSetting,
   props: {
     variant: "text",
     highlight: "",
@@ -47,7 +47,7 @@ export const textInfo: MantineTextSettingsProps = {
   },
 };
 
-export function MantineTextSetting(props: MantineTextSettingsProps["props"]) {
+export function TextSetting(props: TextSettingsProps["props"]) {
   const {
     id,
     color,

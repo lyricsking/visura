@@ -17,13 +17,9 @@ import {
   BaseComponentsInfoProps,
   ComponentsInfo,
 } from "../types/builder.components";
-import { MantineTextSetting, MantineTextSettingsProps, textInfo } from "./text";
-import {
-  MantineTitleSetting,
-  MantineTitleSettingsProps,
-  titleInfo,
-} from "./title";
 import { buttonInfo, ButtonSetting, ButtonSettingsProps } from "./button";
+import { textInfo, TextSetting, TextSettingsProps } from "./text";
+import { titleInfo, TitleSetting, TitleSettingsProps } from "./title";
 
 type HighlightProps = {
   /** Color */
@@ -33,11 +29,11 @@ type HighlightProps = {
 type Hero1SettingsProps = ComponentsInfo<
   BaseComponentsInfoProps &
     ContainerProps & {
-      titleProps: MantineTitleSettingsProps["props"];
+      titleProps: TitleSettingsProps["props"];
       highlightProps: HighlightProps;
       highlightText?: string;
       trailingText?: string;
-      subtitleTextProps: MantineTextSettingsProps["props"];
+      subtitleTextProps: TextSettingsProps["props"];
       buttonLeftProps: ButtonSettingsProps["props"];
       buttonRightProps: ButtonSettingsProps["props"];
     }
@@ -158,7 +154,7 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
       <Accordion.Item value={"title"}>
         <Accordion.Control>Title Section</Accordion.Control>
         <Accordion.Panel>
-          <MantineTitleSetting
+          <TitleSetting
             {...titleProps}
             id={id}
             onPropsUpdate={(id, key, value) =>
@@ -200,7 +196,7 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
       <Accordion.Item value={"subtitle"}>
         <Accordion.Control>Subtitle Section</Accordion.Control>
         <Accordion.Panel>
-          <MantineTextSetting
+          <TextSetting
             {...subtitleTextProps}
             id={id}
             onPropsUpdate={(id, key, value) =>
