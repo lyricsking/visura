@@ -41,10 +41,21 @@ export async function action({ request }: ActionFunctionArgs) {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+  
+  const apiURL = new URL("http://localhost:3000/api/pages");
+  if (pageId) {
+    apiURL.searchParams.set("id", pageId);
+  }
 
-  console.log(content);
+  const res = await fetch(apiURL, {
+    method: "PUT",
+    body: JSON.stringify(pageData),
+    headers: { "Content-Type": "application/json" },
+  });
 
-  return "";
+  const data = await res.json();
+
+  return data;
 }
 
 export const loader = ({ params }: LoaderFunctionArgs) => {
