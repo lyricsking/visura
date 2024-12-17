@@ -1,7 +1,6 @@
 import { Group, UnstyledButton } from "@mantine/core";
 import { IContentType } from "../types/content";
 import { ReactNode } from "react";
-import { upperFirst } from "lodash";
 import { capitalize } from "~/shared/utils/string";
 
 type ContentListProps = {
@@ -17,7 +16,7 @@ type ContentListProps = {
 export function ContentList(props: ContentListProps) {
   const { contents } = props;
 
-  function svg(
+  function contentMap(
     value: IContentType,
     index: number,
     array: IContentType[]
@@ -27,5 +26,5 @@ export function ContentList(props: ContentListProps) {
     );
   }
 
-  return <Group>{contents && contents.map(svg)}</Group>;
+  return <Group>{contents && contents.map(contentMap)}</Group>;
 }

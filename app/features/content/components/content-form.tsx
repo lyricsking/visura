@@ -11,11 +11,9 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { Form, useNavigation, useSubmit } from "@remix-run/react";
-import { FormEvent, useState } from "react";
+import { useFetcher } from "@remix-run/react";
+import { useState } from "react";
 import { Field, IContentType } from "../types/content";
-import formDataToObject from "~/shared/utils/form-data-to-object";
-import { ActionFunctionArgs } from "@remix-run/node";
 
 type ContentFormProps = {
   content: IContentType;
@@ -28,6 +26,9 @@ export default function ContentForm(props: ContentFormProps) {
     { name: "", type: "", required: false },
   ]);
 
+  const fetcher = useFetcher({key: "content-form-fetcher"});
+  const isSubmitting = fetcher.state !== "idle"
+  
   const handleAddOgTag = () => {
     setFields([...fields, { name: "", type: "", required: false }]);
   };
@@ -44,6 +45,8 @@ export default function ContentForm(props: ContentFormProps) {
           type="submit"
           variant="outline"
           size="compact-sm"
+          loading={isSubmitting}
+          loaderProps={{ type: "dots" }}
         >
           Save
         </Button>
@@ -52,7 +55,7 @@ export default function ContentForm(props: ContentFormProps) {
       <Divider size={"xs"} mt={"0.5rem"} />
 
       <Stack component={ScrollArea} mih={"100%"} mt={"lg"} px={"xs"}>
-        <Form id="content-form" method="POST">
+        <fetcher.Form id="content-form" method="POST">
           <Stack>
             <TextInput
               label="Content Name"
@@ -106,7 +109,7 @@ export default function ContentForm(props: ContentFormProps) {
               </Flex>
             </Fieldset>
           </Stack>
-        </Form>
+        </fetcher.Form>
       </Stack>
     </Stack>
   );

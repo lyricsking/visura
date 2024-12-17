@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import { FileSliders } from "lucide-react";
 import { FormEvent, useState } from "react";
 import ContentForm from "~/features/content/components/content-form";
 import { useContent } from "~/features/content/components/content-provider";
@@ -14,7 +15,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const schemaName = formDataObject["schemaName"];
   const fieldNames = formDataObject["name"];
   const fieldTypes = formDataObject["type"];
-  const fieldRequired = formDataObject["fieldRequired"];
+  const fieldRequired = formDataObject["required"];
 
   const fields: Field[] = [];
   Array.isArray(fieldNames)
@@ -23,20 +24,20 @@ export async function action({ request }: ActionFunctionArgs) {
           fields.push({
             name: value,
             type: fieldTypes[index],
-            required: !!fieldRequired[index],
+            required: fieldRequired[index]? true: false,
           });
       })
     : typeof fieldNames === "string" && fieldNames.length > 0
     ? fields.push({
         name: fieldNames,
         type: fieldTypes,
-        required: !!fieldRequired,
+        required: !!fieldRequired ,
       })
     : null;
 
   const content: IContentType = {
     name: schemaName,
-    fields: [],
+    fields: fields,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -61,30 +62,6 @@ export const loader = ({ params }: LoaderFunctionArgs) => {
 
 export default function StudioEditContent() {
   const { content } = useLoaderData<typeof loader>();
-
-  const submit = useSubmit();
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state !== "idle";
-
-  function onSubmit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-
-    const formData = formDataToObject(new FormData(event.currentTarget));
-
-    const schemaName = formData["schemaName"];
-    const names = formData["name"];
-    const types = formData["type"];
-    const requireds = !!formData["required"];
-
-    const content: IContentType = {
-      name: schemaName,
-      fields: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    submit({}, { method: "post", encType: "application/json" });
-  }
 
   return <ContentForm content={content} />;
 }

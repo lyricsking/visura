@@ -8,7 +8,7 @@ import {
   Flex,
   Divider,
 } from "@mantine/core";
-import { Outlet, useNavigation } from "@remix-run/react";
+import { Outlet, useFetcher, useNavigation } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContentList } from "~/features/content/components/content-list";
 import ContentProvider, {
@@ -29,9 +29,6 @@ export function StudioChild() {
 
   const [isModalOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
-
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state !== "idle";
 
   const { contents } = useContent();
 

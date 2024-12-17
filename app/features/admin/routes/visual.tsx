@@ -152,9 +152,12 @@ export default function VisualBuilder() {
       status: data["status"] || page.status,
     };
 
-    submit(newPage, { method: "post", encType: "application/json" });
+    submit(newPage, {
+      method: "post",
+      encType: "application/json",
+      navigate: false,
+    });
   }
-
 
   return (
     <VisualBuilderProvider components={page.content.value}>
