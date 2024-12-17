@@ -16,7 +16,11 @@ export default [
 
       // Admin routes
       route("builder.io/:pageId?", "features/admin/routes/visual.tsx");
-      route("studio.io/:pageId?", "features/admin/routes/studio.tsx");
+      route("studio.io", "features/admin/routes/studio.tsx", () => {
+        route("", "features/admin/routes/studio.edit-content.tsx", {
+          index: true,
+        });
+      });
       route("administration", "features/admin/routes/layout.tsx", () => {
         route("", "features/admin/routes/overview.tsx", { index: true });
         route("pages", "features/admin/routes/pages.tsx");

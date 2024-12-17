@@ -1,13 +1,29 @@
-import { AppShell, Burger, ScrollArea, Group } from "@mantine/core";
-import { useNavigation } from "@remix-run/react";
-import { BlockList } from "~/features/visual-builder/components/block-list";
-import { ComponentSettingsPanel } from "~/features/visual-builder/components/block-settings";
-import C from "../../content/components/c";
+import {
+  AppShell,
+  Burger,
+  ScrollArea,
+  Group,
+  Title,
+  Button,
+  Flex,
+  Divider,
+} from "@mantine/core";
+import { Outlet, useNavigation } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect } from "react";
-import { useVisualBuilder } from "~/features/visual-builder/components/visual-builder.provider";
+import { ContentList } from "~/features/content/components/content-list";
+import ContentProvider, {
+  useContent,
+} from "~/features/content/components/content-provider";
 
-export default function Studio() {
+export default function Stuido() {
+  return (
+    <ContentProvider contents={[]}>
+      <StudioChild />
+    </ContentProvider>
+  );
+}
+
+export function StudioChild() {
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
 
@@ -16,6 +32,8 @@ export default function Studio() {
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
+
+  const { contents } = useContent();
 
   return (
     <AppShell
@@ -54,15 +72,35 @@ export default function Studio() {
       </AppShell.Header>
 
       <AppShell.Navbar bg={"#f3f4f6"}>
-        <AppShell.Section p="md" grow component={ScrollArea}></AppShell.Section>
+        <AppShell.Section mb={"2rem"}>
+          <Flex justify="space-between" mt={"1.5rem"} p={"xs"}>
+            <Title order={4} c={"dark"}>
+              Content List
+            </Title>
+
+            <Button variant="outline" size="compact-sm">
+              Create New
+            </Button>
+          </Flex>
+
+          <Divider size={"xs"} mt={"0.5rem"} />
+        </AppShell.Section>
+
+        <AppShell.Section p="md" grow component={ScrollArea}>
+          <ContentList contents={contents} onClickHandler={() => {}} />
+        </AppShell.Section>
       </AppShell.Navbar>
 
       <AppShell.Main bg={"#f3f4f6"}>
-        <C />
+        <Outlet />
       </AppShell.Main>
 
       <AppShell.Aside bg={"#f3f4f6"}>
-        <AppShell.Section p={"xs"} component={ScrollArea}></AppShell.Section>
+        <AppShell.Section
+          p={"xs"}
+          grow
+          component={ScrollArea}
+        ></AppShell.Section>
       </AppShell.Aside>
       {/* <AppShell.Footer p="md">Footer</AppShell.Footer> */}
     </AppShell>
