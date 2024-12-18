@@ -1,9 +1,7 @@
 import { ActionFunctionArgs, data, LoaderFunctionArgs } from "@remix-run/node";
-import { ContentType } from "../models/content.server";
+import { ContentType } from "../../models/content.server";
 import { logger } from "~/shared/utils/logger";
 import { paginate } from "~/shared/utils/http";
-import { createDynamicModel } from "../utils/model-generator";
-import { z } from "zod";
 
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -54,7 +52,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       const contentType = await ContentType.findById(id);
       if (!contentType) {
         return Response.json(
-          { error: "Content type not found" },
+          { error: `Content type with id:${id} not found.` },
           { status: 404 }
         );
       }

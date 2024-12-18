@@ -21,6 +21,7 @@ export default [
           index: true,
         });
       });
+
       route("administration", "features/admin/routes/layout.tsx", () => {
         route("", "features/admin/routes/overview.tsx", { index: true });
         route("pages", "features/admin/routes/pages.tsx");
@@ -58,10 +59,12 @@ export default [
       });
 
       // Api routes
+      route("api/content-type", "features/content/routes/api/content.server.ts");
+      route("api/content-data", "features/content/routes/api/content-data.server.ts");
       route("api/options", "features/option/routes/api/options.server.ts");
       route("api/pages", "features/page/routes/api/pages.server.ts");
       route("api/plugins", "features/plugin/routes/api/plugins.server.ts");
-    });
+});
   })),
 ] satisfies RouteConfig;
 

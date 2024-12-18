@@ -1,13 +1,22 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
-import { ContentType } from "../models/content.server";
-import { createDynamicModel } from "../utils/model-generator";
+import { ContentType } from "../../models/content.server";
+import { createDynamicModel } from "../../utils/model-generator";
 import { PageModel } from "~/features/page/models/page.server";
 import { z } from "zod";
 
-const createPageSchema = z.object({});
-const updatePageSchema = createPageSchema.partial();
+const fieldsSchema = z.object({
+name: z.string(),
+  type: z.string(),
+required: z.string()
+})
+
+const createContentDataSchema = z.object({
+  name: z.string(),
+  fields: z.array(fieldsSchema)
+});
+const updateContentDataSchema = createContentDataSchema.partial();
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const { model } = params;
@@ -15,7 +24,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   // Fetch the content type definition
   const contentType = await ContentType.findOne({ name: model });
   if (!contentType) {
-    return Response.json({ error: "Content type not found" }, { status: 404 });
+    return Response.json({ error: `Type not found for ${model}` }, { status: 404 });
   }
   
   // get the dynamic model and create a new record
@@ -30,7 +39,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     const method = request.method.toUpperCase();
     switch (method) {
       case "POST": {
-        const parsedData = createPageSchema.safeParse(requestData);
+        const parsedData = createContentDataSchema.safeParse(requestData);
         if (!parsedData.success) {
           return Response.json(
             { error: parsedData.error.format() },
@@ -38,7 +47,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
           );
         }
 
-        const newRecord = new PageModel(parsedData.data);
+        const newRecord = new DynamicModel(parsedData.data);
         await newRecord.save();
 
         return Response.json(newRecord, { status: 201 });
@@ -46,11 +55,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
       case "PUT": {
         if (!id)
           return Response.json(
-            { error: "ID is requuired for update" },
+            { error: "ID is required for update record" },
             { status: 400 }
           );
 
-        const parsedData = updatePageSchema.safeParse(requestData);
+        const parsedData = updateContentDataSchema.safeParse(requestData);
         if (!parsedData.success) {
           return Response.json(
             { error: parsedData.error.format() },
@@ -58,13 +67,13 @@ export async function action({ params, request }: ActionFunctionArgs) {
           );
         }
 
-        const updatedRecord = await PageModel.findByIdAndUpdate(
+        const updatedRecord = await DynamicModel.findByIdAndUpdate(
           id,
           parsedData.data,
           { new: true }
         );
         if (!updatedRecord)
-          return Response.json({ error: "Page not found" }, { status: 404 });
+          return Response.json({ error: `Record not found for ${model} with id: ${id}` }, { status: 404 });
         return Response.json({ data: updatedRecord });
       }
       case "DELETE": {
@@ -73,10 +82,13 @@ export async function action({ params, request }: ActionFunctionArgs) {
             { error: "ID is required for deletion" },
             { status: 400 }
           );
-        const deletedRecord = await PageModel.findByIdAndDelete(id);
+        const deletedRecord = await DynamicModel.findByIdAndDelete(id);
         if (!deletedRecord)
-          return Response.json({ error: "Page not found" }, { status: 404 });
-        return Response.json({ message: "Page deleted successfully" });
+          return Response.json(
+            { error: `Record not found for ${model} with id: ${id}` },
+            { status: 404 }
+          );
+        return Response.json({ message: `Record with id: ${id} was deleted successfully` });
       }
       default:
         return Response.json({ error: "Method not allowed" }, { status: 405 });
