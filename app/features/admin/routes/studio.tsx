@@ -8,29 +8,27 @@ import {
   Flex,
   Divider,
 } from "@mantine/core";
-import { Outlet, useFetcher, useNavigation } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContentList } from "~/features/content/components/content-list";
-import ContentProvider, {
-  useContent,
-} from "~/features/content/components/content-provider";
+import { LoaderFunctionArgs } from "@remix-run/node";
 
-export default function Stuido() {
-  return (
-    <ContentProvider contents={[]}>
-      <StudioChild />
-    </ContentProvider>
-  );
+export async function loader({ params }: LoaderFunctionArgs) {
+  // Fetch page if pageId is provided and valid
+  const pageReqUrl = new URL("http://localhost:3000/api/content-type");
+
+  const contents = await (await fetch(pageReqUrl, { method: "GET" })).json();
+  // Ensures the the fetched page is valid, otherwise return a default page object
+  console.log(contents);
+
+  return contents;
 }
 
-export function StudioChild() {
+export default function Stuido() {
+  const { data, pagination } = useLoaderData<typeof loader>();
+
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
-
-  const [isModalOpened, { open: openModal, close: closeModal }] =
-    useDisclosure(false);
-
-  const { contents } = useContent();
 
   return (
     <AppShell
@@ -41,11 +39,11 @@ export function StudioChild() {
         breakpoint: "sm",
         collapsed: { mobile: !opened, desktop: false },
       }}
-      aside={{
-        width: 250,
-        breakpoint: "md",
-        collapsed: { mobile: !asideOpened, desktop: false },
-      }}
+      // aside={{
+      //   width: 250,
+      //   breakpoint: "md",
+      //   collapsed: { mobile: !asideOpened, desktop: false },
+      // }}
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
@@ -69,13 +67,18 @@ export function StudioChild() {
       </AppShell.Header>
 
       <AppShell.Navbar bg={"#f3f4f6"}>
-        <AppShell.Section mb={"2rem"}>
+        <AppShell.Section mb={"lg"}>
           <Flex justify="space-between" mt={"1.5rem"} p={"xs"}>
             <Title order={4} c={"dark"}>
               Content List
             </Title>
 
-            <Button variant="outline" size="compact-sm">
+            <Button
+              component="a"
+              href="/studio.io"
+              variant="outline"
+              size="compact-sm"
+            >
               Create New
             </Button>
           </Flex>
@@ -83,8 +86,8 @@ export function StudioChild() {
           <Divider size={"xs"} mt={"0.5rem"} />
         </AppShell.Section>
 
-        <AppShell.Section p="md" grow component={ScrollArea}>
-          <ContentList contents={contents} onClickHandler={() => {}} />
+        <AppShell.Section grow component={ScrollArea} p={"xs"}>
+          <ContentList contents={data || []} onClickHandler={() => {}} />
         </AppShell.Section>
       </AppShell.Navbar>
 
@@ -92,13 +95,13 @@ export function StudioChild() {
         <Outlet />
       </AppShell.Main>
 
-      <AppShell.Aside bg={"#f3f4f6"}>
+      {/* <AppShell.Aside bg={"#f3f4f6"}>
         <AppShell.Section
           p={"xs"}
           grow
           component={ScrollArea}
         ></AppShell.Section>
-      </AppShell.Aside>
+      </AppShell.Aside> */}
       {/* <AppShell.Footer p="md">Footer</AppShell.Footer> */}
     </AppShell>
   );

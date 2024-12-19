@@ -2,32 +2,107 @@ import { ActionFunctionArgs, data, LoaderFunctionArgs } from "@remix-run/node";
 import { ContentType } from "../../models/content.server";
 import { logger } from "~/shared/utils/logger";
 import { paginate } from "~/shared/utils/http";
+import { z } from "zod";
 
+const fieldsSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  required: z.boolean(),
+});
 
-export async function action({ request }: ActionFunctionArgs) {
-  if (request.method !== "POST")
-    return Response.json({ error: "Method not allowed" }, { status: 405 });
+const createContentDataSchema = z.object({
+  name: z.string(),
+  fields: z.array(fieldsSchema),
+});
+const updateContentDataSchema = createContentDataSchema.partial();
+
+export async function action({ params, request }: ActionFunctionArgs) {
+  const url = new URL(request.url);
+
+  const contentTypeId = url.searchParams.get("id");
 
   const body = await request.json();
-  if (!body.name || !Array.isArray(body.fields))
-    return Response.json({ error: "Invalid data" }, { status: 400 });
 
   try {
-    const contentType = new ContentType({
-      name: body.name,
-      fields: body.fields,
-    });
+    const method = request.method.toUpperCase();
+    switch (method) {
+      case "POST": {
+        const parsedData = createContentDataSchema.safeParse(body);
+        if (!parsedData.success) {
+          return Response.json(
+            { error: parsedData.error.format() },
+            { status: 400 }
+          );
+        }
 
-    await contentType.save();
+        const contentType = new ContentType(parsedData.data);
 
-    return Response.json({
-      message: "Content type created",
-      data: contentType,
-    });
+        await contentType.save();
+
+        return Response.json({
+          message: "Content type created",
+          data: contentType,
+        });
+      }
+      case "PUT": {
+        if (!contentTypeId)
+          return Response.json(
+            { error: "ID is required for update record" },
+            { status: 400 }
+          );
+
+        const parsedData = updateContentDataSchema.safeParse(body);
+        if (!parsedData.success) {
+          return Response.json(
+            { error: parsedData.error.format() },
+            { status: 400 }
+          );
+        }
+
+        const updatedRecord = await ContentType.findByIdAndUpdate(
+          contentTypeId,
+          parsedData.data,
+          { new: true }
+        );
+
+        if (!updatedRecord) {
+          return Response.json(
+            { error: `No contentType exists for the id: ${contentTypeId}` },
+            { status: 404 }
+          );
+        }
+
+        return Response.json({ data: updatedRecord });
+      }
+      case "DELETE": {
+        if (!contentTypeId)
+          return Response.json(
+            { error: "ID is required for deletion" },
+            { status: 400 }
+          );
+        const deletedRecord = await ContentType.findByIdAndDelete(
+          contentTypeId
+        );
+        if (!deletedRecord)
+          return Response.json(
+            {
+              error: `Record not found for id: ${contentTypeId}`,
+            },
+            { status: 404 }
+          );
+        return Response.json({
+          message: `Record with id: ${contentTypeId} was deleted successfully`,
+        });
+      }
+      default:
+        return Response.json({ error: "Method not allowed" }, { status: 405 });
+    }
   } catch (error) {
     logger(error);
-
-    return Response.json({ error: "Unknown error occurred" }, { status: 500 });
+    return Response.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
   }
 }
 

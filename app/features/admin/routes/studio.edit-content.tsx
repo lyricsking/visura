@@ -1,15 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import {
-  useFetcher,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react";
-import { FileSliders } from "lucide-react";
-import { log } from "node:console";
-import { FormEvent, useState } from "react";
+import { useLoaderData } from "@remix-run/react";
 import ContentForm from "~/features/content/components/content-form";
-import { useContent } from "~/features/content/components/content-provider";
 import { Field, IContentType } from "~/features/content/types/content";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 
@@ -39,7 +30,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       })
     : null;
 
-  const content: IContentType = {
+  const content: Omit<IContentType, "_id"> = {
     name: schemaName,
     fields: fields,
     createdAt: new Date(),
@@ -48,45 +39,57 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   let res;
 
+  const { contentTypeId } = params;
+
   const apiURL = new URL("http://localhost:3000/api/content-type");
-  const { contentId } = params;
-  if (contentId) {
-    apiURL.searchParams.set("id", contentId);
+  if (contentTypeId) {
+    apiURL.searchParams.set("id", contentTypeId);
 
     res = await fetch(apiURL, {
       method: "PUT",
       body: JSON.stringify(content),
       headers: { "Content-Type": "application/json" },
     });
+  } else {
+    res = await fetch(apiURL, {
+      method: "POST",
+      body: JSON.stringify(content),
+      headers: { "Content-Type": "application/json" },
+    });
   }
-  res = await fetch(apiURL, {
-    method: "POST",
-    body: JSON.stringify(content),
-    headers: { "Content-Type": "application/json" },
-  });
 
   const data = await res.json();
-
-  console.log(data);
+  console.log(JSON.stringify(data));
 
   return data;
 }
 
-export const loader = ({ params }: LoaderFunctionArgs) => {
-  const { contentId } = params;
+export async function loader({ params, request }: LoaderFunctionArgs) {
+  const currentUrl = new URL(request.url);
 
-  const content: IContentType = {
+  let content: Omit<IContentType, "_id"> = {
     name: "",
     fields: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  return { content: content };
-};
+  const { contentTypeId } = params;
+  if (contentTypeId) {
+    // Fetch page if pageId is provided and valid
+    const pageReqUrl = new URL("http://localhost:3000/api/content-type");
+    pageReqUrl.searchParams.set("id", contentTypeId);
+
+    content = (await (await fetch(pageReqUrl, { method: "GET" })).json())?.[
+      "data"
+    ];
+  }
+
+  return { data: content };
+}
 
 export default function StudioEditContent() {
-  const { content } = useLoaderData<typeof loader>();
+  const { data } = useLoaderData<typeof loader>();
 
-  return <ContentForm content={content} />;
+  return <ContentForm content={data as IContentType} />;
 }

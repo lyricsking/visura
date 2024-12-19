@@ -21,7 +21,7 @@ export async function paginate<T = any>(
 
   return {
     data,
-    paginate: {
+    pagination: {
       total,
       page,
       limit,

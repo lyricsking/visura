@@ -1,7 +1,8 @@
-import { Group, UnstyledButton } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { IContentType } from "../types/content";
 import { ReactNode } from "react";
 import { capitalize } from "~/shared/utils/string";
+import { useSearchParams } from "@remix-run/react";
 
 type ContentListProps = {
   contents: IContentType[];
@@ -16,15 +17,31 @@ type ContentListProps = {
 export function ContentList(props: ContentListProps) {
   const { contents } = props;
 
-  function contentMap(
-    value: IContentType,
-    index: number,
-    array: IContentType[]
-  ): ReactNode {
-    return (
-      <UnstyledButton key={value.name}>{capitalize(value.name)}</UnstyledButton>
-    );
-  }
+  // Hook to update searchParams whenever content is clicked to be displayed
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  return <Group>{contents && contents.map(contentMap)}</Group>;
+  const handleClick = (content: IContentType) => {
+    setSearchParams((prev) => {
+      prev.set("id", content._id.toString());
+
+      return prev;
+    });
+  };
+
+  const contentMap = (content: IContentType): ReactNode => {
+    return (
+      <Button
+        key={content.name}
+        component="a"
+        href={`/studio.io/${content._id.toString()}`}
+        variant={"transparent"}
+        size="compact-sm"
+        justify="start"
+      >
+        {capitalize(content.name)}
+      </Button>
+    );
+  };
+
+  return <Stack>{contents && contents.map(contentMap)}</Stack>;
 }

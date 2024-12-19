@@ -3,18 +3,17 @@ import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
 import { ContentType } from "../../models/content.server";
 import { createDynamicModel } from "../../utils/model-generator";
-import { PageModel } from "~/features/page/models/page.server";
 import { z } from "zod";
 
 const fieldsSchema = z.object({
-name: z.string(),
+  name: z.string(),
   type: z.string(),
-required: z.string()
-})
+  required: z.string(),
+});
 
 const createContentDataSchema = z.object({
   name: z.string(),
-  fields: z.array(fieldsSchema)
+  fields: z.array(fieldsSchema),
 });
 const updateContentDataSchema = createContentDataSchema.partial();
 
@@ -24,9 +23,12 @@ export async function action({ params, request }: ActionFunctionArgs) {
   // Fetch the content type definition
   const contentType = await ContentType.findOne({ name: model });
   if (!contentType) {
-    return Response.json({ error: `Type not found for ${model}` }, { status: 404 });
+    return Response.json(
+      { error: `Type not found for ${model}` },
+      { status: 404 }
+    );
   }
-  
+
   // get the dynamic model and create a new record
   const DynamicModel = createDynamicModel(contentType.name, contentType.fields);
 
@@ -73,7 +75,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
           { new: true }
         );
         if (!updatedRecord)
-          return Response.json({ error: `Record not found for ${model} with id: ${id}` }, { status: 404 });
+          return Response.json(
+            { error: `Record not found for ${model} with id: ${id}` },
+            { status: 404 }
+          );
         return Response.json({ data: updatedRecord });
       }
       case "DELETE": {
@@ -88,7 +93,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
             { error: `Record not found for ${model} with id: ${id}` },
             { status: 404 }
           );
-        return Response.json({ message: `Record with id: ${id} was deleted successfully` });
+        return Response.json({
+          message: `Record with id: ${id} was deleted successfully`,
+        });
       }
       default:
         return Response.json({ error: "Method not allowed" }, { status: 405 });
@@ -104,6 +111,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { model } = params;
+  //  return Response.json({ error: "Content type not found" }, { status: 404 });
 
   const url = new URL(request.url);
 

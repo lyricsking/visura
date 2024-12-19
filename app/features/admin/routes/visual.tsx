@@ -78,26 +78,35 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     status: status,
   };
 
-  const pageId = formData["_id"];
+  let res;
 
   const apiURL = new URL("http://localhost:3000/api/pages");
+  const pageId = formData["_id"];
   if (pageId) {
     apiURL.searchParams.set("id", pageId);
+
+    res = await fetch(apiURL, {
+      method: "PUT",
+      body: JSON.stringify(pageData),
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  const res = await fetch(apiURL, {
-    method: "PUT",
+  res = await fetch(apiURL, {
+    method: "POST",
     body: JSON.stringify(pageData),
     headers: { "Content-Type": "application/json" },
   });
 
   const data = await res.json();
+  console.log(data);
 
   return data;
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const pageId = params["pageId"];
+
   //  Create a default blank page
   let page: IPageWithOptionalId = {
     metadata: {
@@ -126,6 +135,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     // Ensures the the fetched page is valid, otherwise return a default page object
     foundPage && (page = foundPage);
   }
+  console.log(page);
 
   return { page: page };
 };

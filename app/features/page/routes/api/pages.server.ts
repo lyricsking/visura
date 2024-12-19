@@ -5,51 +5,6 @@ import { paginate } from "~/shared/utils/http";
 import { z } from "zod";
 import { logger } from "~/shared/utils/logger";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-
-  const id = url.searchParams.get("id");
-  const path = url.searchParams.get("path");
-  const template = url.searchParams.get("template") === "true";
-  const status = url.searchParams.get("status");
-
-  const page = parseInt(url.searchParams.get("page") || "1", 10);
-  const limit = parseInt(url.searchParams.get("limit") || "10", 10);
-
-  const fields = url.searchParams.get("fields");
-
-  //
-  const query: Record<string, any> = {
-    status: "active",
-  };
-
-  if (path) query.path = path;
-  if (template) query.isTemplate = template;
-  if (status) query.status = status as PageStatus;
-
-  const projection = fields
-    ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
-    : null;
-
-  try {
-    if (id) {
-      const page = await PageModel.findById(id);
-      if (!page)
-        return Response.json({ error: "Page not found" }, { status: 404 });
-      return Response.json(page);
-    } else {
-      const result = await paginate(PageModel, query, projection, page, limit);
-      return Response.json(result);
-    }
-  } catch (error) {
-    logger(error);
-    return Response.json(
-      { error: "An unexpected error occurred" },
-      { status: 500 }
-    );
-  }
-};
-
 const createPageSchema = z.object({
   path: z.string().min(3),
   metadata: z.object({
@@ -91,7 +46,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       case "PUT": {
         if (!id)
           return Response.json(
-            { error: "ID is requuired for update" },
+            { error: "ID is required for update" },
             { status: 400 }
           );
         const requestData = await request.json();
@@ -126,6 +81,51 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
       default:
         return Response.json({ error: "Method not allowed" }, { status: 405 });
+    }
+  } catch (error) {
+    logger(error);
+    return Response.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
+  }
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+
+  const id = url.searchParams.get("id");
+  const path = url.searchParams.get("path");
+  const template = url.searchParams.get("template") === "true";
+  const status = url.searchParams.get("status");
+
+  const page = parseInt(url.searchParams.get("page") || "1", 10);
+  const limit = parseInt(url.searchParams.get("limit") || "10", 10);
+
+  const fields = url.searchParams.get("fields");
+
+  //
+  const query: Record<string, any> = {
+    status: "active",
+  };
+
+  if (path) query.path = path;
+  if (template) query.isTemplate = template;
+  if (status) query.status = status as PageStatus;
+
+  const projection = fields
+    ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
+    : null;
+
+  try {
+    if (id) {
+      const page = await PageModel.findById(id);
+      if (!page)
+        return Response.json({ error: "Page not found" }, { status: 404 });
+      return Response.json(page);
+    } else {
+      const result = await paginate(PageModel, query, projection, page, limit);
+      return Response.json(result);
     }
   } catch (error) {
     logger(error);

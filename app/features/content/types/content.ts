@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface Field {
   name: string; // name
   // title: string; // Name
@@ -6,6 +8,7 @@ export interface Field {
 }
 
 export interface IContentType {
+  _id: Types.ObjectId;
   name: string; // name of the schema e.g Product
   fields: Field[];
   createdAt: Date;
