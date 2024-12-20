@@ -106,7 +106,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   //
   const query: Record<string, any> = {
-    status: "active",
+    // status: "active",
   };
 
   if (path) query.path = path;

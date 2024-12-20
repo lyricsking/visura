@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ComponentsInfo } from "../types/builder.components";
 import { textInfo } from "./text";
 import { getNanoid } from "~/shared/utils/util";
@@ -56,26 +62,15 @@ export default function VisualBuilderProvider({
   children,
 }: VisualBuilderProviderProps) {
   const [components, setComponents] = useState<ComponentsInfo[]>(() => {
-    const components: ComponentsInfo[] = [];
-
-    if (Array.isArray(initialComponents)) {
-      for (const component of initialComponents) {
-
-        const defComponent = defaultComponents.find(
-          (defComponent) => defComponent.name === component.name
-        );
-
-        if (defComponent) {
-          components.push(merge(defComponent, component));
-        }
-      }
-    }
-
-    return components;
+    return hydrateComponentsInfo(initialComponents);
   });
 
   // State variable to manage selected component block for editing
   const [selection, setSelection] = useState<string>();
+
+  useEffect(() => {
+    setComponents(hydrateComponentsInfo(initialComponents));
+  }, [initialComponents]);
 
   /**
    * Adds corresponding component with to the components' list
@@ -158,3 +153,21 @@ export function useVisualBuilder() {
 
   return context;
 }
+
+const hydrateComponentsInfo = (initialComponents: ComponentsInfo[]) => {
+  const components: ComponentsInfo[] = [];
+
+  if (Array.isArray(initialComponents)) {
+    for (const component of initialComponents) {
+      const defComponent = defaultComponents.find(
+        (defComponent) => defComponent.name === component.name
+      );
+
+      if (defComponent) {
+        components.push(merge(defComponent, component));
+      }
+    }
+  }
+
+  return components;
+};

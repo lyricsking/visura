@@ -37,7 +37,7 @@ import { getSlug } from "~/shared/utils/string";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { ComponentsInfo } from "~/features/visual-builder/types/builder.components";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.json();
 
   const errors = {};
@@ -81,7 +81,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let res;
 
   const apiURL = new URL("http://localhost:3000/api/pages");
-  const pageId = formData["_id"];
+  const pageId = params["pageId"];
+
   if (pageId) {
     apiURL.searchParams.set("id", pageId);
 
@@ -90,22 +91,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       body: JSON.stringify(pageData),
       headers: { "Content-Type": "application/json" },
     });
+  } else {
+    res = await fetch(apiURL, {
+      method: "POST",
+      body: JSON.stringify(pageData),
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  res = await fetch(apiURL, {
-    method: "POST",
-    body: JSON.stringify(pageData),
-    headers: { "Content-Type": "application/json" },
-  });
-
   const data = await res.json();
-  console.log(data);
 
   return data;
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const pageId = params["pageId"];
+  const { pageId } = params;
 
   //  Create a default blank page
   let page: IPageWithOptionalId = {
@@ -125,23 +125,26 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     status: "draft",
   };
 
-  if (pageId) {
-    // Fetch page if pageId is provided and valid
-    const pageReqUrl = new URL("http://localhost:3000/api/pages");
+  const pageReqUrl = new URL("http://localhost:3000/api/pages");
 
+  const allPages = (await (await fetch(pageReqUrl, { method: "GET" })).json())[
+    "data"
+  ];
+
+  // Fetch page if pageId is provided and valid
+  if (pageId) {
     pageReqUrl.searchParams.set("id", pageId);
 
     const foundPage = await (await fetch(pageReqUrl, { method: "GET" })).json();
     // Ensures the the fetched page is valid, otherwise return a default page object
     foundPage && (page = foundPage);
   }
-  console.log(page);
 
-  return { page: page };
+  return { page: page, all: allPages };
 };
 
 export default function VisualBuilder() {
-  const { page } = useLoaderData<typeof loader>();
+  const { all, page } = useLoaderData<typeof loader>();
 
   const submit = useSubmit();
 
@@ -151,7 +154,6 @@ export default function VisualBuilder() {
   ): void {
     // Parse FormData into an array of objects
     const newPage: Record<string, any> = {
-      _id: page._id as unknown as "",
       title: data["title"],
       description: data["description"],
       keywords: data["keywords"],
@@ -172,6 +174,7 @@ export default function VisualBuilder() {
   return (
     <VisualBuilderProvider components={page.content.value}>
       <VisualBuilderConsumer
+        all={all}
         page={page as unknown as IPageWithOptionalId}
         onSave={savePage}
       />
@@ -180,6 +183,7 @@ export default function VisualBuilder() {
 }
 
 type VisualBuilderType = {
+  all: IPageWithOptionalId[];
   page: IPageWithOptionalId;
   onSave: (data: Record<string, any>, components: ComponentsInfo[]) => void;
 };
@@ -189,7 +193,7 @@ type VisualBuilderType = {
  * as it can only be used within VisualBuilderProvider
  * @returns [React.Element]
  */
-function VisualBuilderConsumer({ page, onSave }: VisualBuilderType) {
+function VisualBuilderConsumer({ all, page, onSave }: VisualBuilderType) {
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
 
@@ -266,7 +270,7 @@ function VisualBuilderConsumer({ page, onSave }: VisualBuilderType) {
       </AppShell.Navbar>
 
       <AppShell.Main bg={"#f3f4f6"}>
-        <ComponentsCanvas onSave={() => openModal()} />
+        <ComponentsCanvas pages={all} onSave={() => openModal()} />
 
         <Modal
           opened={isModalOpened}
