@@ -106,7 +106,9 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const { pageId } = params;
+  const url = new URL(request.url)
+  
+  const pageId = url.searchParams.get("id");
 
   //  Create a default blank page
   let page: IPageWithOptionalId = {
