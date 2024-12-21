@@ -21,6 +21,8 @@ import {
   ColorInput,
   SegmentedControl,
   ColorPicker,
+  MantineSpacing,
+  StyleProp,
 } from "@mantine/core";
 import {
   ComponentsInfo,
@@ -38,6 +40,9 @@ type ItemProps = BoxProps & {
 };
 
 type FeatureProps = {
+  mt: StyleProp<MantineSpacing>;
+  mb: StyleProp<MantineSpacing>;
+  mx: StyleProp<MantineSpacing>;
   order: "ltr" | "rtl";
   imageProps: ImageProps;
   itemProps: ItemProps;
@@ -55,6 +60,9 @@ export const featureSectionInfo: FeatureSectionSettingsProps = {
   props: {
     onPropsUpdate: () => {},
     order: "ltr",
+    mt: 0,
+    mb: 0,
+    mx: 0,
     imageProps: {
       my: 0,
       mb: 0,
@@ -82,14 +90,21 @@ export const featureSectionInfo: FeatureSectionSettingsProps = {
   },
 };
 
-export function FeatureSection({ imageProps, itemProps, order }: FeatureProps) {
+export function FeatureSection({
+  imageProps,
+  itemProps,
+  order,
+  mt,
+  mb,
+  mx,
+}: FeatureProps) {
   let mOrder = 0;
   if (order === "rtl") {
     mOrder = 1;
   }
 
   return (
-    <Grid overflow="hidden">
+    <Grid overflow="hidden" mt={mt} mb={mb} mx={mx}>
       <Grid.Col span={6} order={mOrder}>
         <Image {...imageProps} />
       </Grid.Col>
@@ -103,7 +118,7 @@ export function FeatureSection({ imageProps, itemProps, order }: FeatureProps) {
 export function FeatureSectionSettings({
   ...props
 }: FeatureSectionSettingsProps["props"]) {
-  const { id, imageProps, itemProps, order, onPropsUpdate } = props;
+  const { id, imageProps, itemProps, order, mt, mb, mx, onPropsUpdate } = props;
   const { featureProps, headlineProps, subtitleProps } = itemProps;
 
   return (
@@ -122,6 +137,33 @@ export function FeatureSectionSettings({
           { label: "Left to right", value: "ltr" },
           { label: "Right to left", value: "rtl" },
         ]}
+      />
+
+      <NumberInput
+        label="Top Spacing"
+        defaultValue={Number(mt)}
+        step={1}
+        min={0}
+        max={100}
+        onChange={(value) => onPropsUpdate(id!, "mt", value)}
+      />
+
+      <NumberInput
+        label="Horizontal Spacing"
+        defaultValue={Number(mx)}
+        step={1}
+        min={0}
+        max={100}
+        onChange={(value) => onPropsUpdate(id!, "mx", value)}
+      />
+
+      <NumberInput
+        label="Bottom Spacing"
+        defaultValue={Number(mb)}
+        step={1}
+        min={0}
+        max={100}
+        onChange={(value) => onPropsUpdate(id!, "mb", value)}
       />
 
       <Accordion variant="contained">
