@@ -23,10 +23,9 @@ type ComponentsCanvasProps = {
 
 export default function ComponentsCanvas(props: ComponentsCanvasProps) {
   const { pages, onSave } = props;
-
-  const { pageId } = useParams();
-  const navigate = useNavigate();
-
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+  
   // Use useVisualBuilder hook to obtain components
   const { components, setSelection } = useVisualBuilder();
 
@@ -34,8 +33,10 @@ export default function ComponentsCanvas(props: ComponentsCanvasProps) {
 
   function handlePageSwitch(event: ChangeEvent<HTMLSelectElement>): void {
     const pageId = event.currentTarget.value;
-    navigate(`../${pageId}`, { relative: "path", replace: true });
-    // navigate(`../${pageId}`, { relative: "path", replace: true });
+    
+    setSearchParams((prev)=>{
+      prev.set("id", pageId)
+    })
     
   }
 
