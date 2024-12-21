@@ -35,11 +35,11 @@ export default function ComponentsCanvas(props: ComponentsCanvasProps) {
   function handlePageSwitch(event: ChangeEvent<HTMLSelectElement>): void {
     const pageId = event.currentTarget.value;
     navigate(`../${pageId}`, { relative: "path", replace: true });
+    // navigate(`../${pageId}`, { relative: "path", replace: true });
+    
   }
 
-  const dataMap: any[] = [
-    { label: "Select a page", value: "", disabled: true },
-  ];
+  const dataMap: any[] = [{ label: "Blank", value: "" }];
 
   pages.forEach((page) => {
     dataMap.push({

@@ -33,7 +33,7 @@ export const buttonInfo: ButtonSettingsProps = {
     onPropsUpdate: () => {},
     children: "Button Text",
     color: "#228be6",
-    hiddenFrom: undefined,
+    hidden: false,
     href: "http://example.com",
     variant: "filled",
     size: "sm",
@@ -49,7 +49,7 @@ export function ButtonSetting(props: ButtonSettingsProps["props"]) {
     children,
     component,
     disabled,
-    hiddenFrom,
+    hidden,
     fullWidth,
     gradient,
     href,
@@ -129,13 +129,13 @@ export function ButtonSetting(props: ButtonSettingsProps["props"]) {
       />
 
       <Switch
-        defaultChecked={!!hiddenFrom}
+        defaultChecked={!!hidden}
         label="Hide"
         labelPosition="left"
         onChange={(event) =>
           onPropsUpdate(
             id!,
-            "hiddenFrom",
+            "hidden",
             event.currentTarget.checked ? "sm" : undefined
           )
         }

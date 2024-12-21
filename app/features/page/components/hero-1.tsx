@@ -1,12 +1,18 @@
 import {
   Accordion,
+  Box,
+  BoxProps,
   Button,
   ColorInput,
   Container,
   ContainerProps,
+  CSSProperties,
   Divider,
   Flex,
   MantineColor,
+  MantineStyleProp,
+  NumberInput,
+  Slider,
   Stack,
   StyleProp,
   Text,
@@ -20,6 +26,8 @@ import {
 import { buttonInfo, ButtonSetting, ButtonSettingsProps } from "./button";
 import { textInfo, TextSetting, TextSettingsProps } from "./text";
 import { titleInfo, TitleSetting, TitleSettingsProps } from "./title";
+import BorderInput from "./border";
+import { marks } from "../utils/marks";
 
 type HighlightProps = {
   /** Color */
@@ -28,7 +36,7 @@ type HighlightProps = {
 
 type Hero1SettingsProps = ComponentsInfo<
   BaseComponentsInfoProps &
-    ContainerProps & {
+    BoxProps & {
       titleProps: TitleSettingsProps["props"];
       highlightProps: HighlightProps;
       highlightText?: string;
@@ -45,6 +53,13 @@ export const hero1Info: Hero1SettingsProps = {
   component: Hero,
   settingsComponent: HeroSettings,
   props: {
+    style: {
+      borderTop: "0px none #000000",
+      borderRight: "0px none #000000",
+      borderBottom: "0px none #000000",
+      borderLeft: "0px none #000000",
+      borderRadius: "0px",
+    },
     titleProps: { ...titleInfo["props"], mt: 55, mb: 20, mx: 35, order: 2 },
     highlightProps: {
       c: "#228be6",
@@ -76,8 +91,10 @@ export function Hero(props: Hero1SettingsProps["props"]) {
   const {
     buttonLeftProps,
     buttonRightProps,
-    my,
-    mx,
+    pb,
+    pt,
+    px,
+    style,
     trailingText,
     subtitleTextProps,
     highlightText,
@@ -87,33 +104,35 @@ export function Hero(props: Hero1SettingsProps["props"]) {
   const { children, ...titleAttrs } = titleProps;
 
   return (
-    <Container fluid my={my} mx={mx}>
-      <div>
-        <Title {...titleAttrs}>
-          {children}{" "}
-          {highlightText && (
-            <Text {...highlightProps} component="span" inherit>
-              {highlightText}{" "}
-            </Text>
-          )}
-          {trailingText || null}
-        </Title>
+    <Box pb={pb} pt={pt} px={px} style={style}>
+      <Title {...titleAttrs}>
+        {children}{" "}
+        {highlightText && (
+          <Text {...highlightProps} component="span" inherit>
+            {highlightText}{" "}
+          </Text>
+        )}
+        {trailingText || null}
+      </Title>
 
-        <Container p={0} size={600}>
-          <Text {...subtitleTextProps} />
-        </Container>
+      <Container p={0} size={600}>
+        <Text {...subtitleTextProps} />
+      </Container>
 
-        <Flex
-          direction={{ base: "column", sm: "row" }}
-          gap={{ base: "sm", sm: "lg" }}
-          justify={{ sm: "center" }}
-          my={10}
-        >
-          {buttonLeftProps && <Button {...buttonLeftProps} />}
-          {buttonRightProps && <Button {...buttonRightProps} />}
-        </Flex>
-      </div>
-    </Container>
+      <Flex
+        direction={{ base: "column", sm: "row" }}
+        gap={{ base: "sm", sm: "lg" }}
+        justify={{ sm: "center" }}
+        my={10}
+      >
+        {buttonLeftProps && !buttonLeftProps.hidden && (
+          <Button {...buttonLeftProps} />
+        )}
+        {buttonRightProps && !buttonRightProps.hidden && (
+          <Button {...buttonRightProps} />
+        )}
+      </Flex>
+    </Box>
   );
 }
 
@@ -122,8 +141,10 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
     id,
     buttonLeftProps,
     buttonRightProps,
-    my,
-    mx,
+    pt,
+    pb,
+    px,
+    style,
     titleProps,
     subtitleTextProps,
     highlightProps,
@@ -151,6 +172,49 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
 
   return (
     <Accordion variant="contained">
+      <Accordion.Item value="layout">
+        <Accordion.Control>Layout Setting</Accordion.Control>
+        <Accordion.Panel>
+          <Stack>
+            <NumberInput
+              label="Top Spacing"
+              defaultValue={Number(pt) || 0}
+              step={1}
+              min={0}
+              max={100}
+              onChange={(value) => onPropsUpdate(id!, "pt", value)}
+            />
+
+            <NumberInput
+              label="Horizontal Spacing"
+              defaultValue={Number(px) || 0}
+              step={1}
+              min={0}
+              max={100}
+              onChange={(value) => onPropsUpdate(id!, "px", value)}
+            />
+
+            <NumberInput
+              label="Bottom Spacing"
+              defaultValue={Number(pb) || 0}
+              step={1}
+              min={0}
+              max={100}
+              onChange={(value) => onPropsUpdate(id!, "pb", value)}
+            />
+
+            <BorderInput
+              styles={style}
+              onChange={(borderStyles) =>
+                onPropsUpdate(id!, "style", {
+                  ...style,
+                  ...borderStyles,
+                })
+              }
+            />
+          </Stack>
+        </Accordion.Panel>
+      </Accordion.Item>
       <Accordion.Item value={"title"}>
         <Accordion.Control>Title Section</Accordion.Control>
         <Accordion.Panel>

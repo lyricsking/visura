@@ -102,7 +102,13 @@ export function FeatureSection({
   }
 
   return (
-    <Grid overflow="hidden" mt={mt} mb={mb} mx={mx}>
+    <Grid
+      overflow="hidden"
+      mt={mt}
+      mb={mb}
+      mx={mx}
+      gutter={{ base: "sm", md: "xl" }}
+    >
       <Grid.Col span={6} order={mOrder}>
         <Image {...imageProps} />
       </Grid.Col>
