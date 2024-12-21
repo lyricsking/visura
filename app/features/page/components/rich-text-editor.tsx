@@ -1,4 +1,4 @@
-import { RichTextEditor, Link } from "@mantine/tiptap";
+import { RichTextEditor as MantineRichTextEditor, Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import Highlight from "@tiptap/extension-highlight";
 import StarterKit from "@tiptap/starter-kit";
@@ -14,11 +14,13 @@ import TextStyle from "@tiptap/extension-text-style";
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
+  enableCode?: boolean;
 }
 
-export function MantineRichTextEditor({
-  value,
+export function RichTextEditor({
+  enableCode = false,
   onChange,
+  value,
 }: RichTextEditorProps) {
   const editor = useEditor({
     content: value,
@@ -39,53 +41,53 @@ export function MantineRichTextEditor({
   });
 
   return (
-    <RichTextEditor editor={editor}>
-      <RichTextEditor.Toolbar sticky>
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.Bold />
-          <RichTextEditor.Italic />
-          <RichTextEditor.Underline />
-          <RichTextEditor.Strikethrough />
-          <RichTextEditor.ClearFormatting />
-          <RichTextEditor.Highlight />
-          <RichTextEditor.Code />
-        </RichTextEditor.ControlsGroup>
+    <MantineRichTextEditor editor={editor}>
+      <MantineRichTextEditor.Toolbar sticky>
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.Bold />
+          <MantineRichTextEditor.Italic />
+          <MantineRichTextEditor.Underline />
+          <MantineRichTextEditor.Strikethrough />
+          <MantineRichTextEditor.ClearFormatting />
+          <MantineRichTextEditor.Highlight />
+          {enableCode && <MantineRichTextEditor.Code />}
+        </MantineRichTextEditor.ControlsGroup>
 
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.H1 />
-          <RichTextEditor.H2 />
-          <RichTextEditor.H3 />
-          <RichTextEditor.H4 />
-        </RichTextEditor.ControlsGroup>
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.H1 />
+          <MantineRichTextEditor.H2 />
+          <MantineRichTextEditor.H3 />
+          <MantineRichTextEditor.H4 />
+        </MantineRichTextEditor.ControlsGroup>
 
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.Blockquote />
-          <RichTextEditor.Hr />
-          <RichTextEditor.BulletList />
-          <RichTextEditor.OrderedList />
-          <RichTextEditor.Subscript />
-          <RichTextEditor.Superscript />
-        </RichTextEditor.ControlsGroup>
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.Blockquote />
+          <MantineRichTextEditor.Hr />
+          <MantineRichTextEditor.BulletList />
+          <MantineRichTextEditor.OrderedList />
+          <MantineRichTextEditor.Subscript />
+          <MantineRichTextEditor.Superscript />
+        </MantineRichTextEditor.ControlsGroup>
 
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.Link />
-          <RichTextEditor.Unlink />
-        </RichTextEditor.ControlsGroup>
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.Link />
+          <MantineRichTextEditor.Unlink />
+        </MantineRichTextEditor.ControlsGroup>
 
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.AlignLeft />
-          <RichTextEditor.AlignCenter />
-          <RichTextEditor.AlignJustify />
-          <RichTextEditor.AlignRight />
-        </RichTextEditor.ControlsGroup>
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.AlignLeft />
+          <MantineRichTextEditor.AlignCenter />
+          <MantineRichTextEditor.AlignJustify />
+          <MantineRichTextEditor.AlignRight />
+        </MantineRichTextEditor.ControlsGroup>
 
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.Undo />
-          <RichTextEditor.Redo />
-        </RichTextEditor.ControlsGroup>
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.Undo />
+          <MantineRichTextEditor.Redo />
+        </MantineRichTextEditor.ControlsGroup>
 
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.ColorPicker
+        <MantineRichTextEditor.ControlsGroup>
+          <MantineRichTextEditor.ColorPicker
             colors={[
               "#25262b",
               "#868e96",
@@ -103,19 +105,19 @@ export function MantineRichTextEditor({
               "#fd7e14",
             ]}
           />
-          {/* <RichTextEditor.Control interactive={true}>
+          {/* <MantineRichTextEditor.Control interactive={true}>
             <Pipette size="1rem" />
-          </RichTextEditor.Control> */}
-          <RichTextEditor.Color color="#F03E3E" />
-          <RichTextEditor.Color color="#7048E8" />
-          <RichTextEditor.Color color="#1098AD" />
-          <RichTextEditor.Color color="#37B24D" />
-          <RichTextEditor.Color color="#F59F00" />
-          <RichTextEditor.UnsetColor />
-        </RichTextEditor.ControlsGroup>
-      </RichTextEditor.Toolbar>
+          </MantineRichTextEditor.Control> */}
+          <MantineRichTextEditor.Color color="#F03E3E" />
+          <MantineRichTextEditor.Color color="#7048E8" />
+          <MantineRichTextEditor.Color color="#1098AD" />
+          <MantineRichTextEditor.Color color="#37B24D" />
+          <MantineRichTextEditor.Color color="#F59F00" />
+          <MantineRichTextEditor.UnsetColor />
+        </MantineRichTextEditor.ControlsGroup>
+      </MantineRichTextEditor.Toolbar>
 
-      <RichTextEditor.Content />
-    </RichTextEditor>
+      <MantineRichTextEditor.Content />
+    </MantineRichTextEditor>
   );
 }
