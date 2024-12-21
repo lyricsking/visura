@@ -54,7 +54,9 @@ export function MantineImageSetting({
         description="Specify image url."
         defaultValue={src}
         placeholder="http://www.example.com/placeholder.jpg"
-        onChange={(value) => onPropsUpdate(id!, "src", value)}
+        onChange={(event) =>
+          onPropsUpdate(id!, "src", event.currentTarget.value)
+        }
       />
 
       <TextInput

@@ -12,12 +12,12 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import ComponentsCanvas from "~/features/visual-builder/components/builder-canvas";
-import { ComponentSettingsPanel } from "~/features/visual-builder/components/block-settings";
+import ComponentsCanvas from "~/features/page/components/builder-canvas";
+import { ComponentSettingsPanel } from "~/features/page/components/block-settings";
 import VisualBuilderProvider, {
   useVisualBuilder,
-} from "~/features/visual-builder/components/visual-builder.provider";
-import { BlockList } from "~/features/visual-builder/components/block-list";
+} from "~/features/page/components/visual-builder.provider";
+import { BlockList } from "~/features/page/components/block-list";
 import "@mantine/tiptap/styles.css";
 import { FormEvent, useEffect, useState } from "react";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -36,7 +36,7 @@ import {
 import { Types } from "mongoose";
 import { getSlug } from "~/shared/utils/string";
 import formDataToObject from "~/shared/utils/form-data-to-object";
-import { ComponentsInfo } from "~/features/visual-builder/types/builder.components";
+import { ComponentsInfo } from "~/features/page/types/builder.components";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.json();

@@ -63,15 +63,18 @@ export default function VisualBuilderProvider({
   components: initialComponents = [],
   children,
 }: VisualBuilderProviderProps) {
-  const [components, setComponents] = useState<ComponentsInfo[]>(() => {
-    return hydrateComponentsInfo(initialComponents);
-  });
+  const [components, setComponents] = useState<ComponentsInfo[]>([]);
 
   // State variable to manage selected component block for editing
   const [selection, setSelection] = useState<string>();
+  let initialRender = true;
 
   useEffect(() => {
-    setComponents(hydrateComponentsInfo(initialComponents));
+    if (!initialRender) {
+      setComponents(hydrateComponentsInfo(initialComponents));
+    }
+
+    initialRender = false;
   }, [initialComponents]);
 
   /**
