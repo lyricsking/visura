@@ -169,7 +169,17 @@ const hydrateComponentsInfo = (initialComponents: ComponentsInfo[]) => {
       );
 
       if (defComponent) {
-        components.push(merge(defComponent, component));
+        const hydratedComponent = {
+          ...component, 
+          component: defComponent.component,
+          settingsComponent: defComponent.settingsComponent,
+          props: {
+            ...component.props,
+            onPropsUpdate: defComponent.onPropsUpdate
+          }
+        }
+        
+        components.push(hydratedComponent);
       }
     }
   }
