@@ -1,7 +1,6 @@
 import {
   Button,
   Center,
-  ComboboxData,
   Container,
   Divider,
   NativeSelect,
@@ -13,8 +12,9 @@ import { useVisualBuilder } from "./visual-builder.provider";
 import { cn } from "~/shared/utils/util";
 import { IPageWithOptionalId } from "~/features/page/types/page";
 import { ChangeEvent } from "react";
-import { useNavigate, useParams, useSearchParams } from "@remix-run/react";
-import { Trash2Icon, TrashIcon } from "lucide-react";
+import { useNavigate, useParams } from "@remix-run/react";
+import { Trash2Icon, Upload } from "lucide-react";
+import { DesktopIcon, MobileIcon } from "@radix-ui/react-icons";
 
 type ComponentsCanvasProps = {
   pages: IPageWithOptionalId[];
@@ -50,7 +50,7 @@ export default function ComponentsCanvas(props: ComponentsCanvasProps) {
 
   return (
     <Container h={"calc(100vh - 112px)"} w={"100%"} p="0">
-      <div className="flex items-center justify-center gap-4 px-4 h-[40px] bg-gray-200">
+      <div className="flex items-center justify-center gap-2 px-4 h-[40px] bg-gray-200">
         <NativeSelect
           defaultValue={pageId}
           data={dataMap}
@@ -65,15 +65,14 @@ export default function ComponentsCanvas(props: ComponentsCanvasProps) {
             defaultValue={"desktop"}
             size="xs"
             data={[
-              { label: "Desktop", value: "desktop" },
-              { label: "Mobile", value: "mobile" },
+              { label: <DesktopIcon />, value: "desktop" },
+              { label: <MobileIcon />, value: "mobile" },
             ]}
           />
         </div>
 
         <Divider
           orientation="vertical"
-          mx="-xs"
           color="#d1d1d1"
           size={"xs"}
           variant="solid"
@@ -84,10 +83,14 @@ export default function ComponentsCanvas(props: ComponentsCanvasProps) {
           color="#228be6"
           // color="#cccccc"
           onClick={onSave}
-          children="Save"
-        />
+        >
+          <span className="hidden md:flex">Save</span>
+          <Upload className="md:hidden" size={15} />
+        </Button>
+
         <Button size="compact-sm" color="red">
-          <Trash2Icon size={15} />
+          <span className="hidden md:flex">Delete</span>
+          <Trash2Icon className="md:hidden" size={15} />
         </Button>
       </div>
       {/* Check if we have an active component for editing

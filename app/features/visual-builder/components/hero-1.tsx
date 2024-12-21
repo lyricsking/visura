@@ -150,7 +150,7 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
   };
 
   return (
-    <Accordion defaultValue="title" variant="contained">
+    <Accordion variant="contained">
       <Accordion.Item value={"title"}>
         <Accordion.Control>Title Section</Accordion.Control>
         <Accordion.Panel>

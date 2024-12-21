@@ -85,33 +85,23 @@ export function MantineImageSetting({
 
       <Divider />
 
-      <div>
-        <Text size="sm" fw={500}>
-          Vertical Spacing
-        </Text>
-        <Slider
-          defaultValue={Number(my)}
-          step={1}
-          min={0}
-          max={40}
-          onChange={(value: number) => onPropsUpdate(id!, "my", value)}
-          styles={{ markLabel: { display: "none" } }}
-        />
-      </div>
+      <NumberInput
+        label="Vertical Spacing"
+        defaultValue={Number(my)}
+        step={1}
+        min={0}
+        max={100}
+        onChange={(value) => onPropsUpdate(id!, "my", Number(value))}
+      />
 
-      <div>
-        <Text size="sm" fw={500}>
-          Horizontal Spacing
-        </Text>
-        <Slider
-          defaultValue={Number(mx)}
-          step={1}
-          min={0}
-          max={40}
-          onChange={(value: number) => onPropsUpdate(id!, "mx", value)}
-          styles={{ markLabel: { display: "none" } }}
-        />
-      </div>
+      <NumberInput
+        label="Horizontal Spacing"
+        defaultValue={Number(mx)}
+        step={1}
+        min={0}
+        max={40}
+        onChange={(value) => onPropsUpdate(id!, "mx", Number(value))}
+      />
 
       <Divider />
 

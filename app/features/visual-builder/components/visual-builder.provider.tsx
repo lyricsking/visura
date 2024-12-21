@@ -20,6 +20,7 @@ import { buttonInfo } from "./button";
 import { itemCardInfo } from "./item-card";
 
 import lo from "lodash";
+import { featureSectionInfo } from "./features_1";
 const { merge } = lo;
 
 const defaultComponents: ComponentsInfo[] = [
@@ -34,6 +35,7 @@ const defaultComponents: ComponentsInfo[] = [
   hero1Info,
   dividerInfo,
   carouselInfo,
+  featureSectionInfo,
 ];
 
 export type PropsUpdateFunction = (id: string, key: string, value: any) => void;

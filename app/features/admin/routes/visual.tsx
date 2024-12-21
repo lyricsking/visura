@@ -23,6 +23,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
+  useFetcher,
   useLoaderData,
   useNavigation,
   useSubmit,
@@ -146,37 +147,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export default function VisualBuilder() {
   const { all, page } = useLoaderData<typeof loader>();
 
-  const submit = useSubmit();
-
-  function savePage(
-    data: Record<string, any>,
-    components: ComponentsInfo[]
-  ): void {
-    // Parse FormData into an array of objects
-    const newPage: Record<string, any> = {
-      title: data["title"],
-      description: data["description"],
-      keywords: data["keywords"],
-      contentType: "block",
-      contentValue: components,
-      properties: data["properties"],
-      contents: data["contents"],
-      status: data["status"] || page.status,
-    };
-
-    submit(newPage, {
-      method: "post",
-      encType: "application/json",
-      navigate: false,
-    });
-  }
-
   return (
     <VisualBuilderProvider components={page.content.value}>
       <VisualBuilderConsumer
         all={all}
         page={page as unknown as IPageWithOptionalId}
-        onSave={savePage}
       />
     </VisualBuilderProvider>
   );
@@ -185,7 +160,6 @@ export default function VisualBuilder() {
 type VisualBuilderType = {
   all: IPageWithOptionalId[];
   page: IPageWithOptionalId;
-  onSave: (data: Record<string, any>, components: ComponentsInfo[]) => void;
 };
 
 /**
@@ -193,7 +167,7 @@ type VisualBuilderType = {
  * as it can only be used within VisualBuilderProvider
  * @returns [React.Element]
  */
-function VisualBuilderConsumer({ all, page, onSave }: VisualBuilderType) {
+function VisualBuilderConsumer({ all, page }: VisualBuilderType) {
   const [opened, { toggle }] = useDisclosure();
   const [asideOpened, { toggle: asideToggle }] = useDisclosure();
 
@@ -218,13 +192,27 @@ function VisualBuilderConsumer({ all, page, onSave }: VisualBuilderType) {
     }
   }, [selection]);
 
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state !== "idle";
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state !== "idle";
 
   function savePage(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    onSave(formDataToObject(new FormData(e.currentTarget)), components);
+    const data = formDataToObject(new FormData(e.currentTarget));
+
+    // Parse FormData into an array of objects
+    const newPage: Record<string, any> = {
+      title: data["title"],
+      description: data["description"],
+      keywords: data["keywords"],
+      contentType: "block",
+      contentValue: components,
+      properties: data["properties"],
+      contents: data["contents"],
+      status: data["status"] || page.status,
+    };
+
+    fetcher.submit(newPage, { method: "post", encType: "application/json" });
   }
 
   return (
