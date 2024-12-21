@@ -105,10 +105,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   return data;
 };
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url)
-  
-  const pageId = url.searchParams.get("id");
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const { pageId } = params;
 
   //  Create a default blank page
   let page: IPageWithOptionalId = {
@@ -135,7 +133,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   ];
 
   // Fetch page if pageId is provided and valid
-  if (pageId) {
+  if (pageId && pageId!== "new") {
     pageReqUrl.searchParams.set("id", pageId);
 
     const foundPage = await (await fetch(pageReqUrl, { method: "GET" })).json();

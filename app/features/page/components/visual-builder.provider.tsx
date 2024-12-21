@@ -3,6 +3,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { ComponentsInfo } from "../types/builder.components";
@@ -63,19 +64,28 @@ export default function VisualBuilderProvider({
   components: initialComponents = [],
   children,
 }: VisualBuilderProviderProps) {
-  const [components, setComponents] = useState<ComponentsInfo[]>([]);
+  const [components, setComponents] = useState<ComponentsInfo[]>(
+    hydrateComponentsInfo(initialComponents)
+  );
 
   // State variable to manage selected component block for editing
   const [selection, setSelection] = useState<string>();
-  let initialRender = true;
+
+  // Flag to identify when this mounted
+  const mountRun = useRef(false);
 
   useEffect(() => {
-    if (!initialRender) {
-      setComponents(hydrateComponentsInfo(initialComponents));
+    // useEffect will run when provider is first mounted,
+    // even though no component change occurred
+    if (!mountRun.current) {
+      mountRun.current = true;
+      return;
     }
+    
+  setComponents(hydrateComponentsInfo(initialComponents));
 
-    initialRender = false;
   }, [initialComponents]);
+
 
   /**
    * Adds corresponding component with to the components' list
@@ -164,20 +174,22 @@ const hydrateComponentsInfo = (initialComponents: ComponentsInfo[]) => {
 
   if (Array.isArray(initialComponents)) {
     for (const component of initialComponents) {
+      // Find the default component config for this component
+      // This will be used to fill up non serializable properties of the component
       const defComponent = defaultComponents.find(
         (defComponent) => defComponent.name === component.name
       );
 
       if (defComponent) {
         const hydratedComponent = {
-          ...component, 
+          ...component,
           component: defComponent.component,
           settingsComponent: defComponent.settingsComponent,
           props: {
             ...component.props,
-            onPropsUpdate: defComponent.onPropsUpdate
-          }
-        }
+            onPropsUpdate: defComponent.props.onPropsUpdate ,
+          },
+        };
         
         components.push(hydratedComponent);
       }
