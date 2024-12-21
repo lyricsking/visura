@@ -68,7 +68,7 @@ export const featureSectionInfo: FeatureSectionSettingsProps = {
       src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
       h: "200",
       w: "200",
-      radius: "none",
+      radius: "0",
       fit: "cover",
       fallbackSrc: "https://placehold.co/600x400?text=Placeholder",
     },
