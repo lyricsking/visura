@@ -1,7 +1,30 @@
-import { index, type RouteConfig } from "@remix-run/route-config";
+import {
+  index,
+  layout,
+  prefix,
+  route,
+  type RouteConfig,
+} from "@remix-run/route-config";
 import { remixRoutesOptionAdapter } from "@remix-run/routes-option-adapter";
 
 export default [
+  ...prefix("dashboard", [
+    index("./features/admin/routes/dashboard.tsx"),
+    route("builder/:id?", "./features/admin/routes/visual.tsx"),
+    layout("./features/admin/routes/content.tsx", [
+      route("content/:id?", "./features/admin/routes/content.edit.tsx"),
+    ]),
+  ]),
+
+  // Api routes
+  ...prefix("api", [
+    route("content-type/:id?", "features/content/routes/api/content.server.ts"),
+    route("content-data", "features/content/routes/api/content-data.server.ts"),
+    route("options", "features/option/routes/api/options.server.ts"),
+    route("pages/:id?", "features/page/routes/api/pages.server.ts"),
+    route("plugins", "features/plugin/routes/api/plugins.server.ts"),
+  ]),
+
   ...(await remixRoutesOptionAdapter((defineRoutes) => {
     return defineRoutes((route) => {
       // Define all static routes first
@@ -15,13 +38,6 @@ export default [
       });
 
       // Admin routes
-      route("builder.io/:pageId?", "features/admin/routes/visual.tsx");
-      route("studio.io/:contentTypeId?", "features/admin/routes/studio.tsx", () => {
-        route("", "features/admin/routes/studio.edit-content.tsx", {
-          index: true,
-        });
-      });
-
       route("administration", "features/admin/routes/layout.tsx", () => {
         route("", "features/admin/routes/overview.tsx", { index: true });
         route("pages", "features/admin/routes/pages.tsx");
@@ -57,14 +73,7 @@ export default [
         route("", "features/public/routes/home.tsx", { index: true });
         route("*", "features/public/routes/catch-all.tsx");
       });
-
-      // Api routes
-      route("api/content-type", "features/content/routes/api/content.server.ts");
-      route("api/content-data", "features/content/routes/api/content-data.server.ts");
-      route("api/options", "features/option/routes/api/options.server.ts");
-      route("api/pages", "features/page/routes/api/pages.server.ts");
-      route("api/plugins", "features/plugin/routes/api/plugins.server.ts");
-});
+    });
   })),
 ] satisfies RouteConfig;
 

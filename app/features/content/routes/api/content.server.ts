@@ -19,7 +19,7 @@ const updateContentDataSchema = createContentDataSchema.partial();
 export async function action({ params, request }: ActionFunctionArgs) {
   const url = new URL(request.url);
 
-  const contentTypeId = url.searchParams.get("id");
+  const { id } = params;
 
   const body = await request.json();
 
@@ -45,7 +45,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
         });
       }
       case "PUT": {
-        if (!contentTypeId)
+        if (!id)
           return Response.json(
             { error: "ID is required for update record" },
             { status: 400 }
@@ -60,14 +60,14 @@ export async function action({ params, request }: ActionFunctionArgs) {
         }
 
         const updatedRecord = await ContentType.findByIdAndUpdate(
-          contentTypeId,
+          id,
           parsedData.data,
           { new: true }
         );
 
         if (!updatedRecord) {
           return Response.json(
-            { error: `No contentType exists for the id: ${contentTypeId}` },
+            { error: `No contentType exists for the id: ${id}` },
             { status: 404 }
           );
         }
@@ -75,23 +75,21 @@ export async function action({ params, request }: ActionFunctionArgs) {
         return Response.json({ data: updatedRecord });
       }
       case "DELETE": {
-        if (!contentTypeId)
+        if (!id)
           return Response.json(
             { error: "ID is required for deletion" },
             { status: 400 }
           );
-        const deletedRecord = await ContentType.findByIdAndDelete(
-          contentTypeId
-        );
+        const deletedRecord = await ContentType.findByIdAndDelete(id);
         if (!deletedRecord)
           return Response.json(
             {
-              error: `Record not found for id: ${contentTypeId}`,
+              error: `Record not found for id: ${id}`,
             },
             { status: 404 }
           );
         return Response.json({
-          message: `Record with id: ${contentTypeId} was deleted successfully`,
+          message: `Record with id: ${id} was deleted successfully`,
         });
       }
       default:
@@ -109,7 +107,8 @@ export async function action({ params, request }: ActionFunctionArgs) {
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
-  const id = url.searchParams.get("id");
+  const { id } = params;
+
   const page = parseInt(url.searchParams.get("page") || "1", 10);
   const limit = parseInt(url.searchParams.get("limit") || "10", 10);
 

@@ -8,7 +8,7 @@ import {
   Flex,
   Divider,
 } from "@mantine/core";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContentList } from "~/features/content/components/content-list";
 import { LoaderFunctionArgs } from "@remix-run/node";
@@ -19,7 +19,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   const contents = await (await fetch(pageReqUrl, { method: "GET" })).json();
   // Ensures the the fetched page is valid, otherwise return a default page object
-  console.log(contents);
 
   return contents;
 }
@@ -35,15 +34,10 @@ export default function Stuido() {
       header={{ height: 45 }}
       // footer={{ height: 60 }}
       navbar={{
-        width: 250,
+        width: 275,
         breakpoint: "sm",
         collapsed: { mobile: !opened, desktop: false },
       }}
-      // aside={{
-      //   width: 250,
-      //   breakpoint: "md",
-      //   collapsed: { mobile: !asideOpened, desktop: false },
-      // }}
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
@@ -74,8 +68,8 @@ export default function Stuido() {
             </Title>
 
             <Button
-              component="a"
-              href="/studio.io"
+              component={NavLink}
+              to="/dashboard/content/new"
               variant="outline"
               size="compact-sm"
             >

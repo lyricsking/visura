@@ -14,7 +14,7 @@ import {
   Title,
 } from "@mantine/core";
 import { Outlet, useFetcher } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Field, IContentType } from "../types/content";
 
 type ContentFormProps = {
@@ -29,6 +29,21 @@ export default function ContentForm(props: ContentFormProps) {
       ? content.fields
       : [{ name: "", type: "", required: false }]
   );
+
+  // Flag to identify when this mounted
+  const mountRun = useRef(false);
+
+  useEffect(() => {
+    // useEffect will run when component is first mounted,
+    // even though no change occurred
+    if (!mountRun.current) {
+      mountRun.current = true;
+      return;
+    }
+
+    if (content && content.fields && content.fields.length > 0)
+      setFields(content.fields);
+  }, [content]);
 
   const fetcher = useFetcher({ key: "content-form-fetcher" });
   const isSubmitting = fetcher.state !== "idle";
@@ -46,7 +61,14 @@ export default function ContentForm(props: ContentFormProps) {
       <Divider size={"xs"} mt={"0.5rem"} />
 
       <Group>
-        <Stack component={ScrollArea} mih={"100%"} mt={"lg"} px={"xs"}>
+        <Stack
+          component={ScrollArea}
+          mih={"100%"}
+          maw={{ base: "100%", md: "70%" }}
+          mx="auto"
+          mt={"lg"}
+          px={"xs"}
+        >
           <Flex justify="end" mt={"1.5rem"}>
             <Button
               form="content-form"
@@ -57,7 +79,7 @@ export default function ContentForm(props: ContentFormProps) {
               loaderProps={{ type: "dots" }}
             >
               Save
-            </Button>{" "}
+            </Button>
           </Flex>
 
           <fetcher.Form id="content-form" method="POST">
@@ -72,7 +94,7 @@ export default function ContentForm(props: ContentFormProps) {
               />
 
               <Fieldset legend="Fields" name="tags">
-                <SimpleGrid cols={{ base: 1, lg: 5 }}>
+                <SimpleGrid cols={{ base: 1, lg: 2 }}>
                   {fields.map((field, index) => (
                     <div key={index} className="grid grid-cols-2 gap-4 mb-4">
                       <TextInput

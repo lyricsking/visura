@@ -1,8 +1,12 @@
-import { Button, Stack } from "@mantine/core";
+import { Button, NavLink, Stack } from "@mantine/core";
 import { IContentType } from "../types/content";
 import { ReactNode } from "react";
 import { capitalize } from "~/shared/utils/string";
-import { useSearchParams } from "@remix-run/react";
+import {
+  NavLink as ReactNavLink,
+  useHref,
+  useSearchParams,
+} from "@remix-run/react";
 
 type ContentListProps = {
   contents: IContentType[];
@@ -30,18 +34,14 @@ export function ContentList(props: ContentListProps) {
 
   const contentMap = (content: IContentType): ReactNode => {
     return (
-      <Button
-        key={content.name}
-        component="a"
-        href={`/studio.io/${content._id.toString()}`}
-        variant={"transparent"}
-        size="compact-sm"
-        justify="start"
-      >
-        {capitalize(content.name)}
-      </Button>
+      <NavLink
+        key={content._id.toString()}
+        component={ReactNavLink}
+        label={capitalize(content.name)}
+        to={`dashboard/content/${content._id.toString()}`}
+      />
     );
   };
 
-  return <Stack>{contents && contents.map(contentMap)}</Stack>;
+  return <Stack gap="0">{contents && contents.map(contentMap)}</Stack>;
 }

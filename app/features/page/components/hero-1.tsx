@@ -1,9 +1,11 @@
 import {
   Accordion,
+  BackgroundImage,
   Box,
   BoxProps,
   Button,
   ColorInput,
+  ColorPicker,
   Container,
   ContainerProps,
   CSSProperties,
@@ -12,11 +14,13 @@ import {
   MantineColor,
   MantineStyleProp,
   NumberInput,
+  Overlay,
   Slider,
   Stack,
   StyleProp,
   Text,
   Textarea,
+  TextInput,
   Title,
 } from "@mantine/core";
 import {
@@ -28,6 +32,7 @@ import { textInfo, TextSetting, TextSettingsProps } from "./text";
 import { titleInfo, TitleSetting, TitleSettingsProps } from "./title";
 import BorderInput from "./border";
 import { marks } from "../utils/marks";
+import { colorSwatch } from "../utils/color";
 
 type HighlightProps = {
   /** Color */
@@ -37,6 +42,10 @@ type HighlightProps = {
 type Hero1SettingsProps = ComponentsInfo<
   BaseComponentsInfoProps &
     BoxProps & {
+      bgImageSrc?: string;
+      bgColor?: string;
+      bgColorOpacity: number;
+      blur: number;
       titleProps: TitleSettingsProps["props"];
       highlightProps: HighlightProps;
       highlightText?: string;
@@ -53,6 +62,8 @@ export const hero1Info: Hero1SettingsProps = {
   component: Hero,
   settingsComponent: HeroSettings,
   props: {
+    bgColorOpacity: 0,
+    blur: 0,
     style: {
       borderTop: "0px none #000000",
       borderRight: "0px none #000000",
@@ -89,6 +100,10 @@ export const hero1Info: Hero1SettingsProps = {
 
 export function Hero(props: Hero1SettingsProps["props"]) {
   const {
+    bgImageSrc,
+    bgColor,
+    bgColorOpacity,
+    blur,
     buttonLeftProps,
     buttonRightProps,
     pb,
@@ -102,10 +117,10 @@ export function Hero(props: Hero1SettingsProps["props"]) {
     titleProps,
   } = props;
   const { children, ...titleAttrs } = titleProps;
-
-  return (
-    <Box pb={pb} pt={pt} px={px} style={style}>
-      <Title {...titleAttrs}>
+  
+  let content =
+    <>
+  <Title {...titleAttrs}>
         {children}{" "}
         {highlightText && (
           <Text {...highlightProps} component="span" inherit>
@@ -132,6 +147,23 @@ export function Hero(props: Hero1SettingsProps["props"]) {
           <Button {...buttonRightProps} />
         )}
       </Flex>
+    </>
+  
+  //if (bgColor) {
+  //  content = (
+  //    <Overlay color={bgColor} backgroundOpacity={bgColorOpacity} blur={blur}>
+  //      {content}
+  //    </Overlay>
+  //  );
+  //}
+
+  //if (bgImageSrc) {
+  //  content = <BackgroundImage src={bgImageSrc}>{content}</BackgroundImage>;
+  //}
+
+  
+   return( <Box pb={pb} pt={pt} px={px} style={style}>
+      { content}
     </Box>
   );
 }
@@ -139,7 +171,7 @@ export function Hero(props: Hero1SettingsProps["props"]) {
 export function HeroSettings(props: Hero1SettingsProps["props"]) {
   const {
     id,
-    buttonLeftProps,
+  bgColor,bgColorOpacity,bgImageSrc,blur,  buttonLeftProps,
     buttonRightProps,
     pt,
     pb,
@@ -176,6 +208,58 @@ export function HeroSettings(props: Hero1SettingsProps["props"]) {
         <Accordion.Control>Layout Setting</Accordion.Control>
         <Accordion.Panel>
           <Stack>
+            {/** BackgroundImage src */}
+            <TextInput
+              label="Background Image Src"
+              description="Optionally specify the background image url"
+              type="text"
+              defaultValue={bgImageSrc}
+              onChange={(event) =>
+                onPropsUpdate(id!, "bgImageSrc", event.currentTarget.value)
+              }
+            />
+
+            {/** Background color picker */}
+            <div>
+              <Text size="sm" fw={500}>
+                Background Color
+              </Text>
+
+              <ColorPicker
+                defaultValue={bgColor}
+                onChange={(value: any) => {
+                  onPropsUpdate(id!, "bgColor", value);
+                }}
+                format="hex"
+                fullWidth
+                swatches={colorSwatch}
+              />
+            </div>
+
+            {/** Background Opacity, must be between 0 and 1 */}
+            <NumberInput
+              label="BackgroundOpacity"
+              description="Specify the degree of transparency of the background color. Should be vetween 0 and 1"
+              defaultValue={Number(bgColorOpacity)}
+              step={0.1}
+              min={0}
+              max={1}
+              onChange={(value) => onPropsUpdate(id!, "bgColorOpacity", value)}
+            />
+
+            {/** Background blur property, must be between 0 and 30 */}
+            <NumberInput
+              label="Blur"
+              description="Specify the degree of blur of the background color. Should be between 0 and 30"
+              defaultValue={Number(blur)}
+              step={0.1}
+              min={0}
+              max={1}
+              onChange={(value) => onPropsUpdate(id!, "blur", value)}
+            />
+
+            <Divider />
+
             <NumberInput
               label="Top Spacing"
               defaultValue={Number(pt) || 0}

@@ -21,9 +21,8 @@ const createPageSchema = z.object({
 });
 const updatePageSchema = createPageSchema.partial();
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const url = new URL(request.url);
-  const id = url.searchParams.get("id");
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  const { id } = params;
 
   try {
     const method = request.method.toUpperCase();

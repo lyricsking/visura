@@ -12,7 +12,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import ComponentsCanvas from "~/features/page/components/builder-canvas";
+import BuilderCanvas from "~/features/page/components/builder-canvas";
 import { ComponentSettingsPanel } from "~/features/page/components/block-settings";
 import VisualBuilderProvider, {
   useVisualBuilder,
@@ -37,6 +37,7 @@ import { Types } from "mongoose";
 import { getSlug } from "~/shared/utils/string";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { ComponentsInfo } from "~/features/page/types/builder.components";
+import { logger } from "~/shared/utils/logger";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.json();
@@ -81,28 +82,54 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   let res;
 
-  const apiURL = new URL("http://localhost:3000/api/pages");
-  const pageId = params["pageId"];
+  const pageId = params["id"];
+  try {
+    const method = request.method.toUpperCase();
+    switch (method) {
+      case "POST": {
+        const apiURL = new URL("http://localhost:3000/api/pages");
+        return await (
+          await fetch(apiURL, {
+            method: "POST",
+            body: JSON.stringify(pageData),
+            headers: { "Content-Type": "application/json" },
+          })
+        ).json();
+      }
+      case "PUT": {
+        if (!pageId)
+          return Response.json(
+            { error: "ID is required for update" },
+            { status: 400 }
+          );
 
-  if (pageId) {
-    apiURL.searchParams.set("id", pageId);
+        const apiURL = new URL(`http://localhost:3000/api/pages/${pageId}`);
 
-    res = await fetch(apiURL, {
-      method: "PUT",
-      body: JSON.stringify(pageData),
-      headers: { "Content-Type": "application/json" },
-    });
-  } else {
-    res = await fetch(apiURL, {
-      method: "POST",
-      body: JSON.stringify(pageData),
-      headers: { "Content-Type": "application/json" },
-    });
+        return await (
+          await fetch(apiURL, {
+            method: "PUT",
+            body: JSON.stringify(pageData),
+            headers: { "Content-Type": "application/json" },
+          })
+        ).json();
+      }
+      case "DELETE": {
+        if (!pageId)
+          return Response.json(
+            { error: "ID is required for deletion" },
+            { status: 400 }
+          );
+        const apiURL = new URL(`http://localhost:3000/api/pages/${pageId}`);
+        return await (await fetch(apiURL, { method: "DELETE" })).json();
+      }
+    }
+  } catch (error) {
+    logger(error);
+    return Response.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
   }
-
-  const data = await res.json();
-
-  return data;
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -133,7 +160,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   ];
 
   // Fetch page if pageId is provided and valid
-  if (pageId && pageId!== "new") {
+  if (pageId && pageId !== "new") {
     pageReqUrl.searchParams.set("id", pageId);
 
     const foundPage = await (await fetch(pageReqUrl, { method: "GET" })).json();
@@ -258,7 +285,7 @@ function VisualBuilderConsumer({ all, page }: VisualBuilderType) {
       </AppShell.Navbar>
 
       <AppShell.Main bg={"#f3f4f6"}>
-        <ComponentsCanvas pages={all} onSave={() => openModal()} />
+        <BuilderCanvas pages={all} onSave={() => openModal()} />
 
         <Modal
           opened={isModalOpened}

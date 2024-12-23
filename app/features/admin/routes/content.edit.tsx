@@ -39,11 +39,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   let res;
 
-  const { contentTypeId } = params;
+  const { id } = params;
 
-  const apiURL = new URL("http://localhost:3000/api/content-type");
-  if (contentTypeId) {
-    apiURL.searchParams.set("id", contentTypeId);
+  if (id && id !== "new") {
+    const apiURL = new URL(`http://localhost:3000/api/content-type/${id}`);
 
     res = await fetch(apiURL, {
       method: "PUT",
@@ -51,6 +50,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       headers: { "Content-Type": "application/json" },
     });
   } else {
+    const apiURL = new URL("http://localhost:3000/api/content-type");
     res = await fetch(apiURL, {
       method: "POST",
       body: JSON.stringify(content),
@@ -59,14 +59,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
   }
 
   const data = await res.json();
-  console.log(JSON.stringify(data));
 
   return data;
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const currentUrl = new URL(request.url);
-
   let content: Omit<IContentType, "_id"> = {
     name: "",
     fields: [],
@@ -74,11 +71,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     updatedAt: new Date(),
   };
 
-  const { contentTypeId } = params;
-  if (contentTypeId) {
-    // Fetch page if pageId is provided and valid
-    const pageReqUrl = new URL("http://localhost:3000/api/content-type");
-    pageReqUrl.searchParams.set("id", contentTypeId);
+  const { id } = params;
+  if (id && id !== "new") {
+    // Fetch page if id is provided and valid
+    const pageReqUrl = new URL(`http://localhost:3000/api/content-type/${id}`);
 
     content = (await (await fetch(pageReqUrl, { method: "GET" })).json())?.[
       "data"

@@ -57,10 +57,10 @@ export const featureSectionInfo: FeatureSectionSettingsProps = {
   settingsComponent: FeatureSectionSettings,
   props: {
     onPropsUpdate: () => {},
-    order: "ltr",
     mt: 0,
     mb: 0,
     mx: 0,
+    order: "ltr",
     imageProps: {
       my: 0,
       mb: 0,
@@ -68,7 +68,7 @@ export const featureSectionInfo: FeatureSectionSettingsProps = {
       src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
       h: "200",
       w: "200",
-      radius: "none",
+      radius: "0",
       fit: "cover",
       fallbackSrc: "https://placehold.co/600x400?text=Placeholder",
     },
@@ -89,12 +89,12 @@ export const featureSectionInfo: FeatureSectionSettingsProps = {
 };
 
 export function FeatureSection({
-  imageProps,
-  itemProps,
-  order,
   mt,
   mb,
   mx,
+  order,
+  imageProps,
+  itemProps,
 }: FeatureProps) {
   let mOrder = 0;
   if (order === "rtl") {
@@ -120,9 +120,15 @@ export function FeatureSection({
 }
 
 export function FeatureSectionSettings({
-  ...props
+  id,
+  imageProps,
+  itemProps,
+  order,
+  mt,
+  mb,
+  mx,
+  onPropsUpdate,
 }: FeatureSectionSettingsProps["props"]) {
-  const { id, imageProps, itemProps, order, mt, mb, mx, onPropsUpdate } = props;
   const { featureProps, headlineProps, subtitleProps } = itemProps;
 
   return (
