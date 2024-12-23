@@ -5,7 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/shared/components/dropdown.menu";
-import { useLocation, useNavigate, useSubmit } from "react-router";
+import { useLocation, useNavigate, useSubmit } from "@remix-run/react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { renderIcon } from "./icon-loader";
 import { Menu } from "~/shared/types/menu";
@@ -24,7 +24,7 @@ export default function AccountMenuButton({ menu, user }: Props) {
   let profilePhoto = user?.photo;
 
   return (
-    (<DropdownMenu>
+    <DropdownMenu>
       <DropdownMenuTrigger className="max-h-12 p-2">
         {user && profilePhoto ? (
           <img
@@ -33,7 +33,7 @@ export default function AccountMenuButton({ menu, user }: Props) {
             className="w-6 h-6 rounded-full"
           />
         ) : (
-          (<UserCircleIcon className="w-6 h-6 text-gray-500" />)
+          <UserCircleIcon className="w-6 h-6 text-gray-500" />
           // <UserIcon className="w-6 h-6 text-gray-500" />
         )}
       </DropdownMenuTrigger>
@@ -84,6 +84,6 @@ export default function AccountMenuButton({ menu, user }: Props) {
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
-    </DropdownMenu>)
+    </DropdownMenu>
   );
 }

@@ -6,7 +6,7 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
   type ActionFunctionArgs,
-} from "react-router";
+} from "@remix-run/node";
 
 export async function action({ request }: ActionFunctionArgs) {
   let folder = "post";

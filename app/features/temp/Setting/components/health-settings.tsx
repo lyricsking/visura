@@ -1,4 +1,4 @@
-import { useFetcher } from "react-router";
+import { useFetcher } from "@remix-run/react";
 import { HEALTH_UPDATE_ACTION } from "../../Dashboard/utils/constants";
 import { Label } from "~/shared/components/label";
 import { Input } from "~/shared/components/input";

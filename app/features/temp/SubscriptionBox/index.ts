@@ -1,4 +1,4 @@
-import { DefineRouteFunction } from "@react-router/dev/dist/config/routes";
+import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
 import { AppContext } from "~/app";
 import { IPlugin } from "~/core/declarations";
 

@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
 import { ContentType } from "../../models/content.server";

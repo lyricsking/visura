@@ -1,4 +1,9 @@
-import { data as dataFn, redirect, Session, TypedResponse } from "react-router";
+import {
+  data as dataFn,
+  redirect,
+  Session,
+  TypedResponse,
+} from "@remix-run/node";
 import { REDIRECT_SEARCH_PARAM } from "~/features/auth/server/auth.server";
 import { commitSession, getSession } from "./session";
 

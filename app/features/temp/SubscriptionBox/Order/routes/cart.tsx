@@ -1,4 +1,4 @@
-import { json, useNavigate, useOutletContext } from "react-router";
+import { json, useNavigate, useOutletContext } from "@remix-run/react";
 import { getSession } from "~/shared/utils/session";
 import { deleteCart, updateCartItem } from "../server/cart.server";
 import { IOrder } from "../types/order.type";

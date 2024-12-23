@@ -1,4 +1,4 @@
-import { LoaderFunction, LoaderFunctionArgs } from "react-router";
+import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { findPostBySlug } from "../server/post.server";
 import { PluginLoaderFunction } from "~/app";
 

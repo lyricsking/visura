@@ -1,5 +1,5 @@
 import { formatDateOrTime } from "~/shared/utils/date";
-import { Link } from "react-router";
+import { Link } from "@remix-run/react";
 
 type PostSummaryProps = {
   post: any;

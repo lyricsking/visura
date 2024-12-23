@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet } from "@remix-run/react";
 import { APP_NAME } from "~/app";
 import Button from "~/shared/components/button";
 import {

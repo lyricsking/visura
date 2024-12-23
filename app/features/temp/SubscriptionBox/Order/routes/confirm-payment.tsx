@@ -1,4 +1,4 @@
-import { useFetcher } from "react-router";
+import { useFetcher } from "@remix-run/react";
 
 const OrderConfirmationModal = () => {
   const fetcher = useFetcher();

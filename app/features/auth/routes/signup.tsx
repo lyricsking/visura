@@ -1,5 +1,5 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/16/solid";
-import { Link, useLoaderData, useOutletContext } from "react-router";
+import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
 
 export default function SignUp() {
   const { appname }: { appname: string } = useOutletContext();

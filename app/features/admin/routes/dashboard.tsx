@@ -1,6 +1,6 @@
 import { AppShell, Burger, Group, NavLink, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { NavLink as ReactNavLink } from "react-router";
+import { NavLink as ReactNavLink } from "@remix-run/react";
 
 export default function Dashboard() { 
 const [opened, { toggle }] = useDisclosure();

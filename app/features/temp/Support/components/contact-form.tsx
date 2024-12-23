@@ -1,4 +1,4 @@
-import { useFetcher } from "react-router";
+import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import Button from "~/shared/components/button";
 import { Input } from "~/shared/components/input";

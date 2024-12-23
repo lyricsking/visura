@@ -1,4 +1,4 @@
-import { reactRouter } from "@react-router/dev/vite";
+import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { envOnlyMacros } from "vite-env-only";
@@ -6,7 +6,7 @@ import { envOnlyMacros } from "vite-env-only";
 export default defineConfig({
   server: { port: 3000 },
   plugins: [
-    reactRouter({
+    remix({
       ignoredRouteFiles: ["**/.*"],
       // appDirectory: "app",
       // assetsBuildDirectory: "public/build",

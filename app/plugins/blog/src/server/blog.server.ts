@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { findPosts, publishPost } from "./post.server";
 import AppContext, { PluginLoaderFunction } from "~/app";
 

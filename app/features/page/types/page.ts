@@ -25,7 +25,7 @@ export interface PageContent {
   value: any; // YAML configuration for type "yaml", React Components for "component" type
 }
 import { AppContext } from "~/app";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 
 interface PluginLoaderFunctionArgs extends LoaderFunctionArgs {
   app: AppContext;

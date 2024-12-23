@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink } from "@remix-run/react";
 import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "~/shared/components/sheet";
 import Button from "~/shared/components/button";

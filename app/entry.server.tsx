@@ -6,9 +6,9 @@
 
 import { PassThrough } from "node:stream";
 
-import type { AppLoadContext, EntryContext } from "react-router";
-import { createReadableStreamFromReadable } from "@react-router/node";
-import { ServerRouter } from "react-router";
+import type { AppLoadContext, EntryContext } from "@remix-run/node";
+import { createReadableStreamFromReadable } from "@remix-run/node";
+import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
@@ -22,7 +22,7 @@ export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  reactRouterContext: EntryContext,
+  remixContext: EntryContext,
   // This is ignored so we can keep it in the template for visibility.  Feel
   // free to delete this parameter in your app if you're not using it!
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,14 +36,14 @@ export default async function handleRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        reactRouterContext,
+        remixContext,
         app
       )
     : handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        reactRouterContext,
+        remixContext,
         app
       );
 }
@@ -52,14 +52,14 @@ function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  reactRouterContext: EntryContext,
+  remixContext: EntryContext,
   app: AppContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
       <AppContextProvider appContext={app}>
-        <ServerRouter context={reactRouterContext} url={request.url} />
+        <RemixServer context={remixContext} url={request.url} />
       </AppContextProvider>,
       {
         onAllReady() {
@@ -102,14 +102,14 @@ function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  reactRouterContext: EntryContext,
+  remixContext: EntryContext,
   app: AppContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
       <AppContextProvider appContext={app}>
-        <ServerRouter context={reactRouterContext} url={request.url} />
+        <RemixServer context={remixContext} url={request.url} />
       </AppContextProvider>,
       {
         onShellReady() {

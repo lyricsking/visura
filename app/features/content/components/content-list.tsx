@@ -2,7 +2,11 @@ import { Button, NavLink, Stack } from "@mantine/core";
 import { IContentType } from "../types/content";
 import { ReactNode } from "react";
 import { capitalize } from "~/shared/utils/string";
-import { NavLink as ReactNavLink, useHref, useSearchParams } from "react-router";
+import {
+  NavLink as ReactNavLink,
+  useHref,
+  useSearchParams,
+} from "@remix-run/react";
 
 type ContentListProps = {
   contents: IContentType[];

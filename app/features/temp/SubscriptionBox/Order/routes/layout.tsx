@@ -1,6 +1,12 @@
 import { getCartByEmailId } from "../server/cart.server";
-import { json, LoaderFunctionArgs, redirect } from "react-router";
-import { Outlet, useFetcher, useLoaderData, useMatches, useNavigate } from "react-router";
+import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import {
+  Outlet,
+  useFetcher,
+  useLoaderData,
+  useMatches,
+  useNavigate,
+} from "@remix-run/react";
 import mongoose from "mongoose";
 import { CART_FETCHER_KEY } from "../types/cart.type";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";

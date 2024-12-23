@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json } from "react-router";
+import { ActionFunctionArgs, json } from "@remix-run/node";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
 import UserMeta, { IUserMeta } from "../../models/user-meta.model";

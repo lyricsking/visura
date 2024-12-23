@@ -1,5 +1,5 @@
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router";
+import { useNavigate } from "@remix-run/react";
 import Button from "~/shared/components/button";
 
 export function CartIcon() {

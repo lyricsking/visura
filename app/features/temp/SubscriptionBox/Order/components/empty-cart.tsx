@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "@remix-run/react";
 import Button from "~/shared/components/button";
 
 export default function EmptyCart() {

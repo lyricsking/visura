@@ -1,4 +1,4 @@
-import { Session, TypedResponse } from "react-router";
+import { Session, TypedResponse } from "@remix-run/node";
 import { AuthUser } from "../types/auth-user.type";
 
 export const isAuthUser = (authUser: any): authUser is AuthUser =>

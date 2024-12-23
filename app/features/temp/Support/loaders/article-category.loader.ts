@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from "react-router";
+import { LoaderFunction, json } from "@remix-run/node";
 import { getArticlesCategory } from "../data/articles";
 
 export const loader: LoaderFunction = async ({ params }) => {

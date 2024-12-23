@@ -8,10 +8,10 @@ import {
   Flex,
   Divider,
 } from "@mantine/core";
-import { NavLink, Outlet, useLoaderData } from "react-router";
+import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContentList } from "~/features/content/components/content-list";
-import { LoaderFunctionArgs } from "react-router";
+import { LoaderFunctionArgs } from "@remix-run/node";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   // Fetch page if pageId is provided and valid

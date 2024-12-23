@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "react-router";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "../../models/plugin.model";
 import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
 import { IPlugin } from "../../types/plugin";

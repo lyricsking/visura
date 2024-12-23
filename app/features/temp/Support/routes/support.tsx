@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData } from "@remix-run/react";
 import { loader } from "../loaders/index.loader";
 import { HandleObjectType } from "./layout";
 import { ContactForm } from "../components/contact-form";

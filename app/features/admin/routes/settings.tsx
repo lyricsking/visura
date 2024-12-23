@@ -1,11 +1,11 @@
-import { json, LoaderFunctionArgs } from "react-router";
+import { json, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Outlet,
   ShouldRevalidateFunctionArgs,
   useLoaderData,
   useNavigate,
   useOutletContext,
-} from "react-router";
+} from "@remix-run/react";
 import { IHydratedUser } from "~/core/user/models/user.model";
 import {
   Tabs,

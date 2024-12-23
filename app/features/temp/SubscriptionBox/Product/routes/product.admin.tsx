@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "@remix-run/react";
 import { config } from "@/config";
 
 export const handle = {

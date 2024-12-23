@@ -1,4 +1,4 @@
-import { ActionFunction, json } from "react-router";
+import { ActionFunction, json } from "@remix-run/node";
 import { ISupplement } from "~/Supplement/supplement.type";
 import { commitSession, getSession } from "~/shared/utils/session";
 import {

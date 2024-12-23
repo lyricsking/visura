@@ -1,4 +1,4 @@
-import { redirect } from "react-router";
+import { redirect } from "@remix-run/node";
 import { StaffRole } from "~/core/user/types/staff.type";
 
 /**

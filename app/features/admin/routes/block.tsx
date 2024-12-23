@@ -1,4 +1,4 @@
-import { json, useFetcher, useLoaderData } from "react-router";
+import { json, useFetcher, useLoaderData } from "@remix-run/react";
 import Button from "~/shared/components/button";
 
 const loader = ({}) => {

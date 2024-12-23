@@ -1,5 +1,5 @@
-import { json, LoaderFunction } from "react-router";
-import { useLoaderData } from "react-router";
+import { json, LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { getUserFromSession } from "~/core/auth/server/auth.server";
 import { IHydratedUser } from "~/core/user/models/user.model";
 

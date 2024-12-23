@@ -1,5 +1,5 @@
-import { json, LoaderFunctionArgs } from "react-router";
-import { Form, useLoaderData, useNavigation } from "react-router";
+import { json, LoaderFunctionArgs } from "@remix-run/node";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { getAppContext } from "~/app";
 import { Label } from "~/shared/components/label";
 import {

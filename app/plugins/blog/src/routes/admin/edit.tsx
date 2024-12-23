@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher } from "@remix-run/react";
 import Button from "~/shared/components/button";
 import { ImagePreview } from "~/shared/components/image-preview";
 import { Input } from "~/shared/components/input";

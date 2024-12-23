@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "react-router";
+import { LoaderFunctionArgs } from "@remix-run/node";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   //  If present id will be used to fetch the specific order.

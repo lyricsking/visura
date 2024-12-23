@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Progress } from "@radix-ui/react-progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import { Form } from "react-router";
+import { Form } from "@remix-run/react";
 import {
   Link,
   ListFilter,

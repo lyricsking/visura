@@ -4,7 +4,7 @@
  * For more information, see https://remix.run/file-conventions/entry.client
  */
 
-import { HydratedRouter } from "react-router/dom";
+import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { AppContext, getAppContext } from "./app";
@@ -21,7 +21,7 @@ initializeAppContext().then((app) => {
       document,
       <AppContextProvider appContext={app}>
         <StrictMode>
-          <HydratedRouter />
+          <RemixBrowser />
         </StrictMode>
       </AppContextProvider>
     );

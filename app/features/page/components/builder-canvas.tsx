@@ -12,7 +12,7 @@ import { useVisualBuilder } from "./visual-builder.provider";
 import { cn } from "~/shared/utils/util";
 import { IPageWithOptionalId } from "~/features/page/types/page";
 import { ChangeEvent } from "react";
-import { useFetcher, useNavigate, useParams } from "react-router";
+import { useFetcher, useNavigate, useParams } from "@remix-run/react";
 import { Trash2Icon, Upload } from "lucide-react";
 import { DesktopIcon, MobileIcon } from "@radix-ui/react-icons";
 

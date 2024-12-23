@@ -11,8 +11,8 @@ import {
   useNavigation,
   useSearchParams,
   useSubmit,
-} from "react-router";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+} from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/shared/components/dialog";
 import CodeMirrorEditor from "~/shared/components/editor/codemirror";
 import { yaml } from "@codemirror/lang-yaml";

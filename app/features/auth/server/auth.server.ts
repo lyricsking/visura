@@ -7,7 +7,7 @@ import {
 import { googleStrategy } from "../strategy/google-strategy";
 import { formStrategy } from "../strategy/form-strategy";
 import { AuthUser } from "../types/auth-user.type";
-import { redirect, Session } from "react-router";
+import { redirect, Session } from "@remix-run/node";
 import { handleResponse } from "~/shared/utils/helpers";
 import { isAuthUser } from "../utils/helper";
 

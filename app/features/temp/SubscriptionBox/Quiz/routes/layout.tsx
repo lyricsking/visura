@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { LoaderFunction, LoaderFunctionArgs } from "react-router";
-import { Outlet, json, useLoaderData } from "react-router";
+import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { Outlet, json, useLoaderData } from "@remix-run/react";
 import { getUserFromSession } from "~/core/auth/server/auth.server";
 import Button from "~/shared/components/button";
 import {

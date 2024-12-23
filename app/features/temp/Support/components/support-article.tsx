@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "@remix-run/react";
 
 type SupportArticleProps = {
   categories: any;

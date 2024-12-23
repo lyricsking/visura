@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, ActionFunctionArgs, json } from "react-router";
+import { LoaderFunctionArgs, ActionFunctionArgs, json } from "@remix-run/node";
 import { UpdateWriteOpResult } from "mongoose";
 import { APP_NAME } from "~/app";
 import { OptionModel } from "~/features/option/models/option.server";

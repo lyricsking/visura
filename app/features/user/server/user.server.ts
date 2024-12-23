@@ -7,7 +7,7 @@ import User, {
   UserType,
 } from "../models/user.model";
 import { IUserMeta } from "../models/user-meta.model";
-import { Session } from "react-router";
+import { Session } from "@remix-run/node";
 import {
   getSession,
   USER_SESSION_KEY,

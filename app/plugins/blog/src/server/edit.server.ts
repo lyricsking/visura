@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json } from "react-router";
+import { ActionFunctionArgs, json } from "@remix-run/node";
 import { getAuthUser } from "~/core/auth/server/auth.server";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { createPost } from "./post.server";

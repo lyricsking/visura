@@ -1,4 +1,4 @@
-import { ActionFunction, json } from "react-router";
+import { ActionFunction, json } from "@remix-run/node";
 import { getSession, commitSession } from "~/shared/utils/session";
 import { saveQuizAnswer } from "../server/quiz.server";
 

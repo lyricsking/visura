@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "@remix-run/react";
 import { ReactElement } from "react";
 
 import { GeneralAppSettings } from "../components/general-app-settings";

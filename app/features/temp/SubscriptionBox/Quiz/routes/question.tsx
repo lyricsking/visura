@@ -1,4 +1,9 @@
-import { useNavigate, useLoaderData, useFetcher, useOutletContext } from "react-router";
+import {
+  useNavigate,
+  useLoaderData,
+  useFetcher,
+  useOutletContext,
+} from "@remix-run/react";
 
 import Button from "~/shared/components/button";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";

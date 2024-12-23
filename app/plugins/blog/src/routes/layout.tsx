@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet } from "@remix-run/react";
 import Footer from "~/shared/components/ui/footer";
 import {
   PageLayout,

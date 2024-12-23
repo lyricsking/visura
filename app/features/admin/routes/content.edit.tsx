@@ -1,5 +1,5 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { useLoaderData } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import ContentForm from "~/features/content/components/content-form";
 import { Field, IContentType } from "~/features/content/types/content";
 import formDataToObject from "~/shared/utils/form-data-to-object";
