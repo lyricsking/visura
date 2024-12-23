@@ -1,5 +1,5 @@
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { Link, Outlet, useLoaderData } from "react-router";
+import { LoaderFunctionArgs, json } from "react-router";
 import AccountMenuButton from "~/shared/components/ui/account-menu-button";
 import Footer from "~/shared/components/ui/footer";
 import {

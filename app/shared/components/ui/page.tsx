@@ -1,5 +1,5 @@
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { json } from "react-router";
+import { useLoaderData } from "react-router";
 import { BlockProps } from "~/dashboard/pages/components/block";
 import Section, { SectionProps } from "~/dashboard/pages/components/section";
 

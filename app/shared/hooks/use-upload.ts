@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher } from "react-router";
 import { action } from "~/plugins/Dashboard/routes/upload";
 
 export function useFileUpload() {

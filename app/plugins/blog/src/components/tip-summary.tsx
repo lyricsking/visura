@@ -2,7 +2,7 @@ import { Calendar, MessageCircleIcon } from "lucide-react";
 import { ITips } from "../types/tips.type";
 import { formatDateByParts } from "~/shared/utils/date";
 import { buttonVariants } from "~/shared/components/button";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { cn } from "~/shared/utils/util";
 import { getSlug } from "../utils/slug";
 

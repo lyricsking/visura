@@ -1,4 +1,4 @@
-import { NavLink } from "@remix-run/react";
+import { NavLink } from "react-router";
 import { Menu } from "~/shared/types/menu";
 import { renderIcon } from "./icon-loader";
 import { cn } from "~/shared/utils/util";

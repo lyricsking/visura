@@ -1,12 +1,5 @@
-import { LoaderFunction, json } from "@remix-run/node";
-import {
-  Outlet,
-  useLoaderData,
-  Link,
-  useNavigate,
-  useParams,
-  useOutletContext,
-} from "@remix-run/react";
+import { LoaderFunction, json } from "react-router";
+import { Outlet, useLoaderData, Link, useNavigate, useParams, useOutletContext } from "react-router";
 import InvoiceList from "~/plugins/SubscriptionBox/Invoice/components/invoice-list";
 
 // Mock data for demonstration

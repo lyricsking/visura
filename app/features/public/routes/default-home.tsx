@@ -1,8 +1,4 @@
-import {
-  LinksFunction,
-  LoaderFunctionArgs,
-  type MetaFunction,
-} from "@remix-run/node";
+import { LinksFunction, LoaderFunctionArgs, type MetaFunction } from "react-router";
 import Hero from "../components/hero";
 import HomeCarousel from "../components/home-carousel";
 import Explanation from "../components/explanation";

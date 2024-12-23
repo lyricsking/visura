@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher } from "react-router";
 import { SettingsType } from "~/features/admin/type/settings.type";
 import { ORDER_UPDATE_ACTION } from "~/features/admin/utils/constants";
 import Button from "~/shared/components/button";

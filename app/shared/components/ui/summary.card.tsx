@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { CommonProps } from "~/shared/types/common.props";
 
 type Props = CommonProps & {

@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from "@heroicons/react/16/solid";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 
 export type BreadcrumbType = {
   id: string | number;

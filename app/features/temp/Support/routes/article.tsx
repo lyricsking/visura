@@ -1,10 +1,5 @@
-import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import {
-  Link,
-  useLoaderData,
-  useOutletContext,
-  useParams,
-} from "@remix-run/react";
+import { LoaderFunction, LoaderFunctionArgs } from "react-router";
+import { Link, useLoaderData, useOutletContext, useParams } from "react-router";
 import { loader } from "../loaders/article.loader";
 import { HandleObjectType } from "./layout";
 

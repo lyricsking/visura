@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, json } from "react-router";
 import { getThemeSession } from "./theme.server";
 import { Theme, isTheme } from "./theme.provider";
 

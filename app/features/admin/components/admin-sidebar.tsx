@@ -10,7 +10,7 @@ import {
 } from "../../../shared/components/sidebar";
 import { Menu } from "~/shared/types/menu";
 import { renderIcon } from "../../../shared/components/ui/icon-loader";
-import { NavLink } from "@remix-run/react";
+import { NavLink } from "react-router";
 import { cn } from "~/shared/utils/util";
 
 const items: Menu[] = [

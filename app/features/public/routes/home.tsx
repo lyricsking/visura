@@ -1,5 +1,5 @@
-import { json, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { json, LoaderFunctionArgs, MetaFunction } from "react-router";
+import { useLoaderData } from "react-router";
 import { IPage, PageContent } from "~/features/page/types/page";
 import { renderPage } from "~/shared/components/ui/render-page";
 import { getAppContext } from "~/app";

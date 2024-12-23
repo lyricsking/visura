@@ -1,4 +1,4 @@
-import { useFetcher, useNavigation, useSubmit } from "@remix-run/react";
+import { useFetcher, useNavigation, useSubmit } from "react-router";
 import { useEffect } from "react";
 import { useAppContext } from "~/shared/providers/app.provider.tsx";
 

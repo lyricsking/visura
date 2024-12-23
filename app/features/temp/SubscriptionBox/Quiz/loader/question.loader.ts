@@ -1,4 +1,4 @@
-import { LoaderFunction, redirect, json } from "@remix-run/node";
+import { LoaderFunction, redirect, json } from "react-router";
 import { getSession } from "~/shared/utils/session";
 import { getQuestion } from "../server/quiz.server";
 

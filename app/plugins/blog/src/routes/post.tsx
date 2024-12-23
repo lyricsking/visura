@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 import ReactMarkdown from "react-markdown";
 import { formatDateOrTime } from "~/shared/utils/date";
 import { loader } from "../loaders/post.loader";

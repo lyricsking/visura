@@ -1,4 +1,4 @@
-import { useFetcher } from "@remix-run/react";
+import { useFetcher } from "react-router";
 import type { IAddress, IAddressRegion } from "../types/address.type";
 import { CART_FETCHER_KEY } from "../types/cart.type";
 

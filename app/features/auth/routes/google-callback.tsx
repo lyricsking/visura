@@ -1,4 +1,4 @@
-import { LoaderFunction, json, redirect } from "@remix-run/node";
+import { LoaderFunction, json, redirect } from "react-router";
 import { authenticate } from "../server/auth.server";
 
 export const loader: LoaderFunction = async ({ request }) => {

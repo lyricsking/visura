@@ -1,5 +1,5 @@
-import { LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunction } from "react-router";
+import { useLoaderData } from "react-router";
 
 export default function OrderDetails() {
   const { order } = useLoaderData<typeof loader>();

@@ -1,11 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import {
-  json,
-  Link,
-  Outlet,
-  useLoaderData,
-  useMatches,
-} from "@remix-run/react";
+import { LoaderFunctionArgs } from "react-router";
+import { json, Link, Outlet, useLoaderData, useMatches } from "react-router";
 import { isAuthenticated } from "~/features/auth/server/auth.server";
 import Breadcrumb from "~/shared/components/breadcrumb";
 import {

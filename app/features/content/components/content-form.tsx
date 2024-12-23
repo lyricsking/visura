@@ -13,7 +13,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { Outlet, useFetcher } from "@remix-run/react";
+import { Outlet, useFetcher } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import { Field, IContentType } from "../types/content";
 

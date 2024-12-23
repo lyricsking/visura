@@ -1,9 +1,9 @@
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "react-router";
 import { cn } from "~/shared/utils/util";
 import { Input } from "~/shared/components/input";
 import Button from "~/shared/components/button";
 import { SettingsType } from "../type/settings.type";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "react-router";
 import { PluginModel } from "~/core/plugin/models/plugin.model";
 import { IPlugin } from "~/core/plugin/types/plugin";
 import { handleResponse } from "~/shared/utils/helpers";

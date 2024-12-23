@@ -33,8 +33,8 @@ import {
   TabsTrigger,
 } from "~/shared/components/tabs";
 import { Progress } from "~/shared/components/progress";
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { cn } from "~/shared/utils/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

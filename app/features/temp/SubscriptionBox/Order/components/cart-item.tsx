@@ -1,5 +1,5 @@
 import React from "react";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher } from "react-router";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { IItem, OrderPurchaseMode } from "../types/order.type";
 import { CART_FETCHER_KEY } from "../types/cart.type";

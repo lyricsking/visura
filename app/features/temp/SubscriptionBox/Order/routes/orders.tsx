@@ -1,11 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import {
-  Outlet,
-  useLoaderData,
-  useNavigate,
-  useOutletContext,
-  useParams,
-} from "@remix-run/react";
+import { LoaderFunctionArgs } from "react-router";
+import { Outlet, useLoaderData, useNavigate, useOutletContext, useParams } from "react-router";
 import { useEffect } from "react";
 import {
   Tabs,

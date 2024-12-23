@@ -7,7 +7,7 @@ import {
 } from "~/shared/components/select";
 import { Switch } from "~/shared/components/switch";
 import { Label } from "~/shared/components/label";
-import { Form, useFetcher } from "@remix-run/react";
+import { Form, useFetcher } from "react-router";
 import Button from "~/shared/components/button";
 import { SettingsType } from "../type/settings.type";
 import { NOTIFICATION_UPDATE_ACTION } from "../utils/constants";

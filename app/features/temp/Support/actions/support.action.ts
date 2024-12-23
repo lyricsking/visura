@@ -1,4 +1,4 @@
-import { ActionFunction, json } from "@remix-run/node";
+import { ActionFunction, json } from "react-router";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { createTicket } from "../server/ticket.server";
 

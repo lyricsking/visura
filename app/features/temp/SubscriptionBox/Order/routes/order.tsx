@@ -1,6 +1,6 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { LoaderFunctionArgs, json } from "react-router";
 import { getOrders } from "../server/order.server";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "react-router";
 import { Tabs, TabsList, TabsTrigger } from "~/shared/components/tabs";
 import { OrderStatus } from "../types/order.type";
 import { NoOrder } from "../components/order-selector";
@@ -31,10 +31,10 @@ export default function Order() {
       : null;
 
   return tabs ? (
-    <Tabs defaultValue={status} className="w-[400px]">
+    (<Tabs defaultValue={status} className="w-[400px]">
       <TabsList>{tabs}</TabsList>
       <Outlet context={{ status }} />
-    </Tabs> //  Render the appropriate component based requested status
+    </Tabs>) //  Render the appropriate component based requested status
   ) : (
     <NoOrder term={"status"} />
   ); // No order id or orders for the passed status was found

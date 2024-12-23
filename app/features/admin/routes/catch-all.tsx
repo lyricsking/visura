@@ -1,5 +1,5 @@
-import { LoaderFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunction, json } from "react-router";
+import { useLoaderData } from "react-router";
 import { match } from "path-to-regexp";
 import React, { Suspense } from "react";
 import { getAppContext } from "~/app";

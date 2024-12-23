@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, data, LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, data, LoaderFunctionArgs } from "react-router";
 import { z } from "zod";
 import User from "~/features/user/models/user.model";
 import { paginate } from "~/shared/utils/http";

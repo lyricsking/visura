@@ -1,5 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs } from "react-router";
+import { useLoaderData } from "react-router";
 import Button from "~/shared/components/button";
 import { Switch } from "~/shared/components/switch";
 import { isAuthenticated } from "~/core/auth/server/auth.server";

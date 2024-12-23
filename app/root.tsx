@@ -3,7 +3,7 @@ import stylesheet from "tailwind.css?url";
 // All packages except `@mantine/hooks` require styles imports
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
-import { LinksFunction, MetaFunction } from "@remix-run/node";
+import { LinksFunction, MetaFunction } from "react-router";
 import {
   useRouteLoaderData,
   Meta,
@@ -14,7 +14,7 @@ import {
   useRouteError,
   isRouteErrorResponse,
   useLoaderData,
-} from "@remix-run/react";
+} from "react-router";
 
 import { Toaster } from "./shared/components/toaster";
 import { getAppContext } from "./app";
@@ -60,7 +60,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     // <ThemeProvider theme={data?.theme}>
-    <html
+    // </ThemeProvider>
+    (<html
       lang="en"
       // className={cn(data?.theme)}
     >
@@ -81,8 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <Scripts />
       </body>
-    </html>
-    // </ThemeProvider>
+    </html>)
   );
 }
 

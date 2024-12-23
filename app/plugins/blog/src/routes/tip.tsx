@@ -1,5 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs } from "react-router";
+import { useLoaderData } from "react-router";
 import { findPostById, findPostBySlug } from "../server/post.server";
 import ReactMarkdown from "react-markdown";
 import { formatDateByParts, formatDateOrTime } from "~/shared/utils/date";

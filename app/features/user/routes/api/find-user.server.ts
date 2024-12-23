@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from "@remix-run/node";
+import { LoaderFunction, json } from "react-router";
 import { findUser } from "../../server/user.server";
 import { getAuthUser } from "~/core/auth/server/auth.server";
 import { isAuthUser } from "~/core/auth/utils/helper";

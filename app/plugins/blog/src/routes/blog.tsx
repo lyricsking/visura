@@ -1,4 +1,4 @@
-import { LinksFunction, type MetaFunction } from "@remix-run/node";
+import { LinksFunction, type MetaFunction } from "react-router";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
 import { PostSummary } from "../components/post-summary";

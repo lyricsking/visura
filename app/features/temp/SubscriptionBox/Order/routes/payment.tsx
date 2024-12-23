@@ -1,10 +1,4 @@
-import {
-  json,
-  NavigateFunction,
-  useFetcher,
-  useLoaderData,
-  useOutletContext,
-} from "@remix-run/react";
+import { json, NavigateFunction, useFetcher, useLoaderData, useOutletContext } from "react-router";
 import { useEffect, useRef } from "react";
 import useScript from "~/shared/hooks/use-script";
 import { IOrder } from "../types/order.type";
@@ -16,7 +10,7 @@ import useFlutterwavePayment from "../hooks/use-flutterwave";
 import { CART_FETCHER_KEY } from "../types/cart.type";
 import {} from "../models/order.model";
 import { updatePaymentMethod } from "../server/cart.server";
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs } from "react-router";
 import { getNanoid } from "~/shared/utils/util";
 
 const PaymentMethods = {
