@@ -38,7 +38,7 @@ export function ContentList(props: ContentListProps) {
         key={content._id.toString()}
         component={ReactNavLink}
         label={capitalize(content.name)}
-        to={`${content._id.toString()}/${content.name}`}
+        to={`${content.name}`}
       />
     );
   };

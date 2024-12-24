@@ -13,7 +13,7 @@ export default [
     route("builder/:id?", "./features/admin/routes/visual.tsx"),
     route("collections", "./features/admin/routes/collection.tsx", [
       index("./features/admin/routes/collection.edit.tsx", { id: "index" }),
-      route(":id/:model", "./features/admin/routes/collection.documents.tsx"),
+      route(":model", "./features/admin/routes/collection.documents.tsx"),
       route(":id/edit", "./features/admin/routes/collection.edit.tsx", {
         id: "edit",
       }),
@@ -27,7 +27,7 @@ export default [
       "features/collection/routes/api/collection.server.ts"
     ),
     route(
-      "documents/:id/:model",
+      "documents/:model",
       "features/collection/routes/api/document.server.ts"
     ),
     route("options", "features/option/routes/api/options.server.ts"),

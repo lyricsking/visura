@@ -119,7 +119,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const fields = url.searchParams.get("fields");
 
-  //
   const query: Record<string, any> = {
     ...(model && { model }),
   };
@@ -136,11 +135,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       );
     }
 
-    const contentTypex = await ContentType.find();
-
-    console.log(model);
     const contentType = await ContentType.findOne({ name: model });
-
     if (!contentType) {
       return Response.json(
         { error: "Content type not found" },

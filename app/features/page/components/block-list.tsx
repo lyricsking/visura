@@ -1,4 +1,4 @@
-import { Button, Divider, Text } from "@mantine/core";
+import { Button, Divider, Flex, Text } from "@mantine/core";
 import { ComponentsInfo } from "../types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 
@@ -24,7 +24,7 @@ export function BlockList() {
 
         <Text children={key} className="capitalize" />
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <Flex mt={"sm"} wrap={"wrap"} gap={"xs"}>
           {items.map((item) => (
             <Button
               key={item.name}
@@ -37,7 +37,7 @@ export function BlockList() {
               {item.name}
             </Button>
           ))}
-        </div>
+        </Flex>
       </div>
     )
   );
