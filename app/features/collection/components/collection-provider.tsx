@@ -1,4 +1,4 @@
-import { IContentType } from "../types/content";
+import { IContentType } from "../types/collection";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export type PropsUpdateFunction = (id: string, key: string, value: any) => void;

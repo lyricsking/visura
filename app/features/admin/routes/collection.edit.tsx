@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import ContentForm from "~/features/content/components/content-form";
-import { Field, IContentType } from "~/features/content/types/content";
+import ContentForm from "~/features/collection/components/collection-form";
+import { Field, IContentType } from "~/features/collection/types/collection";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 
 export async function action({ params, request }: ActionFunctionArgs) {
@@ -41,7 +41,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   const { id } = params;
 
-  if (id && id !== "new") {
+  if (id) {
     const apiURL = new URL(`http://localhost:3000/api/content-type/${id}`);
 
     res = await fetch(apiURL, {
@@ -72,9 +72,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   };
 
   const { id } = params;
-  if (id && id !== "new") {
+
+  if (id) {
     // Fetch page if id is provided and valid
-    const pageReqUrl = new URL(`http://localhost:3000/api/content-type/${id}`);
+    const pageReqUrl = new URL(`http://localhost:3000/api/collections/${id}`);
 
     content = (await (await fetch(pageReqUrl, { method: "GET" })).json())?.[
       "data"

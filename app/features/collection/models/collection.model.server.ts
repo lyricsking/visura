@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IContentType } from "../types/content";
+import { IContentType } from "../types/collection";
 
 type ContentTypeModel = Model<IContentType>;
 

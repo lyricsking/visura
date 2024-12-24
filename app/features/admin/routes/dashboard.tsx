@@ -2,10 +2,9 @@ import { AppShell, Burger, Group, NavLink, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { NavLink as ReactNavLink } from "@remix-run/react";
 
-export default function Dashboard() { 
-const [opened, { toggle }] = useDisclosure();
+export default function Dashboard() {
+  const [opened, { toggle }] = useDisclosure();
 
-  
   return (
     <AppShell
       header={{ height: 45 }}
@@ -34,12 +33,12 @@ const [opened, { toggle }] = useDisclosure();
       <AppShell.Navbar bg={"#f3f4f6"} p="sm">
         <AppShell.Section p={"md"}>Dashboard</AppShell.Section>
         <AppShell.Section p="md" grow component={ScrollArea}>
-          <NavLink component={ReactNavLink} label="Content" to="content" />
           <NavLink
             component={ReactNavLink}
-            label="Page Builder"
-            to="builder"
+            label="Collections"
+            to="collections"
           />
+          <NavLink component={ReactNavLink} label="Page Builder" to="builder" />
           <NavLink component={ReactNavLink} label="Media" to="media" />
           <NavLink component={ReactNavLink} label="Settings" to="settings" />
         </AppShell.Section>

@@ -11,16 +11,25 @@ export default [
   ...prefix("dashboard", [
     index("./features/admin/routes/dashboard.tsx"),
     route("builder/:id?", "./features/admin/routes/visual.tsx"),
-    route("content", "./features/admin/routes/content.tsx", [
-      index("./features/admin/routes/content.documents.tsx"),
-      route(":id?", "./features/admin/routes/content.edit.tsx"),
+    route("collections", "./features/admin/routes/collection.tsx", [
+      index("./features/admin/routes/collection.edit.tsx", { id: "index" }),
+      route(":id/:model", "./features/admin/routes/collection.documents.tsx"),
+      route(":id/edit", "./features/admin/routes/collection.edit.tsx", {
+        id: "edit",
+      }),
     ]),
   ]),
 
   // Api routes
   ...prefix("api", [
-    route("content-type/:id?", "features/content/routes/api/content.server.ts"),
-    route("content-data", "features/content/routes/api/content-data.server.ts"),
+    route(
+      "collections/:id?",
+      "features/collection/routes/api/collection.server.ts"
+    ),
+    route(
+      "documents/:id/:model",
+      "features/collection/routes/api/document.server.ts"
+    ),
     route("options", "features/option/routes/api/options.server.ts"),
     route("pages/:id?", "features/page/routes/api/pages.server.ts"),
     route("plugins", "features/plugin/routes/api/plugins.server.ts"),

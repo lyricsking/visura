@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
-import { ContentType } from "../../models/content.server";
-import { createDynamicModel } from "../../utils/model-generator";
+import { ContentType } from "../../models/collection.model.server";
+import { createDynamicModel } from "../../utils/collection-generator";
 import { z } from "zod";
 
 const fieldsSchema = z.object({
@@ -11,11 +11,11 @@ const fieldsSchema = z.object({
   required: z.string(),
 });
 
-const createContentDataSchema = z.object({
+const createCollectionDataSchema = z.object({
   name: z.string(),
   fields: z.array(fieldsSchema),
 });
-const updateContentDataSchema = createContentDataSchema.partial();
+const updateCollectionDataSchema = createCollectionDataSchema.partial();
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const { model } = params;
@@ -41,7 +41,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     const method = request.method.toUpperCase();
     switch (method) {
       case "POST": {
-        const parsedData = createContentDataSchema.safeParse(requestData);
+        const parsedData = createCollectionDataSchema.safeParse(requestData);
         if (!parsedData.success) {
           return Response.json(
             { error: parsedData.error.format() },
@@ -61,7 +61,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
             { status: 400 }
           );
 
-        const parsedData = updateContentDataSchema.safeParse(requestData);
+        const parsedData = updateCollectionDataSchema.safeParse(requestData);
         if (!parsedData.success) {
           return Response.json(
             { error: parsedData.error.format() },
@@ -110,12 +110,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const { model } = params;
-  //  return Response.json({ error: "Content type not found" }, { status: 404 });
-
   const url = new URL(request.url);
 
-  const id = url.searchParams.get("id");
+  const { id, model } = params;
 
   const page = parseInt(url.searchParams.get("page") || "1", 10);
   const limit = parseInt(url.searchParams.get("limit") || "10", 10);
@@ -123,46 +120,54 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const fields = url.searchParams.get("fields");
 
   //
-  const query: Record<string, any> = {};
+  const query: Record<string, any> = {
+    ...(model && { model }),
+  };
 
   const projection = fields
     ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
     : null;
 
   try {
-    if (model) {
-      const contentType = await ContentType.findOne({ name: model });
-      if (!contentType) {
-        return Response.json(
-          { error: "Content type not found" },
-          { status: 404 }
-        );
-      }
-      // get the dynamic model and  fetch data
-      const DynamicModel = createDynamicModel(
-        contentType.name,
-        contentType.fields
+    if (!model) {
+      return Response.json(
+        { error: "Content type must be provided found" },
+        { status: 404 }
       );
+    }
 
-      if (id) {
-        const data = await DynamicModel.findById(id);
-        if (!data) {
-          return Response.json(
-            { error: "Content type not found" },
-            { status: 404 }
-          );
-        }
-        return Response.json({ data: data });
-      } else {
-        const result = await paginate(
-          DynamicModel,
-          query,
-          projection,
-          page,
-          limit
-        );
-        return Response.json(result);
+    const contentTypex = await ContentType.find();
+
+    console.log(model);
+    const contentType = await ContentType.findOne({ name: model });
+
+    if (!contentType) {
+      return Response.json(
+        { error: "Content type not found" },
+        { status: 404 }
+      );
+    }
+    // get the dynamic model and  fetch data
+    const DynamicModel = createDynamicModel(
+      contentType.name,
+      contentType.fields
+    );
+
+    if (id) {
+      const data = await DynamicModel.findById(id);
+      if (!data) {
+        return Response.json({ error: "Document not found" }, { status: 404 });
       }
+      return Response.json({ data: data });
+    } else {
+      const result = await paginate(
+        DynamicModel,
+        query,
+        projection,
+        page,
+        limit
+      );
+      return Response.json(result);
     }
   } catch (error) {
     logger(error);
@@ -171,4 +176,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       { status: 500 }
     );
   }
+
+  return null;
 }

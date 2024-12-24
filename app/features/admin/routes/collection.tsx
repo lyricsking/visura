@@ -10,12 +10,12 @@ import {
 } from "@mantine/core";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
-import { ContentList } from "~/features/content/components/content-list";
+import { ContentList } from "~/features/collection/components/collection-list";
 import { LoaderFunctionArgs } from "@remix-run/node";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   // Fetch page if pageId is provided and valid
-  const pageReqUrl = new URL("http://localhost:3000/api/content-type");
+  const pageReqUrl = new URL("http://localhost:3000/api/collections");
 
   const contents = await (await fetch(pageReqUrl, { method: "GET" })).json();
   // Ensures the the fetched page is valid, otherwise return a default page object
@@ -34,7 +34,7 @@ export default function Content() {
       header={{ height: 45 }}
       // footer={{ height: 60 }}
       navbar={{
-        width: 275,
+        width: 250,
         breakpoint: "sm",
         collapsed: { mobile: !opened, desktop: false },
       }}
@@ -69,7 +69,7 @@ export default function Content() {
 
             <Button
               component={NavLink}
-              to="/dashboard/content/new"
+              to="/dashboard/content/create"
               variant="outline"
               size="compact-sm"
             >

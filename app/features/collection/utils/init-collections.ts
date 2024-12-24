@@ -1,5 +1,5 @@
-import { ContentType } from "../models/content.server";
-import { createDynamicModel } from "./model-generator";
+import { ContentType } from "../models/collection.model.server";
+import { createDynamicModel } from "./collection-generator";
 
 async function initDynamicModels() {
   // Fetch all content types from database

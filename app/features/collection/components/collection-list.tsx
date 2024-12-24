@@ -1,5 +1,5 @@
 import { Button, NavLink, Stack } from "@mantine/core";
-import { IContentType } from "../types/content";
+import { IContentType } from "../types/collection";
 import { ReactNode } from "react";
 import { capitalize } from "~/shared/utils/string";
 import {
@@ -38,7 +38,7 @@ export function ContentList(props: ContentListProps) {
         key={content._id.toString()}
         component={ReactNavLink}
         label={capitalize(content.name)}
-        to={`dashboard/content/${content._id.toString()}`}
+        to={`${content._id.toString()}/${content.name}`}
       />
     );
   };

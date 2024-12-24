@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { Field } from "../types/content";
+import { Field } from "../types/collection";
 import { convertFieldType } from "./convert-field-type";
 
 type FieldMap = Record<string, any>;
