@@ -20,14 +20,12 @@ import VisualBuilderProvider, {
 import { BlockList } from "~/features/page/components/block-list";
 import "@mantine/tiptap/styles.css";
 import { FormEvent, useEffect, useState } from "react";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react";
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
+import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import {
   IPage,
   IPageWithOptionalId,
@@ -36,57 +34,56 @@ import {
 import { Types } from "mongoose";
 import { getSlug } from "~/shared/utils/string";
 import formDataToObject from "~/shared/utils/form-data-to-object";
-import { ComponentsInfo } from "~/features/page/types/builder.components";
 import { logger } from "~/shared/utils/logger";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const formData = await request.json();
-
-  const errors = {};
-
-  const title = formData["title"];
-  const description = formData["description"];
-  const keywords = formData["keywords"];
-  const contentType = formData["contentType"];
-  const contentValue = formData["contentValue"];
-  const properties = formData["properties"];
-  const contents = formData["contents"];
-  const status = formData["status"];
-
-  const openTags: OpenGraphTag[] = [];
-  Array.isArray(properties)
-    ? properties.forEach((property, index) => {
-        if (typeof property === "string" && property.length > 0)
-          openTags.push({ property, content: contents[index] });
-      })
-    : typeof properties === "string" && properties.length > 0
-    ? openTags.push({ property: properties, content: contents })
-    : null;
-
-  const metadata: IPage["metadata"] = {
-    title,
-    description,
-    keywords,
-    openTags: openTags || undefined,
-  };
-
-  const pageData: Partial<IPage> = {
-    path: getSlug(title),
-    metadata,
-    content: {
-      type: contentType,
-      value: contentValue,
-    },
-    status: status,
-  };
-
-  let res;
-
   const pageId = params["id"];
+
+  const method = request.method.toUpperCase();
+
   try {
-    const method = request.method.toUpperCase();
-    switch (method) {
-      case "POST": {
+    if (method === "POST" || method === "PUT") {
+      const formData = await request.json();
+
+      const errors = {};
+
+      const title = formData["title"];
+      const description = formData["description"];
+      const keywords = formData["keywords"];
+      const contentType = formData["contentType"];
+      const contentValue = formData["contentValue"];
+      const properties = formData["properties"];
+      const contents = formData["contents"];
+      const status = formData["status"];
+
+      const openTags: OpenGraphTag[] = [];
+      Array.isArray(properties)
+        ? properties.forEach((property, index) => {
+            if (typeof property === "string" && property.length > 0)
+              openTags.push({ property, content: contents[index] });
+          })
+        : typeof properties === "string" && properties.length > 0
+        ? openTags.push({ property: properties, content: contents })
+        : null;
+
+      const metadata: IPage["metadata"] = {
+        title,
+        description,
+        keywords,
+        openTags: openTags || undefined,
+      };
+
+      const pageData: Partial<IPage> = {
+        path: getSlug(title),
+        metadata,
+        content: {
+          type: contentType,
+          value: contentValue,
+        },
+        status: status,
+      };
+
+      if (method === "POST") {
         const apiURL = new URL("http://localhost:3000/api/pages");
         return await (
           await fetch(apiURL, {
@@ -95,8 +92,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
             headers: { "Content-Type": "application/json" },
           })
         ).json();
-      }
-      case "PUT": {
+      } else {
         if (!pageId)
           return Response.json(
             { error: "ID is required for update" },
@@ -113,15 +109,14 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
           })
         ).json();
       }
-      case "DELETE": {
-        if (!pageId)
-          return Response.json(
-            { error: "ID is required for deletion" },
-            { status: 400 }
-          );
-        const apiURL = new URL(`http://localhost:3000/api/pages/${pageId}`);
-        return await (await fetch(apiURL, { method: "DELETE" })).json();
-      }
+    } else if (method === "DELETE") {
+      if (!pageId)
+        return Response.json(
+          { error: "ID is required for deletion" },
+          { status: 400 }
+        );
+      const apiURL = new URL(`http://localhost:3000/api/pages/${pageId}`);
+      return await (await fetch(apiURL, { method: "DELETE" })).json();
     }
   } catch (error) {
     logger(error);
@@ -132,8 +127,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   }
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const { pageId } = params;
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const { id } = params;
 
   //  Create a default blank page
   let page: IPageWithOptionalId = {
@@ -160,12 +155,21 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   ];
 
   // Fetch page if pageId is provided and valid
-  if (pageId && pageId !== "new") {
-    pageReqUrl.searchParams.set("id", pageId);
+  if (id && id !== "new") {
+    const pageReqUrl = new URL(`http://localhost:3000/api/pages/${id}`);
 
     const foundPage = await (await fetch(pageReqUrl, { method: "GET" })).json();
+    console.log(foundPage);
+
     // Ensures the the fetched page is valid, otherwise return a default page object
-    foundPage && (page = foundPage);
+    if (foundPage && foundPage.error) {
+      const currentUrl = new URL(request.url);
+      currentUrl.pathname = "dashboard/builder";
+
+      return redirect(currentUrl.toString());
+    } else {
+      page = foundPage;
+    }
   }
 
   return { page: page, all: allPages };

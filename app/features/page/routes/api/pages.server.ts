@@ -73,8 +73,9 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
             { error: "ID is required for deletion" },
             { status: 400 }
           );
-        const deletedUser = await PageModel.findByIdAndDelete(id);
-        if (!deletedUser)
+        const deletedPage = await PageModel.findByIdAndDelete(id);
+        
+        if (!deletedPage)
           return Response.json({ error: "Page not found" }, { status: 404 });
         return Response.json({ message: "Page deleted successfully" });
       }
@@ -90,10 +91,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   }
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
-  const id = url.searchParams.get("id");
+  const id = params["id"];
+  
   const path = url.searchParams.get("path");
   const template = url.searchParams.get("template") === "true";
   const status = url.searchParams.get("status");

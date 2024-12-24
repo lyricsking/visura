@@ -23,7 +23,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return contents;
 }
 
-export default function Stuido() {
+export default function Content() {
   const { data, pagination } = useLoaderData<typeof loader>();
 
   const [opened, { toggle }] = useDisclosure();

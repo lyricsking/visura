@@ -11,8 +11,9 @@ export default [
   ...prefix("dashboard", [
     index("./features/admin/routes/dashboard.tsx"),
     route("builder/:id?", "./features/admin/routes/visual.tsx"),
-    layout("./features/admin/routes/content.tsx", [
-      route("content/:id?", "./features/admin/routes/content.edit.tsx"),
+    route("content", "./features/admin/routes/content.tsx", [
+      index("./features/admin/routes/content.documents.tsx"),
+      route(":id?", "./features/admin/routes/content.edit.tsx"),
     ]),
   ]),
 

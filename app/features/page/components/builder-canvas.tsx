@@ -11,7 +11,7 @@ import {
 import { useVisualBuilder } from "./visual-builder.provider";
 import { cn } from "~/shared/utils/util";
 import { IPageWithOptionalId } from "~/features/page/types/page";
-import { ChangeEvent } from "react";
+import { ChangeEvent, MouseEvent } from "react";
 import { useFetcher, useNavigate, useParams } from "@remix-run/react";
 import { Trash2Icon, Upload } from "lucide-react";
 import { DesktopIcon, MobileIcon } from "@radix-ui/react-icons";
@@ -24,7 +24,7 @@ type ComponentsCanvasProps = {
 export default function BuilderCanvas(props: ComponentsCanvasProps) {
   const { pages, onSave } = props;
 
-  const { pageId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   // Use useVisualBuilder hook to obtain components
@@ -34,7 +34,7 @@ export default function BuilderCanvas(props: ComponentsCanvasProps) {
 
   function handlePageSwitch(event: ChangeEvent<HTMLSelectElement>): void {
     const pageId = event.currentTarget.value;
-    navigate(`./${pageId}`);
+    navigate(`/dashboard/builder/${pageId}`);
   }
 
   const dataMap: any[] = [{ label: "Blank", value: "new" }];
@@ -48,11 +48,17 @@ export default function BuilderCanvas(props: ComponentsCanvasProps) {
 
   const fetcher = useFetcher();
 
+  function handleDelete(event: MouseEvent<HTMLButtonElement>): void {
+    const id = event.currentTarget.value;
+
+    fetcher.submit(null, { method: "DELETE", encType: "application/json" });
+  }
+
   return (
     <Container h={"calc(100vh - 112px)"} w={"100%"} p="0">
       <div className="flex items-center justify-center gap-2 px-4 h-[40px] bg-gray-200">
         <NativeSelect
-          defaultValue={pageId}
+          defaultValue={id}
           data={dataMap}
           onChange={handlePageSwitch}
         />
@@ -88,12 +94,10 @@ export default function BuilderCanvas(props: ComponentsCanvasProps) {
           <Upload className="md:hidden" size={15} />
         </Button>
 
-        <fetcher.Form method="delete">
-          <Button type="submit" size="compact-sm" color="red">
-            <span className="hidden md:flex">Delete</span>
-            <Trash2Icon className="md:hidden" size={15} />
-          </Button>
-        </fetcher.Form>
+        <Button value={id} size="compact-sm" color="red" onClick={handleDelete}>
+          <span className="hidden md:flex">Delete</span>
+          <Trash2Icon className="md:hidden" size={15} />
+        </Button>
       </div>
       {/* Check if we have an active component for editing
       and display appropriate settings component */}
