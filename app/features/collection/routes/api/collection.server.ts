@@ -107,7 +107,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
-  const { id } = params;
+  const name = url.searchParams.get("model") || "";
 
   const page = parseInt(url.searchParams.get("page") || "1", 10);
   const limit = parseInt(url.searchParams.get("limit") || "10", 10);
@@ -115,11 +115,15 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const fields = url.searchParams.get("fields");
 
   //
-  const query: Record<string, any> = {};
+  const query: Record<string, any> = {
+    ...(name && { name }),
+  };
 
   const projection = fields
     ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
     : null;
+
+  const { id } = params;
 
   try {
     if (id) {

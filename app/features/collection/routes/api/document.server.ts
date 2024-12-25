@@ -2,20 +2,20 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
 import { ContentType } from "../../models/collection.model.server";
-import { createDynamicModel } from "../../utils/collection-generator";
+import { createDynamicModel } from "../../utils/collection";
 import { z } from "zod";
 
-const fieldsSchema = z.object({
-  name: z.string(),
-  type: z.string(),
-  required: z.string(),
-});
+// const fieldsSchema = z.object({
+//   name: z.string(),
+//   type: z.string(),
+//   required: z.string(),
+// });
 
-const createCollectionDataSchema = z.object({
-  name: z.string(),
-  fields: z.array(fieldsSchema),
-});
-const updateCollectionDataSchema = createCollectionDataSchema.partial();
+// const createCollectionDataSchema = z.object({
+//   name: z.string(),
+//   fields: z.array(fieldsSchema),
+// });
+// const updateCollectionDataSchema = createCollectionDataSchema.partial();
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const { model } = params;
@@ -24,7 +24,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const contentType = await ContentType.findOne({ name: model });
   if (!contentType) {
     return Response.json(
-      { error: `Type not found for ${model}` },
+      { error: `Collection not found for ${model}` },
       { status: 404 }
     );
   }
@@ -41,15 +41,17 @@ export async function action({ params, request }: ActionFunctionArgs) {
     const method = request.method.toUpperCase();
     switch (method) {
       case "POST": {
-        const parsedData = createCollectionDataSchema.safeParse(requestData);
-        if (!parsedData.success) {
-          return Response.json(
-            { error: parsedData.error.format() },
-            { status: 400 }
-          );
-        }
+        // const parsedData = createCollectionDataSchema.safeParse(requestData);
+        // if (!parsedData.success) {
+        //   return Response.json(
+        //     { error: parsedData.error.format() },
+        //     { status: 400 }
+        //   );
+        // }
 
-        const newRecord = new DynamicModel(parsedData.data);
+        // const newRecord = new DynamicModel(parsedData.data);
+        const newRecord = new DynamicModel(requestData);
+
         await newRecord.save();
 
         return Response.json(newRecord, { status: 201 });
@@ -61,17 +63,18 @@ export async function action({ params, request }: ActionFunctionArgs) {
             { status: 400 }
           );
 
-        const parsedData = updateCollectionDataSchema.safeParse(requestData);
-        if (!parsedData.success) {
-          return Response.json(
-            { error: parsedData.error.format() },
-            { status: 400 }
-          );
-        }
+        // const parsedData = updateCollectionDataSchema.safeParse(requestData);
+        // if (!parsedData.success) {
+        //   return Response.json(
+        //     { error: parsedData.error.format() },
+        //     { status: 400 }
+        //   );
+        // }
 
         const updatedRecord = await DynamicModel.findByIdAndUpdate(
           id,
-          parsedData.data,
+          // parsedData.data,
+          requestData,
           { new: true }
         );
         if (!updatedRecord)
@@ -120,7 +123,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const fields = url.searchParams.get("fields");
 
   const query: Record<string, any> = {
-    ...(model && { model }),
   };
 
   const projection = fields

@@ -8,29 +8,46 @@ import {
   Flex,
   Button,
   Text,
-  Box,
-  Center,
   Modal,
   ScrollArea,
-  SimpleGrid,
-  TextInput,
 } from "@mantine/core";
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { Form, Link, NavLink, useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
-import page from "~/shared/components/ui/page";
 import { DocumentForm } from "~/features/collection/components/document-form";
+import formDataToObject from "~/shared/utils/form-data-to-object";
+import { head } from "lodash";
+
+export async function action({ params, request }: ActionFunctionArgs) {
+  const body = formDataToObject(await request.formData());
+
+  const { model } = params;
+
+  const docsReqUrl = new URL(`http://localhost:3000/api/documents/${model}`);
+  const c = await fetch(docsReqUrl, {
+    body: JSON.stringify(body),
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return c;
+}
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const currentUrl = new URL(request.url);
-  const id = currentUrl.searchParams.get("id");
   const { model } = params;
+
+  const collectionReqUrl = new URL("http://localhost:3000/api/collections");
+  model && collectionReqUrl.searchParams.set("model", model);
+
   // Fetch page if pageId is provided and valid
   const docsReqUrl = new URL(`http://localhost:3000/api/documents/${model}`);
-  // if (id) {
-  //   docsReqUrl.searchParams.set("id", id);
-  // }
-  return await (await fetch(docsReqUrl, { method: "GET" })).json();
+
+  const [collection, docs] = await Promise.all([
+    await fetch(collectionReqUrl, { method: "GET" }),
+    await fetch(docsReqUrl, { method: "GET" }),
+  ]);
+
+  return { collection: await collection.json(), docs: await docs.json() };
 }
 
 const elements = [
@@ -42,43 +59,52 @@ const elements = [
 ];
 
 export default function Documents() {
-  const { data, pagination } = useLoaderData<typeof loader>();
+  const { collection, docs } = useLoaderData<typeof loader>();
 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const [isOpened, { open: openModal, close: closeModal }] =
     useDisclosure(false);
 
-  const rows = data.map((element: any) => (
-    <Table.Tr
-      key={element.name}
-      bg={
-        selectedRows.includes(element.position)
-          ? "var(--mantine-color-blue-light)"
-          : undefined
-      }
-    >
-      <Table.Td>
-        <Checkbox
-          aria-label="Select row"
-          checked={selectedRows.includes(element.position)}
-          onChange={(event) =>
-            setSelectedRows(
-              event.currentTarget.checked
-                ? [...selectedRows, element.position]
-                : selectedRows.filter(
-                    (position) => position !== element.position
-                  )
-            )
-          }
-        />
-      </Table.Td>
-      <Table.Td>{element.position}</Table.Td>
-      <Table.Td>{element.name}</Table.Td>
-      <Table.Td>{element.symbol}</Table.Td>
-      <Table.Td>{element.mass}</Table.Td>
-    </Table.Tr>
-  ));
+  const rows: any[] = [];
+  const heads: any[] = [];
+
+  docs.data.forEach((element: any) => {
+    const { _id, __v, ...fields } = element;
+
+    rows.push(
+      <Table.Tr
+        key={_id}
+        bg={
+          selectedRows.includes(element.position)
+            ? "var(--mantine-color-blue-light)"
+            : undefined
+        }
+      >
+        <Table.Td>
+          <Checkbox
+            aria-label="Select row"
+            checked={selectedRows.includes(element.position)}
+            onChange={(event) =>
+              setSelectedRows(
+                event.currentTarget.checked
+                  ? [...selectedRows, element.position]
+                  : selectedRows.filter(
+                      (position) => position !== element.position
+                    )
+              )
+            }
+          />
+        </Table.Td>
+
+        {Object.entries(fields).map(([key, value]) => {
+          heads.indexOf(key) < 0 && heads.push(key);
+
+          return <Table.Td>{String(value)}</Table.Td>;
+        })}
+      </Table.Tr>
+    );
+  });
 
   return (
     <Stack gap={0} h={"calc(100vh - 150px)"} w={"100%"}>
@@ -96,7 +122,7 @@ export default function Documents() {
         />
       </Flex>
 
-      {data && data.length > 0 ? (
+      {docs.data && docs.data.length > 0 ? (
         <Table.ScrollContainer minWidth={500} p={"sm"}>
           <Table
             striped
@@ -107,11 +133,10 @@ export default function Documents() {
           >
             <Table.Thead>
               <Table.Tr>
-                <Table.Th />
-                <Table.Th>Element position</Table.Th>
-                <Table.Th>Element name</Table.Th>
-                <Table.Th>Symbol</Table.Th>
-                <Table.Th>Atomic mass</Table.Th>
+                <Table.Th w={"5%"} />
+                {heads.map((head) => (
+                  <Table.Th>{head}</Table.Th>
+                ))}
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
@@ -152,7 +177,7 @@ export default function Documents() {
         centered
         scrollAreaComponent={ScrollArea.Autosize}
       >
-        <DocumentForm />
+        <DocumentForm schema={collection.data[0]} />
       </Modal>
     </Stack>
   );

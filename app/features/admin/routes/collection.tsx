@@ -23,7 +23,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return contents;
 }
 
-export default function Content() {
+export default function Collection() {
   const { data, pagination } = useLoaderData<typeof loader>();
 
   const [opened, { toggle }] = useDisclosure();
@@ -69,7 +69,7 @@ export default function Content() {
 
             <Button
               component={NavLink}
-              to="/dashboard/content/create"
+              to="/dashboard/collections"
               variant="outline"
               size="compact-sm"
             >

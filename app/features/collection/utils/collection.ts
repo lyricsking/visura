@@ -1,6 +1,22 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { Field } from "../types/collection";
-import { convertFieldType } from "./convert-field-type";
+import { ContentType } from "../models/collection.model.server";
+
+export const typeMap: Record<string, any> = {
+  string: String,
+  number: Number,
+  boolean: Boolean,
+  date: Date,
+};
+
+/**
+ * Converts a string field type to Mmongoose schema type.
+ * @param type - The field type as string (e.g. "string", "number").
+ * @returns The corresponding Mongoose schema type.
+ */
+export function convertFieldType(type: string) {
+  return typeMap[type] || String; // Default to String if type is unknown
+}
 
 type FieldMap = Record<string, any>;
 
@@ -33,4 +49,13 @@ export function createDynamicModel(name: string, fields: Field[]): Model<any> {
   const model = mongoose.model(name, schema);
 
   return model;
+}
+
+async function initDynamicModels() {
+  // Fetch all content types from database
+  const ContentTypes = await ContentType.find();
+
+  ContentTypes.forEach((contentType) => {
+    createDynamicModel(contentType.name, contentType.fields);
+  });
 }

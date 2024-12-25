@@ -21,17 +21,6 @@ type ContentListProps = {
 export function ContentList(props: ContentListProps) {
   const { contents } = props;
 
-  // Hook to update searchParams whenever content is clicked to be displayed
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const handleClick = (content: IContentType) => {
-    setSearchParams((prev) => {
-      prev.set("id", content._id.toString());
-
-      return prev;
-    });
-  };
-
   const contentMap = (content: IContentType): ReactNode => {
     return (
       <NavLink
