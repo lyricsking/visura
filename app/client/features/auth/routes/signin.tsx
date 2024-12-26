@@ -1,4 +1,5 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
+import { Button } from "@mantine/core";
 import {
   ActionFunctionArgs,
   LoaderFunction,
@@ -12,19 +13,17 @@ import {
   useLoaderData,
   useOutletContext,
 } from "@remix-run/react";
+import { useEffect } from "react";
+import { Input } from "~/client/components/input";
+import { useToast } from "~/client/hooks/use-toast";
 import {
-  REDIRECT_URL,
   authenticate,
   isAuthenticated,
+  REDIRECT_URL,
   getAuthErrorKey,
-} from "../server/auth.server";
-import { commitSession, getSession } from "~/shared/utils/session";
-import { isAuthUser } from "../utils/helper";
-import { Input } from "~/shared/components/input";
-import Button from "~/shared/components/button";
-import { useEffect } from "react";
-import { useToast } from "~/shared/hooks/use-toast";
-import { AuthorizationError } from "remix-auth";
+} from "~/shared/auth/server/auth.server";
+import { isAuthUser } from "~/shared/auth/utils/helper";
+import { getSession, commitSession } from "~/shared/utils/session";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   return await authenticate("form", request);
