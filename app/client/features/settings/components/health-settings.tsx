@@ -2,7 +2,7 @@ import { useFetcher } from "@remix-run/react";
 import { Label } from "~/shared/components/label";
 import { Input } from "~/shared/components/input";
 import Button from "~/shared/components/button";
-import { HEALTH_UPDATE_ACTION } from "../utils/constants";
+import { HEALTH_UPDATE_ACTION } from "../../admin/utils/constants";
 
 export default function HealthSettings() {
   const fetcher = useFetcher();

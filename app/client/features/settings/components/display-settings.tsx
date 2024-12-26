@@ -8,8 +8,8 @@ import {
   SelectValue,
 } from "~/shared/components/select";
 import Button from "~/shared/components/button";
-import { SettingsType } from "../type/settings.type";
-import { DISPLAY_UPDATE_ACTION } from "../utils/constants";
+import { SettingsType } from "../../admin/type/settings.type";
+import { DISPLAY_UPDATE_ACTION } from "../../admin/utils/constants";
 
 export default function DisplaySettings({ user: { profile } }: SettingsType) {
   const fetcher = useFetcher();

@@ -9,8 +9,8 @@ import { Switch } from "~/shared/components/switch";
 import { Label } from "~/shared/components/label";
 import { Form, useFetcher } from "@remix-run/react";
 import Button from "~/shared/components/button";
-import { SettingsType } from "../type/settings.type";
-import { NOTIFICATION_UPDATE_ACTION } from "../utils/constants";
+import { SettingsType } from "../../admin/type/settings.type";
+import { NOTIFICATION_UPDATE_ACTION } from "../../admin/utils/constants";
 
 export default function NotificationSettings({ user }: SettingsType) {
   const { profile } = user;

@@ -1,5 +1,5 @@
 import { Input } from "~/shared/components/input";
-import { SettingsType } from "../type/settings.type";
+import { SettingsType } from "../../admin/type/settings.type";
 
 export default function AccountSettings(props: Partial<SettingsType>) {
   return (

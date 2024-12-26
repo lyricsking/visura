@@ -14,7 +14,7 @@ import {
   DisplayOptions,
   homepageDisplayType,
   HomepageType,
-} from "../type/options";
+} from "../../admin/type/options";
 import Button from "~/shared/components/button";
 import { FormEvent, useEffect, useState } from "react";
 import { IPage } from "~/features/page/types/page";
