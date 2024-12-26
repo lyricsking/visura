@@ -1,5 +1,5 @@
 import mongoose, { model, Model, models, Schema, Types } from "mongoose";
-import { IOption } from "../types/option";
+import { IOption } from "~/shared/types/option";
 
 type IOptionModel = Model<IOption>;
 const optionSchema = new Schema<IOption, IOptionModel>({

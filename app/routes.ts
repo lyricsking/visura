@@ -8,83 +8,79 @@ import {
 import { remixRoutesOptionAdapter } from "@remix-run/routes-option-adapter";
 
 export default [
-  ...prefix("dashboard", [
-    index("./features/admin/routes/dashboard.tsx"),
-    route("builder/:id?", "./features/admin/routes/visual.tsx"),
-    route("collections", "./features/admin/routes/collection.tsx", [
-      index("./features/admin/routes/collection.edit.tsx", { id: "index" }),
-      route(":model", "./features/admin/routes/collection.documents.tsx"),
-      route(":id/edit", "./features/admin/routes/collection.edit.tsx", {
-        id: "edit",
-      }),
-    ]),
-  ]),
-
-  // Api routes
+  // // Api routes
   ...prefix("api", [
-    route(
-      "collections/:id?",
-      "features/collection/routes/api/collection.server.ts"
-    ),
-    route(
-      "documents/:model",
-      "features/collection/routes/api/document.server.ts"
-    ),
+    ...prefix("content", [
+      route(":type?", "backend/routes/content.server.ts"),
+      route(":type/data", "backend/routes/document.server.ts"),
+    ]),
     route("options", "features/option/routes/api/options.server.ts"),
     route("pages/:id?", "features/page/routes/api/pages.server.ts"),
     route("plugins", "features/plugin/routes/api/plugins.server.ts"),
   ]),
 
-  ...(await remixRoutesOptionAdapter((defineRoutes) => {
-    return defineRoutes((route) => {
-      // Define all static routes first
-      // Auth routes
-      route("auth", "features/auth/routes/layout.tsx", () => {
-        index("features/auth/routes/signin.tsx");
-        route("signup", "features/auth/routes/signup.tsx");
-        route("google", "features/auth/routes/google-signin.tsx");
-        route("google/callback", "features/auth/routes/google-callback.tsx");
-        route("signout", "features/auth/routes/signout.tsx");
-      });
+  ...prefix("dashboard", [
+    //   index("./features/admin/routes/dashboard.tsx"),
+    //   route("builder/:id?", "./features/admin/routes/visual.tsx"),
+    //   route("collections", "./features/admin/routes/collection.tsx", [
+    //     index("./features/admin/routes/collection.edit.tsx", { id: "index" }),
+    //     route(":model", "./features/admin/routes/collection.documents.tsx"),
+    //     route(":id/edit", "./features/admin/routes/collection.edit.tsx", {
+    //       id: "edit",
+    //     }),
+    //   ]),
+  ]),
 
-      // Admin routes
-      route("administration", "features/admin/routes/layout.tsx", () => {
-        route("", "features/admin/routes/overview.tsx", { index: true });
-        route("pages", "features/admin/routes/pages.tsx");
-        route("pages/edit/:pageId", "features/admin/routes/page-editor.tsx", {
-          id: "edit-page",
-        });
-        route(
-          "pages/create/:templateId?",
-          "features/admin/routes/page-editor.tsx",
-          {
-            id: "create-page",
-          }
-        );
-        route("users", "features/admin/routes/users.tsx");
-        route(
-          "settings",
-          "features/admin/routes/settings.tsx",
-          { id: "setting" },
-          () => {
-            route("general", "features/admin/routes/general-settings.tsx", {
-              index: true,
-            });
-            route("display", "features/admin/routes/display-settings.tsx");
-            route("policy", "features/admin/routes/privacy-settings.tsx");
-          }
-        );
+  // ...(await remixRoutesOptionAdapter((defineRoutes) => {
+  //   return defineRoutes((route) => {
+  //     // Define all static routes first
+  //     // Auth routes
+  //     route("auth", "features/auth/routes/layout.tsx", () => {
+  //       index("features/auth/routes/signin.tsx");
+  //       route("signup", "features/auth/routes/signup.tsx");
+  //       route("google", "features/auth/routes/google-signin.tsx");
+  //       route("google/callback", "features/auth/routes/google-callback.tsx");
+  //       route("signout", "features/auth/routes/signout.tsx");
+  //     });
 
-        route("*", "features/admin/routes/catch-all.tsx");
-      });
+  //     // Admin routes
+  //     route("administration", "features/admin/routes/layout.tsx", () => {
+  //       route("", "features/admin/routes/overview.tsx", { index: true });
+  //       route("pages", "features/admin/routes/pages.tsx");
+  //       route("pages/edit/:pageId", "features/admin/routes/page-editor.tsx", {
+  //         id: "edit-page",
+  //       });
+  //       route(
+  //         "pages/create/:templateId?",
+  //         "features/admin/routes/page-editor.tsx",
+  //         {
+  //           id: "create-page",
+  //         }
+  //       );
+  //       route("users", "features/admin/routes/users.tsx");
+  //       route(
+  //         "settings",
+  //         "features/admin/routes/settings.tsx",
+  //         { id: "setting" },
+  //         () => {
+  //           route("general", "features/admin/routes/general-settings.tsx", {
+  //             index: true,
+  //           });
+  //           route("display", "features/admin/routes/display-settings.tsx");
+  //           route("policy", "features/admin/routes/privacy-settings.tsx");
+  //         }
+  //       );
 
-      // Public pages, registered last so that catch all route would match non handle routes only.
-      route("/", "features/public/routes/layout.tsx", () => {
-        route("", "features/public/routes/home.tsx", { index: true });
-        route("*", "features/public/routes/catch-all.tsx");
-      });
-    });
-  })),
+  //       route("*", "features/admin/routes/catch-all.tsx");
+  //     });
+
+  //     // Public pages, registered last so that catch all route would match non handle routes only.
+  //     route("/", "features/public/routes/layout.tsx", () => {
+  //       route("", "features/public/routes/home.tsx", { index: true });
+  //       route("*", "features/public/routes/catch-all.tsx");
+  //     });
+  //   });
+  // })),
 ] satisfies RouteConfig;
 
 const defaultRoutes = () => {
