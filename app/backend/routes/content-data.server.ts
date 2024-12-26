@@ -2,7 +2,6 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
 import { createDynamicModel } from "../utils/collection";
-import { z } from "zod";
 import { ContentType } from "../models/content";
 
 // const fieldsSchema = z.object({
@@ -30,11 +29,12 @@ export async function action({ params, request }: ActionFunctionArgs) {
   }
 
   // get the dynamic model and create a new record
-  const DynamicModel = createDynamicModel(contentType.name, contentType.fields);
+  const DynamicModel = createDynamicModel(
+    contentType.modelName,
+    contentType.fields
+  );
 
   const requestData = await request.json();
-
-  const url = new URL(request.url);
 
   try {
     const method = request.method.toUpperCase();

@@ -8,13 +8,15 @@ import {
 import { remixRoutesOptionAdapter } from "@remix-run/routes-option-adapter";
 
 export default [
-  // // Api routes
+  // Api routes configs
   ...prefix("api", [
     ...prefix("users", [index("backend/routes/user.server.ts")]),
+    // Content api configs
     ...prefix("content", [
       route(":type?", "backend/routes/content.server.ts"),
       route(":type/data/:id?", "backend/routes/document.server.ts"),
     ]),
+    // Options routes configs
     route("options", "features/option/routes/api/options.server.ts"),
     // route("pages/:id?", "features/page/routes/api/pages.server.ts"),
     // route("plugins", "features/plugin/routes/api/plugins.server.ts"),
