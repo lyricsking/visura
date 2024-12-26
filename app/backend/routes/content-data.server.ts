@@ -18,13 +18,13 @@ import { ContentType } from "../models/content";
 // const updateCollectionDataSchema = createCollectionDataSchema.partial();
 
 export async function action({ params, request }: ActionFunctionArgs) {
-  const { model } = params;
+  const { type, id } = params;
 
   // Fetch the content type definition
-  const contentType = await ContentType.findOne({ name: model });
+  const contentType = await ContentType.findOne({ name: type });
   if (!contentType) {
     return Response.json(
-      { error: `Collection not found for ${model}` },
+      { error: `Content type not found for ${type}` },
       { status: 404 }
     );
   }
@@ -35,7 +35,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const requestData = await request.json();
 
   const url = new URL(request.url);
-  const id = url.searchParams.get("id");
 
   try {
     const method = request.method.toUpperCase();
@@ -79,7 +78,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
         );
         if (!updatedRecord)
           return Response.json(
-            { error: `Record not found for ${model} with id: ${id}` },
+            { error: `Record not found for ${type} with id: ${id}` },
             { status: 404 }
           );
         return Response.json({ data: updatedRecord });
@@ -93,7 +92,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
         const deletedRecord = await DynamicModel.findByIdAndDelete(id);
         if (!deletedRecord)
           return Response.json(
-            { error: `Record not found for ${model} with id: ${id}` },
+            { error: `Record not found for ${type} with id: ${id}` },
             { status: 404 }
           );
         return Response.json({

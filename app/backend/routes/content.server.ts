@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, data, LoaderFunctionArgs } from "@remix-run/node";
-import { ContentType } from "../../models/collection.model.server";
 import { logger } from "~/shared/utils/logger";
 import { paginate } from "~/shared/utils/http";
 import { z } from "zod";
+import { ContentType } from "../models/content";
 
 const fieldsSchema = z.object({
   name: z.string(),
@@ -14,12 +14,13 @@ const createContentDataSchema = z.object({
   name: z.string(),
   fields: z.array(fieldsSchema),
 });
+
 const updateContentDataSchema = createContentDataSchema.partial();
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const url = new URL(request.url);
 
-  const { id } = params;
+  const { type } = params;
 
   const body = await request.json();
 
@@ -45,9 +46,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
         });
       }
       case "PUT": {
-        if (!id)
+        if (!type)
           return Response.json(
-            { error: "ID is required for update record" },
+            { error: "Type of content to update must be provided." },
             { status: 400 }
           );
 
@@ -59,15 +60,15 @@ export async function action({ params, request }: ActionFunctionArgs) {
           );
         }
 
-        const updatedRecord = await ContentType.findByIdAndUpdate(
-          id,
+        const updatedRecord = await ContentType.findOneAndUpdate(
+          { name: type },
           parsedData.data,
           { new: true }
         );
 
         if (!updatedRecord) {
           return Response.json(
-            { error: `No contentType exists for the id: ${id}` },
+            { error: `No Content exists for the type: ${type}` },
             { status: 404 }
           );
         }
@@ -75,21 +76,23 @@ export async function action({ params, request }: ActionFunctionArgs) {
         return Response.json({ data: updatedRecord });
       }
       case "DELETE": {
-        if (!id)
+        if (!type)
           return Response.json(
-            { error: "ID is required for deletion" },
+            { error: "Type of content to delete must be provided." },
             { status: 400 }
           );
-        const deletedRecord = await ContentType.findByIdAndDelete(id);
+        const deletedRecord = await ContentType.findOneAndDelete({
+          name: type,
+        });
         if (!deletedRecord)
           return Response.json(
             {
-              error: `Record not found for id: ${id}`,
+              error: `Record not found for type: ${type}`,
             },
             { status: 404 }
           );
         return Response.json({
-          message: `Record with id: ${id} was deleted successfully`,
+          message: `Content type: ${type} was deleted successfully`,
         });
       }
       default:
@@ -123,14 +126,14 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
     : null;
 
-  const { id } = params;
+  const { type } = params;
 
   try {
-    if (id) {
-      const contentType = await ContentType.findById(id);
+    if (type) {
+      const contentType = await ContentType.findOne({ name: type });
       if (!contentType) {
         return Response.json(
-          { error: `Content type with id:${id} not found.` },
+          { error: `Content type:${type} not found.` },
           { status: 404 }
         );
       }

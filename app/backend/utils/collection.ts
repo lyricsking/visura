@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { Field } from "../../shared/types/content";
-import { ContentType } from "../models/collection.model.server";
+import { Field } from "~/shared/types/content";
+import { ContentType } from "../models/content";
 
 export const typeMap: Record<string, any> = {
   string: String,
