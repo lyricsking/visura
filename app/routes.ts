@@ -14,10 +14,10 @@ export default [
     // Content api configs
     ...prefix("content", [
       route(":type?", "backend/routes/content.server.ts"),
-      route(":type/data/:id?", "backend/routes/document.server.ts"),
+      route(":type/data/:id?", "backend/routes/content-data.server.ts"),
     ]),
     // Options routes configs
-    route("options", "features/option/routes/api/options.server.ts"),
+    route("options", "backend/routes/options.server.ts"),
     // route("pages/:id?", "features/page/routes/api/pages.server.ts"),
     // route("plugins", "features/plugin/routes/api/plugins.server.ts"),
   ]),

@@ -1,10 +1,9 @@
 import { serverOnly$ } from "vite-env-only/macros";
-import { DisplayOptions } from "./features/admin/type/options";
-import createDBConnection from "./shared/services/db.server";
-import { IOption, DISPLAY_OPTION_KEY } from "./features/option/types/option";
-import { IPage } from "./features/page/types/page";
-import { IPlugin, IBasePlugin } from "./features/plugin/types/plugin";
-import { Menu, MenuType, SettingsTab } from "./shared/types/menu";
+import { IBasePlugin, IPlugin } from "./client/features/plugin/types/plugin";
+import { DisplayOptions } from "./client/features/admin/type/options";
+import createDBConnection from "./client/services/db.server";
+import { MenuType, Menu, SettingsTab } from "./client/types/menu";
+import { IOption, DISPLAY_OPTION_KEY } from "./shared/types/option";
 
 export const APP_NAME = "app_name";
 
@@ -147,7 +146,7 @@ class AppContext {
     );
   }
 
-  findRoute(path: string): Omit<IPage, "id"> | undefined {
+  findRoute(path: string): /* Omit<IPage, "id">*/ any | undefined {
     return this.pluginRoutes.find((route) => {
       return route.path === path;
     });

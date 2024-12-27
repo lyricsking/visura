@@ -1,7 +1,8 @@
 import { ActionFunctionArgs, data, LoaderFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
-import User from "~/features/user/models/user.model";
+import User from "../models/user.model";
 import { paginate } from "~/shared/utils/http";
+import { logger } from "~/shared/utils/logger";
 
 const createUserSchema = z.object({});
 

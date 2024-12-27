@@ -7,7 +7,7 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "~/shared/components/toast";
+} from "~/client/components/toast";
 import { VariantProps } from "class-variance-authority";
 import { useToast } from "../hooks/use-toast";
 import { toastViewportVariants } from "./toast";
