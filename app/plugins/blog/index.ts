@@ -2,17 +2,13 @@ import {type  PluginImpl, PluginOptions } from "~/shared/types/plugin";
 import Blog, { blogLoader } from "./routes/blog";
 
 export default class BlogPlugin implements PluginImpl {
-  readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
   readonly name = "Blog";
-  readonly displayName = "Blog";
   readonly description = "";
   readonly options?: PluginOptions | undefined;
   readonly version = "0.0.1";
 
-  readonly routes = [
-    {
-      // id: new Types.ObjectId("app/plugins/blog"),
-      path: "/blog",
+  readonly routes = {
+    "va-blog": {
       loader: blogLoader,
       metadata: { title: "Blog", description: "" },
       content: {
@@ -20,8 +16,7 @@ export default class BlogPlugin implements PluginImpl {
         value: Blog,
       },
     },
-  ];
-  readonly settings: PluginOptions = {};
+  }
 
   // constructor({ version, settings }: any) {
   //   this.settings = {
@@ -47,3 +42,4 @@ export default class BlogPlugin implements PluginImpl {
   //   });
   // }
 }
+
