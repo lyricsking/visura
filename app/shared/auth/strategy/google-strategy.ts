@@ -1,14 +1,11 @@
 import { GoogleStrategy } from "remix-auth-google";
-import {
-  createUser,
-  findUser,
-  setUserToSession,
-} from "~/features/user/server/user.server";
-import { AuthUser } from "../types/auth-user.type";
-import { getAppContext } from "~/app";
-import { UserType } from "~/features/user/models/user.model";
 import { AuthorizationError } from "remix-auth";
 import doenv from "dotenv";
+import { getAppContext } from "~/app";
+import { UserType } from "~/shared/types/user";
+import { AuthUser } from "../types/auth-user.type";
+import User from "~/backend/models/user.model";
+import { cacheUserInstance } from "../utils/helper";
 doenv.config();
 
 export const googleStrategy = new GoogleStrategy(
@@ -27,7 +24,7 @@ export const googleStrategy = new GoogleStrategy(
     const photo = profile.photos[0].value;
 
     // Attempt to retrieve user with the email.
-    let user = await findUser({ email: email });
+    let user = await User.findOne({ email: email });
 
     const app = await getAppContext();
 
@@ -52,12 +49,13 @@ export const googleStrategy = new GoogleStrategy(
 
       console.log("Creating new user with: %s", userData);
 
-      user = await createUser(userData);
+      user = new User(userData);
+      await user.save();
 
       console.log("Created user %s", user);
     }
 
-    await setUserToSession(request, user);
+    await cacheUserInstance(request, user);
 
     let authUser: AuthUser = {
       id: user._id.toString(),

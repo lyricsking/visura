@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from "mongoose";
-import { IPlugin } from "../types/plugin";
+import { IPlugin } from "~/shared/types/plugin";
 
 type IPluginModel = Model<IPlugin>;
 const pluginSchema = new Schema<IPlugin, IPluginModel>({

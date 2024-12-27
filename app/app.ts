@@ -1,7 +1,7 @@
 import { serverOnly$ } from "vite-env-only/macros";
-import { IBasePlugin, IPlugin } from "./client/features/plugin/types/plugin";
+import { IBasePlugin, IPlugin } from "./shared/types/plugin";
 import { DisplayOptions } from "./client/features/admin/type/options";
-import createDBConnection from "./client/services/db.server";
+import createDBConnection from "./shared/services/db.server";
 import { MenuType, Menu, SettingsTab } from "./client/types/menu";
 import { IOption, DISPLAY_OPTION_KEY } from "./shared/types/option";
 

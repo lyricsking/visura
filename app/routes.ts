@@ -18,8 +18,8 @@ export default [
     ]),
     // Options routes configs
     route("options", "backend/routes/options.server.ts"),
-    // route("pages/:id?", "features/page/routes/api/pages.server.ts"),
-    // route("plugins", "features/plugin/routes/api/plugins.server.ts"),
+    route("pages/:id?", "backend/routes/pages.server.ts"),
+    route("plugins", "backend/routes/plugins.server.ts"),
   ]),
 
   ...prefix("dashboard", [

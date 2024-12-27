@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import { PluginModel } from "../../models/plugin.model";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
-import { IPlugin } from "../../types/plugin";
+import { IPlugin } from "../../shared/types/plugin";
 import { handleResponse } from "~/shared/utils/helpers";
+import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import { PluginModel } from "../models/plugin.model";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   let response: DBReponse<IPlugin[] | null>;
