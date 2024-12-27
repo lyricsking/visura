@@ -3,25 +3,20 @@ import { IPage } from "./page";
 
 export const PLUGIN_KEY = "plugins";
 
-export interface PluginSetting {
+export interface PluginOptions {
   [key: string]: any;
 }
 
-export interface IBasePlugin {
+export interface IPlugin {
+  _id: Types.ObjectId;
   name: string;
   description: string;
   path: string;
-  // displayName: string;
-  settings?: PluginSetting;
-  routes: Omit<IPage, "id">[];
+  isActive: boolean;
+  options?: PluginOptions;
   version: string;
 }
 
-export interface IPlugin
-  extends Pick<IBasePlugin, "name" | "description" | "path" | "version"> {
-  id: Types.ObjectId;
-  isActive: boolean;
-  settings: Omit<PluginSetting, "routes"> & {
-    routes: string[];
-  };
+export interface PluginInstance extends IPlugin {
+  routes: Record<string, any>;
 }

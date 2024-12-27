@@ -7,7 +7,7 @@ const pluginSchema = new Schema<IPlugin, IPluginModel>({
   description: { type: String, required: true },
   path: { type: String, required: true },
   isActive: { type: Boolean, default: false },
-  settings: { type: Schema.Types.Mixed, default: {} },
+  options: { type: Schema.Types.Mixed, default: {} },
   version: { type: String, required: true },
 });
 

@@ -18,20 +18,3 @@ const pageSchema = new Schema<IPage, IPageModel>({
 
 export const PageModel: IPageModel =
   mongoose.models.Page || model<IPage, IPageModel>("Page", pageSchema);
-
-export const defaultPage: Pick<IPage, "content"> = {
-  content: {
-    type: "yaml",
-    value: `# Array of sections
-sections:
-  - type: section
-    props:
-      blocks:
-        - type: text
-          props:
-            text: Sample text block
-            as: 'p'
-            class: "italic"
-`,
-  },
-};

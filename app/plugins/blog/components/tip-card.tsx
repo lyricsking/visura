@@ -4,7 +4,7 @@ import { formatDateByParts } from "~/shared/utils/date";
 import { Link } from "@remix-run/react";
 import { cn } from "~/shared/utils/util";
 import { getSlug } from "../utils/slug";
-import { buttonVariants } from "~/shared/components/button";
+import { Button } from "@mantine/core";
 
 type TipCardProps = {
   tip: ITips;
@@ -40,15 +40,13 @@ export const TipSummary = (props: TipCardProps) => {
               {tip.prediction.outcome.value}
             </h3>
           </div>
-          <Link
+          <Button
+            component={Link}
             to={path + "/" + getSlug(title)}
-            className={cn(
-              buttonVariants({ variant: "outline", radius: "md" }),
-              "text-white bg-red-400 "
-            )}
+            className="text-white bg-red-400 "
           >
             See Predictions
-          </Link>
+          </Button>
         </div>
         <div>
           <h4 className="text-md font-semibold">

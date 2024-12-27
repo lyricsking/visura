@@ -1,13 +1,13 @@
+import { Button } from "@mantine/core";
 import { Link, Outlet } from "@remix-run/react";
 import { APP_NAME } from "~/app";
-import Button from "~/shared/components/button";
 import {
   PageLayout,
   PageLayoutHeader,
   PageLayoutHeaderItem,
   PageLayoutContent,
-} from "~/shared/components/ui/page.layout";
-import { useAppContext } from "~/shared/providers/app.provider.tsx";
+} from "~/client/components/ui/page.layout";
+import { useAppContext } from "~/client/providers/app.provider.tsx";
 
 export default function Layout() {
   const app = useAppContext();

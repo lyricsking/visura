@@ -1,10 +1,9 @@
 import { AppContext } from "~/app";
-import { IBasePlugin, PluginSetting } from "~/core/plugin/types/plugin";
-import Blog, { blogLoader } from "./src/routes/blog";
-import { PageContentType } from "~/core/page/types/page";
-import { Types } from "mongoose";
+import { PageContentType } from "~/shared/types/page";
+import { PluginOptions } from "~/shared/types/plugin";
+import Blog, { blogLoader } from "./routes/blog";
 
-export default class BlogPlugin implements IBasePlugin {
+export default class BlogPlugin extends PluginInstance {
   readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
   readonly name = "Blog";
   readonly displayName = "Blog";
@@ -22,7 +21,7 @@ export default class BlogPlugin implements IBasePlugin {
       },
     },
   ];
-  readonly settings: PluginSetting = {};
+  readonly settings: PluginOptions = {};
 
   constructor({ version, settings }: any) {
     this.version = version;
@@ -32,19 +31,19 @@ export default class BlogPlugin implements IBasePlugin {
     };
   }
 
-  module(app: AppContext) {
-    app.addMenu("admin", {
-      id: "blog",
-      path: "blog",
-      label: "Blog",
-      //   icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFjdGl2aXR5Ij48cGF0aCBkPSJNMjIgMTJoLTIuNDhhMiAyIDAgMCAwLTEuOTMgMS40NmwtMi4zNSA4LjM2YS4yNS4yNSAwIDAgMS0uNDggMEw5LjI0IDIuMThhLjI1LjI1IDAgMCAwLS40OCAwbC0yLjM1IDguMzZBMiAyIDAgMCAxIDQuNDkgMTJIMiIvPjwvc3ZnPg==",
-      icon: "lucide-ListIcon",
-    });
+  // module(app: AppContext) {
+  //   app.addMenu("admin", {
+  //     id: "blog",
+  //     path: "blog",
+  //     label: "Blog",
+  //     //   icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFjdGl2aXR5Ij48cGF0aCBkPSJNMjIgMTJoLTIuNDhhMiAyIDAgMCAwLTEuOTMgMS40NmwtMi4zNSA4LjM2YS4yNS4yNSAwIDAgMS0uNDggMEw5LjI0IDIuMThhLjI1LjI1IDAgMCAwLS40OCAwbC0yLjM1IDguMzZBMiAyIDAgMCAxIDQuNDkgMTJIMiIvPjwvc3ZnPg==",
+  //     icon: "lucide-ListIcon",
+  //   });
 
-    app.addRouteMenu("/administration/blog", {
-      id: "blog-edit",
-      path: "blog/edit",
-      label: "Create Post",
-    });
-  }
+  //   app.addRouteMenu("/administration/blog", {
+  //     id: "blog-edit",
+  //     path: "blog/edit",
+  //     label: "Create Post",
+  //   });
+  // }
 }
