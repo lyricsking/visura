@@ -16,7 +16,14 @@ export interface IPlugin {
   version: string;
 }
 
-export interface PluginInstance extends Omit<IPlugin, "_id" | "isActive"> {
-  readonly path: string; // Path to load the plugin from; used to load plugin from internal or external host
+export interface PluginImpl {
+  name: string;
+  description: string;
+  options?: PluginOptions;
+  version: string;
   routes: Record<string, any>;
+}
+
+export interface PluginInstance extends PluginImpl {
+  readonly path: string; // Path to load the plugin from; used to load plugin from internal or external host
 }

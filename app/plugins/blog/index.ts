@@ -1,7 +1,7 @@
-import { PluginInstance, PluginOptions } from "~/shared/types/plugin";
+import {type  PluginImpl, PluginOptions } from "~/shared/types/plugin";
 import Blog, { blogLoader } from "./routes/blog";
 
-export default class BlogPlugin implements PluginInstance {
+export default class BlogPlugin implements PluginImpl {
   readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
   readonly name = "Blog";
   readonly displayName = "Blog";
