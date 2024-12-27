@@ -11,16 +11,14 @@ export interface IPlugin {
   _id: Types.ObjectId;
   name: string;
   description: string;
+  path: string; // Path to load the plugin from; used to load plugin from internal or external host
   isActive: boolean;
   options?: PluginOptions;
   version: string;
 }
 
-export interface PluginImpl {
-  name: string;
-  description: string;
-  options?: PluginOptions;
-  version: string;
+export interface PluginImpl
+  extends Pick<IPlugin, "name" | "description" | "options" | "version"> {
   routes: Record<string, any>;
 }
 
