@@ -16,10 +16,10 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import { Toaster } from "./shared/components/toaster";
 import { getAppContext } from "./app";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Toaster } from "./client/components/toaster";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },

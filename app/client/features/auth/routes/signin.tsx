@@ -1,14 +1,8 @@
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@mantine/core";
-import {
-  ActionFunctionArgs,
-  LoaderFunction,
-  json,
-  redirect,
-} from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
 import {
   Form,
-  Link,
   useFetcher,
   useLoaderData,
   useOutletContext,
@@ -41,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   console.log("error", error);
 
   if (error) {
-    return json(
+    return Response.json(
       { error },
       {
         headers: {
@@ -49,7 +43,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         },
       }
     );
-  } else return json({});
+  } else return Response.json({});
 };
 
 export default function Signin() {
@@ -114,7 +108,7 @@ export default function Signin() {
               </Button>
             </Form>
 
-            <button className="hidden w-full font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
+            {/* <button className="hidden w-full font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
               <div className=" bg-white p-1 rounded-full">
                 <svg className=" w-6" viewBox="0 0 32 32">
                   <path
@@ -125,50 +119,57 @@ export default function Signin() {
               </div>
               <span className="ml-4">Sign in with GitHub</span>
             </button>
-          </div>
+          </div> */}
 
-          <div className="my-4 flex items-center justify-center">
-            <div className="flex-1 border-t border-gray-300 w-full"></div>
-            <span className="mx-4 text-gray-500">Or sign in with e-mail</span>
-            <div className="flex-1 border-t border-gray-300 w-full"></div>
-          </div>
+            <div className="my-4 flex items-center justify-center">
+              <div className="flex-1 border-t border-gray-300 w-full"></div>
+              <span className="mx-4 text-gray-500">Or sign in with e-mail</span>
+              <div className="flex-1 border-t border-gray-300 w-full"></div>
+            </div>
 
-          <div className="mx-auto">
-            <fetcher.Form method="post">
-              <Input
-                className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                name="userId"
-                type="text"
-                placeholder="Email"
-              />
-              <Input
-                className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                name="password"
-                type="password"
-                placeholder="Password"
-              />
-              <Button
-                type="submit"
-                className="mt-5 h-12 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                disabled={isSubmitting}
-              >
-                <ArrowLeftEndOnRectangleIcon className="w-6 h-6 -ml-3" />
-                <span className="ml-3">
-                  {isSubmitting ? "Signing in" : "Sign In"}
-                </span>
-              </Button>
-              <p className="mt-6 text-xs text-gray-600 text-center">
-                By continuing, you agree to have read, understood and accepted{" "}
-                {appname}'s{" "}
-                <a href="#" className="border-b border-gray-500 border-dotted">
-                  Terms of Service
-                </a>{" "}
-                and{" "}
-                <a href="#" className="border-b border-gray-500 border-dotted">
-                  Privacy Policy
-                </a>
-              </p>
-            </fetcher.Form>
+            <div className="mx-auto">
+              <fetcher.Form method="post">
+                <Input
+                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  name="userId"
+                  type="text"
+                  placeholder="Email"
+                />
+                <Input
+                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                />
+                <Button
+                  type="submit"
+                  className="mt-5 h-12 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  disabled={isSubmitting}
+                >
+                  <ArrowLeftEndOnRectangleIcon className="w-6 h-6 -ml-3" />
+                  <span className="ml-3">
+                    {isSubmitting ? "Signing in" : "Sign In"}
+                  </span>
+                </Button>
+                <p className="mt-6 text-xs text-gray-600 text-center">
+                  By continuing, you agree to have read, understood and accepted{" "}
+                  {appname}'s{" "}
+                  <a
+                    href="#"
+                    className="border-b border-gray-500 border-dotted"
+                  >
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="#"
+                    className="border-b border-gray-500 border-dotted"
+                  >
+                    Privacy Policy
+                  </a>
+                </p>
+              </fetcher.Form>
+            </div>
           </div>
         </div>
       </div>

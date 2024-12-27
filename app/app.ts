@@ -1,14 +1,11 @@
 import { serverOnly$ } from "vite-env-only/macros";
-import { DisplayOptions } from "./features/admin/type/options";
+import { IPlugin, PluginInstance } from "./shared/types/plugin";
+import { DisplayOptions } from "./client/features/admin/type/options";
 import createDBConnection from "./shared/services/db.server";
-import { IOption, DISPLAY_OPTION_KEY } from "./features/option/types/option";
-import { IPage } from "./features/page/types/page";
-import { IPlugin, IBasePlugin } from "./features/plugin/types/plugin";
-import { Menu, MenuType, SettingsTab } from "./shared/types/menu";
+import { MenuType, Menu, SettingsTab } from "./client/types/menu";
+import { IOption, DISPLAY_OPTION_KEY } from "./shared/types/option";
 
 export const APP_NAME = "app_name";
-
-type PluginInstance = IPlugin & { instance: IBasePlugin };
 
 class AppContext {
   private static baseUrl =
@@ -100,27 +97,27 @@ class AppContext {
       const pluginModule = await import(/* @vite-ignore*/ plugin.path);
       if (pluginModule.default) {
         pluginsInstance.push({
-          id: plugin.id,
+          // _id: plugin._id,
           name: plugin.name,
           description: plugin.description,
           path: plugin.path,
-          isActive: plugin.isActive,
-          settings: plugin.settings,
+          // isActive: plugin.isActive,
+          options: plugin.options,
           version: plugin.version,
-          // displayName: plugin.name,
-          instance: new pluginModule.default(plugin),
+          routes: pluginModule.default.routes,
         });
       }
     }
+
     return pluginsInstance;
   }
 
   // Async initialization logic for loading plugins
-  async use(callbackFn: (app: AppContext) => Promise<void>) {
-    if (callbackFn) {
-      await callbackFn(this);
-    }
-  }
+  // async use(callbackFn: (app: AppContext) => Promise<void>) {
+  //   if (callbackFn) {
+  //     await callbackFn(this);
+  //   }
+  // }
 
   config(key: string) {
     const option = this._configs.find((option) => option.name === key);
@@ -137,7 +134,7 @@ class AppContext {
 
   get pluginRoutes() {
     return this.activePlugins.flatMap((plugin) =>
-      plugin.instance.routes ? Object.values(plugin.instance.routes) : []
+      plugin.routes ? Object.values(plugin.routes) : []
     );
   }
 
@@ -147,7 +144,7 @@ class AppContext {
     );
   }
 
-  findRoute(path: string): Omit<IPage, "id"> | undefined {
+  findRoute(path: string): /* Omit<IPage, "id">*/ any | undefined {
     return this.pluginRoutes.find((route) => {
       return route.path === path;
     });

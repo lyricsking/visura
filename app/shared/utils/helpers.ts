@@ -4,8 +4,8 @@ import {
   Session,
   TypedResponse,
 } from "@remix-run/node";
-import { REDIRECT_SEARCH_PARAM } from "~/features/auth/server/auth.server";
 import { commitSession, getSession } from "./session";
+import { REDIRECT_SEARCH_PARAM } from "../auth/server/auth.server";
 
 export type ApiResponse<T> = {
   data?: T;

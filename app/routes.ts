@@ -14,12 +14,21 @@ export default [
     // Content api configs
     ...prefix("content", [
       route(":type?", "backend/routes/content.server.ts"),
-      route(":type/data/:id?", "backend/routes/document.server.ts"),
+      route(":type/data/:id?", "backend/routes/content-data.server.ts"),
     ]),
     // Options routes configs
-    route("options", "features/option/routes/api/options.server.ts"),
-    // route("pages/:id?", "features/page/routes/api/pages.server.ts"),
-    // route("plugins", "features/plugin/routes/api/plugins.server.ts"),
+    route("options", "backend/routes/options.server.ts"),
+    route("pages/:id?", "backend/routes/pages.server.ts"),
+    route("plugins", "backend/routes/plugins.server.ts"),
+  ]),
+
+  // Auth routes
+  layout("client/features/auth/routes/layout.tsx", [
+    route("signin", "client/features/auth/routes/signin.tsx"),
+    //       route("signup", "features/auth/routes/signup.tsx"),
+    //       route("google", "features/auth/routes/google-signin.tsx"),
+    //       route("google/callback", "features/auth/routes/google-callback.tsx"),
+    //       route("signout", "features/auth/routes/signout.tsx"),
   ]),
 
   ...prefix("dashboard", [
@@ -37,14 +46,7 @@ export default [
   // ...(await remixRoutesOptionAdapter((defineRoutes) => {
   //   return defineRoutes((route) => {
   //     // Define all static routes first
-  //     // Auth routes
-  //     route("auth", "features/auth/routes/layout.tsx", () => {
-  //       index("features/auth/routes/signin.tsx");
-  //       route("signup", "features/auth/routes/signup.tsx");
-  //       route("google", "features/auth/routes/google-signin.tsx");
-  //       route("google/callback", "features/auth/routes/google-callback.tsx");
-  //       route("signout", "features/auth/routes/signout.tsx");
-  //     });
+  //
 
   //     // Admin routes
   //     route("administration", "features/admin/routes/layout.tsx", () => {

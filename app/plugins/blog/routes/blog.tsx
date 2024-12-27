@@ -11,19 +11,19 @@ import {
   SelectContent,
   SelectItem,
 } from "@radix-ui/react-select";
-import Button from "~/shared/components/button";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "~/shared/components/card";
 import { serverOnly$ } from "vite-env-only/macros";
 import { TipSummary } from "../components/tip-card";
 import { ITips } from "../types/tips.type";
 import { findPosts } from "../server/post.server";
 import { findTips } from "../server/tips.server";
-import { PluginLoaderFunction } from "~/core/page/types/page";
+import { PluginLoaderFunction } from "~/shared/types/page";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "~/client/components/card";
+import { Button } from "@mantine/core";
 
 export const blogLoader: PluginLoaderFunction | undefined = serverOnly$(
   async () => {
