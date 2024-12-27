@@ -1,14 +1,14 @@
-import { AppContext } from "~/app";
-import { PageContentType } from "~/shared/types/page";
-import { PluginOptions } from "~/shared/types/plugin";
+import { PluginInstance, PluginOptions } from "~/shared/types/plugin";
 import Blog, { blogLoader } from "./routes/blog";
 
-export default class BlogPlugin extends PluginInstance {
+export default class BlogPlugin implements PluginInstance {
   readonly path = ""; // Path to load the plugin from; used to load plugin from internal or external host
   readonly name = "Blog";
   readonly displayName = "Blog";
   readonly description = "";
+  readonly options?: PluginOptions | undefined;
   readonly version = "0.0.1";
+
   readonly routes = [
     {
       // id: new Types.ObjectId("app/plugins/blog"),
@@ -16,20 +16,20 @@ export default class BlogPlugin extends PluginInstance {
       loader: blogLoader,
       metadata: { title: "Blog", description: "" },
       content: {
-        type: "component" as PageContentType["type"],
+        type: "block",
         value: Blog,
       },
     },
   ];
   readonly settings: PluginOptions = {};
 
-  constructor({ version, settings }: any) {
-    this.version = version;
-    this.settings = {
-      ...settings,
-      routes: this.settings.routes,
-    };
-  }
+  // constructor({ version, settings }: any) {
+  //   this.settings = {
+  //     ...settings,
+  //     routes: this.settings.routes,
+  //   };
+  //   this.version = version;
+  // }
 
   // module(app: AppContext) {
   //   app.addMenu("admin", {

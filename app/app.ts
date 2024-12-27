@@ -97,11 +97,11 @@ class AppContext {
       const pluginModule = await import(/* @vite-ignore*/ plugin.path);
       if (pluginModule.default) {
         pluginsInstance.push({
-          _id: plugin._id,
+          // _id: plugin._id,
           name: plugin.name,
           description: plugin.description,
           path: plugin.path,
-          isActive: plugin.isActive,
+          // isActive: plugin.isActive,
           options: plugin.options,
           version: plugin.version,
           routes: pluginModule.default.routes,
