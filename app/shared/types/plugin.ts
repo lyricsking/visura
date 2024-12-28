@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import { IPage } from "./page";
 import { Menu } from "~/shared/types/menu";
-import { z } from "zod";
 import { Widget } from "./widget";
 
 export const PLUGIN_KEY = "plugins";
@@ -19,6 +18,6 @@ export interface IPlugin {
   isActive: boolean;
   routes?: Omit<IPage, "_id">[];
   adminMenu?: Menu[];
-  widgets: Widget[];
+  widgets?: Widget[];
   options?: PluginOptions;
 }

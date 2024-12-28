@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/utils/slug.ts"],
+  "sourcesContent": ["import slugify from \"slugify\";\r\nimport { getNanoid } from \"~/shared/utils/util\";\r\n\r\nexport const getSlug = (text: string) => {\r\n  let slug = slugify(text, {\r\n    lower: true, // to lowercase\r\n    strict: true, // Remove special chracters\r\n  });\r\n\r\n  let id = getNanoid(6);\r\n\r\n  return `${slug}-${id}`;\r\n};\r\n"],
+  "mappings": ";AAAA,OAAO,aAAa;AACpB,SAAS,iBAAiB;AAEnB,aAAM,UAAU,CAAC,SAAiB;AACvC,MAAI,OAAO,QAAQ,MAAM;AAAA,IACvB,OAAO;AAAA;AAAA,IACP,QAAQ;AAAA;AAAA,EACV,CAAC;AAED,MAAI,KAAK,UAAU,CAAC;AAEpB,SAAO,GAAG,IAAI,IAAI,EAAE;AACtB;",
+  "names": []
+}
