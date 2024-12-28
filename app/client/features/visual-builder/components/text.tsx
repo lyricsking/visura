@@ -14,7 +14,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../types/builder.components";
+} from "../../../../shared/types/builder.components";
 import { colorSwatch } from "../utils/color";
 
 export type TextSettingsProps = ComponentsInfo<

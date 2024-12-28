@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { ComponentsInfo } from "../types/builder.components";
+import { ComponentsInfo } from "../../../../shared/types/builder.components";
 import { textInfo } from "./text";
 import { getNanoid } from "~/shared/utils/util";
 import { AddComponent } from "../utils/fns";
@@ -60,7 +60,6 @@ export default function VisualBuilderProvider({
 
     if (Array.isArray(initialComponents)) {
       for (const component of initialComponents) {
-
         const defComponent = defaultComponents.find(
           (defComponent) => defComponent.name === component.name
         );

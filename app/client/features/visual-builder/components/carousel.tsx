@@ -17,7 +17,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../types/builder.components";
+} from "../../../../shared/types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 import { slideSizeMarks, marks } from "../utils/marks";
 

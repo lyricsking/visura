@@ -15,7 +15,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../types/builder.components";
+} from "../../../../shared/types/builder.components";
 import { MouseEvent } from "react";
 import { getNanoid } from "~/shared/utils/util";
 

@@ -11,7 +11,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../types/builder.components";
+} from "../../../../shared/types/builder.components";
 
 type MantineAvatarSettingsProps = ComponentsInfo<
   AvatarProps & BaseComponentsInfoProps

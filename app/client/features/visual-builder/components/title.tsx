@@ -13,7 +13,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../types/builder.components";
+} from "../../../../shared/types/builder.components";
 
 export type TitleSettingsProps = ComponentsInfo<
   BaseComponentsInfoProps & TitleProps

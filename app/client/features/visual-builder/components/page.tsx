@@ -14,7 +14,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../types/builder.components";
+} from "../../../../shared/types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 
 type PageSettingsProps = ComponentsInfo<
@@ -26,8 +26,10 @@ export const pageInfo: PageSettingsProps = {
   group: "layout",
   component: Container,
   settingsComponent: PageSetting,
-  props: { 
-  onPropsUpdate: () => {},fluid: true },
+  props: {
+    onPropsUpdate: () => {},
+    fluid: true,
+  },
 };
 
 export function PageSetting({ ...props }: PageSettingsProps["props"]) {

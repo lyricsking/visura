@@ -3,7 +3,12 @@ import stylesheet from "tailwind.css?url";
 // All packages except `@mantine/hooks` require styles imports
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
-import { LinksFunction, MetaFunction } from "@remix-run/node";
+import {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+  redirect,
+} from "@remix-run/node";
 import {
   useRouteLoaderData,
   Meta,
@@ -20,6 +25,10 @@ import { getAppContext } from "./app";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Toaster } from "./client/components/toaster";
+import { Types } from "mongoose";
+import { IPageWithOptionalId } from "./shared/types/page";
+import { IPlugin } from "./shared/types/plugin";
+import { PluginManager } from "./plugin-manager";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -29,31 +38,46 @@ export type LoaderData = {
   config: any;
 };
 
-// read the state from the cookie
-export const loader = async () => {
-  //const themeSession = await getThemeSession(request);
-  const app = await getAppContext();
-  const data: LoaderData = {
-    config: {},
-  };
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const pluginsUrl = new URL("http://localhost:3000/api/plugins");
+  pluginsUrl.searchParams.set("limit", "0");
+  // pluginsUrl.searchParams.set("isActive", "true");
 
-  return Response.json(data);
+  const optionsUrl = new URL("http://localhost:3000/api/plugins");
+  optionsUrl.searchParams.set("limit", "0");
+  optionsUrl.searchParams.set("type", "system");
+
+  const [pluginsReq, optionsReq] = await Promise.all([
+    fetch(pluginsUrl, { method: "GET" }),
+    fetch(optionsUrl, { method: "GET" }),
+  ]);
+
+  const plugins = (await pluginsReq.json())["data"];
+  const options = (await optionsReq.json())["data"];
+
+  console.log(`Plugins data:`, plugins);
+  console.log(`Options data:`, options);
+  
+  // Server side plugins initialization
+  const pluginManager = new PluginManager(plugins);
+
+  return { plugins, options };
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  // Access the appConfig from the loader's returned data
-  if (data && data.config) {
-    return [{ title: "" }, { name: "description", content: "" }];
-  }
+// export const meta: MetaFunction<typeof loader> = ({ data }) => {
+//   // Access the appConfig from the loader's returned data
+//   if (data && data.config) {
+//     return [{ title: "" }, { name: "description", content: "" }];
+//   }
 
-  return [
-    { title: "Title" },
-    {
-      name: "description",
-      content: "Description",
-    },
-  ];
-};
+//   return [
+//     { title: "Title" },
+//     {
+//       name: "description",
+//       content: "Description",
+//     },
+//   ];
+// };
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData("root") as LoaderData;

@@ -1,38 +1,51 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import { IPlugin } from "../../shared/types/plugin";
-import { handleResponse } from "~/shared/utils/helpers";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "../models/plugin.model";
+import { paginate } from "~/shared/utils/http";
+import { logger } from "~/shared/utils/logger";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  let response: DBReponse<IPlugin[] | null>;
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
 
-  if (process.env.NODE_ENV !== "production") {
-    const blogPlugin = new PluginModel({
-      name: "blog",
-      description: "Blog description",
-      path: "/app/plugins/blog/index",
-      isActive: true,
-      settings: {
-        routes: [],
-      },
-      version: "0.0.1",
-    });
+  const { id } = params;
 
-    response = { data: [blogPlugin] };
-  } else {
-    const url = new URL(request.url);
+  const isActive = url.searchParams.get("isActive");
+  const plugin = parseInt(url.searchParams.get("page") || "1", 10);
+  const limit = parseInt(url.searchParams.get("limit") || "10", 10);
 
-    const isActive = url.searchParams.get("isActive") === "true";
+  const fields = url.searchParams.get("fields");
 
-    const query: { isActive?: boolean } = {};
+  const query: Record<string, any> = {
+    ...(isActive && { isActive: isActive === "true" }),
+  };
 
-    if (isActive) query.isActive = isActive;
+  const projection = fields
+    ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
+    : null;
 
-    response = await handleDbResult(PluginModel.find(query));
+  try {
+    if (id) {
+      const data = await PluginModel.findById(id);
+      if (!data) {
+        return Response.json({ error: "Plugin not found" }, { status: 404 });
+      }
+      return Response.json({ data: data });
+    } else {
+      const result = await paginate(
+        PluginModel,
+        query,
+        projection,
+        plugin,
+        limit
+      );
+      return Response.json(result);
+    }
+  } catch (error) {
+    logger(error);
+    return Response.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
   }
-
-  return json(response);
 };
 
 export const action = ({}: ActionFunctionArgs) => {};

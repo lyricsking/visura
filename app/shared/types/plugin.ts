@@ -1,5 +1,8 @@
 import { Types } from "mongoose";
 import { IPage } from "./page";
+import { Menu } from "~/shared/types/menu";
+import { z } from "zod";
+import { Widget } from "./widget";
 
 export const PLUGIN_KEY = "plugins";
 
@@ -11,17 +14,11 @@ export interface IPlugin {
   _id: Types.ObjectId;
   name: string;
   description: string;
-  path: string; // Path to load the plugin from; used to load plugin from internal or external host
-  isActive: boolean;
-  options?: PluginOptions;
+  // path: string; // CDN or local path to plugin configuration
   version: string;
-}
-
-export interface PluginImpl
-  extends Pick<IPlugin, "name" | "description" | "options" | "version"> {
-  routes: Record<string, any>;
-}
-
-export interface PluginInstance extends PluginImpl {
-  readonly path: string; // Path to load the plugin from; used to load plugin from internal or external host
+  isActive: boolean;
+  routes?: Omit<IPage, "_id">[];
+  adminMenu?: Menu[];
+  widgets: Widget[];
+  options?: PluginOptions;
 }

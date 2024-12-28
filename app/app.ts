@@ -1,8 +1,7 @@
 import { serverOnly$ } from "vite-env-only/macros";
-import { IPlugin, PluginInstance } from "./shared/types/plugin";
 import { DisplayOptions } from "./client/features/admin/type/options";
 import createDBConnection from "./shared/services/db.server";
-import { MenuType, Menu, SettingsTab } from "./client/types/menu";
+import { MenuType, Menu, SettingsTab } from "./shared/types/menu";
 import { IOption, DISPLAY_OPTION_KEY } from "./shared/types/option";
 
 export const APP_NAME = "app_name";
@@ -27,7 +26,7 @@ class AppContext {
 
   private constructor(
     private _configs: IOption[],
-    private activePlugins: PluginInstance[]
+    private activePlugins: any[]
   ) {
     console.log("App initialized");
   }
@@ -78,8 +77,8 @@ class AppContext {
     return configRes.data;
   }
 
-  static async loadActivePlugins(): Promise<PluginInstance[]> {
-    const pluginsInstance: PluginInstance[] = [];
+  static async loadActivePlugins(): Promise<any[]> {
+    const pluginsInstance: any[] = [];
 
     let pluginReq;
     if (typeof document === "undefined") {
@@ -97,14 +96,10 @@ class AppContext {
       const pluginModule = await import(/* @vite-ignore*/ plugin.path);
       if (pluginModule.default) {
         pluginsInstance.push({
-          // _id: plugin._id,
           name: plugin.name,
           description: plugin.description,
-          path: plugin.path,
-          // isActive: plugin.isActive,
           options: plugin.options,
           version: plugin.version,
-          routes: pluginModule.default.routes,
         });
       }
     }
@@ -112,64 +107,64 @@ class AppContext {
     return pluginsInstance;
   }
 
-  // Async initialization logic for loading plugins
+  // // Async initialization logic for loading plugins
   // async use(callbackFn: (app: AppContext) => Promise<void>) {
   //   if (callbackFn) {
   //     await callbackFn(this);
   //   }
   // }
 
-  config(key: string) {
-    const option = this._configs.find((option) => option.name === key);
-    return option?.value;
-  }
+  // config(key: string) {
+  //   const option = this._configs.find((option) => option.name === key);
+  //   return option?.value;
+  // }
 
-  get homepageConfig(): DisplayOptions["homepage"] {
-    const option = this._configs.find(
-      (option) => option.name === DISPLAY_OPTION_KEY
-    );
+  // get homepageConfig(): DisplayOptions["homepage"] {
+  //   const option = this._configs.find(
+  //     (option) => option.name === DISPLAY_OPTION_KEY
+  //   );
 
-    return option?.value["homepage"];
-  }
+  //   return option?.value["homepage"];
+  // }
 
-  get pluginRoutes() {
-    return this.activePlugins.flatMap((plugin) =>
-      plugin.routes ? Object.values(plugin.routes) : []
-    );
-  }
+  // get pluginRoutes() {
+  //   return this.activePlugins.flatMap((plugin) =>
+  //     plugin.routes ? Object.values(plugin.routes) : []
+  //   );
+  // }
 
-  plugin(name: string) {
-    return Object.entries(this.activePlugins).find(
-      ([key, value]) => key === name
-    );
-  }
+  // plugin(name: string) {
+  //   return Object.entries(this.activePlugins).find(
+  //     ([key, value]) => key === name
+  //   );
+  // }
 
-  findRoute(path: string): /* Omit<IPage, "id">*/ any | undefined {
-    return this.pluginRoutes.find((route) => {
-      return route.path === path;
-    });
-  }
+  // findRoute(path: string): /* Omit<IPage, "id">*/ any | undefined {
+  //   return this.pluginRoutes.find((route) => {
+  //     return route.path === path;
+  //   });
+  // }
 
-  addMenu(menuType: MenuType, menuItem: Menu) {
-    this._menus[menuType] = [...this._menus[menuType], menuItem];
-  }
+  // addMenu(menuType: MenuType, menuItem: Menu) {
+  //   this._menus[menuType] = [...this._menus[menuType], menuItem];
+  // }
 
-  get dashboardMenu() {
-    return this._menus.admin;
-  }
+  // get dashboardMenu() {
+  //   return this._menus.admin;
+  // }
 
-  addRouteMenu(path: string, menuItem: Menu) {
-    const currentPathMenus = this._routeMenus[path] || [];
-    currentPathMenus.push(menuItem);
+  // addRouteMenu(path: string, menuItem: Menu) {
+  //   const currentPathMenus = this._routeMenus[path] || [];
+  //   currentPathMenus.push(menuItem);
 
-    this._routeMenus[path] = currentPathMenus;
-  }
+  //   this._routeMenus[path] = currentPathMenus;
+  // }
 
-  getRouteMenu(routePath: string): Menu[] | undefined {
-    return Object.entries(this._routeMenus).find(
-      ([path, menuItem]) => path === routePath
-    )?.[1];
-  }
+  // getRouteMenu(routePath: string): Menu[] | undefined {
+  //   return Object.entries(this._routeMenus).find(
+  //     ([path, menuItem]) => path === routePath
+  //   )?.[1];
+  // }
 }
 
 export const getAppContext = (): Promise<AppContext> => {

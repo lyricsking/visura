@@ -1,15 +1,8 @@
-import {
-  PluginActionFunction,
-  PluginLoaderFunction,
-} from "~/core/page/types/page";
-
 export type SettingsTab = {
   id?: string;
   label: string;
   path: string;
   component: string;
-  loader?: ReturnType<PluginLoaderFunction>;
-  action?: ReturnType<PluginActionFunction>;
   icon?: string;
 };
 
@@ -19,4 +12,5 @@ export type Menu = {
   label: string;
   path: string;
   icon?: string;
+  position?: number;
 };

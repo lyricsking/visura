@@ -26,6 +26,7 @@ export interface PageContent {
 }
 import { AppContext } from "~/app";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { ComponentsInfo } from "~/shared/types/builder.components";
 
 interface PluginLoaderFunctionArgs extends LoaderFunctionArgs {
   app: AppContext;
@@ -57,12 +58,11 @@ export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType];
 
 export interface IPage {
   _id: Types.ObjectId;
-  path?: string;
-  default?: boolean;
+  path: string;
   metadata: PageMetadata;
-  content: PageContent;
-  action?: PluginActionFunction;
-  loader?: PluginLoaderFunction;
+  loaderEnpoint?: string;
+  actionEnpoint?: string;
+  content: ComponentsInfo[];
   createdBy: Types.ObjectId;
   isTemplate?: TemplateType;
   status: PageStatus;

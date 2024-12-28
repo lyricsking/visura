@@ -1,5 +1,5 @@
 import { ComponentType, ReactNode } from "react";
-import { PropsUpdateFunction } from "../components/visual-builder.provider";
+import { PropsUpdateFunction } from "../../client/features/visual-builder/components/visual-builder.provider";
 
 export const ComponentsInfoGroup = {
   layout: "layout",
