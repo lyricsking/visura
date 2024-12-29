@@ -3,17 +3,17 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export default async function createDBConnection() {
-  const MONGODB_URI = process.env.MONGODB_URI;
+export default async function createDBConnection(fallbackUrl: string = "") {
+  const DATABASE_URL = process.env.DATABASE_URL || fallbackUrl;
 
-  if (!MONGODB_URI) {
+  if (!DATABASE_URL) {
     throw new Error(
-      "Please define the MONGODB_URI environment variable inside .env"
+      "Please define the DATABASE_URL environment variable inside .env"
     );
   }
 
   if (!mongoose.connection.readyState) {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(DATABASE_URL);
     console.log("Mongoose connected");
   }
 

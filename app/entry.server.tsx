@@ -14,6 +14,19 @@ import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
 import { AppContext, getAppContext } from "./app";
 import AppContextProvider from "./client/providers/app.provider.tsx";
+import { logger } from "./shared/utils/logger";
+import dotenv from "dotenv";
+
+dotenv.config();
+// If setup script hadn't completed we abort with instruction
+// to complete the setup.
+if (process.env.SETUP_COMPLETE !== "true") {
+  console.error(
+    "Setup has not been completed. Please run `npm run setup` first."
+  );
+
+  process.exit(1);
+}
 
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;

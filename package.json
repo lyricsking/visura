@@ -11,7 +11,8 @@
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "generate:plugin": "node scripts/plugin/generate.cjs",
-    "build:plugin": "node scripts/plugin/build.cjs"
+    "build:plugin": "node scripts/plugin/build.cjs",
+    "setup": "node scripts/setup/setup.cjs"
   },
   "dependencies": {
     "@codemirror/lang-yaml": "^6.1.1",

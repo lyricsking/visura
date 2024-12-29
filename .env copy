@@ -1,0 +1,7 @@
+BASE_URL="http://localhost:3000"
+SESSION_SECRET="SecretSession"
+MONGODB_URI="mongodb+srv://asaajay775:Y1UCjRJi4kn4nBkO@linked-mongodb-cluster.vt5v17t.mongodb.net/linkedDB?retryWrites=true&w=majority&appName=Linked-Mongodb-Cluster"
+MONGODB_NAME="databasename"
+FLUTTERWAVE_PUBLIC_KEY="FLWPUBK-43ed770abe9aff62df15f53c04bef9a6-X"
+GOOGLE_CLIENT_ID="28230292127-e96bh0vt4md8vjegtid8jpf5me0sg8k1.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="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"
