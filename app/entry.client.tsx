@@ -8,22 +8,22 @@ import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { AppContext, getAppContext } from "./app";
-import AppContextProvider from "./client/providers/app.provider.tsx";
 
-async function initializeAppContext(): Promise<AppContext> {
+export let appContext: AppContext;
+
+async function initializeAppContext(): Promise<void> {
   // Init app context
-  return getAppContext();
+  appContext = await getAppContext();
+  return;
 }
 
-initializeAppContext().then((app) => {
+initializeAppContext().then(() => {
   startTransition(() => {
     hydrateRoot(
       document,
-      <AppContextProvider appContext={app}>
-        <StrictMode>
-          <RemixBrowser />
-        </StrictMode>
-      </AppContextProvider>
+      <StrictMode>
+        <RemixBrowser />
+      </StrictMode>
     );
   });
 });

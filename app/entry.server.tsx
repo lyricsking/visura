@@ -12,12 +12,12 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
-import { AppContext, getAppContext } from "./app";
-import AppContextProvider from "./client/providers/app.provider.tsx";
-import { logger } from "./shared/utils/logger";
 import dotenv from "dotenv";
+import createDBConnection from "./shared/services/db.server";
+import { AppContext, getAppContext } from "./app";
 
 dotenv.config();
+
 // If setup script hadn't completed we abort with instruction
 // to complete the setup.
 if (process.env.SETUP_COMPLETE !== "true") {
@@ -28,10 +28,12 @@ if (process.env.SETUP_COMPLETE !== "true") {
   process.exit(1);
 }
 
+export let appContext: AppContext;
+
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;
 
-export default async function handleRequest(
+export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
@@ -41,23 +43,18 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  // Todo Implement debounce
-  const app: AppContext = await getAppContext();
-
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext,
-        app
+        remixContext
       )
     : handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
-        remixContext,
-        app
+        remixContext
       );
 }
 
@@ -65,15 +62,12 @@ function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
-  app: AppContext
+  remixContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <AppContextProvider appContext={app}>
-        <RemixServer context={remixContext} url={request.url} />
-      </AppContextProvider>,
+      <RemixServer context={remixContext} url={request.url} />,
       {
         onAllReady() {
           shellRendered = true;
@@ -115,15 +109,12 @@ function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
-  app: AppContext
+  remixContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <AppContextProvider appContext={app}>
-        <RemixServer context={remixContext} url={request.url} />
-      </AppContextProvider>,
+      <RemixServer context={remixContext} url={request.url} />,
       {
         onShellReady() {
           shellRendered = true;
@@ -159,3 +150,13 @@ function handleBrowserRequest(
     setTimeout(abort, streamTimeout + 1000);
   });
 }
+
+async function initApp() {
+  // init database
+  await createDBConnection();
+
+  // init app
+  appContext = await getAppContext();
+}
+
+initApp();

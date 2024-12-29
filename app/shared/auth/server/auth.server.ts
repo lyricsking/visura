@@ -23,7 +23,7 @@ export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   throwOnError: true,
 });
 
-// authenticator.use(formStrategy);
+authenticator.use(formStrategy);
 authenticator.use(googleStrategy);
 
 export const getAuthErrorKey = () => authenticator.sessionErrorKey;

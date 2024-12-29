@@ -19,12 +19,12 @@ export default function AppContextProvider({
   );
 }
 
-export function useAppContext() {
-  const context = useContext(ClientAppContext);
+// export function useAppContext() {
+//   const context = useContext(ClientAppContext);
 
-  if (!context) {
-    throw new Error("useAppContext must be used within AppContextProvider");
-  }
+//   if (!context) {
+//     throw new Error("useAppContext must be used within AppContextProvider");
+//   }
 
-  return context;
-}
+//   return context;
+// }

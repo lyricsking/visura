@@ -25,11 +25,14 @@ export default [
   // Auth routes
   layout("client/features/auth/routes/layout.tsx", [
     route("signin", "client/features/auth/routes/signin.tsx"),
-    //       route("signup", "features/auth/routes/signup.tsx"),
-    //       route("google", "features/auth/routes/google-signin.tsx"),
-    //       route("google/callback", "features/auth/routes/google-callback.tsx"),
-    //       route("signout", "features/auth/routes/signout.tsx"),
+    //       route("signup", "client/features/auth/routes/signup.tsx"),
+    //       route("google", "client/features/auth/routes/google-signin.tsx"),
+    //       route("google/callback", "client/features/auth/routes/google-callback.tsx"),
+    //       route("signout", "client/features/auth/routes/signout.tsx"),
   ]),
+
+  // Public routes
+  index("client/features/admin/routes/overview.tsx"),
 
   ...prefix("dashboard", [
     //   index("./features/admin/routes/dashboard.tsx"),

@@ -1,5 +1,4 @@
-import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import { Button } from "@mantine/core";
+import { Button, Divider } from "@mantine/core";
 import { ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
 import {
   Form,
@@ -7,6 +6,7 @@ import {
   useLoaderData,
   useOutletContext,
 } from "@remix-run/react";
+import { ArrowLeft, ArrowRight, ArrowRightFromLine } from "lucide-react";
 import { useEffect } from "react";
 import { Input } from "~/client/components/input";
 import { useToast } from "~/client/hooks/use-toast";
@@ -82,7 +82,12 @@ export default function Signin() {
             <Form action="/auth/google" method="POST" className="w-full">
               <Button
                 type="submit"
-                className="w-full font-bold shadow-sm rounded-lg py-6 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow hover:text-white focus:shadow-sm focus:shadow-outline focus:text-white "
+                maw={"250"}
+                my={"sm"}
+                mx="auto"
+                size="md"
+                fullWidth
+                className="transition-all duration-300 ease-in-out"
               >
                 <div className="bg-white p-2 rounded-full">
                   <svg className="w-4" viewBox="0 0 533.5 544.3">
@@ -121,11 +126,14 @@ export default function Signin() {
             </button>
           </div> */}
 
-            <div className="my-4 flex items-center justify-center">
-              <div className="flex-1 border-t border-gray-300 w-full"></div>
-              <span className="mx-4 text-gray-500">Or sign in with e-mail</span>
-              <div className="flex-1 border-t border-gray-300 w-full"></div>
-            </div>
+            <Divider
+              orientation="horizontal"
+              label="Or sign in with e-mail"
+              labelPosition="center"
+              size={"md"}
+              my={"lg"}
+              color={"red"}
+            />
 
             <div className="mx-auto">
               <fetcher.Form method="post">
@@ -143,10 +151,14 @@ export default function Signin() {
                 />
                 <Button
                   type="submit"
-                  className="mt-5 h-12 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  className="transition-all duration-300 ease-in-out"
+                  maw={"250"}
+                  my={"sm"}
+                  mx="auto"
+                  fullWidth
                   disabled={isSubmitting}
                 >
-                  <ArrowLeftEndOnRectangleIcon className="w-6 h-6 -ml-3" />
+                  <ArrowRightFromLine />
                   <span className="ml-3">
                     {isSubmitting ? "Signing in" : "Sign In"}
                   </span>

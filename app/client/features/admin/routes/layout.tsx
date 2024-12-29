@@ -6,22 +6,18 @@ import {
   useLoaderData,
   useMatches,
 } from "@remix-run/react";
-import { isAuthenticated } from "~/features/auth/server/auth.server";
-import Breadcrumb from "~/shared/components/breadcrumb";
+import Breadcrumb from "~/client/components/breadcrumb";
 import {
   PageLayout,
   PageLayoutHeader,
   PageLayoutHeaderItem,
   PageLayoutContent,
-} from "~/shared/components/ui/page.layout";
-import HeaderIcons from "../components/header-icons";
-import { SidebarProvider, SidebarTrigger } from "~/shared/components/sidebar";
-import { AdminSidebar } from "~/features/admin/components/admin-sidebar";
+} from "~/client/components/ui/page.layout";
+import { SidebarProvider, SidebarTrigger } from "~/client/components/sidebar";
 import { APP_NAME } from "~/app";
-import { useAppContext } from "~/shared/providers/app.provider.tsx";
-import { getUserOrFetch } from "~/features/user/server/user.server";
-import { IUser } from "~/features/user/models/user.model";
 import { Types } from "mongoose";
+import { isAuthenticated } from "~/shared/auth/server/auth.server";
+import { IUser } from "~/shared/types/user";
 
 export const handle = {
   breadcrumb: {

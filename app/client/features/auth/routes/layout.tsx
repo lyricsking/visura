@@ -7,11 +7,9 @@ import {
   PageLayoutHeaderItem,
   PageLayoutContent,
 } from "~/client/components/ui/page.layout";
-import { useAppContext } from "~/client/providers/app.provider.tsx";
 
 export default function Layout() {
-  const app = useAppContext();
-  const appName = app.config(APP_NAME);
+  const appName = "";
 
   return (
     <PageLayout className="bg-white max-h-screen overflow-y-auto no-scrollbar">

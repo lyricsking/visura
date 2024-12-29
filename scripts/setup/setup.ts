@@ -102,7 +102,12 @@ const runSetup = async () => {
   await user.save();
 
   // Create default options
-  new OptionModel({ name: APP_NAME, value: appName });
+  // new OptionModel({ name: APP_NAME, value: appName });
+  await OptionModel.updateOne(
+    { name: APP_NAME },
+    { value: appName },
+    { upsert: true }
+  );
 
   // Step 6: Finalize, Prevent running the setup again by locking it
   fs.renameSync("scripts/setup/setup.ts", "scripts/setup/setup.lock");

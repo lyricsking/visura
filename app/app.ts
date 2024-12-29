@@ -7,10 +7,10 @@ import { IOption, DISPLAY_OPTION_KEY } from "./shared/types/option";
 export const APP_NAME = "app_name";
 
 class AppContext {
-  private static baseUrl =
-    "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu117.gitpod.io";
-  // "https://ynm7f3-3000.csb.app";
-  // "http://localhost:3000";
+  private static baseUrl: string;
+  //   "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu117.gitpod.io";
+  // // "https://ynm7f3-3000.csb.app";
+  // // "http://localhost:3000";
 
   private static instance: AppContext | null = null;
   private static queue: Array<(instance: AppContext) => void> = [];
@@ -31,23 +31,20 @@ class AppContext {
     console.log("App initialized");
   }
 
-  static async getInstance(): Promise<AppContext> {
+  static async getInstance(baseUrl: string): Promise<AppContext> {
     if (AppContext.instance) return AppContext.instance;
 
     return new Promise<AppContext>((resolve) => {
       AppContext.queue.push(resolve);
 
       if (AppContext.queue.length === 1) {
+        this.baseUrl = baseUrl;
         AppContext.init();
       }
     });
   }
 
   private static async init() {
-    // process.env.NODE_ENV === "production" &&
-    if (typeof document === "undefined")
-      serverOnly$(await createDBConnection());
-
     const [configs, plugins] = await Promise.all([
       AppContext.loadConfigOptions(),
       AppContext.loadActivePlugins(),
@@ -63,33 +60,31 @@ class AppContext {
   }
 
   static async loadConfigOptions(): Promise<any> {
-    let configReq;
-    if (typeof document === "undefined") {
-      configReq = await fetch("http://localhost:3000/api/options");
-    } else {
-      configReq = await fetch(`${this.baseUrl}/api/options`);
-    }
+    const url = new URL(`${this.baseUrl}/api/options`);
+    url.searchParams.set("autoload", "true");
+
+    const configReq = await fetch(url);
 
     const configRes = await configReq.json();
+    const configs = configRes.data;
 
-    console.log("Fetched configurations");
+    console.log("Fetched configurations", configs);
 
-    return configRes.data;
+    return configs;
   }
 
-  static async loadActivePlugins(): Promise<any[]> {
+  static async loadActivePlugins(): Promise<any> {
     const pluginsInstance: any[] = [];
 
-    let pluginReq;
-    if (typeof document === "undefined") {
-      pluginReq = await fetch("http://localhost:3000/api/plugins");
-    } else {
-      pluginReq = await fetch(`${this.baseUrl}/api/plugins`);
-    }
+    const url = new URL(`${this.baseUrl}/api/plugins`);
+    url.searchParams.set("isActive", "true");
+
+    const pluginReq = await fetch(url);
+
     const pluginRes = await pluginReq.json();
     const plugins = pluginRes.data;
 
-    console.log("Fetched plugins");
+    console.log("Fetched plugins: ", plugins);
 
     for (const plugin of plugins) {
       // Dynamically import and initialize active plugins
@@ -167,8 +162,8 @@ class AppContext {
   // }
 }
 
-export const getAppContext = (): Promise<AppContext> => {
-  return AppContext.getInstance();
+export const getAppContext = (baseUrl: string): Promise<AppContext> => {
+  return AppContext.getInstance(baseUrl);
 };
 
 export type { AppContext };

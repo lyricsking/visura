@@ -1,3 +1,4 @@
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import {
   Activity,
@@ -6,15 +7,15 @@ import {
   DollarSign,
   Users,
 } from "lucide-react";
-import Avatar from "~/shared/components/avatar";
-import Button from "~/shared/components/button";
+import Avatar from "~/client/components/avatar";
+import Button from "~/client/components/button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardDescription,
-} from "~/shared/components/card";
+} from "~/client/components/card";
 
 export const handle = {
   pageName: "Overview",
@@ -22,6 +23,10 @@ export const handle = {
     id: "overview",
     label: "Overview",
   },
+};
+
+export const loader = ({}: LoaderFunctionArgs) => {
+  console.log("layout");
 };
 
 export default function Overview() {
