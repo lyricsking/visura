@@ -1,68 +1,121 @@
-const readline = require("readline");
-const fs = require("fs");
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
-const path = require("path");
+import readline from "readline";
+import fs from "fs";
+import bcrypt from "bcrypt";
+import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
+import { Writable, WritableOptions } from "stream";
+import User from "~/backend/models/user.model";
+import { OptionModel } from "~/backend/models/option.server";
+import { APP_NAME } from "~/app";
 
-// Utility for dsecure prompts
-const prompt = (question, isPassword = false) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Utility for secure prompts
+const askQuestion = (question: string, isPassword = false) => {
+  const stdin = process.stdin;
+  // let stdout: any = process.stdout;
+
+  // if (isPassword) {
+  const stdout = new Writable({
+    write(
+      chunk: Buffer | string,
+      encoding: BufferEncoding,
+      callback: () => void
+    ): void {
+      // Dont print anything if its password
+      if (!isPassword) {
+        process.stdout.write(chunk, encoding);
+      }
+      callback();
+    },
+  } as WritableOptions);
+  // }
+
   const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+    input: stdin,
+    output: stdout,
     terminal: true,
   });
 
-  if (isPassword) rl.write("\x1B[?25l"); // hide cursor for passwrod
   return new Promise((resolve) => {
-    rl.question(question, (answer) => {
+    process.stdout.write(question);
+
+    rl.question(question, (answer: unknown) => {
+      if (isPassword) {
+        // rl.h = rl.history.slice(1);
+        process.stdout.write("\n");
+      }
+
       rl.close();
-      if (isPassword) rl.write("\x1B[?25h\n"); // Show cursor again
       resolve(answer);
     });
   });
 };
 
 const runSetup = async () => {
-  console.log("Welcome to the Setup Wizard!");
+  console.log("Welcome to the Setup Wizard!\n");
 
   // Step 1: Gather inputs
-  const dbUrl = await prompt("Enter Database URL: ");
-  // const appName = await prompt("Enter App Name: ");
-  // const adminEmail = await prompt("Enter Admin email: ");
-  // const adminPassword = await prompt("Enter Admin password: ", true);
+  const dbUrl = await askQuestion("Enter Database URL: ");
+  const appName = await askQuestion("Enter App Name: ");
+  const firstName = await askQuestion("Enter First Name: ");
+  const lastName = await askQuestion("Enter Last Name: ");
+  const adminEmail = await askQuestion("Enter Admin email: ");
+  const adminPassword = await askQuestion("Enter Admin password: ", true);
 
   console.log("\nValidating inputs...\n");
 
   // Step 2: Validate inputs
-  if (!dbUrl /*|| !appName || !adminEmail || !adminPassword*/) {
+  if (
+    !dbUrl ||
+    !appName ||
+    !firstName ||
+    !lastName ||
+    !adminEmail ||
+    !adminPassword
+  ) {
     console.error("All fields are required. Please restart the setup.");
     process.exit(1);
   }
   // Step 3: Validate database
-  const isDbValid = await validateDatabase(dbUrl);
+  const isDbValid = await validateDatabase(dbUrl as string);
   if (!isDbValid) {
     process.exit(1);
   }
 
-  // Step 4: Hash password
-  // const salt = await bcrypt.genSalt(10);
-  // const hashPassword = await bcrypt.hash(adminPassword, salt);
-
-  // Step 5: Write Configuration
+  // Step 4: Write Configuration
   updateEnvFile({
     DATABASE_URL: `"${String(dbUrl).replace(/"/g, '\\"')}"`,
     SETUP_COMPLETE: true,
   });
 
+  // Step 5: Create default Admin User and Default App Options
+  const user = new User({
+    firstName,
+    lastName,
+    email: adminEmail,
+    password: adminPassword,
+  });
+
+  await user.save();
+
+  // Create default options
+  new OptionModel({ name: APP_NAME, value: appName });
+
   // Step 6: Finalize, Prevent running the setup again by locking it
-  fs.renameSync("scripts/setup/setup.cjs", "scripts/setup/setup.lock");
+  fs.renameSync("scripts/setup/setup.ts", "scripts/setup/setup.lock");
   console.log("Setup complete! You can now start your app.");
   process.exit(1);
 };
 
 const envFilePath = path.join(__dirname, "../../.env");
 
-const updateEnvFile = (newEnvVars) => {
+const updateEnvFile = (newEnvVars: {
+  DATABASE_URL: string;
+  SETUP_COMPLETE: boolean;
+}) => {
   try {
     let existingContent = "";
 
@@ -79,7 +132,7 @@ const updateEnvFile = (newEnvVars) => {
         const [key, value] = line.split("=");
         acc[key] = value;
         return acc;
-      }, {});
+      }, {} as any);
 
     // Merge new variables
     const mergedVars = { ...existingVars, ...newEnvVars };
@@ -94,13 +147,13 @@ const updateEnvFile = (newEnvVars) => {
 
     // Append the content
     console.log("Configuration saved to .env file.");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Failed to update .env file:", error.message);
     process.exit(1);
   }
 };
 
-const validateDatabase = async (dbUrl) => {
+const validateDatabase = async (dbUrl: string) => {
   console.log("Validating database connection...");
 
   try {
@@ -110,7 +163,7 @@ const validateDatabase = async (dbUrl) => {
     }
     // await mongoose.disconnect();
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Database connection failed:", error.message);
 
     return false;
