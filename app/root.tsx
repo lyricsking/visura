@@ -18,8 +18,6 @@ import {
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Toaster } from "./client/components/toaster";
-import { PluginManager } from "./plugin-manager";
-import createDBConnection from "./shared/services/db.server";
 import { getAppContext } from "./app";
 
 export const links: LinksFunction = () => [
@@ -31,34 +29,9 @@ export type LoaderData = {
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  console.log('root')
-  const pluginsUrl = new URL("http://localhost:3000/api/plugins");
-  pluginsUrl.searchParams.set("limit", "0");
-  // pluginsUrl.searchParams.set("isActive", "true");
-
-  const optionsUrl = new URL("http://localhost:3000/api/plugins");
-  optionsUrl.searchParams.set("limit", "0");
-  optionsUrl.searchParams.set("type", "system");
-
-  // Ensure database connection
-  await createDBConnection();
-
-  const [pluginsReq, optionsReq] = await Promise.all([
-    fetch(pluginsUrl, { method: "GET" }),
-    fetch(optionsUrl, { method: "GET" }),
-  ]);
-
-  const plugins = (await pluginsReq.json())["data"];
-  const options = (await optionsReq.json())["data"];
-
-  // console.log(`Plugins data:`, plugins);
-  // console.log(`Options data:`, options);
-
-  // Server side plugins initialization
-  const pluginManager = new PluginManager(plugins);
-  const app = getAppContext();
-
-  return { plugins, options };
+  console.log("root");
+  const app = await getAppContext("http://localhost:3000");
+  return {};
 };
 
 // export const meta: MetaFunction<typeof loader> = ({ data }) => {

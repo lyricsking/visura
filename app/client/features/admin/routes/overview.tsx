@@ -25,10 +25,6 @@ export const handle = {
   },
 };
 
-export const loader = ({}: LoaderFunctionArgs) => {
-  console.log("layout");
-};
-
 export default function Overview() {
   return (
     <div className="flex flex-1 flex-col gap-4 sm:gap-8">

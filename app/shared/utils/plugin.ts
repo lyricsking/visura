@@ -2,13 +2,21 @@ import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
 import { logger } from "./logger";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const publicDir = path.join(__dirname, "../../../public/plugins");
 
 export function isPluginInstalled(plugnFolderName: string): boolean {
   return fs.existsSync(path.join(publicDir, plugnFolderName));
 }
 
+/**
+ * Install plugin from the provided url
+ * @param pluginUrl Url path to download the plugin zip file from
+ * @returns [string] Path to folder containing the extracted plugin
+ */
 export function installPlugin(pluginUrl: string) {
   // Define where to store the downloaded zip file temporarily
   const tempFile = path.join(publicDir, "temp-plugin.zip");
@@ -19,7 +27,7 @@ export function installPlugin(pluginUrl: string) {
     return Response.json({ error: "Inavlid plugin url" }, { status: 400 });
   }
 
-  return new Promise<void>(async (resolve, reject) => {
+  return new Promise<string>(async (resolve, reject) => {
     try {
       // Download the zip file from the provided URL
       const response = await fetch(pluginUrl, { method: "GET" });
@@ -61,7 +69,7 @@ export function installPlugin(pluginUrl: string) {
       // Clean up the temporary zip file
       fs.unlinkSync(tempFile);
 
-      resolve();
+      resolve(extractToDir);
     } catch (error) {
       logger(error);
       reject(`Error downloading plugin: ${error}`);
@@ -69,20 +77,28 @@ export function installPlugin(pluginUrl: string) {
   });
 }
 
-export function fetchLocalPlugins() {
+export async function getInstalledPlugins(): Promise<any[]> {
+  const c: any[] = [];
+
+  if (!fs.existsSync(publicDir)) {
+    return c;
+  }
+
   const pluginFolders = fs.readdirSync(publicDir);
 
-  return pluginFolders.map((pluginFolder) => {
+  for (const pluginFolder of pluginFolders) {
     const pluginPath = path.join(publicDir, pluginFolder);
-    const configPath = path.join(pluginPath, "manifest.js");
+    const manifestPath = path.join(pluginPath, "manifest.js");
 
-    if (fs.existsSync(configPath)) {
-      const manifest = require(configPath);
+    if (fs.existsSync(manifestPath)) {
+      const manifest = await import(/* @vite-ignore*/ manifestPath);
       console.log(`Loading plugin: ${manifest.name} (v${manifest.version})`);
 
-      return manifest;
+      c.push(manifest);
     } else {
       console.warn(`No manifest found in ${pluginFolder}`);
     }
-  });
+  }
+
+  return c;
 }

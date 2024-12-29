@@ -13,7 +13,10 @@ export let appContext: AppContext;
 
 async function initializeAppContext(): Promise<void> {
   // Init app context
-  appContext = await getAppContext();
+  // "https://3000-lyricsking-subscription-8anendzdz6o.ws-eu117.gitpod.io";
+  // "https://ynm7f3-3000.csb.app";
+  // "http://localhost:3000"
+  appContext = await getAppContext("http://localhost:3000");
   return;
 }
 

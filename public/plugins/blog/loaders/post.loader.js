@@ -1,0 +1,12 @@
+"use strict";
+import { findPostBySlug } from "../server/post.server";
+export const loader = () => {
+  return async ({ params }) => {
+    let slug = params["slug"];
+    if (!slug) throw Error("Post slug id must be provided.");
+    let post = await findPostBySlug({ slug });
+    if (!post) throw Error("No post was found.");
+    return { post };
+  };
+};
+//# sourceMappingURL=post.loader.js.map

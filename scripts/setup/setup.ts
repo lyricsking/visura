@@ -8,6 +8,7 @@ import { Writable, WritableOptions } from "stream";
 import User from "~/backend/models/user.model";
 import { OptionModel } from "~/backend/models/option.server";
 import { APP_NAME } from "~/app";
+import { installPlugin } from "~/shared/utils/plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,24 +93,25 @@ const runSetup = async () => {
   });
 
   // Step 5: Create default Admin User and Default App Options
-  const user = new User({
+  await User.deleteMany({});
+  const user = await User.create({
     firstName,
     lastName,
     email: adminEmail,
     password: adminPassword,
   });
 
-  await user.save();
-
+  // Clean options collection
+  await OptionModel.deleteMany({});
   // Create default options
-  // new OptionModel({ name: APP_NAME, value: appName });
-  await OptionModel.updateOne(
-    { name: APP_NAME },
-    { value: appName },
-    { upsert: true }
+  await OptionModel.create({ name: APP_NAME, value: appName, autoload: true });
+
+  // Step 6: Install default plugins
+  const installedPath = await installPlugin(
+    "http://localhost:3000/pluginTemp/blog.zip"
   );
 
-  // Step 6: Finalize, Prevent running the setup again by locking it
+  // Step 7: Finalize, Prevent running the setup again by locking it
   fs.renameSync("scripts/setup/setup.ts", "scripts/setup/setup.lock");
   console.log("Setup complete! You can now start your app.");
   process.exit(1);

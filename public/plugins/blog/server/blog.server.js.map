@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/server/blog.server.ts"],
+  "sourcesContent": ["import { ActionFunctionArgs, LoaderFunctionArgs, json } from \"@remix-run/node\";\r\nimport { findPosts, publishPost } from \"./post.server\";\r\nimport AppContext, { PluginLoaderFunction } from \"~/app\";\r\n\r\nexport const action = async ({ request }: ActionFunctionArgs) => {\r\n  const formData = await request.formData();\r\n  const action = formData.get(\"action\");\r\n\r\n  if (action === \"publish\") {\r\n    const id = formData.get(\"id\");\r\n    if (id) {\r\n      console.log(await publishPost(id as string));\r\n    }\r\n    return json({ success: true });\r\n  }\r\n};\r\n\r\nexport const loader: PluginLoaderFunction = (app: AppContext) => {\r\n  return async () => {\r\n    const posts = await findPosts({});\r\n\r\n    return posts;\r\n  };\r\n};\r\n"],
+  "mappings": ";AAAA,SAAiD,YAAY;AAC7D,SAAS,WAAW,mBAAmB;AAGhC,aAAM,SAAS,OAAO,EAAE,QAAQ,MAA0B;AAC/D,QAAM,WAAW,MAAM,QAAQ,SAAS;AACxC,QAAMA,UAAS,SAAS,IAAI,QAAQ;AAEpC,MAAIA,YAAW,WAAW;AACxB,UAAM,KAAK,SAAS,IAAI,IAAI;AAC5B,QAAI,IAAI;AACN,cAAQ,IAAI,MAAM,YAAY,EAAY,CAAC;AAAA,IAC7C;AACA,WAAO,KAAK,EAAE,SAAS,KAAK,CAAC;AAAA,EAC/B;AACF;AAEO,aAAM,SAA+B,CAAC,QAAoB;AAC/D,SAAO,YAAY;AACjB,UAAM,QAAQ,MAAM,UAAU,CAAC,CAAC;AAEhC,WAAO;AAAA,EACT;AACF;",
+  "names": ["action"]
+}

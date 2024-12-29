@@ -1,8 +1,7 @@
-import { serverOnly$ } from "vite-env-only/macros";
-import { DisplayOptions } from "./client/features/admin/type/options";
-import createDBConnection from "./shared/services/db.server";
+import { PluginManager } from "./plugin-manager";
 import { MenuType, Menu, SettingsTab } from "./shared/types/menu";
-import { IOption, DISPLAY_OPTION_KEY } from "./shared/types/option";
+import { IOption } from "./shared/types/option";
+import { getInstalledPlugins } from "./shared/utils/plugin";
 
 export const APP_NAME = "app_name";
 
@@ -26,7 +25,7 @@ class AppContext {
 
   private constructor(
     private _configs: IOption[],
-    private activePlugins: any[]
+    private activePlugins: PluginManager
   ) {
     console.log("App initialized");
   }
@@ -62,6 +61,7 @@ class AppContext {
   static async loadConfigOptions(): Promise<any> {
     const url = new URL(`${this.baseUrl}/api/options`);
     url.searchParams.set("autoload", "true");
+    // url.searchParams.set("type", "system");
 
     const configReq = await fetch(url);
 
@@ -73,9 +73,7 @@ class AppContext {
     return configs;
   }
 
-  static async loadActivePlugins(): Promise<any> {
-    const pluginsInstance: any[] = [];
-
+  static async loadActivePlugins(): Promise<PluginManager> {
     const url = new URL(`${this.baseUrl}/api/plugins`);
     url.searchParams.set("isActive", "true");
 
@@ -86,20 +84,22 @@ class AppContext {
 
     console.log("Fetched plugins: ", plugins);
 
-    for (const plugin of plugins) {
-      // Dynamically import and initialize active plugins
-      const pluginModule = await import(/* @vite-ignore*/ plugin.path);
-      if (pluginModule.default) {
-        pluginsInstance.push({
-          name: plugin.name,
-          description: plugin.description,
-          options: plugin.options,
-          version: plugin.version,
-        });
-      }
-    }
+    console.log(await getInstalledPlugins());
 
-    return pluginsInstance;
+    // for (const plugin of plugins) {
+    //   // Dynamically import and initialize active plugins
+    //   const pluginModule = await import(/* @vite-ignore*/ plugin.path);
+    //   if (pluginModule.default) {
+    //     pluginsInstance.push({
+    //       name: plugin.name,
+    //       description: plugin.description,
+    //       options: plugin.options,
+    //       version: plugin.version,
+    //     });
+    //   }
+    // }
+
+    return new PluginManager(plugins);
   }
 
   // // Async initialization logic for loading plugins

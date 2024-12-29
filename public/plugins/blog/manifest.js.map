@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/manifest.json"],
+  "sourcesContent": ["{\r\n  \"name\": \"Blog\",\r\n  \"description\": \"\",\r\n  \"options\": {},\r\n  \"version\": \"0.0.1\",\r\n  \"pages\": {}\r\n}\r\n"],
+  "mappings": "AAAA;AAAA,EACE,MAAQ;AAAA,EACR,aAAe;AAAA,EACf,SAAW,CAAC;AAAA,EACZ,SAAW;AAAA,EACX,OAAS,CAAC;AACZ;",
+  "names": []
+}

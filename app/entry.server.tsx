@@ -14,7 +14,6 @@ import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
 import dotenv from "dotenv";
 import createDBConnection from "./shared/services/db.server";
-import { AppContext, getAppContext } from "./app";
 
 dotenv.config();
 
@@ -28,7 +27,8 @@ if (process.env.SETUP_COMPLETE !== "true") {
   process.exit(1);
 }
 
-export let appContext: AppContext;
+// Init database connection
+await createDBConnection();
 
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;
@@ -150,13 +150,3 @@ function handleBrowserRequest(
     setTimeout(abort, streamTimeout + 1000);
   });
 }
-
-async function initApp() {
-  // init database
-  await createDBConnection();
-
-  // init app
-  appContext = await getAppContext();
-}
-
-initApp();
