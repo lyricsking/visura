@@ -8,7 +8,7 @@ import { Writable, WritableOptions } from "stream";
 import User from "~/backend/models/user.model";
 import { OptionModel } from "~/backend/models/option.server";
 import { APP_NAME } from "~/app";
-import { installPlugin } from "~/shared/utils/plugin";
+import { getPluginManifest, installPlugin } from "~/shared/utils/plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -107,8 +107,13 @@ const runSetup = async () => {
   await OptionModel.create({ name: APP_NAME, value: appName, autoload: true });
 
   // Step 6: Install default plugins
-  const installedPath = await installPlugin(
+  const pluginName = await installPlugin(
     "http://localhost:3000/pluginTemp/blog.zip"
+  );
+
+  console.log(
+    `Manifest: `,
+    typeof pluginName === "string" ? await getPluginManifest(pluginName) : ""
   );
 
   // Step 7: Finalize, Prevent running the setup again by locking it

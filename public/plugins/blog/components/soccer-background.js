@@ -1,7 +1,39 @@
 "use strict";
-import { jsx, jsxs } from "react/jsx-runtime";
-import * as React from "react";
-const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var soccer_background_exports = {};
+__export(soccer_background_exports, {
+  default: () => soccer_background_default
+});
+module.exports = __toCommonJS(soccer_background_exports);
+var import_jsx_runtime = require("react/jsx-runtime");
+var React = __toESM(require("react"), 1);
+const SoccerSVGComponent = (props) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
   "svg",
   {
     xmlns: "http://www.w3.org/2000/svg",
@@ -15,7 +47,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
     xmlSpace: "preserve",
     ...props,
     children: [
-      /* @__PURE__ */ jsx("g", { id: "BACKGROUND", children: /* @__PURE__ */ jsx(
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { id: "BACKGROUND", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "rect",
         {
           style: {
@@ -25,8 +57,8 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
           height: 500
         }
       ) }),
-      /* @__PURE__ */ jsxs("g", { id: "OBJECTS", children: [
-        /* @__PURE__ */ jsx(
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { id: "OBJECTS", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "path",
           {
             style: {
@@ -37,8 +69,8 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
             d: "M189,488"
           }
         ),
-        /* @__PURE__ */ jsxs("g", { children: [
-          /* @__PURE__ */ jsx(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -47,7 +79,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
               d: "M57.067,401.986c-3.111-4.527,2.769-11.102,5.961-13.828c-6.366,2.376-12.965,7.71-6.414,14.139 L57.067,401.986z"
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -56,7 +88,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
               d: "M63.299,392.238c2.767-0.436,4.957-2.873,6.05-5.357c3.92,3.57-2.638,5.278-5.071,5.616 L63.299,392.238z"
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -65,7 +97,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
               d: "M71.343,370.581c1.088-5.014,6.31-6.337,10.18-4.197L71.343,370.581z"
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -74,7 +106,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
               d: "M79.983,371.708c0.101,2.863,4.515,2.496,4.08-0.271L79.983,371.708z"
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -84,8 +116,8 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
             }
           )
         ] }),
-        /* @__PURE__ */ jsx("g", { children: /* @__PURE__ */ jsxs("g", { children: [
-          /* @__PURE__ */ jsx(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -94,7 +126,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
               d: "M132.089,356.153c0.051,0.038,0.095,0.08,0.144,0.119c0.004,0.003,0.008,0.005,0.012,0.008 C132.197,356.232,132.139,356.198,132.089,356.153z"
             }
           ),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "path",
             {
               style: {
@@ -104,7 +136,7 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
             }
           )
         ] }) }),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "path",
           {
             style: {
@@ -113,9 +145,9 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
             d: "M377.692,222.652c-14.901-2.11-28.691,8.258-30.802,23.159 c-2.111,14.902,8.258,28.691,23.158,30.802c14.901,2.111,28.692-8.258,30.803-23.158 C402.962,238.553,392.594,224.763,377.692,222.652z"
           }
         ),
-        /* @__PURE__ */ jsxs("g", { children: [
-          /* @__PURE__ */ jsx("defs", { children: /* @__PURE__ */ jsx("rect", { id: "SVGID_1_", width: 500, height: 500 }) }),
-          /* @__PURE__ */ jsx("clipPath", { id: "SVGID_00000083090358913934837540000006018286806621943221_", children: /* @__PURE__ */ jsx(
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("defs", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { id: "SVGID_1_", width: 500, height: 500 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("clipPath", { id: "SVGID_00000083090358913934837540000006018286806621943221_", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "use",
             {
               xlinkHref: "#SVGID_1_",
@@ -124,13 +156,13 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
               }
             }
           ) }),
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             "g",
             {
               style: {
                 clipPath: "url(#SVGID_00000083090358913934837540000006018286806621943221_)"
               },
-              children: /* @__PURE__ */ jsx(
+              children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                 "path",
                 {
                   style: {
@@ -146,5 +178,5 @@ const SoccerSVGComponent = (props) => /* @__PURE__ */ jsxs(
     ]
   }
 );
-export default React.memo(SoccerSVGComponent);
+var soccer_background_default = React.memo(SoccerSVGComponent);
 //# sourceMappingURL=soccer-background.js.map

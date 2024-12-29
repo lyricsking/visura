@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../src/loaders/post.loader.ts"],
   "sourcesContent": ["import { LoaderFunction, LoaderFunctionArgs } from \"@remix-run/node\";\r\nimport { findPostBySlug } from \"../server/post.server\";\r\nimport { PluginLoaderFunction } from \"~/app\";\r\n\r\nexport const loader: PluginLoaderFunction = () => {\r\n  return async ({ params }) => {\r\n    let slug = params[\"slug\"];\r\n    if (!slug) throw Error(\"Post slug id must be provided.\");\r\n\r\n    let post = await findPostBySlug({ slug });\r\n\r\n    if (!post) throw Error(\"No post was found.\");\r\n\r\n    return { post };\r\n  };\r\n};\r\n"],
-  "mappings": ";AACA,SAAS,sBAAsB;AAGxB,aAAM,SAA+B,MAAM;AAChD,SAAO,OAAO,EAAE,OAAO,MAAM;AAC3B,QAAI,OAAO,OAAO,MAAM;AACxB,QAAI,CAAC,KAAM,OAAM,MAAM,gCAAgC;AAEvD,QAAI,OAAO,MAAM,eAAe,EAAE,KAAK,CAAC;AAExC,QAAI,CAAC,KAAM,OAAM,MAAM,oBAAoB;AAE3C,WAAO,EAAE,KAAK;AAAA,EAChB;AACF;",
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,kBAA+B;AAGxB,MAAM,SAA+B,MAAM;AAChD,SAAO,OAAO,EAAE,OAAO,MAAM;AAC3B,QAAI,OAAO,OAAO,MAAM;AACxB,QAAI,CAAC,KAAM,OAAM,MAAM,gCAAgC;AAEvD,QAAI,OAAO,UAAM,4BAAe,EAAE,KAAK,CAAC;AAExC,QAAI,CAAC,KAAM,OAAM,MAAM,oBAAoB;AAE3C,WAAO,EAAE,KAAK;AAAA,EAChB;AACF;",
   "names": []
 }

@@ -15,7 +15,7 @@ export function isPluginInstalled(plugnFolderName: string): boolean {
 /**
  * Install plugin from the provided url
  * @param pluginUrl Url path to download the plugin zip file from
- * @returns [string] Path to folder containing the extracted plugin
+ * @returns folder name of the downloaded plugin
  */
 export function installPlugin(pluginUrl: string) {
   // Define where to store the downloaded zip file temporarily
@@ -24,7 +24,7 @@ export function installPlugin(pluginUrl: string) {
   const pluginFolderName = pluginUrl.split("/").pop()?.split(".zip")[0];
 
   if (!pluginFolderName) {
-    return Response.json({ error: "Inavlid plugin url" }, { status: 400 });
+    return Response.json({ error: "Invalid plugin url" }, { status: 400 });
   }
 
   return new Promise<string>(async (resolve, reject) => {
@@ -69,12 +69,35 @@ export function installPlugin(pluginUrl: string) {
       // Clean up the temporary zip file
       fs.unlinkSync(tempFile);
 
-      resolve(extractToDir);
+      resolve(pluginFolderName);
     } catch (error) {
       logger(error);
       reject(`Error downloading plugin: ${error}`);
     }
   });
+}
+/**
+ *
+ * @param pluginName
+ * @returns
+ */
+export async function getPluginManifest(pluginName: string): Promise<any> {
+  if (!isPluginInstalled(pluginName)) {
+    return;
+  }
+
+  if (fs.existsSync(path.join(publicDir, pluginName, "manifest.js"))) {
+    console.log(`../../../public/plugins/${pluginName}/manifest.js`);
+
+    const manifest = await import(
+      `../../../public/plugins/${pluginName}/manifest.js`
+    );
+    console.log(`Loading plugin: ${manifest.name} (v${manifest.version})`);
+
+    return manifest;
+  } else {
+    console.warn(`No manifest found in ${pluginName}`);
+  }
 }
 
 export async function getInstalledPlugins(): Promise<any[]> {
@@ -90,8 +113,12 @@ export async function getInstalledPlugins(): Promise<any[]> {
     const pluginPath = path.join(publicDir, pluginFolder);
     const manifestPath = path.join(pluginPath, "manifest.js");
 
+    console.log("Path is", manifestPath);
+    // /* @vite-ignore*/
     if (fs.existsSync(manifestPath)) {
-      const manifest = await import(/* @vite-ignore*/ manifestPath);
+      const manifest = await import(
+        `../../../public/plugins/${pluginFolder}/manifest.js`
+      );
       console.log(`Loading plugin: ${manifest.name} (v${manifest.version})`);
 
       c.push(manifest);
