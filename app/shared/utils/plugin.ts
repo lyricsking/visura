@@ -84,7 +84,6 @@ export function installPlugin(pluginUrl: string) {
         const manifest: IPlugin = JSON.parse(manifestData);
 
         // Validate manifest structure
-        //
         const c = await PluginModel.create(manifest);
         console.log(c);
       }

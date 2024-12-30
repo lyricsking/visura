@@ -53,13 +53,15 @@ export const authenticate = async (
  * authenticated and properly handles redirection, ensuring user can go back
  * to initial page that failed authentication.
  *
- * @param request `Request` Request object of the current page
+ * @param request `Request` object of the current page
  * @param options Optional options to pass to authenticator
+ *
+ * @returns `Promise<AuthUser | null>`
  */
 export const isAuthenticated = async (
   request: Request,
   shouldRedirect: boolean = false
-) => {
+): Promise<AuthUser | null> => {
   const authRes = await authenticator.isAuthenticated(request);
 
   if (!authRes) {

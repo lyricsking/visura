@@ -25,7 +25,7 @@ class AppContext {
 
   private constructor(
     private _configs: IOption[],
-    private activePlugins: PluginManager
+    private pluginsManager: PluginManager
   ) {
     console.log("App initialized");
   }
@@ -75,7 +75,7 @@ class AppContext {
 
   static async loadActivePlugins(): Promise<PluginManager> {
     const url = new URL(`${this.baseUrl}/api/plugins`);
-    url.searchParams.set("isActive", "true");
+    // url.searchParams.set("isActive", "true");
 
     const pluginReq = await fetch(url);
 
@@ -84,30 +84,9 @@ class AppContext {
 
     console.log("Fetched plugins: ", plugins);
 
-    console.log(await getInstalledPlugins());
-
-    // for (const plugin of plugins) {
-    //   // Dynamically import and initialize active plugins
-    //   const pluginModule = await import(/* @vite-ignore*/ plugin.path);
-    //   if (pluginModule.default) {
-    //     pluginsInstance.push({
-    //       name: plugin.name,
-    //       description: plugin.description,
-    //       options: plugin.options,
-    //       version: plugin.version,
-    //     });
-    //   }
-    // }
-
     return new PluginManager(plugins);
   }
 
-  // // Async initialization logic for loading plugins
-  // async use(callbackFn: (app: AppContext) => Promise<void>) {
-  //   if (callbackFn) {
-  //     await callbackFn(this);
-  //   }
-  // }
 
   // config(key: string) {
   //   const option = this._configs.find((option) => option.name === key);
@@ -121,6 +100,10 @@ class AppContext {
 
   //   return option?.value["homepage"];
   // }
+
+  addRoute() {
+    this.pluginsManager.activePlugins.
+  }
 
   // get pluginRoutes() {
   //   return this.activePlugins.flatMap((plugin) =>

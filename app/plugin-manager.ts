@@ -1,15 +1,14 @@
 import { IPlugin } from "./shared/types/plugin";
-import { logger } from "./shared/utils/logger";
 
 export class PluginManager {
   private loading: Set<string> = new Set(); // To track loading plugins
   private cache: Map<string, any> = new Map(); // cache plugin data
 
-  constructor(plugins: IPlugin[]) {
-    this.activatePlugins(plugins);
-  }
+  constructor(private plugins: IPlugin[]) {}
 
-  activatePlugins(plugins: IPlugin[]) {}
+  get activePlugins() {
+    return this.plugins.filter((plugin) => plugin.isActive === true);
+  }
 
   // // Load plugin configuration asynchronously
   // async loadPlugin(pluginName: string) {

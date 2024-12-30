@@ -32,7 +32,7 @@ export default [
   ]),
 
   // Public routes
-  index("client/features/admin/routes/overview.tsx"),
+  index("client/features/landing-page/routes/home.tsx"),
 
   ...prefix("dashboard", [
     //   index("./features/admin/routes/dashboard.tsx"),

@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export default async function createDBConnection(fallbackUrl: string = "") {
-  const DATABASE_URL = process.env.DATABASE_URL || fallbackUrl;
+export default async function createDBConnection() {
+  const DATABASE_URL = process.env.DATABASE_URL;
 
   if (!DATABASE_URL) {
     throw new Error(
