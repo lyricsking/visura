@@ -21,9 +21,9 @@ __export(post_summary_exports, {
   PostSummary: () => PostSummary
 });
 module.exports = __toCommonJS(post_summary_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_date = require("~/shared/utils/date");
 var import_react = require("@remix-run/react");
+var import_jsx_runtime = require("react/jsx-runtime");
 function PostSummary(props) {
   let { post } = props;
   let dateFormat = post.publishedOn ? (0, import_date.formatDateOrTime)(new Date(post.publishedOn), {

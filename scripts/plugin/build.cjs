@@ -34,7 +34,7 @@ function getValidFiles(dir) {
     } else if (
       filePath.endsWith(".ts") ||
       filePath.endsWith(".js") ||
-      filePath.endsWith(".json") ||
+      // filePath.endsWith(".json") ||
       filePath.endsWith(".tsx") ||
       filePath.endsWith(".jsx")
     ) {
@@ -44,6 +44,30 @@ function getValidFiles(dir) {
   });
 
   return results;
+}
+
+/**
+ * Recursively copy JSON files from the source directory to the destibation dirctory
+ *
+ * @param {*} srcDir
+ * @param {*} ourDir
+ */
+function copyJSONFiles(srcDir, ourDir) {
+  const files = fs.readdirSync(srcDir, { withFileTypes: true });
+
+  for (const file of files) {
+    const srcPath = path.join(srcDir, file.name);
+    const outPath = path.join(ourDir, file.name);
+
+    if (file.isDirectory()) {
+      // Recurse into subdirectories
+      fs.mkdirSync(outPath, { recursive: true });
+      copyJSONFiles(srcPath, outPath);
+    } else if (file.isFile() && path.extname(file.name) === ".json") {
+      // Copy JSON file
+      fs.copyFileSync(srcPath, outPath);
+    }
+  }
 }
 
 // Ensure plugin exists
@@ -78,13 +102,21 @@ try {
   }
 
   esbuild.buildSync({
+    // entryPoints: [path.join(srcDir, "**/*.{ts,tsx,jsx}")],
     entryPoints,
     outdir: outputDir,
     bundle: false, // keep files separated instead of bundling
     platform: "node",
-    target: "es2020",
-    sourcemap: true, // Optional: include sourcemaps
+    format: "cjs",
+    sourcemap: true, // Optional: include sourcemaps,
+    treeShaking: true,
   });
+
+  console.log(`Typescript compilation completed.`);
+  // Copy JSON files
+  copyJSONFiles(srcDir, outputDir);
+  // console.log("JSON files copied.");
+
   console.log(`Compiled all files for plugin "${pluginName}".`);
 } catch (error) {
   console.error(`Failed to compile plugin "${pluginName}":`, error);

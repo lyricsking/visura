@@ -21,12 +21,12 @@ __export(tip_summary_exports, {
   TipSummary: () => TipSummary
 });
 module.exports = __toCommonJS(tip_summary_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_lucide_react = require("lucide-react");
 var import_date = require("~/shared/utils/date");
 var import_button = require("~/shared/components/button");
 var import_react = require("@remix-run/react");
 var import_util = require("~/shared/utils/util");
+var import_jsx_runtime = require("react/jsx-runtime");
 const TipSummary = (props) => {
   const { tip } = props;
   let path = "";

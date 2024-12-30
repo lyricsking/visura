@@ -3,6 +3,9 @@ import fs from "fs";
 import path from "path";
 import { logger } from "./logger";
 import { fileURLToPath } from "url";
+import { IPlugin } from "../types/plugin";
+import { PluginModel } from "~/backend/models/plugin.model";
+import createDBConnection from "../services/db.server";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +30,7 @@ export function installPlugin(pluginUrl: string) {
     return Response.json({ error: "Invalid plugin url" }, { status: 400 });
   }
 
-  return new Promise<string>(async (resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => {
     try {
       // Download the zip file from the provided URL
       const response = await fetch(pluginUrl, { method: "GET" });
@@ -69,13 +72,31 @@ export function installPlugin(pluginUrl: string) {
       // Clean up the temporary zip file
       fs.unlinkSync(tempFile);
 
-      resolve(pluginFolderName);
+      // Look for the manifest.json in the extracted folder
+      const manifestPath = path.join(extractToDir, "manifest.json");
+      console.log(manifestPath);
+
+      if (fs.existsSync(manifestPath)) {
+        // Read the JSON config file asychronously
+        const manifestData = await fs.promises.readFile(manifestPath, "utf-8");
+
+        // Parse the manifest file data into javascript object
+        const manifest: IPlugin = JSON.parse(manifestData);
+
+        // Validate manifest structure
+        //
+        const c = await PluginModel.create(manifest);
+        console.log(c);
+      }
+
+      resolve();
     } catch (error) {
       logger(error);
       reject(`Error downloading plugin: ${error}`);
     }
   });
 }
+
 /**
  *
  * @param pluginName
@@ -86,13 +107,18 @@ export async function getPluginManifest(pluginName: string): Promise<any> {
     return;
   }
 
-  if (fs.existsSync(path.join(publicDir, pluginName, "manifest.js"))) {
-    console.log(`../../../public/plugins/${pluginName}/manifest.js`);
+  const manifestPath = path.join(publicDir, pluginName, "manifest.js");
 
-    const manifest = await import(
-      `../../../public/plugins/${pluginName}/manifest.js`
-    );
-    console.log(`Loading plugin: ${manifest.name} (v${manifest.version})`);
+  if (fs.existsSync(manifestPath)) {
+    // const manifest = await import(
+    //   `../../../public/plugins/${pluginName}/manifest`
+    // );
+
+    const manifest = fs.readFileSync(manifestPath, "utf8");
+
+    console.log(manifest);
+
+    // console.log(`Loading plugin: ${manifest.name} (v${manifest.version})`);
 
     return manifest;
   } else {

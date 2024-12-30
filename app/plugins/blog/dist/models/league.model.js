@@ -33,7 +33,7 @@ __export(league_model_exports, {
 });
 module.exports = __toCommonJS(league_model_exports);
 var import_mongoose = require("mongoose");
-var import_mongoose3 = __toESM(require("mongoose"), 1);
+var import_mongoose2 = __toESM(require("mongoose"), 1);
 const leagueCountrySchema = new import_mongoose.Schema({
   name: {
     type: String,
@@ -56,8 +56,8 @@ const leagueSchema = new import_mongoose.Schema({
     // Ensure each league is linked to a country
   }
 });
-const LeagueCountryModel = import_mongoose3.default.models.LeagueCountry || import_mongoose3.default.model("LeagueCountry", leagueCountrySchema);
-const LeagueModel = import_mongoose3.default.models.League || import_mongoose3.default.model("League", leagueSchema);
+const LeagueCountryModel = import_mongoose2.default.models.LeagueCountry || import_mongoose2.default.model("LeagueCountry", leagueCountrySchema);
+const LeagueModel = import_mongoose2.default.models.League || import_mongoose2.default.model("League", leagueSchema);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   LeagueCountryModel,

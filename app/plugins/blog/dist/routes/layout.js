@@ -31,11 +31,11 @@ __export(layout_exports, {
   default: () => Layout
 });
 module.exports = __toCommonJS(layout_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_react = require("@remix-run/react");
 var import_footer = __toESM(require("~/shared/components/ui/footer"), 1);
 var import_page = require("~/shared/components/ui/page.layout");
 var import_button = __toESM(require("~/shared/components/button"), 1);
+var import_jsx_runtime = require("react/jsx-runtime");
 function Layout() {
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_page.PageLayout, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_page.PageLayoutHeader, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_page.PageLayoutHeaderItem, { spacing: "compact", className: "bg-white", children: [

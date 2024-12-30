@@ -24,7 +24,6 @@ __export(blog_exports, {
   meta: () => meta
 });
 module.exports = __toCommonJS(blog_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_lucide_react = require("lucide-react");
 var import_post_summary = require("../components/post-summary");
 var import_fonts = require("~/shared/utils/fonts");
@@ -33,13 +32,14 @@ var import_react_select = require("@radix-ui/react-select");
 var import_macros = require("vite-env-only/macros");
 var import_tip_card = require("../components/tip-card");
 var import_post = require("../server/post.server");
-var import_tips2 = require("../server/tips.server");
+var import_tips = require("../server/tips.server");
 var import_card = require("~/client/components/card");
 var import_core = require("@mantine/core");
+var import_jsx_runtime = require("react/jsx-runtime");
 const blogLoader = (0, import_macros.serverOnly$)(
   async () => {
     const [tips, posts] = await Promise.all([
-      (0, import_tips2.findTips)(),
+      (0, import_tips.findTips)(),
       (0, import_post.findPosts)({ published: true })
     ]);
     return { tips, posts };

@@ -13,7 +13,6 @@ export interface IPlugin {
   _id: Types.ObjectId;
   name: string;
   description: string;
-  // path: string; // CDN or local path to plugin configuration
   version: string;
   isActive: boolean;
   routes?: Omit<IPage, "_id">[];
@@ -21,3 +20,14 @@ export interface IPlugin {
   widgets?: Widget[];
   options?: PluginOptions;
 }
+
+export type IPluginImpl = Pick<
+  IPlugin,
+  | "name"
+  | "description"
+  | "version"
+  | "routes"
+  | "adminMenu"
+  | "widgets"
+  | "options"
+>;

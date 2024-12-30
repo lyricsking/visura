@@ -31,8 +31,8 @@ __export(soccer_background_exports, {
   default: () => soccer_background_default
 });
 module.exports = __toCommonJS(soccer_background_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var React = __toESM(require("react"), 1);
+var import_jsx_runtime = require("react/jsx-runtime");
 const SoccerSVGComponent = (props) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
   "svg",
   {

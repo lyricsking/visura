@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../../src/routes/admin/blog.admin.tsx"],
   "sourcesContent": ["import { LoaderFunctionArgs, json } from \"@remix-run/node\";\r\nimport { Outlet, useLoaderData } from \"@remix-run/react\";\r\nimport { loadConfigFromFile } from \"vite\";\r\nimport { findPosts } from \"../../server/post.server\";\r\n\r\nexport const handle = {\r\n  pageName: \"Blog\",\r\n  submenu: [\r\n    {\r\n      path: ``,\r\n      label: \"Blog\",\r\n    },\r\n    {\r\n      path: `edit`,\r\n      label: \"New\",\r\n    },\r\n  ],\r\n};\r\n\r\nexport default function BlogLayout() {\r\n  return (\r\n    <div className=\"\">\r\n      <Outlet />\r\n    </div>\r\n  );\r\n}\r\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAsBM;AArBN,mBAAsC;AAI/B,MAAM,SAAS;AAAA,EACpB,UAAU;AAAA,EACV,SAAS;AAAA,IACP;AAAA,MACE,MAAM;AAAA,MACN,OAAO;AAAA,IACT;AAAA,IACA;AAAA,MACE,MAAM;AAAA,MACN,OAAO;AAAA,IACT;AAAA,EACF;AACF;AAEe,SAAR,aAA8B;AACnC,SACE,4CAAC,SAAI,WAAU,IACb,sDAAC,uBAAO,GACV;AAEJ;",
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,mBAAsC;AAqBhC;AAjBC,MAAM,SAAS;AAAA,EACpB,UAAU;AAAA,EACV,SAAS;AAAA,IACP;AAAA,MACE,MAAM;AAAA,MACN,OAAO;AAAA,IACT;AAAA,IACA;AAAA,MACE,MAAM;AAAA,MACN,OAAO;AAAA,IACT;AAAA,EACF;AACF;AAEe,SAAR,aAA8B;AACnC,SACE,4CAAC,SAAI,WAAU,IACb,sDAAC,uBAAO,GACV;AAEJ;",
   "names": []
 }

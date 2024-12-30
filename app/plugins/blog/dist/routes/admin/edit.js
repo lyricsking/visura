@@ -31,7 +31,6 @@ __export(edit_exports, {
   default: () => PostForm
 });
 module.exports = __toCommonJS(edit_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_react = require("react");
 var import_react2 = require("@remix-run/react");
 var import_button = __toESM(require("~/shared/components/button"), 1);
@@ -43,6 +42,7 @@ var import_validation_message = require("~/shared/components/ui/validation-messa
 var import_use_upload = require("~/shared/hooks/use-upload");
 var import_util = require("~/shared/utils/util");
 var import_use_toast = require("~/shared/hooks/use-toast");
+var import_jsx_runtime = require("react/jsx-runtime");
 function PostForm() {
   const editorRef = (0, import_react.useRef)(null);
   let fetcher = (0, import_react2.useFetcher)({ key: "submit-post" });

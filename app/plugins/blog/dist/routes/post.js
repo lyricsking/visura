@@ -31,9 +31,9 @@ __export(post_exports, {
   default: () => Post
 });
 module.exports = __toCommonJS(post_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_react_markdown = __toESM(require("react-markdown"), 1);
 var import_date = require("~/shared/utils/date");
+var import_jsx_runtime = require("react/jsx-runtime");
 function Post({ post }) {
   let publishedOn = post.publishedOn ? (0, import_date.formatDateOrTime)(new Date(post.publishedOn), {
     month: "long",

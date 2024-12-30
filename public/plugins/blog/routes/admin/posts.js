@@ -32,7 +32,6 @@ __export(posts_exports, {
   handle: () => handle
 });
 module.exports = __toCommonJS(posts_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_react_dropdown_menu = require("@radix-ui/react-dropdown-menu");
 var import_react_progress = require("@radix-ui/react-progress");
 var import_react_tabs = require("@radix-ui/react-tabs");
@@ -44,6 +43,7 @@ var import_card = require("~/shared/components/card");
 var import_table = require("~/shared/components/table");
 var import_date = require("~/shared/utils/date");
 var import_util = require("~/shared/utils/util");
+var import_jsx_runtime = require("react/jsx-runtime");
 const handle = {
   breadcrumb: {
     id: "post-list",

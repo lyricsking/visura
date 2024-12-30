@@ -1,6 +1,5 @@
 import readline from "readline";
 import fs from "fs";
-import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -8,7 +7,7 @@ import { Writable, WritableOptions } from "stream";
 import User from "~/backend/models/user.model";
 import { OptionModel } from "~/backend/models/option.server";
 import { APP_NAME } from "~/app";
-import { getPluginManifest, installPlugin } from "~/shared/utils/plugin";
+import { installPlugin } from "~/shared/utils/plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -111,13 +110,8 @@ const runSetup = async () => {
     "http://localhost:3000/pluginTemp/blog.zip"
   );
 
-  console.log(
-    `Manifest: `,
-    typeof pluginName === "string" ? await getPluginManifest(pluginName) : ""
-  );
-
   // Step 7: Finalize, Prevent running the setup again by locking it
-  fs.renameSync("scripts/setup/setup.ts", "scripts/setup/setup.lock");
+  // fs.renameSync("scripts/setup/setup.ts", "scripts/setup/setup.lock");
   console.log("Setup complete! You can now start your app.");
   process.exit(1);
 };

@@ -31,10 +31,10 @@ __export(tip_exports, {
   default: () => TipPage
 });
 module.exports = __toCommonJS(tip_exports);
-var import_jsx_runtime = require("react/jsx-runtime");
 var import_react_markdown = __toESM(require("react-markdown"), 1);
 var import_date = require("~/shared/utils/date");
 var import_card = require("~/shared/components/card");
+var import_jsx_runtime = require("react/jsx-runtime");
 function TipPage({ tip }) {
   let title = tip.teamA + " - " + tip.teamB;
   let publishedOn = tip.publishedOn ? (0, import_date.formatDateOrTime)(new Date(tip.publishedOn), {
