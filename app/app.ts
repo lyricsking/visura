@@ -101,8 +101,14 @@ class AppContext {
   //   return option?.value["homepage"];
   // }
 
-  addRoute() {
-    this.pluginsManager.activePlugins.
+  routes() {
+    return this.pluginsManager.activePlugins.reduce((acc, plugin) => {
+      plugin.routes.forEach((page) => {
+        acc[page.path] = page; // Map the path to the page object
+      });
+      
+      return acc;
+    }, {} as Record<string, IPage>);
   }
 
   // get pluginRoutes() {
