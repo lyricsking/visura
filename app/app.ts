@@ -1,6 +1,8 @@
 import { PluginManager } from "./plugin-manager";
 import { MenuType, Menu, SettingsTab } from "./shared/types/menu";
 import { IOption } from "./shared/types/option";
+import { IPage } from "./shared/types/page";
+import { IPluginImpl } from "./shared/types/plugin";
 import { getInstalledPlugins } from "./shared/utils/plugin";
 
 export const APP_NAME = "app_name";
@@ -73,20 +75,9 @@ class AppContext {
     return configs;
   }
 
-  static async loadActivePlugins(): Promise<PluginManager> {
-    const url = new URL(`${this.baseUrl}/api/plugins`);
-    // url.searchParams.set("isActive", "true");
-
-    const pluginReq = await fetch(url);
-
-    const pluginRes = await pluginReq.json();
-    const plugins = pluginRes.data;
-
-    console.log("Fetched plugins: ", plugins);
-
-    return new PluginManager(plugins);
+  static loadActivePlugins(): PluginManager {
+    return new PluginManager();
   }
-
 
   // config(key: string) {
   //   const option = this._configs.find((option) => option.name === key);
@@ -101,15 +92,16 @@ class AppContext {
   //   return option?.value["homepage"];
   // }
 
-  routes() {
-    return this.pluginsManager.activePlugins.reduce((acc, plugin) => {
-      plugin.routes.forEach((page) => {
-        acc[page.path] = page; // Map the path to the page object
-      });
-      
-      return acc;
-    }, {} as Record<string, IPage>);
-  }
+  // routes() {
+  //   return this.pluginsManager.activePlugins.reduce((acc, plugin) => {
+  //     plugin.routes &&
+  //       plugin.routes.forEach((page) => {
+  //         acc[page.path] = page; // Map the path to the page object
+  //       });
+
+  //     return acc;
+  //   }, {} as Record<string, Omit<IPage, "_id">>);
+  // }
 
   // get pluginRoutes() {
   //   return this.activePlugins.flatMap((plugin) =>

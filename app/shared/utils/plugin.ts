@@ -3,16 +3,19 @@ import fs from "fs";
 import path from "path";
 import { logger } from "./logger";
 import { fileURLToPath } from "url";
-import { IPlugin } from "../types/plugin";
+import { IPlugin, IPluginImpl } from "../types/plugin";
 import { PluginModel } from "~/backend/models/plugin.model";
 import createDBConnection from "../services/db.server";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const publicDir = path.join(__dirname, "../../../public/plugins");
+export const PLUGIN_INSTALL_FOLDER = path.join(
+  __dirname,
+  "../../../public/plugins"
+);
 
 export function isPluginInstalled(plugnFolderName: string): boolean {
-  return fs.existsSync(path.join(publicDir, plugnFolderName));
+  return fs.existsSync(path.join(PLUGIN_INSTALL_FOLDER, plugnFolderName));
 }
 
 /**
@@ -22,7 +25,7 @@ export function isPluginInstalled(plugnFolderName: string): boolean {
  */
 export function installPlugin(pluginUrl: string) {
   // Define where to store the downloaded zip file temporarily
-  const tempFile = path.join(publicDir, "temp-plugin.zip");
+  const tempFile = path.join(PLUGIN_INSTALL_FOLDER, "temp-plugin.zip");
   // Get the plugin folder name from the url
   const pluginFolderName = pluginUrl.split("/").pop()?.split(".zip")[0];
 
@@ -60,7 +63,7 @@ export function installPlugin(pluginUrl: string) {
       await response.body?.pipeTo(webWritableStream);
 
       const zip = new AdmZip(tempFile);
-      const extractToDir = path.join(publicDir, pluginFolderName);
+      const extractToDir = path.join(PLUGIN_INSTALL_FOLDER, pluginFolderName);
 
       // Ensure the directory exists
       if (!fs.existsSync(extractToDir)) {
@@ -106,7 +109,11 @@ export async function getPluginManifest(pluginName: string): Promise<any> {
     return;
   }
 
-  const manifestPath = path.join(publicDir, pluginName, "manifest.js");
+  const manifestPath = path.join(
+    PLUGIN_INSTALL_FOLDER,
+    pluginName,
+    "manifest.js"
+  );
 
   if (fs.existsSync(manifestPath)) {
     // const manifest = await import(
@@ -126,30 +133,19 @@ export async function getPluginManifest(pluginName: string): Promise<any> {
 }
 
 export async function getInstalledPlugins(): Promise<any[]> {
-  const c: any[] = [];
+  const c: IPluginImpl[] = [];
 
-  if (!fs.existsSync(publicDir)) {
+  if (!fs.existsSync(PLUGIN_INSTALL_FOLDER)) {
     return c;
   }
 
-  const pluginFolders = fs.readdirSync(publicDir);
+  const pluginFolders = fs.readdirSync(PLUGIN_INSTALL_FOLDER);
 
   for (const pluginFolder of pluginFolders) {
-    const pluginPath = path.join(publicDir, pluginFolder);
-    const manifestPath = path.join(pluginPath, "manifest.js");
-
-    console.log("Path is", manifestPath);
-    // /* @vite-ignore*/
-    if (fs.existsSync(manifestPath)) {
-      const manifest = await import(
-        `../../../public/plugins/${pluginFolder}/manifest.js`
-      );
-      console.log(`Loading plugin: ${manifest.name} (v${manifest.version})`);
-
-      c.push(manifest);
-    } else {
-      console.warn(`No manifest found in ${pluginFolder}`);
-    }
+    try {
+      const pluginPath = path.join(PLUGIN_INSTALL_FOLDER, pluginFolder);
+      //
+    } catch (error) {}
   }
 
   return c;

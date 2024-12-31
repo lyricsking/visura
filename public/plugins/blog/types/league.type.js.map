@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/types/league.type.ts"],
-  "sourcesContent": ["import mongoose, { Schema, Types } from \"mongoose\";\r\n\r\n// Interface for Country\r\nexport interface ILeagueCountry {\r\n  _id: Types.ObjectId;\r\n  name: string;\r\n}\r\n\r\n// Interface for League\r\nexport interface ILeague {\r\n  _id: Types.ObjectId;\r\n  name: string;\r\n  country: Types.ObjectId; // Reference to Category model\r\n}\r\n"],
-  "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;",
-  "names": []
-}

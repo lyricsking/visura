@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IPage } from "./page";
+import { IPage, IPageWithOptionalId } from "./page";
 import { Menu } from "~/shared/types/menu";
 import { Widget } from "./widget";
 
@@ -15,19 +15,14 @@ export interface IPlugin {
   description: string;
   version: string;
   isActive: boolean;
-  routes?: Omit<IPage, "_id">[];
+}
+
+export type IPluginImpl = Pick<IPlugin, "name" | "description" | "version">;
+
+export type ActivateFunctionData = {
+  metadata: IPluginImpl;
+  routes?: IPageWithOptionalId[];
   adminMenu?: Menu[];
   widgets?: Widget[];
   options?: PluginOptions;
-}
-
-export type IPluginImpl = Pick<
-  IPlugin,
-  | "name"
-  | "description"
-  | "version"
-  | "routes"
-  | "adminMenu"
-  | "widgets"
-  | "options"
->;
+};
