@@ -48,7 +48,7 @@ class AppContext {
   private static async init() {
     const [configs, plugins] = await Promise.all([
       AppContext.loadConfigOptions(),
-      AppContext.loadActivePlugins(),
+      AppContext.initPluginManger(),
     ]);
 
     AppContext.instance = new AppContext(configs, plugins);
@@ -75,7 +75,7 @@ class AppContext {
     return configs;
   }
 
-  static loadActivePlugins(): PluginManager {
+  static initPluginManger(): PluginManager {
     return new PluginManager();
   }
 

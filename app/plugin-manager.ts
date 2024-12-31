@@ -3,10 +3,18 @@ import {
   ActivateFunctionData,
   IPlugin,
   IPluginImpl,
+  PluginOptions,
 } from "./shared/types/plugin";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import { logger } from "./shared/utils/logger";
+import { Widget } from "./shared/types/widget";
+import { Menu } from "./shared/types/menu";
+import { IPageWithOptionalId } from "./shared/types/page";
+import { PluginModel } from "./backend/models/plugin.model";
+import { OptionModel } from "./backend/models/option.server";
+import { IOption } from "./shared/types/option";
+import { PageModel } from "./backend/models/page.server";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,6 +62,12 @@ export class PluginManager {
     }
 
     const { adminMenu, metadata, options, routes, widgets } = pluginData;
+
+    adminMenu && this.registerMenu(adminMenu);
+    await this.registerMetadata(metadata);
+    options && (await this.registerOptions(options));
+    routes && (await this.registerRoutes(routes));
+    widgets && this.registerWidgets(widgets);
   }
 
   async loadPlugin(
@@ -103,10 +117,31 @@ export class PluginManager {
     return fs.existsSync(path.join(PLUGIN_INSTALL_FOLDER, plugnFolderName));
   }
 
-  get activePlugins() {
-    return;
-    // this.plugins.filter((plugin) => plugin.isActive === true);
+  registerMenu(adminMenu: Menu[]) {}
+
+  async registerMetadata(metadata: IPluginImpl) {
+    await PluginModel.findOneAndUpdate({ name: metadata.name }, metadata, {
+      upsert: true,
+      new: true,
+    });
   }
+
+  async registerOptions(options: PluginOptions) {
+    const optionsData: Pick<IOption, "name" | "value" | "autoload">[] =
+      Object.entries(options).map(([name, value]) => ({
+        name,
+        value,
+        autoload: false,
+      }));
+
+    await OptionModel.insertMany(optionsData);
+  }
+
+  async registerRoutes(routes: IPageWithOptionalId[]) {
+    await PageModel.insertMany(routes);
+  }
+
+  registerWidgets(widgets: Widget[]) {}
 
   // async fetchPlugin(pluginName: string): Promise<IPlugin | null> {
   //   try {

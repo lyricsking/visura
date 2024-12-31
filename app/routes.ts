@@ -8,6 +8,9 @@ import {
 import { remixRoutesOptionAdapter } from "@remix-run/routes-option-adapter";
 
 export default [
+  // Public routes
+  index("client/features/landing-page/routes/home.tsx"),
+
   // Api routes configs
   ...prefix("api", [
     ...prefix("users", [index("backend/routes/user.server.ts")]),
@@ -30,9 +33,6 @@ export default [
     //       route("google/callback", "client/features/auth/routes/google-callback.tsx"),
     //       route("signout", "client/features/auth/routes/signout.tsx"),
   ]),
-
-  // Public routes
-  index("client/features/landing-page/routes/home.tsx"),
 
   ...prefix("dashboard", [
     //   index("./features/admin/routes/dashboard.tsx"),

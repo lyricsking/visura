@@ -10,5 +10,8 @@ export const activate = (): ActivateFunctionData => {
       description: "",
       version: "0.0.1",
     },
+    routes: [
+      {}
+    ]
   } as ActivateFunctionData;
 };
