@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/loaders/tip.loader.ts"],
-  "sourcesContent": ["import { PluginLoaderFunction } from \"~/core/page/types/page\";\r\nimport { findTipBySlug } from \"../server/tips.server\";\r\n\r\nexport const loader: PluginLoaderFunction = async ({ params }) => {\r\n  let slug = params[\"slug\"];\r\n  if (!slug) throw Error(\"Tip id must be provided.\");\r\n\r\n  let tip = await findTipBySlug({ slug });\r\n\r\n  if (!tip.data) throw Error(\"No tip was found with such.\");\r\n\r\n  return { tip: tip.data };\r\n};\r\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACA,kBAA8B;AAEvB,MAAM,SAA+B,OAAO,EAAE,OAAO,MAAM;AAChE,MAAI,OAAO,OAAO,MAAM;AACxB,MAAI,CAAC,KAAM,OAAM,MAAM,0BAA0B;AAEjD,MAAI,MAAM,UAAM,2BAAc,EAAE,KAAK,CAAC;AAEtC,MAAI,CAAC,IAAI,KAAM,OAAM,MAAM,6BAA6B;AAExD,SAAO,EAAE,KAAK,IAAI,KAAK;AACzB;",
-  "names": []
-}

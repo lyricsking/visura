@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useFetcher } from "@remix-run/react";
-import Button from "~/shared/components/button";
-import { ImagePreview } from "~/shared/components/image-preview";
-import { Input } from "~/shared/components/input";
-import { MarkdownEditor } from "~/shared/components/editor/markdown-editor";
-import { Textarea } from "~/shared/components/textarea";
-import { ValidationMessage } from "~/shared/components/ui/validation-message";
-import { useFileUpload } from "~/shared/hooks/use-upload";
+import { Textarea, Button } from "@mantine/core";
+import { Input } from "~/client/components/input";
+import { MarkdownEditor } from "~/client/components/editor/markdown-editor";
+import { ImagePreview } from "~/client/components/image-preview";
+import { ValidationMessage } from "~/client/components/ui/validation-message";
+import { useToast } from "~/client/hooks/use-toast";
+import { useFileUpload } from "~/client/hooks/use-upload";
 import { cn } from "~/shared/utils/util";
-import { useToast } from "~/shared/hooks/use-toast";
 
 export default function PostForm() {
   // const loaderData = useLoaderData<typeof loader>();

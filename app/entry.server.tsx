@@ -29,7 +29,7 @@ if (process.env.SETUP_COMPLETE !== "true") {
 
 // Init database connection
 createDBConnection();
-
+// fetch()
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;
 

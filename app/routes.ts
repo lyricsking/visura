@@ -34,8 +34,10 @@ export default [
     //       route("signout", "client/features/auth/routes/signout.tsx"),
   ]),
 
-  ...prefix("dashboard", [
-    //   index("./features/admin/routes/dashboard.tsx"),
+  route("dashboard", "client/features/admin/routes/new-layout.tsx", [
+    index("client/features/admin/routes/dashboard.tsx"),
+    route("plugins", "client/features/admin/routes/plugins.tsx"),
+
     //   route("builder/:id?", "./features/admin/routes/visual.tsx"),
     //   route("collections", "./features/admin/routes/collection.tsx", [
     //     index("./features/admin/routes/collection.edit.tsx", { id: "index" }),

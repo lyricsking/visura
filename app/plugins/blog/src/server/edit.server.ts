@@ -1,13 +1,12 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import { getAuthUser } from "~/core/auth/server/auth.server";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { createPost } from "./post.server";
 import { Types } from "mongoose";
-import { parseError } from "~/shared/utils/mongoose";
-import { PluginLoaderFunction } from "~/core/page/types/page";
+import { isAuthenticated } from "~/shared/auth/server/auth.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  let authUser = await getAuthUser(request);
+  let authUser = await isAuthenticated(request);
+  
   if (!authUser || !authUser.id) {
     // throw new Error("You are not authorised to perform this operation");
   }
@@ -30,14 +29,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (response.error) {
     const values = Object.fromEntries(formData);
-    let errors = parseError(response.error);
+    // let errors = parseError(response.error);
 
-    return json({ errors, values });
+    // return json({ errors, values });
   }
 
   return json({ post: response.data });
-};
-
-export const loader: PluginLoaderFunction = () => {
-  return async () => {};
 };

@@ -5,12 +5,11 @@ import { paginate } from "~/shared/utils/http";
 import { logger } from "~/shared/utils/logger";
 import { PageModel } from "../models/page.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
-  const id = url.searchParams.get("id");
   const path = url.searchParams.get("path");
-  const template = url.searchParams.get("template") === "true";
+  const template = url.searchParams.get("template");
   const status = url.searchParams.get("status");
 
   const page = parseInt(url.searchParams.get("page") || "1", 10);
@@ -19,17 +18,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const fields = url.searchParams.get("fields");
 
   //
-  const query: Record<string, any> = {
-    status: "active",
-  };
+  const query: Record<string, any> = {};
 
   if (path) query.path = path;
-  if (template) query.isTemplate = template;
+  if (template) query.isTemplate = template === "true";
   if (status) query.status = status as PageStatus;
 
   const projection = fields
     ? fields.split(",").reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
     : null;
+
+  const { id } = params;
 
   try {
     if (id) {

@@ -1,7 +1,6 @@
 import { LinksFunction, type MetaFunction } from "@remix-run/node";
 import { ArrowBigDownDash, ListFilter } from "lucide-react";
 
-import { PostSummary } from "../components/post-summary";
 import { findFontByName } from "~/shared/utils/fonts";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
@@ -14,8 +13,6 @@ import {
 import { serverOnly$ } from "vite-env-only/macros";
 import { TipSummary } from "../components/tip-card";
 import { ITips } from "../types/tips.type";
-import { findPosts } from "../server/post.server";
-import { findTips } from "../server/tips.server";
 import { PluginLoaderFunction } from "~/shared/types/page";
 import {
   Card,
@@ -24,6 +21,8 @@ import {
   CardHeader,
 } from "~/client/components/card";
 import { Button } from "@mantine/core";
+import { findTips } from "plugins/blog/src/server/tips.server";
+import { findPosts } from "plugins/blog/src/server/post.server";
 
 export const blogLoader: PluginLoaderFunction | undefined = serverOnly$(
   async () => {
@@ -58,12 +57,10 @@ export const meta: MetaFunction<typeof blogLoader> = ({ data }) => {
   ];
 };
 
-export default function Blog({ tips, posts }: any, path: string) {
+export default function Blog({ tips, posts }: any) {
   //const { tips, posts } = useLoaderData<typeof loader>();
 
   const font = findFontByName("Courier Prime");
-
-  console.log("path", path);
 
   return (
     <div className="flex flex-col items-start">

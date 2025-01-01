@@ -27,6 +27,7 @@ export interface PageContent {
 import { AppContext } from "~/app";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { ComponentsInfo } from "~/shared/types/builder.components";
+import Module from "module";
 
 interface PluginLoaderFunctionArgs extends LoaderFunctionArgs {
   app: AppContext;
@@ -59,13 +60,23 @@ export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType];
 export interface IPage {
   _id: Types.ObjectId;
   path: string;
+  uniqueId: string;
   metadata: PageMetadata;
   loaderEnpoint?: string;
   actionEnpoint?: string;
-  content: ComponentsInfo[];
+  // content: ComponentsInfo[];
+  content: string;
   createdBy: Types.ObjectId;
   isTemplate?: TemplateType;
   status: PageStatus;
 }
 
-export type IPageWithOptionalId = Omit<IPage, "_id"> & { _id?: Types.ObjectId };
+export type IPageWithOptionalId = Pick<
+  IPage,
+  | "path"
+  | "uniqueId"
+  | "metadata"
+  | "loaderEnpoint"
+  | "actionEnpoint"
+  | "content"
+> & { _id?: Types.ObjectId };

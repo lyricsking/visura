@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/types/post.type.ts"],
-  "sourcesContent": ["import { Types } from \"mongoose\";\r\n\r\nexport interface IPost {\r\n  _id: Types.ObjectId;\r\n  title: string;\r\n  slug: string;\r\n  author: Types.ObjectId;\r\n  content: string;\r\n  excerpt: string;\r\n  featuredImage: string;\r\n  tags: string[];\r\n  published: boolean;\r\n  publishedOn: Date | null;\r\n  createdAt: Date;\r\n  updatedAt: Date;\r\n}\r\n"],
-  "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;",
-  "names": []
-}

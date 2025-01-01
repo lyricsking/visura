@@ -1,11 +1,10 @@
 import path from "path";
 import {
-  ActivateFunctionData,
+  ActivateFunctionReturnType,
   IPlugin,
   IPluginImpl,
   PluginOptions,
 } from "./shared/types/plugin";
-import { fileURLToPath } from "url";
 import fs from "fs";
 import { logger } from "./shared/utils/logger";
 import { Widget } from "./shared/types/widget";
@@ -15,15 +14,16 @@ import { PluginModel } from "./backend/models/plugin.model";
 import { OptionModel } from "./backend/models/option.server";
 import { IOption } from "./shared/types/option";
 import { PageModel } from "./backend/models/page.server";
+import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
+let __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export const PLUGIN_INSTALL_FOLDER = path.join(__dirname, "../plugins");
 
 export class PluginManager {
   private installedPlugins: Map<string, string> = new Map();
   private loading: Set<string> = new Set(); // To track loading plugins
-  private cache: Map<string, ActivateFunctionData> = new Map(); // cache plugin
+  private cache: Map<string, ActivateFunctionReturnType> = new Map(); // cache plugin
 
   constructor() {
     this.getInstalledPlugins();
@@ -46,6 +46,8 @@ export class PluginManager {
         //
 
         this.installedPlugins.set(pluginFolder, pluginPath);
+
+        console.log("PluginManager Initialized");
       } catch (error) {
         logger(error);
         console.error(`Error loading plugin ${pluginFolder}:`, error);
@@ -66,13 +68,13 @@ export class PluginManager {
     adminMenu && this.registerMenu(adminMenu);
     await this.registerMetadata(metadata);
     options && (await this.registerOptions(options));
-    routes && (await this.registerRoutes(routes));
+    routes && (await this.registerRoutes(pluginName, routes));
     widgets && this.registerWidgets(widgets);
   }
 
   async loadPlugin(
     pluginName: string
-  ): Promise<ActivateFunctionData | null | undefined> {
+  ): Promise<ActivateFunctionReturnType | null | undefined> {
     if (this.loading.has(pluginName)) {
       return null; // Prevent loading same plugin multiple times
     }
@@ -89,18 +91,29 @@ export class PluginManager {
       }
 
       const pluginPath = path.join(PLUGIN_INSTALL_FOLDER, pluginName);
-      const pluginEntry = path.join(pluginPath, `${pluginName}.js`);
+      const pluginEntry = path.join(pluginPath, `/dist/${pluginName}.js`);
 
       if (!fs.existsSync(pluginEntry)) {
         throw new Error("Plugin entry file not found.");
       }
 
-      const plugin = await import(pluginEntry);
+      let relativeEntryPath = path.relative(process.cwd(), pluginEntry);
+
+      relativeEntryPath = relativeEntryPath
+        .split(path.sep)
+        .join(path.posix.sep);
+
+      console.log(relativeEntryPath);
+
+      const plugin = await import(
+        /* @vite-ignore */ `../plugins/${pluginName}/dist/${pluginName}`
+      );
+
       if (!plugin || typeof plugin.activate !== "function") {
         throw new Error("Plugin must export an activate function.");
       }
 
-      const pluginData: ActivateFunctionData = await plugin.activate();
+      const pluginData: ActivateFunctionReturnType = await plugin.activate();
 
       this.cache.set(pluginName, pluginData);
 
@@ -137,8 +150,19 @@ export class PluginManager {
     await OptionModel.insertMany(optionsData);
   }
 
-  async registerRoutes(routes: IPageWithOptionalId[]) {
-    await PageModel.insertMany(routes);
+  async registerRoutes(plugin: string, routes: IPageWithOptionalId[]) {
+    for (const route of routes) {
+      const page = await PageModel.findOneAndUpdate(
+        { uniqueId: route.uniqueId },
+        route,
+        {
+          upsert: true,
+          new: true,
+        }
+      );
+
+      console.log(page);
+    }
   }
 
   registerWidgets(widgets: Widget[]) {}

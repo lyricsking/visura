@@ -1,7 +1,9 @@
 import { Types } from "mongoose";
-import { IPage, IPageWithOptionalId } from "./page";
+import { IPage, IPageWithOptionalId, PageContentType } from "./page";
 import { Menu } from "~/shared/types/menu";
 import { Widget } from "./widget";
+import { ContextType } from "react";
+import { IContentType, PluginSchema } from "./content";
 
 export const PLUGIN_KEY = "plugins";
 
@@ -19,10 +21,11 @@ export interface IPlugin {
 
 export type IPluginImpl = Pick<IPlugin, "name" | "description" | "version">;
 
-export type ActivateFunctionData = {
-  metadata: IPluginImpl;
-  routes?: IPageWithOptionalId[];
+export type ActivateFunctionReturnType = {
   adminMenu?: Menu[];
-  widgets?: Widget[];
+  metadata: IPluginImpl;
   options?: PluginOptions;
+  routes?: IPageWithOptionalId[];
+  widgets?: Widget[];
+  collections?: Pick<IContentType, "name" | "modelName" | "fields">;
 };

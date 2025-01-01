@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/types/tips.type.ts"],
-  "sourcesContent": ["import { Types } from \"mongoose\";\r\n\r\nexport const PredictionType = {\r\n  outcome: \"outcome\",\r\n  scoreline: \"scoreline\",\r\n} as const;\r\nexport type PredictionType = keyof typeof PredictionType;\r\n\r\nexport type IPrediction = Record<\r\n  PredictionType,\r\n  {\r\n    value: string;\r\n    reason: string;\r\n  }\r\n>;\r\n\r\nexport interface ITips {\r\n  _id: Types.ObjectId;\r\n  slug: string;\r\n  teamA: string;\r\n  teamB: string;\r\n  matchDate: Date;\r\n  leagueCountry: Types.ObjectId;\r\n  league: Types.ObjectId;\r\n  teamARank: number;\r\n  teamBRank: number;\r\n  author: Types.ObjectId;\r\n  prediction: IPrediction;\r\n  introduction: string;\r\n  excerpt: string;\r\n  featuredImage: string;\r\n  tags: string[];\r\n  publishedOn: Date;\r\n}\r\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEO,MAAM,iBAAiB;AAAA,EAC5B,SAAS;AAAA,EACT,WAAW;AACb;",
-  "names": []
-}

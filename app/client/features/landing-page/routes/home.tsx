@@ -1,26 +1,42 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { request } from "http";
+import { Box, Center, Text } from "@mantine/core";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { Await, useLoaderData } from "@remix-run/react";
+import { ReactNode, Suspense } from "react";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const homepageReqUrl = new URL(`http://localhost:3000/api/pages`);
+  homepageReqUrl.searchParams.set("path", "blog");
+  // homepageReqUrl.searchParams.set("status", "false");
 
-  const pageReqUrl = new URL(`http://localhost:3000/api/pages/${id}`);
+  const homepage = await (
+    await fetch(homepageReqUrl, { method: "GET" })
+  ).json();
 
-  const foundPage = await (await fetch(pageReqUrl, { method: "GET" })).json();
-  console.log(foundPage);
-
-  // Ensures the the fetched page is valid, otherwise return a default page object
-  if (foundPage && foundPage.error) {
-    const currentUrl = new URL(request.url);
-    currentUrl.pathname = "dashboard/builder";
-
-    return redirect(currentUrl.toString());
-  } else {
-    page = foundPage;
-  }
-
-  return { page: page, all: allPages };
+  return { page: homepage["data"] ? homepage["data"][0] : homepage };
 };
 
 export default function Home() {
-  return <>he</>;
+  const { page } = useLoaderData<typeof loader>();
+
+  let child: ReactNode = (
+    <Center h={"100vh"}>
+      <Text ta={"center"} size={"xl"} c="dimmed">
+        Ops! No homepage configuration found.
+      </Text>
+    </Center>
+  );
+
+  if (page && page.content) {
+    child = (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={import(`../../../../../plugins/blog/src/routes/blog`)}>
+          {(resolvedValue) => (
+            <p>{resolvedValue.default({ tips: [], posts: [] })}</p>
+          )}
+        </Await>
+      </Suspense>
+    );
+  }
+
+  return <Box h={"100vh"}>{child}</Box>;
 }

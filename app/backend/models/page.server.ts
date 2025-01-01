@@ -3,10 +3,11 @@ import { IPage, TemplateType, PageStatus } from "~/shared/types/page";
 
 export type IPageModel = Model<IPage>;
 const pageSchema = new Schema<IPage, IPageModel>({
+  uniqueId: { type: String, unique: true },
   path: { type: String, unique: true },
-  default: { type: Boolean, default: false },
   metadata: { type: Schema.Types.Mixed, required: true },
-  content: { type: Schema.Types.Mixed, required: true },
+  // content: { type: Schema.Types.Mixed, required: true },
+  content: { type: String, required: true },
   createdBy: { type: Schema.Types.ObjectId, ref: "User" },
   isTemplate: {
     type: String,

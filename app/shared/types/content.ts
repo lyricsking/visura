@@ -15,3 +15,5 @@ export interface IContentType {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type PluginSchema = Pick<IContentType, "name" | "modelName" | "fields">;

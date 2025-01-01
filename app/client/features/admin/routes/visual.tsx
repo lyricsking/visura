@@ -12,12 +12,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import BuilderCanvas from "~/features/page/components/builder-canvas";
-import { ComponentSettingsPanel } from "~/features/page/components/block-settings";
-import VisualBuilderProvider, {
-  useVisualBuilder,
-} from "~/features/page/components/visual-builder.provider";
-import { BlockList } from "~/features/page/components/block-list";
+
 import "@mantine/tiptap/styles.css";
 import { FormEvent, useEffect, useState } from "react";
 import {
@@ -26,15 +21,15 @@ import {
   redirect,
 } from "@remix-run/node";
 import { Form, useFetcher, useLoaderData } from "@remix-run/react";
-import {
-  IPage,
-  IPageWithOptionalId,
-  OpenGraphTag,
-} from "~/features/page/types/page";
 import { Types } from "mongoose";
 import { getSlug } from "~/shared/utils/string";
 import formDataToObject from "~/shared/utils/form-data-to-object";
 import { logger } from "~/shared/utils/logger";
+import { OpenGraphTag, IPage, IPageWithOptionalId } from "~/shared/types/page";
+import { BlockList } from "../../visual-builder/components/block-list";
+import { ComponentSettingsPanel } from "../../visual-builder/components/block-settings";
+import BuilderCanvas from "../../visual-builder/components/builder-canvas";
+import VisualBuilderProvider, { useVisualBuilder } from "../../visual-builder/components/visual-builder.provider";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const pageId = params["id"];
@@ -240,7 +235,7 @@ function VisualBuilderConsumer({ all, page }: VisualBuilderType) {
       contentValue: components,
       properties: data["properties"],
       contents: data["contents"],
-      status: data["status"] || page.status,
+      status: data["status"] //|| page.status,
     };
 
     fetcher.submit(newPage, { method: "post", encType: "application/json" });

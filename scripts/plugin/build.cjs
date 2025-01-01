@@ -13,8 +13,9 @@ if (!pluginName) {
 const pluginsDir = path.resolve(__dirname, "../../app/plugins");
 const pluginDir = path.join(pluginsDir, pluginName);
 const outputDir = path.join(pluginDir, "dist");
-const buildDir = path.join(pluginDir, "build");
-const outputZip = path.join(buildDir, `${pluginName}.zip`);
+// const buildDir = path.join(pluginDir, "build");
+const srcDir = path.join(pluginDir, "src");
+const outputZip = path.join(outputDir, `${pluginName}.zip`);
 
 const excludedFolders = ["build", "dist"];
 
@@ -50,14 +51,14 @@ function getValidFiles(dir) {
  * Recursively copy JSON files from the source directory to the destibation dirctory
  *
  * @param {*} srcDir
- * @param {*} ourDir
+ * @param {*} outDir
  */
-function copyJSONFiles(srcDir, ourDir) {
+function copyJSONFiles(srcDir, outDir) {
   const files = fs.readdirSync(srcDir, { withFileTypes: true });
 
   for (const file of files) {
     const srcPath = path.join(srcDir, file.name);
-    const outPath = path.join(ourDir, file.name);
+    const outPath = path.join(outDir, file.name);
 
     if (file.isDirectory()) {
       // Recurse into subdirectories
@@ -79,10 +80,9 @@ if (!fs.existsSync(pluginDir)) {
 // Clean and prepare directory
 fs.removeSync(outputDir);
 fs.ensureDirSync(outputDir);
-fs.ensureDirSync(buildDir);
+// fs.ensureDirSync(buildDir);
 
 // Step 1: Compile the plugindir source code
-const srcDir = path.join(pluginDir, "src");
 if (!fs.existsSync(srcDir)) {
   console.error(
     `Source directory "${srcDir}" not found for plugin "${pluginName}".`
@@ -107,9 +107,10 @@ try {
     outdir: outputDir,
     bundle: false, // keep files separated instead of bundling
     platform: "node",
-    format: "cjs",
-    sourcemap: true, // Optional: include sourcemaps,
+    // format: "esm",
+    sourcemap: false, // Optional: include sourcemaps,
     treeShaking: true,
+    allowOverwrite: true,
   });
 
   console.log(`Typescript compilation completed.`);
@@ -126,7 +127,7 @@ try {
 // Step 2: Copy assets (if any)
 const assetsDir = path.join(pluginDir, "assets");
 if (fs.existsSync(assetsDir)) {
-  fs.copySync(assetsDir, path.join(outputDir, "assets"));
+  fs.copySync(assetsDir, path.join(srcDir, "assets"));
   console.log(`Copied assets for "${pluginName}".`);
 }
 
@@ -149,7 +150,7 @@ archive.on("error", (err) => {
 archive.pipe(output);
 
 // Append plugin files
-archive.directory(outputDir, false);
+archive.directory(srcDir, false);
 
 // Finalize
 archive.finalize();

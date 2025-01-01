@@ -1,9 +1,6 @@
-import { PluginManager } from "./plugin-manager";
+import { PluginManager } from "./plugin.server";
 import { MenuType, Menu, SettingsTab } from "./shared/types/menu";
 import { IOption } from "./shared/types/option";
-import { IPage } from "./shared/types/page";
-import { IPluginImpl } from "./shared/types/plugin";
-import { getInstalledPlugins } from "./shared/utils/plugin";
 
 export const APP_NAME = "app_name";
 
@@ -27,7 +24,7 @@ class AppContext {
 
   private constructor(
     private _configs: IOption[],
-    private pluginsManager: PluginManager
+    public readonly plugins: PluginManager
   ) {
     console.log("App initialized");
   }
