@@ -7,7 +7,6 @@ import {
 } from "./core/types/plugin";
 import fs from "fs";
 import { logger } from "./core/utils/logger";
-import { Widget } from "./core/types/widget";
 import { Menu } from "./core/types/menu";
 import { IPageWithOptionalId } from "./core/types/page";
 import { PluginModel } from "./backend/models/plugin.model";
@@ -15,6 +14,7 @@ import { OptionModel } from "./backend/models/option.server";
 import { IOption } from "./core/types/option";
 import { PageModel } from "./backend/models/page.server";
 import { fileURLToPath } from "url";
+import { Widget } from "./core/widget";
 
 let __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

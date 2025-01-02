@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 import { IPage, IPageWithOptionalId, PageContentType } from "./page";
 import { Menu } from "~/core/types/menu";
-import { Widget } from "./widget";
 import { ContextType } from "react";
 import { IContentType, PluginSchema } from "./content";
+import { Widget } from "../widget";
 
 export const PLUGIN_KEY = "plugins";
 
