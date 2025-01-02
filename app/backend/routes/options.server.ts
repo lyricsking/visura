@@ -1,14 +1,14 @@
 import { LoaderFunctionArgs, ActionFunctionArgs, json } from "@remix-run/node";
 import { UpdateWriteOpResult } from "mongoose";
 import { APP_NAME } from "~/app";
-import { DISPLAY_OPTION_KEY, IOption } from "~/shared/types/option";
-import { handleResponse } from "~/shared/utils/helpers";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import { DISPLAY_OPTION_KEY, IOption } from "~/core/types/option";
+import { handleResponse } from "~/core/utils/helpers";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { OptionModel } from "../models/option.server";
-import { paginate } from "~/shared/utils/http";
-import { logger } from "~/shared/utils/logger";
+import { paginate } from "~/core/utils/http";
+import { logger } from "~/core/utils/logger";
 import { ContentType } from "../models/content";
-import { isAuthenticated } from "~/shared/auth/server/auth.server";
+import { isAuthenticated } from "~/core/auth/server/auth.server";
 import { z } from "zod";
 
 const createOptionDataSchema = z.object({

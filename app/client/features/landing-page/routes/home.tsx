@@ -29,7 +29,7 @@ export default function Home() {
   if (page && page.content) {
     child = (
       <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={import(`../../../../../plugins/blog/src/routes/blog`)}>
+        <Await resolve={import(`../../../../../plugins/blog/routes/blog`)}>
           {(resolvedValue) => (
             <p>{resolvedValue.default({ tips: [], posts: [] })}</p>
           )}

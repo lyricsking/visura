@@ -39,11 +39,11 @@ import {
 } from "~/shared/components/card";
 import { Input } from "~/shared/components/input";
 import { Textarea } from "~/shared/components/textarea";
-import formDataToObject from "~/shared/utils/form-data-to-object";
+import formDataToObject from "~/core/utils/form-data-to-object";
 import { IPage, OpenGraphTag, PageStatus } from "~/features/page/types/page";
 import { defaultPage, PageModel } from "~/features/page/models/page.server";
-import { getSlug } from "~/shared/utils/string";
-import { cn } from "~/shared/utils/util";
+import { getSlug } from "~/core/utils/string";
+import { cn } from "~/core/utils/util";
 import { loader as pageLoader } from "~/features/page/routes/api/pages.server";
 import {
   Tabs,

@@ -1,8 +1,8 @@
 import { Stack, SimpleGrid, TextInput, Flex, Button } from "@mantine/core";
 import { Form, useFetcher } from "@remix-run/react";
 import { FormEvent } from "react";
-import { IContentType } from "~/shared/types/content";
-import { capitalize } from "~/shared/utils/string";
+import { IContentType } from "~/core/types/content";
+import { capitalize } from "~/core/utils/string";
 
 type DocumentFormProps = {
   schema: IContentType;

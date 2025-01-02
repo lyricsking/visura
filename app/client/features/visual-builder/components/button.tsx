@@ -15,7 +15,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../../../../shared/types/builder.components";
+} from "../../../../core/types/builder.components";
 import { colorSwatch } from "../utils/color";
 import { marks } from "../utils/marks";
 

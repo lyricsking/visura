@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "../models/plugin.model";
-import { paginate } from "~/shared/utils/http";
-import { logger } from "~/shared/utils/logger";
+import { paginate } from "~/core/utils/http";
+import { logger } from "~/core/utils/logger";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);

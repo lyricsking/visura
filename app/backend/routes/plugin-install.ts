@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 import { Writable } from "stream";
 import AdmZip from "adm-zip";
-import { logger } from "~/shared/utils/logger";
-import { installPlugin } from "~/shared/utils/plugin";
+import { logger } from "~/core/utils/logger";
+import { installPlugin } from "~/core/utils/plugin";
 
 export const loader = () => {
   return Response.json({ message: "Ready to install plugin." });

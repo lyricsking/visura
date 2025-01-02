@@ -6,8 +6,8 @@ import { isAuthenticated } from "~/core/auth/server/auth.server";
 import { PluginModel } from "~/core/plugin/models/plugin.model";
 import { IPlugin } from "~/core/plugin/types/plugin";
 import { IHydratedUser } from "~/core/user/models/user.model";
-import { handleResponse } from "~/shared/utils/helpers";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import { handleResponse } from "~/core/utils/helpers";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 
 // Sample plugin data structure
 type Plugin = {

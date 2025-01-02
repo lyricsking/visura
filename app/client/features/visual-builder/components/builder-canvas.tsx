@@ -8,7 +8,7 @@ import {
   Text,
 } from "@mantine/core";
 import { useVisualBuilder } from "./visual-builder.provider";
-import { cn } from "~/shared/utils/util";
+import { cn } from "~/core/utils/util";
 import { useDisclosure } from "@mantine/hooks";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";

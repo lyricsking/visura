@@ -3,7 +3,7 @@ import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "~/shared/components/sheet";
 import Button from "~/shared/components/button";
 import { renderIcon } from "./icon-loader";
-import { Menu } from "~/shared/types/menu";
+import { Menu } from "~/core/types/menu";
 import { Menu as MenuIcon } from "lucide-react";
 
 export type SidebarContentProps = {

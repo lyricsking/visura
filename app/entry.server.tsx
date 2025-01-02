@@ -13,7 +13,7 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
 import dotenv from "dotenv";
-import createDBConnection from "./shared/services/db.server";
+import createDBConnection from "./core/services/db.server";
 
 dotenv.config();
 
@@ -29,7 +29,7 @@ if (process.env.SETUP_COMPLETE !== "true") {
 
 // Init database connection
 createDBConnection();
-// fetch()
+
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;
 

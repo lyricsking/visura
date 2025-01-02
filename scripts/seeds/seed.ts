@@ -1,4 +1,4 @@
-import createDBConnection from "~/shared/services/db.server";
+import createDBConnection from "~/core/services/db.server";
 import { seedOptions } from "./options.server";
 import { seedPages } from "./page.server";
 import { seedPlugins } from "./plugin.server";

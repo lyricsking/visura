@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { preview } from "vite";
-import { customMarkdownParser } from "~/shared/utils/markdown-utils";
+import { customMarkdownParser } from "~/core/utils/markdown-utils";
 import { PageContentType } from "~/features/page/types/page";
 
 export const renderPage = (

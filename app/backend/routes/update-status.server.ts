@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import formDataToObject from "~/shared/utils/form-data-to-object";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import formDataToObject from "~/core/utils/form-data-to-object";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { getUserFromSession } from "../../server/user.server";
-import { handleResponse } from "~/shared/utils/helpers";
+import { handleResponse } from "~/core/utils/helpers";
 import User, { IHydratedUser } from "../../models/user.model";
 
 export const action = async ({ request }: ActionFunctionArgs) => {

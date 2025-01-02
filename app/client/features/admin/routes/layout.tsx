@@ -16,8 +16,8 @@ import {
 import { SidebarProvider, SidebarTrigger } from "~/client/components/sidebar";
 import { APP_NAME } from "~/app";
 import { Types } from "mongoose";
-import { isAuthenticated } from "~/shared/auth/server/auth.server";
-import { IUser } from "~/shared/types/user";
+import { isAuthenticated } from "~/core/auth/server/auth.server";
+import { IUser } from "~/core/types/user";
 
 export const handle = {
   breadcrumb: {

@@ -4,15 +4,15 @@ import {
   IPlugin,
   IPluginImpl,
   PluginOptions,
-} from "./shared/types/plugin";
+} from "./core/types/plugin";
 import fs from "fs";
-import { logger } from "./shared/utils/logger";
-import { Widget } from "./shared/types/widget";
-import { Menu } from "./shared/types/menu";
-import { IPageWithOptionalId } from "./shared/types/page";
+import { logger } from "./core/utils/logger";
+import { Widget } from "./core/types/widget";
+import { Menu } from "./core/types/menu";
+import { IPageWithOptionalId } from "./core/types/page";
 import { PluginModel } from "./backend/models/plugin.model";
 import { OptionModel } from "./backend/models/option.server";
-import { IOption } from "./shared/types/option";
+import { IOption } from "./core/types/option";
 import { PageModel } from "./backend/models/page.server";
 import { fileURLToPath } from "url";
 

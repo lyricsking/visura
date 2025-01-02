@@ -15,9 +15,9 @@ import {
   isAuthenticated,
   REDIRECT_URL,
   getAuthErrorKey,
-} from "~/shared/auth/server/auth.server";
-import { isAuthUser } from "~/shared/auth/utils/helper";
-import { getSession, commitSession } from "~/shared/utils/session";
+} from "~/core/auth/server/auth.server";
+import { isAuthUser } from "~/core/auth/utils/helper";
+import { getSession, commitSession } from "~/core/utils/session";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   return await authenticate("form", request);

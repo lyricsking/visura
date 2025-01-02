@@ -1,5 +1,5 @@
 import mongoose, { model, Model, Schema } from "mongoose";
-import { IPage, TemplateType, PageStatus } from "~/shared/types/page";
+import { IPage, TemplateType, PageStatus } from "~/core/types/page";
 
 export type IPageModel = Model<IPage>;
 const pageSchema = new Schema<IPage, IPageModel>({

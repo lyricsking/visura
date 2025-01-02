@@ -2,7 +2,7 @@ import mongoose, { Schema, Model, HydratedDocument, Types } from "mongoose";
 import bcrypt from "bcrypt";
 import { IUserMeta } from "./user-meta.model";
 import { IStaff } from "./staff.model";
-import { IUser, UserType } from "~/shared/types/user";
+import { IUser, UserType } from "~/core/types/user";
 
 export interface IUserMethods {
   isValidPassword(password: string): Promise<boolean>;

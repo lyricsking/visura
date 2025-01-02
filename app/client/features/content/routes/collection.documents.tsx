@@ -15,7 +15,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useDisclosure } from "@mantine/hooks";
 import { DocumentForm } from "~/features/collection/components/document-form";
-import formDataToObject from "~/shared/utils/form-data-to-object";
+import formDataToObject from "~/core/utils/form-data-to-object";
 import { head } from "lodash";
 
 export async function action({ params, request }: ActionFunctionArgs) {

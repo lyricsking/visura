@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, data, LoaderFunctionArgs } from "@remix-run/node";
-import { logger } from "~/shared/utils/logger";
-import { paginate } from "~/shared/utils/http";
+import { logger } from "~/core/utils/logger";
+import { paginate } from "~/core/utils/http";
 import { z } from "zod";
 import { ContentType } from "../models/content";
 

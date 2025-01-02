@@ -16,7 +16,7 @@ import {
 import {
   BaseComponentsInfoProps,
   ComponentsInfo,
-} from "../../../../shared/types/builder.components";
+} from "../../../../core/types/builder.components";
 import { buttonInfo, ButtonSetting, ButtonSettingsProps } from "./button";
 import { textInfo, TextSetting, TextSettingsProps } from "./text";
 import { titleInfo, TitleSetting, TitleSettingsProps } from "./title";

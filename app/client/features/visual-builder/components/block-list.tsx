@@ -1,5 +1,5 @@
 import { Button, Divider, Text } from "@mantine/core";
-import { ComponentsInfo } from "../../../../shared/types/builder.components";
+import { ComponentsInfo } from "../../../../core/types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 
 export function BlockList() {

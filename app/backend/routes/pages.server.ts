@@ -1,8 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { z } from "zod";
-import { PageStatus, PageContentType } from "~/shared/types/page";
-import { paginate } from "~/shared/utils/http";
-import { logger } from "~/shared/utils/logger";
+import { PageStatus, PageContentType } from "~/core/types/page";
+import { paginate } from "~/core/utils/http";
+import { logger } from "~/core/utils/logger";
 import { PageModel } from "../models/page.server";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {

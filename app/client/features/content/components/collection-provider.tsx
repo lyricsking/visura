@@ -1,4 +1,4 @@
-import { IContentType } from "../../../../shared/types/content";
+import { IContentType } from "../../../../core/types/content";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export type PropsUpdateFunction = (id: string, key: string, value: any) => void;

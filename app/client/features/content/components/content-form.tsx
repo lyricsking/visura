@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
-import { Field, IContentType } from "../../../../shared/types/content";
+import { Field, IContentType } from "../../../../core/types/content";
 
 type ContentFormProps = {
   content: IContentType;

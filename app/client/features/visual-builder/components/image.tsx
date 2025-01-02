@@ -14,7 +14,7 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../../../../shared/types/builder.components";
+} from "../../../../core/types/builder.components";
 import { useVisualBuilder } from "./visual-builder.provider";
 import { marks } from "../utils/marks";
 

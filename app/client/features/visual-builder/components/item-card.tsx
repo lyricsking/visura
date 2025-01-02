@@ -25,9 +25,9 @@ import {
 import {
   ComponentsInfo,
   BaseComponentsInfoProps,
-} from "../../../../shared/types/builder.components";
+} from "../../../../core/types/builder.components";
 import { MouseEvent } from "react";
-import { getNanoid } from "~/shared/utils/util";
+import { getNanoid } from "~/core/utils/util";
 import { marks } from "../utils/marks";
 import { TextSettingsProps, textInfo } from "./text";
 import { colorSwatch } from "../utils/color";

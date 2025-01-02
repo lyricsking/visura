@@ -1,6 +1,6 @@
 import { PluginManager } from "./plugin.server";
-import { MenuType, Menu, SettingsTab } from "./shared/types/menu";
-import { IOption } from "./shared/types/option";
+import { MenuType, Menu, SettingsTab } from "./core/types/menu";
+import { IOption } from "./core/types/option";
 
 export const APP_NAME = "app_name";
 

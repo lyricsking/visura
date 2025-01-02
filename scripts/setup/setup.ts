@@ -7,7 +7,7 @@ import { Writable, WritableOptions } from "stream";
 import User from "~/backend/models/user.model";
 import { OptionModel } from "~/backend/models/option.server";
 import { APP_NAME } from "~/app";
-import { installPlugin } from "~/shared/utils/plugin";
+import { installPlugin } from "~/core/utils/plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

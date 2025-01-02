@@ -1,10 +1,10 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
-import formDataToObject from "~/shared/utils/form-data-to-object";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import formDataToObject from "~/core/utils/form-data-to-object";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import UserMeta, { IUserMeta } from "../../models/user-meta.model";
 import { getUserFromSession } from "../../client/features/user/server/user.server";
 import User, { IHydratedUser, IUser } from "../../models/user.model";
-import { handleResponse } from "~/shared/utils/helpers";
+import { handleResponse } from "~/core/utils/helpers";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUserFromSession(request);

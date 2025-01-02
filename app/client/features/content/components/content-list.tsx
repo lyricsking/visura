@@ -1,7 +1,7 @@
 import { Button, NavLink, Stack } from "@mantine/core";
-import { IContentType } from "../../../../shared/types/content";
+import { IContentType } from "../../../../core/types/content";
 import { ReactNode } from "react";
-import { capitalize } from "~/shared/utils/string";
+import { capitalize } from "~/core/utils/string";
 import {
   NavLink as ReactNavLink,
   useHref,

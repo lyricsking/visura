@@ -2,7 +2,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import ContentForm from "~/features/collection/components/collection-form";
 import { Field, IContentType } from "~/features/collection/types/collection";
-import formDataToObject from "~/shared/utils/form-data-to-object";
+import formDataToObject from "~/core/utils/form-data-to-object";
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const formDataObject = formDataToObject(await request.formData());

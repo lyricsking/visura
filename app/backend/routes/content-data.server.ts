@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { paginate } from "~/shared/utils/http";
-import { logger } from "~/shared/utils/logger";
+import { paginate } from "~/core/utils/http";
+import { logger } from "~/core/utils/logger";
 import { createDynamicModel } from "../utils/collection";
 import { ContentType } from "../models/content";
 

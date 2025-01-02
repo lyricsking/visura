@@ -20,7 +20,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { IPage } from "~/features/page/types/page";
 import { DISPLAY_OPTION_KEY, IOption } from "~/features/option/types/option";
 import lo from "lodash";
-import formDataToObject from "~/shared/utils/form-data-to-object";
+import formDataToObject from "~/core/utils/form-data-to-object";
 
 export const loader = async ({}: LoaderFunctionArgs) => {
   const app = await getAppContext();

@@ -1,6 +1,6 @@
 import { StringColorFormat } from "@faker-js/faker";
 import { ComponentProps, Suspense, lazy } from "react";
-import { cn } from "~/shared/utils/util";
+import { cn } from "~/core/utils/util";
 
 export type RenderIconProps = {
   icon: string;

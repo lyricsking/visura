@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { ComponentsInfo } from "../../../../shared/types/builder.components";
+import { ComponentsInfo } from "../../../../core/types/builder.components";
 import { textInfo } from "./text";
-import { getNanoid } from "~/shared/utils/util";
+import { getNanoid } from "~/core/utils/util";
 import { AddComponent } from "../utils/fns";
 import { imageInfo } from "./image";
 import { avatarInfo } from "./avatar";

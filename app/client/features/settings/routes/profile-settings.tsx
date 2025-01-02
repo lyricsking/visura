@@ -1,13 +1,13 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import { cn } from "~/shared/utils/util";
+import { cn } from "~/core/utils/util";
 import { Input } from "~/shared/components/input";
 import Button from "~/shared/components/button";
 import { SettingsType } from "../../admin/type/settings.type";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { PluginModel } from "~/core/plugin/models/plugin.model";
 import { IPlugin } from "~/core/plugin/types/plugin";
-import { handleResponse } from "~/shared/utils/helpers";
-import { DBReponse, handleDbResult } from "~/shared/utils/mongoose";
+import { handleResponse } from "~/core/utils/helpers";
+import { DBReponse, handleDbResult } from "~/core/utils/mongoose";
 import { isAuthenticated } from "~/core/auth/server/auth.server";
 import { isAuthUser } from "~/core/auth/utils/helper";
 import { IHydratedUser } from "~/core/user/models/user.model";
