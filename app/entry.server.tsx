@@ -14,6 +14,7 @@ import { renderToPipeableStream } from "react-dom/server";
 import _default from "node_modules/vite-tsconfig-paths/dist";
 import dotenv from "dotenv";
 import createDBConnection from "./core/services/db.server";
+import { loadRouteAliases } from "./core/route";
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ if (process.env.SETUP_COMPLETE !== "true") {
 createDBConnection();
 
 // Init plugins
-await loadRouteAlias();
+await loadRouteAliases();
 
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;
@@ -152,7 +153,4 @@ function handleBrowserRequest(
 
     setTimeout(abort, streamTimeout + 1000);
   });
-}
-function loadRouteAlias() {
-  throw new Error("Function not implemented.");
 }

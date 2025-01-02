@@ -1,4 +1,3 @@
-import visuraConfig from "visura.config";
 import { registerRoute, Route } from "./route";
 import { Widget } from "./widget";
 
@@ -16,10 +15,10 @@ export function definePlugin(pluginConfig: PluginConfig) {
     pluginConfig.routes?.forEach((route) => {
       registerRoute({
         id: route.id,
-        metadata: route.metadata,
         path: route.path,
-        loaderEnpoint: route.loaderEnpoint,
-        actionEnpoint: route.actionEnpoint,
+        metadata: route.metadata,
+        // loaderEnpoint: route.loaderEnpoint,
+        // actionEnpoint: route.actionEnpoint,
         component: route.component,
       });
     });
