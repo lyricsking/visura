@@ -32,7 +32,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const error = session.get(getAuthErrorKey());
-  console.log("error", error);
 
   if (error) {
     return Response.json(
@@ -128,11 +127,8 @@ export default function Signin() {
 
             <Divider
               orientation="horizontal"
-              label="Or sign in with e-mail"
-              labelPosition="center"
-              size={"md"}
-              my={"lg"}
-              color={"red"}
+              // label="Or sign in with e-mail"
+              // labelPosition="center"
             />
 
             <div className="mx-auto">
@@ -156,7 +152,7 @@ export default function Signin() {
                   my={"sm"}
                   mx="auto"
                   fullWidth
-                  disabled={isSubmitting}
+                  loading={isSubmitting}
                 >
                   <ArrowRightFromLine />
                   <span className="ml-3">

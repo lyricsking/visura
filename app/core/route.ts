@@ -2,6 +2,7 @@ import { ComponentType } from "react";
 import visuraConfig from "visura.config";
 import { serverOnly$ } from "vite-env-only/macros";
 import { RouteAlias } from "~/backend/models/route-alias";
+import { PluginConfig } from "~/core/plugin";
 import { PageMetadata } from "~/core/types/page";
 
 interface MetaTags {
@@ -42,8 +43,8 @@ export function registerRoute(route: Route) {
   routeRegistry.push(route);
 }
 
-export function getRoutes(): Route[] {
-  return visuraConfig.plugins.flatMap<Route>((plugin) =>
+export function getRoutes(plugins:PluginConfig[]): Route[] {
+  return plugins.flatMap<Route>((plugin) =>
     (plugin.routes || []).map<Route>((route) => ({
       ...route,
       path: routeAliases[route.id] || route.path, // Use alias route if available

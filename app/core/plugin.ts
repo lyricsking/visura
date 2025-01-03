@@ -1,4 +1,5 @@
-import { registerRoute, Route } from "./route";
+import type { Route } from "~/core/route";
+import * as routeModule from "~/core/route";
 import { Widget } from "./widget";
 
 export interface PluginConfig {
@@ -12,15 +13,16 @@ export interface PluginConfig {
 
 export function definePlugin(pluginConfig: PluginConfig) {
   if (pluginConfig) {
+
     pluginConfig.routes?.forEach((route) => {
-      registerRoute({
-        id: route.id,
-        path: route.path,
-        metadata: route.metadata,
-        // loaderEnpoint: route.loaderEnpoint,
-        // actionEnpoint: route.actionEnpoint,
-        component: route.component,
-      });
+      // routeModule.registerRoute({
+      //   id: route.id,
+      //   path: route.path,
+      //   metadata: route.metadata,
+      //   // loaderEnpoint: route.loaderEnpoint,
+      //   // actionEnpoint: route.actionEnpoint,
+      //   component: route.component,
+      // });
     });
   }
 

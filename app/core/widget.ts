@@ -1,6 +1,4 @@
-import { ComponentType } from "react";
 import visuraConfig from "visura.config";
-import { PageMetadata } from "~/core/types/page";
 
 export interface Widget {
   id: string;
@@ -8,27 +6,6 @@ export interface Widget {
   location: "dashboard";
   component: string;
 }
-
-interface MetaTags {
-  property: string;
-  content: string;
-}
-
-export interface RouteMetadata {
-  title: string;
-  description?: string;
-  keywords?: string;
-  openTags?: Array<MetaTags>;
-}
-
-export type Route = {
-  id: string;
-  path: string;
-  metadata: PageMetadata;
-  loaderEnpoint?: string;
-  actionEnpoint?: string;
-  component: ComponentType;
-};
 
 const widgetRegistry: Widget[] = [];
 

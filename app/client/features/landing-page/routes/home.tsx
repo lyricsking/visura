@@ -1,19 +1,23 @@
 import { Box, Center, Text } from "@mantine/core";
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
-import { ComponentType, ReactNode, Suspense } from "react";
+import { useLoaderData } from "@remix-run/react";
+import { ReactNode, ComponentType } from "react";
+import visuraConfig from "visura.config";
 import { getRoutes } from "~/core/route";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const routes = getRoutes();
+  const routes = getRoutes(visuraConfig.plugins);
 
-  const route = routes.find((route) => route.path == "/");
+  const route = routes.find((route) => route.path == "/blog");
 
-  return { page: route };
+  return { path: route?.path, metadata: route?.metadata };
 };
 
 export default function Home() {
-  const { page } = useLoaderData<typeof loader>();
+  const { path } = useLoaderData<typeof loader>();
+
+  const routes = getRoutes(visuraConfig.plugins);
+  const page = routes.find((route) => route.path == path);
 
   let child: ReactNode = (
     <Center h={"100vh"}>

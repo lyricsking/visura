@@ -21,8 +21,9 @@ import {
   CardHeader,
 } from "~/client/components/card";
 import { Button } from "@mantine/core";
-import { findTips } from "plugins/blog/server/tips.server";
-import { findPosts } from "plugins/blog/server/post.server";
+import { PostSummary } from "../components/post-summary";
+import { findPosts } from "../server/post.server";
+import { findTips } from "../server/tips.server";
 
 export const blogLoader: PluginLoaderFunction | undefined = serverOnly$(
   async () => {
