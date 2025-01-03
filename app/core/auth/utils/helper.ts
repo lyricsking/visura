@@ -3,7 +3,7 @@ import { AuthUser } from "../types/auth-user.type";
 import { IUser } from "~/core/types/user";
 
 export const isAuthUser = (authUser: any): authUser is AuthUser =>
-  (authUser as AuthUser).id !== undefined;
+  authUser && (authUser as AuthUser).id !== undefined;
 
 export const isSessionInstance = (
   authUser: AuthUser | Session | undefined

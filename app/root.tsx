@@ -29,7 +29,7 @@ export type LoaderData = {
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  console.log("root");
+ 
   return {};
 };
 

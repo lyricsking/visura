@@ -28,11 +28,16 @@ if (process.env.SETUP_COMPLETE !== "true") {
   process.exit(1);
 }
 
-// Init database connection
-createDBConnection();
+// Init db
+async function initDb() {
+  // Init database connection
+  await createDBConnection();
 
-// Init plugins
-await loadRouteAliases();
+  // Init plugins
+  await loadRouteAliases();
+}
+
+initDb();
 
 // Reject/cancel all pending promises after 5 seconds
 export const streamTimeout = 5000;

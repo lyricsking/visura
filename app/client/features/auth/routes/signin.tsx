@@ -1,4 +1,4 @@
-import { Button, Divider } from "@mantine/core";
+import { Button, Divider, TextInput } from "@mantine/core";
 import { ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
 import {
   Form,
@@ -8,19 +8,27 @@ import {
 } from "@remix-run/react";
 import { ArrowLeft, ArrowRight, ArrowRightFromLine } from "lucide-react";
 import { useEffect } from "react";
-import { Input } from "~/client/components/input";
 import { useToast } from "~/client/hooks/use-toast";
 import {
   authenticate,
   isAuthenticated,
   REDIRECT_URL,
-  getAuthErrorKey,
 } from "~/core/auth/server/auth.server";
 import { isAuthUser } from "~/core/auth/utils/helper";
 import { getSession, commitSession } from "~/core/utils/session";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return await authenticate("form", request);
+  try {
+    return await authenticate("form", request);
+  } catch (error) {
+    if (error instanceof Error) {
+      // here the error related to the authentication process
+    }
+
+    // throw error; // Re-throw other values or unhandled errors
+  }
+
+  return null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -122,62 +130,63 @@ export default function Signin() {
                 </svg>
               </div>
               <span className="ml-4">Sign in with GitHub</span>
-            </button>
-          </div> */}
+            </button> */}
+          </div>
 
-            <Divider
-              orientation="horizontal"
-              // label="Or sign in with e-mail"
-              // labelPosition="center"
-            />
+          <Divider
+            orientation="horizontal"
+            label="Or sign in with e-mail"
+            labelPosition="center"
+            mb={"lg"}
+          />
 
-            <div className="mx-auto">
-              <fetcher.Form method="post">
-                <Input
-                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  name="userId"
-                  type="text"
-                  placeholder="Email"
-                />
-                <Input
-                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                />
-                <Button
-                  type="submit"
-                  className="transition-all duration-300 ease-in-out"
-                  maw={"250"}
-                  my={"sm"}
-                  mx="auto"
-                  fullWidth
-                  loading={isSubmitting}
-                >
-                  <ArrowRightFromLine />
-                  <span className="ml-3">
-                    {isSubmitting ? "Signing in" : "Sign In"}
-                  </span>
-                </Button>
-                <p className="mt-6 text-xs text-gray-600 text-center">
-                  By continuing, you agree to have read, understood and accepted{" "}
-                  {appname}'s{" "}
-                  <a
-                    href="#"
-                    className="border-b border-gray-500 border-dotted"
-                  >
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a
-                    href="#"
-                    className="border-b border-gray-500 border-dotted"
-                  >
-                    Privacy Policy
-                  </a>
-                </p>
-              </fetcher.Form>
-            </div>
+          <div className="mx-auto">
+            <fetcher.Form method="post">
+              <TextInput
+                name="userId"
+                type="text"
+                placeholder="Email"
+                maw={"250"}
+                my={"sm"}
+                mx="auto"
+                size="md"
+              />
+              <TextInput
+                name="password"
+                type="password"
+                placeholder="Password"
+                maw={"250"}
+                my={"sm"}
+                mx="auto"
+                size="md"
+              />
+              <Button
+                type="submit"
+                className="transition-all duration-300 ease-in-out"
+                maw={"250"}
+                my={"sm"}
+                mx="auto"
+                size="md"
+                fullWidth
+                loading={isSubmitting}
+              >
+                <ArrowRightFromLine />
+                <span className="ml-3">
+                  {isSubmitting ? "Signing in" : "Sign In"}
+                </span>
+              </Button>
+              <p className="mt-6 text-xs text-gray-600 text-center">
+                By continuing, you agree to have read, understood and accepted{" "}
+                {appname}'s{" "}
+                <a href="#" className="border-b border-gray-500 border-dotted">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="border-b border-gray-500 border-dotted">
+                  Privacy Policy
+                </a>
+              </p>
+            </fetcher.Form>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Authenticator, AuthorizationError } from "remix-auth";
+import { Authenticator } from "remix-auth";
 import {
   commitSession,
   getSession,
@@ -13,20 +13,17 @@ import { isAuthUser } from "../utils/helper";
 
 export const REDIRECT_URL = "redirect-url";
 export const REDIRECT_SEARCH_PARAM = "rdr";
+export const userAuthKey = "auth-user";
+
 export const authErrorKey = "auth-error";
 
 const StrategyType = ["google", "form"] as const;
 type StrategyType = (typeof StrategyType)[number];
 
-export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
-  sessionErrorKey: authErrorKey,
-  throwOnError: true,
-});
+export const authenticator = new Authenticator<AuthUser>();
 
 authenticator.use(formStrategy);
-authenticator.use(googleStrategy);
-
-export const getAuthErrorKey = () => authenticator.sessionErrorKey;
+// authenticator.use(googleStrategy);
 
 //export { authenticator };
 
@@ -40,12 +37,23 @@ export const authenticate = async (
   strategy: StrategyType,
   request: Request
 ) => {
-  const authUser = await authenticator.authenticate(strategy, request);
-
   const session = await getSession(request);
-  if (isAuthUser(authUser)) await setAuthUser(session, authUser);
 
-  return authUser;
+  try {
+    const authUser = await authenticator.authenticate(strategy, request);
+    if (isAuthUser(authUser)) {
+      await setAuthenticatedUser(session, authUser);
+      return authUser;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      // here the error related to the authentication process
+
+      session.flash(authErrorKey, error.message);
+    }
+
+    throw error; // Re-throw other values or unhandled errors
+  }
 };
 
 /**
@@ -61,16 +69,16 @@ export const authenticate = async (
 export const isAuthenticated = async (
   request: Request,
   shouldRedirect: boolean = false
-): Promise<AuthUser | null> => {
-  const authRes = await authenticator.isAuthenticated(request);
+): Promise<AuthUser | undefined> => {
+  const authUser = getAuthenticatedUser(request);
 
-  if (!authRes) {
+  if (!authUser) {
     const session = await getSession(request);
     const currentUrl = new URL(request.url);
     session.set(REDIRECT_URL, currentUrl);
 
     session.flash(
-      authenticator.sessionErrorKey,
+      authErrorKey,
       "You are not authorized to access this resource. Please log in and try again."
     );
 
@@ -81,65 +89,38 @@ export const isAuthenticated = async (
         },
       });
     }
-    /*return handleResponse({
-      error: {
-        message:
-          "You are not authorized to access this resource. Please log in and try again.",
-      },
-      statusCode: 401,
-      statusText: "Unauthorized",
-    });
-    */
   }
 
-  return authRes;
-  // const session = await getSession(requestOrSession);
-  // console.log("Redirect Url", session.get(REDIRECT_URL));
-
-  // const currentUrl = new URL(
-  //   isRequest(requestOrSession) ? requestOrSession.url : "/"
-  // );
-
-  // if (isAuthenticated) {
-  //   return isAuthenticated;
-  // }
-
-  // if (currentUrl.pathname.includes("auth")) {
-  //   const rdrPath = currentUrl.searchParams.get(REDIRECT_SEARCH_PARAM) || "/";
-
-  //   session.set(REDIRECT_URL, rdrPath);
-  //   await commitSession(session);
-  //   return;
-  // } else {
-  //   // This does not provide successRedirect, since it expects
-  //   // isAuthenticated to be successful,
-  //   // We will redirect to authenticate and the redirect back to this current url after Authentication
-  //   return `/auth?${REDIRECT_SEARCH_PARAM}=${currentUrl.toString()}`;
-  // }
+  return authUser;
 };
 
-export const getAuthUser = async (
+export const getAuthenticatedUser = async (
   requestOrSession: Request | Session
 ): Promise<AuthUser | undefined> => {
   const session: Session = await getSession(requestOrSession);
 
-  return session.get(authenticator.sessionKey);
+  return session.get(userAuthKey);
 };
 
-export const setAuthUser = async (
+export const setAuthenticatedUser = async (
   requestOrSession: Request | Session,
   newAuthUser: AuthUser
 ): Promise<void> => {
   const session = await getSession(requestOrSession);
-  session.set(authenticator.sessionKey, newAuthUser);
+  session.set(userAuthKey, newAuthUser);
 
   await commitSession(session);
 };
 
-export const logout = (
+export const logout = async (
   request: Request,
   options: {
     redirectTo: string;
     headers?: HeadersInit;
   }
-) => authenticator.logout(request, options);
+) => {
+  const session = await getSession(request);
+  session.unset(userAuthKey);
+
+  await commitSession(session);
+};
